@@ -1,7 +1,8 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
-import { type SearchNavigationParamList } from "../types";
+import { getClassCode } from "../shared/helper";
+import { type SearchNavigationParamList } from "../shared/types";
 
 const Stack = createStackNavigator<SearchNavigationParamList>();
 
@@ -17,7 +18,7 @@ export default function SearchNavigation() {
         name={"Search-Detail"}
         component={PlaceHolderScreen}
         options={({ route }) => ({
-          title: `${route.params.department.toUpperCase()}-${route.params.school.toUpperCase()} ${route.params.code.toUpperCase()}`,
+          title: getClassCode(route.params),
         })}
       />
     </Stack.Navigator>

@@ -1,7 +1,8 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
-import { type ExploreNavigationParamList } from "../types";
+import { getClassCode } from "../shared/helper";
+import { type ExploreNavigationParamList } from "../shared/types";
 
 const Stack = createStackNavigator<ExploreNavigationParamList>();
 
@@ -17,21 +18,21 @@ export default function ExploreNavigation() {
         name={"Explore-School"}
         component={PlaceHolderScreen}
         options={({ route }) => ({
-          title: route.params.school.toUpperCase(),
+          title: route.params.schoolCode.toUpperCase(),
         })}
       />
       <Stack.Screen
         name={"Explore-Department"}
         component={PlaceHolderScreen}
         options={({ route }) => ({
-          title: `${route.params.department.toUpperCase()}-${route.params.school.toUpperCase()}`,
+          title: `${route.params.departmentCode.toUpperCase()}-${route.params.schoolCode.toUpperCase()}`,
         })}
       />
       <Stack.Screen
         name={"Explore-Detail"}
         component={PlaceHolderScreen}
         options={({ route }) => ({
-          title: `${route.params.department.toUpperCase()}-${route.params.school.toUpperCase()} ${route.params.code.toUpperCase()}`,
+          title: getClassCode(route.params),
         })}
       />
     </Stack.Navigator>

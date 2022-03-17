@@ -1,7 +1,8 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
-import { type MeNavigationParamList } from "../types";
+import { getClassCode } from "../shared/helper";
+import { type MeNavigationParamList } from "../shared/types";
 
 const Stack = createStackNavigator<MeNavigationParamList>();
 
@@ -40,6 +41,13 @@ export default function MeNavigation() {
         options={{
           title: "Sign Up",
         }}
+      />
+      <Stack.Screen
+        name={"Me-Detail"}
+        component={PlaceHolderScreen}
+        options={({ route }) => ({
+          title: getClassCode(route.params),
+        })}
       />
     </Stack.Navigator>
   );

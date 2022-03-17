@@ -1,7 +1,7 @@
-type DetailScreenParam = {
-  school: string;
-  department: string;
-  code: string;
+export type ClassInfo = {
+  schoolCode: string;
+  departmentCode: string;
+  classNumber: string;
   name: string;
   description: string | undefined;
 };
@@ -14,14 +14,14 @@ export type RootNavigationParamList = {
 
 export type ExploreNavigationParamList = {
   "Explore-University": undefined;
-  "Explore-School": { school: string };
-  "Explore-Department": { school: string; department: string };
-  "Explore-Detail": DetailScreenParam;
+  "Explore-School": { schoolCode: string };
+  "Explore-Department": { schoolCode: string; departmentCode: string };
+  "Explore-Detail": ClassInfo;
 };
 
 export type SearchNavigationParamList = {
   "Search-University": undefined;
-  "Search-Detail": DetailScreenParam;
+  "Search-Detail": ClassInfo;
 };
 
 export type MeNavigationParamList = {
@@ -30,4 +30,5 @@ export type MeNavigationParamList = {
   "Me-Reviewed": undefined;
   "Me-SignIn": undefined;
   "Me-SignUp": undefined;
+  "Me-Detail": ClassInfo;
 };

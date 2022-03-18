@@ -3,7 +3,7 @@ import { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
 import { SchoolNameAction, DepartmentNameAction } from "./types";
 
 function schoolNameReducer(
-  state: SchoolNameRecord = {},
+  state: SchoolNameRecord = null,
   action: SchoolNameAction
 ) {
   if (action.type === "update-school-name-record" && !!action.payload) {
@@ -14,7 +14,7 @@ function schoolNameReducer(
 }
 
 function departmentNameReducer(
-  state: DepartmentNameRecord = {},
+  state: DepartmentNameRecord = null,
   action: DepartmentNameAction
 ) {
   if (action.type === "update-department-name-record" && !!action.payload) {

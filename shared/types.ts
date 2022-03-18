@@ -1,6 +1,9 @@
-export type SchoolNameRecord = Record<string, string>;
+export type SchoolNameRecord = Record<string, string> | null;
 
-export type DepartmentNameRecord = Record<string, Record<string, string>>;
+export type DepartmentNameRecord = Record<
+  string,
+  Record<string, string>
+> | null;
 
 export type SchoolInfo = {
   schoolCode: string;

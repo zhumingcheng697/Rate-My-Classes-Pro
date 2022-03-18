@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Text, Button, Skeleton } from "native-base";
+import { Text, Button, Pressable, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
@@ -9,8 +9,8 @@ import {
   type ExploreNavigationParamList,
 } from "../../shared/types";
 import { isSchoolGrad, isObjectEmpty } from "../../shared/util";
-import SafeAreaScrollView from "../../components/SafeAreaScrollView";
-import Grid from "../../components/Grid";
+import SafeAreaScrollView from "../../container/SafeAreaScrollView";
+import Grid from "../../container/Grid";
 
 type ExploreUniversityScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -56,8 +56,9 @@ export default function ExploreUniversityScreen() {
         childrenHeight={"90px"}
       >
         {undergradCodes.map((code, index) => (
-          <Button
+          <Pressable
             key={index}
+            background={"#f2f2f7"}
             borderRadius={12}
             onPress={() => {
               navigation.navigate("Explore-School", {
@@ -65,8 +66,24 @@ export default function ExploreUniversityScreen() {
               });
             }}
           >
-            {(schoolNames || {})[code] || code.toUpperCase()}
-          </Button>
+            <VStack
+              height={"100%"}
+              justifyContent={"center"}
+              marginX={2}
+              textAlign={"center"}
+            >
+              <Text
+                fontSize={"md"}
+                fontWeight={"medium"}
+                lineHeight={"sm"}
+                textAlign={"center"}
+                numberOfLines={2}
+              >
+                {(schoolNames || {})[code] || code.toUpperCase()}
+              </Text>
+              <Text textAlign={"center"}>{code.toUpperCase()}</Text>
+            </VStack>
+          </Pressable>
         ))}
       </Grid>
 

@@ -2,7 +2,7 @@ import { Text } from "native-base";
 import { useRoute } from "@react-navigation/native";
 
 import { type ClassInfo } from "../../shared/types";
-import SafeAreaScrollView from "../../components/SafeAreaScrollView";
+import SafeAreaScrollView from "../../container/SafeAreaScrollView";
 
 export default function ClassDetailScreen() {
   const route = useRoute();

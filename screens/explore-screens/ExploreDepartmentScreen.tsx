@@ -11,8 +11,8 @@ import {
   type RootState,
   type ExploreNavigationParamList,
 } from "../../shared/types";
-import SafeAreaScrollView from "../../components/SafeAreaScrollView";
-import Grid from "../../components/Grid";
+import SafeAreaScrollView from "../../container/SafeAreaScrollView";
+import Grid from "../../container/Grid";
 
 type ExploreDepartmentScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,

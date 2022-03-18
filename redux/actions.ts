@@ -10,6 +10,9 @@ export const updateSchoolNameRecord =
 
 export const updateDepartmentNameRecord =
   (dispath: Dispatch<DepartmentNameAction>) =>
-  (schoolNameRecord: DepartmentNameRecord) => {
-    dispath({ type: "update-school-name-record", payload: schoolNameRecord });
+  (departmentNameRecord: DepartmentNameRecord) => {
+    dispath({
+      type: "update-department-name-record",
+      payload: departmentNameRecord,
+    });
   };

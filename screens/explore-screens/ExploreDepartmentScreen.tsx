@@ -10,7 +10,10 @@ import { useSelector } from "react-redux";
 import { type ExploreNavigationParamList } from "../../shared/types";
 import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
 import Grid from "../../containers/Grid";
-import { getSchoolName, getDepartmentName } from "../../shared/utils";
+import {
+  getSchoolNameByInfo,
+  getDepartmentNameByInfo,
+} from "../../shared/utils";
 
 type ExploreDepartmentScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -25,16 +28,17 @@ type ExploreDepartmentScreenRouteProp = RouteProp<
 export default function ExploreDepartmentScreen() {
   const navigation = useNavigation<ExploreDepartmentScreenNavigationProp>();
   const route = useRoute<ExploreDepartmentScreenRouteProp>();
-  const { schoolCode, departmentCode } = route.params;
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
 
   return (
     <SafeAreaScrollView>
       <Text variant={"h1"}>
-        {getDepartmentName(schoolCode, departmentCode, departmentNames)}
+        {getDepartmentNameByInfo(route.params, departmentNames)}
       </Text>
-      <Text variant={"h2"}>{getSchoolName(schoolCode, schoolNames)}</Text>
+      <Text variant={"h2"}>
+        {getSchoolNameByInfo(route.params, schoolNames)}
+      </Text>
       <Grid minChildrenWidth={140} childrenHeight={"90px"}>
         {["2193", "3193", "4193"].map((classNumber, index) => (
           <Button
@@ -42,8 +46,7 @@ export default function ExploreDepartmentScreen() {
             borderRadius={12}
             onPress={() => {
               navigation.navigate("Explore-Detail", {
-                schoolCode: schoolCode,
-                departmentCode: departmentCode,
+                ...route.params,
                 classNumber,
                 name: classNumber,
                 description:

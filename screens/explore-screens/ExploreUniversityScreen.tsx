@@ -5,7 +5,11 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
 import { type ExploreNavigationParamList } from "../../shared/types";
-import { isSchoolGrad, isObjectEmpty, getSchoolName } from "../../shared/utils";
+import {
+  isSchoolGrad,
+  isObjectEmpty,
+  getSchoolNameByCode,
+} from "../../shared/utils";
 import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
 import Grid from "../../containers/Grid";
 
@@ -74,7 +78,7 @@ export default function ExploreUniversityScreen() {
                 textAlign={"center"}
                 numberOfLines={2}
               >
-                {getSchoolName(code, schoolNames)}
+                {getSchoolNameByCode(code, schoolNames)}
               </Text>
               <Text textAlign={"center"}>{code.toUpperCase()}</Text>
             </VStack>

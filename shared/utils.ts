@@ -1,6 +1,8 @@
 import {
   type SchoolNameRecord,
   type DepartmentNameRecord,
+  type SchoolInfo,
+  type DepartmentInfo,
   type ClassCode,
 } from "./types";
 
@@ -21,14 +23,21 @@ export function isObjectEmpty(obj: object) {
   return Object.keys(obj).length === 0;
 }
 
-export function getSchoolName(
+export function getSchoolNameByCode(
   schoolCode: string,
   schoolNameRecord: SchoolNameRecord
 ) {
   return (schoolNameRecord || {})[schoolCode] || schoolCode.toUpperCase();
 }
 
-export function getDepartmentName(
+export function getSchoolNameByInfo(
+  { schoolCode }: SchoolInfo,
+  schoolNameRecord: SchoolNameRecord
+) {
+  return getSchoolNameByCode(schoolCode, schoolNameRecord);
+}
+
+export function getDepartmentNameByCode(
   schoolCode: string,
   departmentCode: string,
   departmentNameRecord: DepartmentNameRecord
@@ -36,5 +45,16 @@ export function getDepartmentName(
   return (
     ((departmentNameRecord || {})[schoolCode] || {})[departmentCode] ||
     departmentCode.toUpperCase()
+  );
+}
+
+export function getDepartmentNameByInfo(
+  { schoolCode, departmentCode }: DepartmentInfo,
+  departmentNameRecord: DepartmentNameRecord
+) {
+  return getDepartmentNameByCode(
+    schoolCode,
+    departmentCode,
+    departmentNameRecord
   );
 }

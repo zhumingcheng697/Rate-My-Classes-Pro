@@ -2,6 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import ExploreUniversityScreen from "../screens/explore-screens/ExploreUniversityScreen";
 import ExploreSchoolScreen from "../screens/explore-screens/ExploreSchoolScreen";
+import ExploreDepartmentScreen from "../screens/explore-screens/ExploreDepartmentScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import { getClassCode } from "../shared/helper";
 import { type ExploreNavigationParamList } from "../shared/types";
@@ -25,7 +26,7 @@ export default function ExploreNavigation() {
       />
       <Stack.Screen
         name={"Explore-Department"}
-        component={PlaceHolderScreen}
+        component={ExploreDepartmentScreen}
         options={({ route }) => ({
           title: `${route.params.departmentCode.toUpperCase()}-${route.params.schoolCode.toUpperCase()}`,
         })}

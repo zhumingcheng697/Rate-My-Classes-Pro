@@ -13,3 +13,8 @@ export type DepartmentNameAction = {
 type ReduxActionType =
   | "update-school-name-record"
   | "update-department-name-record";
+
+export type RootState = {
+  schoolNameRecord: SchoolNameRecord;
+  departmentNameRecord: DepartmentNameRecord;
+};

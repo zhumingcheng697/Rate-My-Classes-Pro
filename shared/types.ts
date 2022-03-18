@@ -3,7 +3,7 @@ export type ClassInfo = {
   departmentCode: string;
   classNumber: string;
   name: string;
-  description: string | undefined;
+  description: string;
 };
 
 export type RootNavigationParamList = {

@@ -1,4 +1,4 @@
-import { Children, type ReactElement, cloneElement } from "react";
+import { Children, type ReactNode, cloneElement } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useWindowDimensions } from "react-native";
 import { Flex, type IFlexProps } from "native-base";
@@ -7,7 +7,7 @@ type GridProp = IFlexProps & {
   spacing?: number;
   minChildrenWidth: number;
   childrenHeight: number | string;
-  children: ReactElement[];
+  children: ReactNode[];
 };
 
 export default function Grid({

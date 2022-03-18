@@ -1,4 +1,4 @@
-import { type ReactElement } from "react";
+import { type ReactNode } from "react";
 import {
   Edge,
   NativeSafeAreaViewProps,
@@ -10,7 +10,7 @@ type SafeAreaScrollViewProp = {
   vstackProps?: IStackProps;
   safeAreaProps?: NativeSafeAreaViewProps;
   marginY?: number | string;
-  children: ReactElement | ReactElement[];
+  children: ReactNode | ReactNode[];
 };
 
 export default function SafeAreaScrollView({

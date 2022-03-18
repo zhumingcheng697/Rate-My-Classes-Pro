@@ -18,7 +18,6 @@ export default function ExploreUniversityScreen() {
     <ScrollView>
       <SafeAreaView edges={["left", "right"]}>
         <Text variant={"h1"}>Undergraduate</Text>
-
         <Grid minChildrenWidth={140} childrenHeight={"90px"}>
           {["Tandon", "Tandon School of Engineering", "UY"].map(
             (school, index) => (
@@ -38,7 +37,6 @@ export default function ExploreUniversityScreen() {
         <Text variant={"h1"} marginTop={"16px"}>
           Graduate
         </Text>
-
         <Grid margin={5} minChildrenWidth={140} childrenHeight={"90px"}>
           {["Tandon", "Tandon School of Engineering", "GY"].map(
             (school, index) => (

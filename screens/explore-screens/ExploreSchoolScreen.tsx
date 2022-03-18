@@ -27,8 +27,7 @@ export default function ExploreSchoolScreen() {
   return (
     <ScrollView>
       <SafeAreaView edges={["left", "right"]}>
-        <Text variant={"h1"}>{route.params.schoolCode}</Text>
-
+        <Text variant={"h1"}>Tandon School of Engineering</Text>
         <Grid minChildrenWidth={140} childrenHeight={"90px"}>
           {["Integrated Digital Media", "Computer Science", "Math"].map(
             (department, index) => (

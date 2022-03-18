@@ -27,9 +27,8 @@ export default function ExploreDepartmentScreen() {
   return (
     <ScrollView>
       <SafeAreaView edges={["left", "right"]}>
-        <Text variant={"h1"}>{route.params.departmentCode}</Text>
-        <Text variant={"h2"}>{route.params.schoolCode}</Text>
-
+        <Text variant={"h1"}>Integrated Digital Media</Text>
+        <Text variant={"h2"}>Tandon School of Engineering</Text>
         <Grid minChildrenWidth={140} childrenHeight={"90px"}>
           {["2193", "3193", "4193"].map((classNumber, index) => (
             <Button
@@ -41,7 +40,8 @@ export default function ExploreDepartmentScreen() {
                   departmentCode: "DM",
                   classNumber,
                   name: classNumber,
-                  description: "",
+                  description:
+                    "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas modi explicabo fuga, eum libero ipsum magnam. Dolores, vel vero nobis doloribus voluptatibus soluta ratione adipisci repellat voluptatem libero ipsam rerum.",
                 });
               }}
             >

@@ -51,3 +51,9 @@ type ThemeType = typeof theme;
 declare module "native-base" {
   interface ICustomTheme extends ThemeType {}
 }
+
+type RootState = ReturnType<typeof store.getState>;
+
+declare module "react-redux" {
+  interface DefaultRootState extends RootState {}
+}

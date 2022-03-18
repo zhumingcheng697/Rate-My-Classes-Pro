@@ -4,13 +4,10 @@ import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import {
-  type RootState,
-  type ExploreNavigationParamList,
-} from "../../shared/types";
+import { type ExploreNavigationParamList } from "../../shared/types";
 import { isSchoolGrad, isObjectEmpty, getSchoolName } from "../../shared/utils";
-import SafeAreaScrollView from "../../container/SafeAreaScrollView";
-import Grid from "../../container/Grid";
+import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
+import Grid from "../../containers/Grid";
 
 type ExploreUniversityScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -19,10 +16,8 @@ type ExploreUniversityScreenNavigationProp = StackNavigationProp<
 
 export default function ExploreUniversityScreen() {
   const navigation = useNavigation<ExploreUniversityScreenNavigationProp>();
-  const schoolNames = useSelector((state: RootState) => state.schoolNameRecord);
-  const departmentNames = useSelector(
-    (state: RootState) => state.departmentNameRecord
-  );
+  const schoolNames = useSelector((state) => state.schoolNameRecord);
+  const departmentNames = useSelector((state) => state.departmentNameRecord);
   const isSchoolNameLoaded = !!schoolNames && !isObjectEmpty(schoolNames);
   const isDepartmentNameLoaded =
     !!departmentNames && !isObjectEmpty(departmentNames);

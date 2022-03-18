@@ -5,11 +5,6 @@ export type DepartmentNameRecord = Record<
   Record<string, string>
 > | null;
 
-export type RootState = {
-  schoolNameRecord: SchoolNameRecord;
-  departmentNameRecord: DepartmentNameRecord;
-};
-
 export type SchoolInfo = {
   schoolCode: string;
 };

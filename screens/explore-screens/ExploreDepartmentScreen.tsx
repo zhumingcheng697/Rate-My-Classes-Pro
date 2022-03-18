@@ -7,12 +7,9 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import {
-  type RootState,
-  type ExploreNavigationParamList,
-} from "../../shared/types";
-import SafeAreaScrollView from "../../container/SafeAreaScrollView";
-import Grid from "../../container/Grid";
+import { type ExploreNavigationParamList } from "../../shared/types";
+import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
+import Grid from "../../containers/Grid";
 import { getSchoolName, getDepartmentName } from "../../shared/utils";
 
 type ExploreDepartmentScreenNavigationProp = StackNavigationProp<
@@ -29,10 +26,8 @@ export default function ExploreDepartmentScreen() {
   const navigation = useNavigation<ExploreDepartmentScreenNavigationProp>();
   const route = useRoute<ExploreDepartmentScreenRouteProp>();
   const { schoolCode, departmentCode } = route.params;
-  const schoolNames = useSelector((state: RootState) => state.schoolNameRecord);
-  const departmentNames = useSelector(
-    (state: RootState) => state.departmentNameRecord
-  );
+  const schoolNames = useSelector((state) => state.schoolNameRecord);
+  const departmentNames = useSelector((state) => state.departmentNameRecord);
 
   return (
     <SafeAreaScrollView>

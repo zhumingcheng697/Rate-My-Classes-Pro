@@ -6,7 +6,7 @@ const headerBaseStyle = {
   marginY: "3px",
 };
 
-const colorStyle = {
+export const colorStyle = {
   background: {
     primary: "#ffffff",
     secondary: "#f2f2f7",
@@ -18,8 +18,8 @@ const colorStyle = {
 const componentsStyle = {
   Skeleton: {
     baseStyle: {
-      startColor: colorStyle.background.primary,
-      endColor: colorStyle.background.secondary,
+      startColor: colorStyle.background.secondary,
+      endColor: colorStyle.background.secondary + "77",
     },
   },
   ScrollView: {

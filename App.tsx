@@ -1,17 +1,25 @@
 import { Component } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { NativeBaseProvider } from "native-base";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 
 import RootNavigation from "./navigation/RootNavigation";
-import theme from "./shared/theme";
+import nativeBaseTheme, { colorStyle } from "./shared/theme";
 import reducer from "./redux/reducers";
 import { getSchoolNames, getDepartmentNames } from "./shared/schedge";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "./redux/actions";
 
 const store = createStore(reducer);
+
+const navigationTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: colorStyle.nyu,
+  },
+};
 
 export default class App extends Component<undefined, undefined> {
   componentDidMount() {
@@ -35,8 +43,8 @@ export default class App extends Component<undefined, undefined> {
   render() {
     return (
       <Provider store={store}>
-        <NativeBaseProvider theme={theme}>
-          <NavigationContainer>
+        <NativeBaseProvider theme={nativeBaseTheme}>
+          <NavigationContainer theme={navigationTheme}>
             <StatusBar style="auto" />
             <RootNavigation />
           </NavigationContainer>
@@ -46,7 +54,7 @@ export default class App extends Component<undefined, undefined> {
   }
 }
 
-type ThemeType = typeof theme;
+type ThemeType = typeof nativeBaseTheme;
 
 declare module "native-base" {
   interface ICustomTheme extends ThemeType {}

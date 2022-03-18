@@ -4,9 +4,11 @@ import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import { type ExploreNavigationParamList } from "../../shared/types";
+import {
+  type RootState,
+  type ExploreNavigationParamList,
+} from "../../shared/types";
 import { isSchoolGrad } from "../../shared/util";
-import { RootState } from "../../redux/types";
 import SafeAreaScrollView from "../../components/SafeAreaScrollView";
 import Grid from "../../components/Grid";
 

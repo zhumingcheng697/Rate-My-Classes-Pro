@@ -7,8 +7,10 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import { RootState } from "../../redux/types";
-import { type ExploreNavigationParamList } from "../../shared/types";
+import {
+  type RootState,
+  type ExploreNavigationParamList,
+} from "../../shared/types";
 import SafeAreaScrollView from "../../components/SafeAreaScrollView";
 import Grid from "../../components/Grid";
 

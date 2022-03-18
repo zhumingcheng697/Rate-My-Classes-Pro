@@ -14,8 +14,3 @@ export type DepartmentNameAction = {
   type: ActionType.setDepartmentNameRecord;
   payload?: DepartmentNameRecord;
 };
-
-export type RootState = {
-  schoolNameRecord: SchoolNameRecord;
-  departmentNameRecord: DepartmentNameRecord;
-};

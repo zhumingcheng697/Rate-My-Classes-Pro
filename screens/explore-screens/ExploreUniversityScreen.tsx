@@ -5,7 +5,6 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { type ExploreNavigationParamList } from "../../shared/types";
 import Grid from "../../components/Grid";
-import Header from "../../components/Header";
 
 type ExploreUniversityScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -18,9 +17,9 @@ export default function ExploreUniversityScreen() {
   return (
     <ScrollView background={"white"} minHeight={"full"} paddingY={"4px"}>
       <SafeAreaView edges={["left", "right"]}>
-        <Header marginX={"10px"} marginTop={"6px"}>
-          Undergraduate Schools
-        </Header>
+        <Text variant={"h1"} marginX={"10px"} marginTop={"6px"}>
+          Undergraduate
+        </Text>
 
         <Grid margin={5} minChildrenWidth={140} childrenHeight={"90px"}>
           {["Tandon", "Tandon School of Engineering", "UY"].map(
@@ -38,9 +37,9 @@ export default function ExploreUniversityScreen() {
           )}
         </Grid>
 
-        <Header marginX={"10px"} marginTop={"16px"}>
-          Graduate Schools
-        </Header>
+        <Text variant={"h1"} marginX={"10px"} marginTop={"16px"}>
+          Graduate
+        </Text>
 
         <Grid margin={5} minChildrenWidth={140} childrenHeight={"90px"}>
           {["Tandon", "Tandon School of Engineering", "GY"].map(

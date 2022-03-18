@@ -9,7 +9,6 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { type ExploreNavigationParamList } from "../../shared/types";
 import Grid from "../../components/Grid";
-import Header from "../../components/Header";
 
 type ExploreSchoolScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -28,13 +27,13 @@ export default function ExploreSchoolScreen() {
   return (
     <ScrollView background={"white"} minHeight={"full"} paddingY={"4px"}>
       <SafeAreaView edges={["left", "right"]}>
-        <Header marginX={"10px"} marginTop={"6px"}>
+        <Text variant={"h1"} marginX={"10px"} marginTop={"6px"}>
           {route.params.schoolCode}
-        </Header>
+        </Text>
 
         <Grid margin={5} minChildrenWidth={140} childrenHeight={"90px"}>
           {["Integrated Digital Media", "Computer Science", "Math"].map(
-            (school, index) => (
+            (department, index) => (
               <Button
                 key={index}
                 borderRadius={12}
@@ -45,7 +44,7 @@ export default function ExploreSchoolScreen() {
                   });
                 }}
               >
-                {school}
+                {department}
               </Button>
             )
           )}

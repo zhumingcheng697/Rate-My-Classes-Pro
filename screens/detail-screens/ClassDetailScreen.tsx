@@ -17,7 +17,7 @@ export default function ClassDetailScreen() {
 
   return (
     <SafeAreaScrollView>
-      <Text variant={"h1"}>{"Mobile Application Development"}</Text>
+      <Text variant={"h1"}>Lorem ipsum dolor sit amet.</Text>
       <Text variant={"h2"}>
         {getSchoolNameByInfo(classInfo, schoolNames)}
         {" | "}

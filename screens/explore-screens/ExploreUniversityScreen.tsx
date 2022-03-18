@@ -57,7 +57,7 @@ export default function ExploreUniversityScreen() {
         {undergradCodes.map((code, index) => (
           <Pressable
             key={index}
-            background={"#f2f2f7"}
+            background={"background.secondary"}
             borderRadius={12}
             onPress={() => {
               navigation.navigate("Explore-School", {

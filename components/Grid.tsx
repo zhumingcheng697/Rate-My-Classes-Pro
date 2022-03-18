@@ -4,7 +4,7 @@ import { useWindowDimensions } from "react-native";
 import { Flex } from "native-base";
 
 type GridProp = {
-  margin: number;
+  margin?: number;
   minChildrenWidth: number;
   childrenHeight: number | string;
   children: ReactElement[];
@@ -16,7 +16,7 @@ export default function Grid({
   childrenHeight: childHeight,
   children,
 }: GridProp) {
-  const acutalMargin = Math.max(margin, 2);
+  const acutalMargin = Math.max(margin ?? 5, 2);
   const actualChildWidth = Math.max(minChildWidth, 60);
 
   const insets = useSafeAreaInsets();

@@ -25,13 +25,11 @@ export default function ExploreSchoolScreen() {
   const route = useRoute<ExploreSchoolScreenRouteProp>();
 
   return (
-    <ScrollView background={"white"} minHeight={"full"} paddingY={"4px"}>
+    <ScrollView>
       <SafeAreaView edges={["left", "right"]}>
-        <Text variant={"h1"} marginX={"10px"} marginTop={"6px"}>
-          {route.params.schoolCode}
-        </Text>
+        <Text variant={"h1"}>{route.params.schoolCode}</Text>
 
-        <Grid margin={5} minChildrenWidth={140} childrenHeight={"90px"}>
+        <Grid minChildrenWidth={140} childrenHeight={"90px"}>
           {["Integrated Digital Media", "Computer Science", "Math"].map(
             (department, index) => (
               <Button

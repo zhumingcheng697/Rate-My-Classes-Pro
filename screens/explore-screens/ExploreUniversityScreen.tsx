@@ -15,13 +15,11 @@ export default function ExploreUniversityScreen() {
   const navigation = useNavigation<ExploreUniversityScreenNavigationProp>();
 
   return (
-    <ScrollView background={"white"} minHeight={"full"} paddingY={"4px"}>
+    <ScrollView>
       <SafeAreaView edges={["left", "right"]}>
-        <Text variant={"h1"} marginX={"10px"} marginTop={"6px"}>
-          Undergraduate
-        </Text>
+        <Text variant={"h1"}>Undergraduate</Text>
 
-        <Grid margin={5} minChildrenWidth={140} childrenHeight={"90px"}>
+        <Grid minChildrenWidth={140} childrenHeight={"90px"}>
           {["Tandon", "Tandon School of Engineering", "UY"].map(
             (school, index) => (
               <Button
@@ -37,7 +35,7 @@ export default function ExploreUniversityScreen() {
           )}
         </Grid>
 
-        <Text variant={"h1"} marginX={"10px"} marginTop={"16px"}>
+        <Text variant={"h1"} marginTop={"16px"}>
           Graduate
         </Text>
 

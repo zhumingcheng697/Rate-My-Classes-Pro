@@ -1,6 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
-import ExploreUniversityScreen from "../screens/ExploreUniversityScreen";
+import ExploreUniversityScreen from "../screens/explore-screens/ExploreUniversityScreen";
+import ExploreSchoolScreen from "../screens/explore-screens/ExploreSchoolScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import { getClassCode } from "../shared/helper";
 import { type ExploreNavigationParamList } from "../shared/types";
@@ -17,7 +18,7 @@ export default function ExploreNavigation() {
       />
       <Stack.Screen
         name={"Explore-School"}
-        component={PlaceHolderScreen}
+        component={ExploreSchoolScreen}
         options={({ route }) => ({
           title: route.params.schoolCode.toUpperCase(),
         })}

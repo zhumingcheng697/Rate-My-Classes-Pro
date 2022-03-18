@@ -19,8 +19,22 @@ export async function getSchoolNames(): Promise<SchoolNameRecord> {
   const json: SchedgeSchoolNameRecord = await res.json();
   const record: SchoolNameRecord = {};
 
+  const fallbackMap: Record<string, string> = {
+    NT: "Non-Credit Tisch School of the Arts",
+    GH: "NYU Abu Dhabi - Graduate",
+    CD: "College of Dentistry Continuing Education",
+    DN: "College of Dentistry - Graduate",
+  };
+
   for (let schoolCode in json) {
-    record[schoolCode] = json[schoolCode].name;
+    let name = json[schoolCode].name;
+    if (!name) {
+      const code = schoolCode.toUpperCase();
+      if (code in fallbackMap) {
+        name = fallbackMap[code];
+      }
+    }
+    record[schoolCode] = name;
   }
 
   return record;

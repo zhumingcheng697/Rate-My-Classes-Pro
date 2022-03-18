@@ -12,7 +12,6 @@ export default extendTheme({
       baseStyle: {
         background: "white",
         minHeight: "full",
-        paddingY: "10px",
       },
     },
     Text: {

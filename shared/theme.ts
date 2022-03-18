@@ -1,6 +1,10 @@
 import { extendTheme } from "native-base";
 
-const headerBaseStyle = { lineHeight: "xs", marginX: "10px" };
+const headerBaseStyle = {
+  lineHeight: "1.05em",
+  marginX: "10px",
+  marginY: "3px",
+};
 
 export default extendTheme({
   components: {

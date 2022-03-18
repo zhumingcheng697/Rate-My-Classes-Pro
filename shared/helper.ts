@@ -1,4 +1,4 @@
-import { type ClassCode, type SchoolInfo } from "./types";
+import { type ClassCode } from "./types";
 
 export function getClassCode({
   schoolCode,
@@ -8,6 +8,6 @@ export function getClassCode({
   return `${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()} ${classNumber.toUpperCase()}`;
 }
 
-export function isSchoolGrad({ schoolCode }: SchoolInfo) {
+export function isSchoolGrad(schoolCode: string) {
   return schoolCode.at(0)?.toUpperCase() === "G";
 }

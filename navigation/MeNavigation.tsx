@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
-import { getClassCode } from "../shared/helper";
+import { getClassCode } from "../shared/util";
 import { type MeNavigationParamList } from "../shared/types";
 
 const Stack = createStackNavigator<MeNavigationParamList>();

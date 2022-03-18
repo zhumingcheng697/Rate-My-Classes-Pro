@@ -4,7 +4,7 @@ import ExploreUniversityScreen from "../screens/explore-screens/ExploreUniversit
 import ExploreSchoolScreen from "../screens/explore-screens/ExploreSchoolScreen";
 import ExploreDepartmentScreen from "../screens/explore-screens/ExploreDepartmentScreen";
 import ClassDetailScreen from "../screens/detail-screens/ClassDetailScreen";
-import { getClassCode } from "../shared/helper";
+import { getClassCode } from "../shared/util";
 import { type ExploreNavigationParamList } from "../shared/types";
 
 const Stack = createStackNavigator<ExploreNavigationParamList>();

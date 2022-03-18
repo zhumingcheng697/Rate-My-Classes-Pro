@@ -8,7 +8,7 @@ import {
   type ISkeletonProps,
 } from "native-base";
 
-type GridProp = IFlexProps & {
+type GridProps = IFlexProps & {
   isLoaded?: boolean;
   skeletonCount?: number;
   skeletonProps?: ISkeletonProps;
@@ -27,7 +27,7 @@ export default function Grid({
   childrenHeight: childHeight,
   children,
   ...rest
-}: GridProp) {
+}: GridProps) {
   const acutalMargin = Math.max(spacing, 2);
   const actualChildWidth = Math.max(minChildWidth, 60);
 

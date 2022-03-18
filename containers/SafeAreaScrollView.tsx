@@ -3,9 +3,9 @@ import {
   NativeSafeAreaViewProps,
   SafeAreaView,
 } from "react-native-safe-area-context";
-import { IStackProps, ScrollView, VStack } from "native-base";
+import { type IStackProps, ScrollView, VStack } from "native-base";
 
-type SafeAreaScrollViewProp = {
+type SafeAreaScrollViewProps = {
   vstackProps?: IStackProps;
   safeAreaProps?: NativeSafeAreaViewProps;
   marginY?: number | string;
@@ -16,7 +16,7 @@ export default function SafeAreaScrollView({
   vstackProps = { marginY: "10px" },
   safeAreaProps = { edges: ["left", "right"] },
   children,
-}: SafeAreaScrollViewProp) {
+}: SafeAreaScrollViewProps) {
   return (
     <ScrollView>
       <SafeAreaView {...safeAreaProps}>

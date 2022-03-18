@@ -1,7 +1,16 @@
-export type ClassInfo = {
+export type SchoolInfo = {
   schoolCode: string;
+};
+
+export type DepartmentInfo = SchoolInfo & {
   departmentCode: string;
+};
+
+export type ClassCode = DepartmentInfo & {
   classNumber: string;
+};
+
+export type ClassInfo = ClassCode & {
   name: string;
   description: string;
 };
@@ -14,8 +23,8 @@ export type RootNavigationParamList = {
 
 export type ExploreNavigationParamList = {
   "Explore-University": undefined;
-  "Explore-School": { schoolCode: string };
-  "Explore-Department": { schoolCode: string; departmentCode: string };
+  "Explore-School": SchoolInfo;
+  "Explore-Department": DepartmentInfo;
   "Explore-Detail": ClassInfo;
 };
 

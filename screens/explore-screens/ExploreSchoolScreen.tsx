@@ -1,5 +1,4 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, Text, Button } from "native-base";
+import { Text, Button } from "native-base";
 import {
   useNavigation,
   useRoute,

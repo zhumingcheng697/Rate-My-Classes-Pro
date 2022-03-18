@@ -1,5 +1,4 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, Text } from "native-base";
+import { Text } from "native-base";
 import { useRoute } from "@react-navigation/native";
 
 import { getClassCode } from "../../shared/helper";

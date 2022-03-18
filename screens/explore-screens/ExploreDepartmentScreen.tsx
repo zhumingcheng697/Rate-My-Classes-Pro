@@ -5,7 +5,9 @@ import {
   type RouteProp,
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
+import { useSelector } from "react-redux";
 
+import { RootState } from "../../redux/types";
 import { type ExploreNavigationParamList } from "../../shared/types";
 import SafeAreaScrollView from "../../components/SafeAreaScrollView";
 import Grid from "../../components/Grid";
@@ -23,11 +25,22 @@ type ExploreDepartmentScreenRouteProp = RouteProp<
 export default function ExploreDepartmentScreen() {
   const navigation = useNavigation<ExploreDepartmentScreenNavigationProp>();
   const route = useRoute<ExploreDepartmentScreenRouteProp>();
+  const schoolNames = useSelector((state: RootState) => state.schoolNameRecord);
+  const departmentNames = useSelector(
+    (state: RootState) => state.departmentNameRecord
+  );
 
   return (
     <SafeAreaScrollView>
-      <Text variant={"h1"}>Integrated Digital Media</Text>
-      <Text variant={"h2"}>Tandon School of Engineering</Text>
+      <Text variant={"h1"}>
+        {((departmentNames || {})[route.params.schoolCode] ?? {})[
+          route.params.departmentCode
+        ] || route.params.departmentCode}
+      </Text>
+      <Text variant={"h2"}>
+        {(schoolNames || {})[route.params.schoolCode] ??
+          route.params.schoolCode}
+      </Text>
       <Grid minChildrenWidth={140} childrenHeight={"90px"}>
         {["2193", "3193", "4193"].map((classNumber, index) => (
           <Button

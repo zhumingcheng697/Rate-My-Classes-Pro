@@ -20,7 +20,7 @@ export default function ExploreUniversityScreen() {
   const schoolNames = useSelector((state: RootState) => state.schoolNameRecord);
 
   const [undergradCodes, gradCodes] = useMemo(() => {
-    if (!schoolNames) return [[], []];
+    if (!schoolNames || !Object.keys(schoolNames).length) return [[], []];
 
     const undergradCodes: string[] = [];
     const gradCodes: string[] = [];
@@ -40,7 +40,7 @@ export default function ExploreUniversityScreen() {
     <SafeAreaScrollView>
       <Text variant={"h1"}>Undergraduate</Text>
       <Grid minChildrenWidth={140} childrenHeight={"90px"}>
-        {schoolNames === null
+        {!schoolNames || !Object.keys(schoolNames).length
           ? [...Array(17)].map((_, index) => (
               <Skeleton key={index} borderRadius={12} />
             ))
@@ -63,7 +63,7 @@ export default function ExploreUniversityScreen() {
         Graduate
       </Text>
       <Grid minChildrenWidth={140} childrenHeight={"90px"}>
-        {schoolNames === null
+        {!schoolNames || !Object.keys(schoolNames).length
           ? [...Array(12)].map((_, index) => (
               <Skeleton key={index} borderRadius={12} />
             ))

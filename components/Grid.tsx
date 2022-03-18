@@ -1,22 +1,23 @@
 import { Children, type ReactElement, cloneElement } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useWindowDimensions } from "react-native";
-import { Flex } from "native-base";
+import { Flex, type IFlexProps } from "native-base";
 
-type GridProp = {
-  margin?: number;
+type GridProp = IFlexProps & {
+  spacing?: number;
   minChildrenWidth: number;
   childrenHeight: number | string;
   children: ReactElement[];
 };
 
 export default function Grid({
-  margin,
+  spacing = 5,
   minChildrenWidth: minChildWidth,
   childrenHeight: childHeight,
   children,
+  ...rest
 }: GridProp) {
-  const acutalMargin = Math.max(margin ?? 5, 2);
+  const acutalMargin = Math.max(spacing, 2);
   const actualChildWidth = Math.max(minChildWidth, 60);
 
   const insets = useSafeAreaInsets();
@@ -28,6 +29,7 @@ export default function Grid({
 
   return (
     <Flex
+      {...rest}
       flexDirection={"row"}
       justifyContent={"flex-start"}
       alignItems={"center"}

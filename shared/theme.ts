@@ -8,6 +8,11 @@ const headerBaseStyle = {
 
 export default extendTheme({
   components: {
+    Skeleton: {
+      baseStyle: {
+        startColor: "#f2f2f7",
+      },
+    },
     ScrollView: {
       baseStyle: {
         background: "white",

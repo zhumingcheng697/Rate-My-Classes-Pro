@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
-import { getClassCode } from "../shared/util";
+import { getClassCode } from "../shared/utils";
 import { type SearchNavigationParamList } from "../shared/types";
 
 const Stack = createStackNavigator<SearchNavigationParamList>();

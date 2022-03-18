@@ -8,7 +8,7 @@ import {
   type RootState,
   type ExploreNavigationParamList,
 } from "../../shared/types";
-import { isSchoolGrad, isObjectEmpty } from "../../shared/util";
+import { isSchoolGrad, isObjectEmpty, getSchoolName } from "../../shared/utils";
 import SafeAreaScrollView from "../../container/SafeAreaScrollView";
 import Grid from "../../container/Grid";
 
@@ -44,7 +44,7 @@ export default function ExploreUniversityScreen() {
       }
     }
 
-    return [undergradCodes.sort(), gradCodes.sort()];
+    return [undergradCodes, gradCodes];
   }, [schoolNames, departmentNames]);
 
   return (
@@ -79,7 +79,7 @@ export default function ExploreUniversityScreen() {
                 textAlign={"center"}
                 numberOfLines={2}
               >
-                {(schoolNames || {})[code] || code.toUpperCase()}
+                {getSchoolName(code, schoolNames)}
               </Text>
               <Text textAlign={"center"}>{code.toUpperCase()}</Text>
             </VStack>

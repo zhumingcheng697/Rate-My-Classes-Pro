@@ -14,7 +14,11 @@ import {
 } from "../../shared/types";
 import SafeAreaScrollView from "../../container/SafeAreaScrollView";
 import Grid from "../../container/Grid";
-import { isObjectEmpty } from "../../shared/util";
+import {
+  getSchoolName,
+  getDepartmentName,
+  isObjectEmpty,
+} from "../../shared/utils";
 
 type ExploreSchoolScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -44,9 +48,7 @@ export default function ExploreSchoolScreen() {
 
   return (
     <SafeAreaScrollView>
-      <Text variant={"h1"}>
-        {(schoolNames || {})[schoolCode] || schoolCode}
-      </Text>
+      <Text variant={"h1"}>{getSchoolName(schoolCode, schoolNames)}</Text>
       <Grid isLoaded={isLoaded} minChildrenWidth={140} childrenHeight={"90px"}>
         {departments.map((department, index) => (
           <Button
@@ -54,13 +56,12 @@ export default function ExploreSchoolScreen() {
             borderRadius={12}
             onPress={() => {
               navigation.navigate("Explore-Department", {
-                schoolCode: route.params.schoolCode,
+                schoolCode: schoolCode,
                 departmentCode: department,
               });
             }}
           >
-            {((departmentNames || {})[schoolCode] ?? {})[department] ||
-              department.toUpperCase()}
+            {getDepartmentName(schoolCode, department, departmentNames)}
           </Button>
         ))}
       </Grid>

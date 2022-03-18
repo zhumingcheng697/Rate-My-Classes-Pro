@@ -13,6 +13,7 @@ import {
 } from "../../shared/types";
 import SafeAreaScrollView from "../../container/SafeAreaScrollView";
 import Grid from "../../container/Grid";
+import { getSchoolName, getDepartmentName } from "../../shared/utils";
 
 type ExploreDepartmentScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -27,6 +28,7 @@ type ExploreDepartmentScreenRouteProp = RouteProp<
 export default function ExploreDepartmentScreen() {
   const navigation = useNavigation<ExploreDepartmentScreenNavigationProp>();
   const route = useRoute<ExploreDepartmentScreenRouteProp>();
+  const { schoolCode, departmentCode } = route.params;
   const schoolNames = useSelector((state: RootState) => state.schoolNameRecord);
   const departmentNames = useSelector(
     (state: RootState) => state.departmentNameRecord
@@ -35,14 +37,9 @@ export default function ExploreDepartmentScreen() {
   return (
     <SafeAreaScrollView>
       <Text variant={"h1"}>
-        {((departmentNames || {})[route.params.schoolCode] ?? {})[
-          route.params.departmentCode
-        ] || route.params.departmentCode}
+        {getDepartmentName(schoolCode, departmentCode, departmentNames)}
       </Text>
-      <Text variant={"h2"}>
-        {(schoolNames || {})[route.params.schoolCode] ??
-          route.params.schoolCode}
-      </Text>
+      <Text variant={"h2"}>{getSchoolName(schoolCode, schoolNames)}</Text>
       <Grid minChildrenWidth={140} childrenHeight={"90px"}>
         {["2193", "3193", "4193"].map((classNumber, index) => (
           <Button
@@ -50,8 +47,8 @@ export default function ExploreDepartmentScreen() {
             borderRadius={12}
             onPress={() => {
               navigation.navigate("Explore-Detail", {
-                schoolCode: route.params.schoolCode,
-                departmentCode: "DM",
+                schoolCode: schoolCode,
+                departmentCode: departmentCode,
                 classNumber,
                 name: classNumber,
                 description:

@@ -1,12 +1,12 @@
 import { combineReducers } from "redux";
 import { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
-import { SchoolNameAction, DepartmentNameAction } from "./types";
+import { SchoolNameAction, DepartmentNameAction, ActionType } from "./types";
 
 function schoolNameReducer(
   state: SchoolNameRecord = {},
   action: SchoolNameAction
 ) {
-  if (action.type === "update-school-name-record" && !!action.payload) {
+  if (action.type === ActionType.setSchoolNameRecord && !!action.payload) {
     return action.payload;
   }
 
@@ -17,7 +17,7 @@ function departmentNameReducer(
   state: DepartmentNameRecord = {},
   action: DepartmentNameAction
 ) {
-  if (action.type === "update-department-name-record" && !!action.payload) {
+  if (action.type === ActionType.setDepartmentNameRecord && !!action.payload) {
     return action.payload;
   }
 

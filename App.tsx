@@ -9,10 +9,7 @@ import RootNavigation from "./navigation/RootNavigation";
 import theme from "./shared/theme";
 import reducer from "./redux/reducers";
 import { getSchoolNames, getDepartmentNames } from "./shared/schedge";
-import {
-  updateDepartmentNameRecord,
-  updateSchoolNameRecord,
-} from "./redux/actions";
+import { setDepartmentNameRecord, setSchoolNameRecord } from "./redux/actions";
 
 const store = createStore(reducer);
 
@@ -20,7 +17,7 @@ export default class App extends Component<undefined, undefined> {
   componentDidMount() {
     getSchoolNames()
       .then((record) => {
-        updateSchoolNameRecord(store.dispatch)(record);
+        setSchoolNameRecord(store.dispatch)(record);
       })
       .catch((e) => {
         console.error(e);
@@ -28,7 +25,7 @@ export default class App extends Component<undefined, undefined> {
 
     getDepartmentNames()
       .then((record) => {
-        updateDepartmentNameRecord(store.dispatch)(record);
+        setDepartmentNameRecord(store.dispatch)(record);
       })
       .catch((e) => {
         console.error(e);

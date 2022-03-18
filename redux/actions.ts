@@ -1,18 +1,21 @@
 import { type Dispatch } from "redux";
 import { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
-import { SchoolNameAction, DepartmentNameAction } from "./types";
+import { SchoolNameAction, DepartmentNameAction, ActionType } from "./types";
 
-export const updateSchoolNameRecord =
+export const setSchoolNameRecord =
   (dispath: Dispatch<SchoolNameAction>) =>
   (schoolNameRecord: SchoolNameRecord) => {
-    dispath({ type: "update-school-name-record", payload: schoolNameRecord });
+    dispath({
+      type: ActionType.setSchoolNameRecord,
+      payload: schoolNameRecord,
+    });
   };
 
-export const updateDepartmentNameRecord =
+export const setDepartmentNameRecord =
   (dispath: Dispatch<DepartmentNameAction>) =>
   (departmentNameRecord: DepartmentNameRecord) => {
     dispath({
-      type: "update-department-name-record",
+      type: ActionType.setDepartmentNameRecord,
       payload: departmentNameRecord,
     });
   };

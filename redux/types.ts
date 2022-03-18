@@ -1,18 +1,19 @@
 import { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
 
+export enum ActionType {
+  setSchoolNameRecord = "SET_SCHOOL_NAME_RECORD",
+  setDepartmentNameRecord = "SET_DEPARTMENT_NAME_RECORD",
+}
+
 export type SchoolNameAction = {
-  type: ReduxActionType;
+  type: ActionType.setSchoolNameRecord;
   payload?: SchoolNameRecord;
 };
 
 export type DepartmentNameAction = {
-  type: ReduxActionType;
+  type: ActionType.setDepartmentNameRecord;
   payload?: DepartmentNameRecord;
 };
-
-type ReduxActionType =
-  | "update-school-name-record"
-  | "update-department-name-record";
 
 export type RootState = {
   schoolNameRecord: SchoolNameRecord;

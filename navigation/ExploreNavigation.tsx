@@ -1,5 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
+import ExploreUniversityScreen from "../screens/ExploreUniversityScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import { getClassCode } from "../shared/helper";
 import { type ExploreNavigationParamList } from "../shared/types";
@@ -11,7 +12,7 @@ export default function ExploreNavigation() {
     <Stack.Navigator>
       <Stack.Screen
         name={"Explore-University"}
-        component={PlaceHolderScreen}
+        component={ExploreUniversityScreen}
         options={{ title: "Explore" }}
       />
       <Stack.Screen

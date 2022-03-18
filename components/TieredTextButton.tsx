@@ -12,13 +12,9 @@ export default function TieredTextButton({
 }: TieredTextButtonProps) {
   return (
     <Pressable {...rest} background={"background.secondary"} borderRadius={12}>
-      <VStack
-        height={"100%"}
-        justifyContent={"center"}
-        marginX={2}
-        textAlign={"center"}
-      >
+      <VStack height={"100%"} justifyContent={"center"} marginX={2}>
         <Text
+          color={"nyu"}
           fontSize={"md"}
           fontWeight={"medium"}
           lineHeight={"sm"}

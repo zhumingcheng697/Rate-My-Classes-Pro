@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { type ExploreNavigationParamList } from "../../shared/types";
 import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
 import Grid from "../../containers/Grid";
+import TieredTextButton from "../../components/TieredTextButton";
 import {
   getSchoolNameByInfo,
   getDepartmentNameByCode,
@@ -48,18 +49,21 @@ export default function ExploreSchoolScreen() {
       </Text>
       <Grid isLoaded={isLoaded} minChildrenWidth={140} childrenHeight={"90px"}>
         {departments.map((department, index) => (
-          <Button
+          <TieredTextButton
             key={index}
-            borderRadius={12}
+            primaryText={getDepartmentNameByCode(
+              schoolCode,
+              department,
+              departmentNames
+            )}
+            secondaryText={department.toUpperCase()}
             onPress={() => {
               navigation.navigate("Explore-Department", {
                 ...route.params,
                 departmentCode: department,
               });
             }}
-          >
-            {getDepartmentNameByCode(schoolCode, department, departmentNames)}
-          </Button>
+          />
         ))}
       </Grid>
     </SafeAreaScrollView>

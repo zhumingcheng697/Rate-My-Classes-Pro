@@ -14,6 +14,7 @@ import {
   getSchoolNameByInfo,
   getDepartmentNameByInfo,
 } from "../../shared/utils";
+import TieredTextButton from "../../components/TieredTextButton";
 
 type ExploreDepartmentScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -41,9 +42,10 @@ export default function ExploreDepartmentScreen() {
       </Text>
       <Grid minChildrenWidth={140} childrenHeight={"90px"}>
         {["2193", "3193", "4193"].map((classNumber, index) => (
-          <Button
+          <TieredTextButton
             key={index}
-            borderRadius={12}
+            primaryText={"Lorem ipsum dolor sit amet"}
+            secondaryText={classNumber}
             onPress={() => {
               navigation.navigate("Explore-Detail", {
                 ...route.params,
@@ -53,9 +55,7 @@ export default function ExploreDepartmentScreen() {
                   "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas modi explicabo fuga, eum libero ipsum magnam. Dolores, vel vero nobis doloribus voluptatibus soluta ratione adipisci repellat voluptatem libero ipsam rerum.",
               });
             }}
-          >
-            {classNumber}
-          </Button>
+          />
         ))}
       </Grid>
     </SafeAreaScrollView>

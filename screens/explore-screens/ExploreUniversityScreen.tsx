@@ -12,6 +12,7 @@ import {
 } from "../../shared/utils";
 import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
 import Grid from "../../containers/Grid";
+import TieredTextButton from "../../components/TieredTextButton";
 
 type ExploreUniversityScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -55,34 +56,16 @@ export default function ExploreUniversityScreen() {
         childrenHeight={"90px"}
       >
         {undergradCodes.map((code, index) => (
-          <Pressable
+          <TieredTextButton
             key={index}
-            background={"background.secondary"}
-            borderRadius={12}
+            primaryText={getSchoolNameByCode(code, schoolNames)}
+            secondaryText={code.toUpperCase()}
             onPress={() => {
               navigation.navigate("Explore-School", {
                 schoolCode: code,
               });
             }}
-          >
-            <VStack
-              height={"100%"}
-              justifyContent={"center"}
-              marginX={2}
-              textAlign={"center"}
-            >
-              <Text
-                fontSize={"md"}
-                fontWeight={"medium"}
-                lineHeight={"sm"}
-                textAlign={"center"}
-                numberOfLines={2}
-              >
-                {getSchoolNameByCode(code, schoolNames)}
-              </Text>
-              <Text textAlign={"center"}>{code.toUpperCase()}</Text>
-            </VStack>
-          </Pressable>
+          />
         ))}
       </Grid>
 
@@ -95,17 +78,16 @@ export default function ExploreUniversityScreen() {
         childrenHeight={"90px"}
       >
         {gradCodes.map((code, index) => (
-          <Button
+          <TieredTextButton
             key={index}
-            borderRadius={12}
+            primaryText={getSchoolNameByCode(code, schoolNames)}
+            secondaryText={code.toUpperCase()}
             onPress={() => {
               navigation.navigate("Explore-School", {
                 schoolCode: code,
               });
             }}
-          >
-            {(schoolNames || {})[code]}
-          </Button>
+          />
         ))}
       </Grid>
     </SafeAreaScrollView>

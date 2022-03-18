@@ -11,3 +11,7 @@ export function getClassCode({
 export function isSchoolGrad(schoolCode: string) {
   return schoolCode.at(0)?.toUpperCase() === "G";
 }
+
+export function isObjectEmpty(obj: object) {
+  return Object.keys(obj).length === 0;
+}

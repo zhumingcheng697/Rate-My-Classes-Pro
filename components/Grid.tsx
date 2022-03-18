@@ -1,9 +1,17 @@
 import { Children, type ReactNode, cloneElement } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useWindowDimensions } from "react-native";
-import { Flex, type IFlexProps } from "native-base";
+import {
+  Flex,
+  type IFlexProps,
+  Skeleton,
+  type ISkeletonProps,
+} from "native-base";
 
 type GridProp = IFlexProps & {
+  isLoaded?: boolean;
+  skeletonCount?: number;
+  skeletonProps?: ISkeletonProps;
   spacing?: number;
   minChildrenWidth: number;
   childrenHeight: number | string;
@@ -11,6 +19,9 @@ type GridProp = IFlexProps & {
 };
 
 export default function Grid({
+  isLoaded = true,
+  skeletonCount = 0,
+  skeletonProps = { borderRadius: 12 },
   spacing = 5,
   minChildrenWidth: minChildWidth,
   childrenHeight: childHeight,
@@ -27,6 +38,12 @@ export default function Grid({
     (windowWidth - acutalMargin * 2) / (actualChildWidth + acutalMargin * 2);
   const columns = Math.max(Math.floor(ratio), 1);
 
+  const actualChildren = isLoaded
+    ? children
+    : [...Array(skeletonCount)].map((_, index) => (
+        <Skeleton key={index} {...skeletonProps} />
+      ));
+
   return (
     <Flex
       {...rest}
@@ -37,7 +54,7 @@ export default function Grid({
       flexWrap={"wrap"}
       marginX={acutalMargin + "px"}
     >
-      {Children.map(children, (child) =>
+      {Children.map(actualChildren, (child) =>
         cloneElement(child, {
           width:
             (windowWidth - acutalMargin * (columns + 1) * 2) / columns + "px",

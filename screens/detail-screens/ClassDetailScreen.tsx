@@ -1,7 +1,6 @@
 import { Text } from "native-base";
 import { useRoute } from "@react-navigation/native";
 
-import { getClassCode } from "../../shared/helper";
 import { type ClassInfo } from "../../shared/types";
 import SafeAreaScrollView from "../../components/SafeAreaScrollView";
 

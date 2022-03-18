@@ -1,6 +1,5 @@
 import { type ReactNode } from "react";
 import {
-  Edge,
   NativeSafeAreaViewProps,
   SafeAreaView,
 } from "react-native-safe-area-context";

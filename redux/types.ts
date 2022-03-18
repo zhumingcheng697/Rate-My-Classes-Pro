@@ -1,6 +1,4 @@
-export type SchoolNameRecord = Record<string, string>;
-
-export type DepartmentNameRecord = Record<string, string>;
+import { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
 
 export type SchoolNameAction = {
   type: ReduxActionType;

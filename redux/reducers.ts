@@ -1,10 +1,6 @@
-import { combineReducers, AnyAction } from "redux";
-import {
-  SchoolNameRecord,
-  DepartmentNameRecord,
-  SchoolNameAction,
-  DepartmentNameAction,
-} from "./types";
+import { combineReducers } from "redux";
+import { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
+import { SchoolNameAction, DepartmentNameAction } from "./types";
 
 function schoolNameReducer(
   state: SchoolNameRecord = {},

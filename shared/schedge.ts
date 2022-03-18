@@ -1,5 +1,4 @@
-import { runInContext } from "lodash";
-import { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
+import type { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
 
 const baseUrl = "https://schedge.a1liu.com";
 const suffix = "?full=true";

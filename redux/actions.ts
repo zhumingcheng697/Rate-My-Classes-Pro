@@ -1,6 +1,10 @@
 import { type Dispatch } from "redux";
-import { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
-import { SchoolNameAction, DepartmentNameAction, ActionType } from "./types";
+import type { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
+import {
+  type SchoolNameAction,
+  type DepartmentNameAction,
+  ActionType,
+} from "./types";
 
 export const setSchoolNameRecord =
   (dispath: Dispatch<SchoolNameAction>) =>

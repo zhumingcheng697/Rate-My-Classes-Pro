@@ -1,4 +1,4 @@
-import { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
+import type { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
 
 export enum ActionType {
   setSchoolNameRecord = "SET_SCHOOL_NAME_RECORD",

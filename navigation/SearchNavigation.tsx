@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
-import PlaceHolderScreen from "../screens/PlaceHolderScreen";
+import SearchClassScreen from "../screens/search/SearchClassScreen";
 import { getClassCode } from "../shared/utils";
 import { type SearchNavigationParamList } from "../shared/types";
 import DetailScreen from "../screens/detail/DetailScreen";
@@ -12,7 +12,7 @@ export default function SearchNavigation() {
     <Stack.Navigator>
       <Stack.Screen
         name={"Search-Class"}
-        component={PlaceHolderScreen}
+        component={SearchClassScreen}
         options={{ title: "Search" }}
       />
       <Stack.Screen

@@ -1,5 +1,5 @@
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { type RootNavigationParamList } from "../shared/types";
 import ExploreNavigation from "./ExploreNavigation";

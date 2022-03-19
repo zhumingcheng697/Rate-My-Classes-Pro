@@ -1,5 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
+import MeAccountScreen from "../screens/me/MeAccountScreen";
+import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import { getClassCode } from "../shared/utils";
 import { type MeNavigationParamList } from "../shared/types";
@@ -11,7 +13,7 @@ export default function MeNavigation() {
     <Stack.Navigator>
       <Stack.Screen
         name={"Me-Account"}
-        component={PlaceHolderScreen}
+        component={MeAccountScreen}
         options={{ title: "Me" }}
       />
       <Stack.Screen
@@ -44,7 +46,7 @@ export default function MeNavigation() {
       />
       <Stack.Screen
         name={"Me-Detail"}
-        component={PlaceHolderScreen}
+        component={DetailScreen}
         options={({ route }) => ({
           title: getClassCode(route.params),
         })}

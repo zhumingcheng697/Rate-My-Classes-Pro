@@ -10,7 +10,7 @@ export default function SearchNavigation() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name={"Search-University"}
+        name={"Search-Class"}
         component={PlaceHolderScreen}
         options={{ title: "Search" }}
       />

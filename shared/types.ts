@@ -33,7 +33,7 @@ export type ExploreNavigationParamList = {
 };
 
 export type SearchNavigationParamList = {
-  "Search-University": undefined;
+  "Search-Class": undefined;
   "Search-Detail": ClassInfo;
 };
 

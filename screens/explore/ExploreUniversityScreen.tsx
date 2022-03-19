@@ -74,7 +74,7 @@ export default function ExploreUniversityScreen() {
         Graduate
       </Text>
       <Grid
-        isLoaded={!!schoolNames && !!Object.keys(schoolNames).length}
+        isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}
         minChildrenWidth={140}
         childrenHeight={"90px"}
       >

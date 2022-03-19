@@ -3,7 +3,7 @@ import { useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 
 import { type ClassInfo } from "../../shared/types";
-import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
+import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { getDepartmentName, getSchoolName } from "../../shared/utils";
 
 export default function DetailScreen() {
@@ -13,7 +13,7 @@ export default function DetailScreen() {
   const departmentNames = useSelector((state) => state.departmentNameRecord);
 
   return (
-    <SafeAreaScrollView>
+    <KeyboardAwareSafeAreaScrollView>
       <Text variant={"h1"}>Lorem ipsum dolor sit amet</Text>
       <Text variant={"h2"}>
         {getSchoolName(classInfo, schoolNames)}
@@ -25,6 +25,6 @@ export default function DetailScreen() {
           {classInfo.description}
         </Text>
       )}
-    </SafeAreaScrollView>
+    </KeyboardAwareSafeAreaScrollView>
   );
 }

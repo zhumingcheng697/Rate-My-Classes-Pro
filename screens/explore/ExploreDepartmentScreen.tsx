@@ -8,7 +8,7 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
 import type { ExploreNavigationParamList, ClassCode } from "../../shared/types";
-import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
+import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import {
   getSchoolName,
@@ -34,7 +34,7 @@ export default function ExploreDepartmentScreen() {
   const departmentNames = useSelector((state) => state.departmentNameRecord);
 
   return (
-    <SafeAreaScrollView>
+    <KeyboardAwareSafeAreaScrollView>
       <Text variant={"h1"}>
         {getDepartmentName(route.params, departmentNames)}
       </Text>
@@ -60,6 +60,6 @@ export default function ExploreDepartmentScreen() {
           );
         })}
       </Grid>
-    </SafeAreaScrollView>
+    </KeyboardAwareSafeAreaScrollView>
   );
 }

@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { type MeNavigationParamList } from "../../shared/types";
-import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
+import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 
 type MeAccountScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
@@ -14,7 +14,7 @@ export default function MeAccountScreen() {
   const navigation = useNavigation<MeAccountScreenNavigationProp>();
 
   return (
-    <SafeAreaScrollView>
+    <KeyboardAwareSafeAreaScrollView>
       <Text variant={"h1"}>McCoy Applseed</Text>
       <Button
         margin={"10px"}
@@ -40,6 +40,6 @@ export default function MeAccountScreen() {
       >
         Sign Out
       </Button>
-    </SafeAreaScrollView>
+    </KeyboardAwareSafeAreaScrollView>
   );
 }

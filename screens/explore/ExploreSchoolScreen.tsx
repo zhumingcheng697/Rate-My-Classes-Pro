@@ -12,7 +12,7 @@ import type {
   ExploreNavigationParamList,
   DepartmentInfo,
 } from "../../shared/types";
-import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
+import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import TieredTextButton from "../../components/TieredTextButton";
 import {
@@ -46,7 +46,7 @@ export default function ExploreSchoolScreen() {
   }, [departmentNames]);
 
   return (
-    <SafeAreaScrollView>
+    <KeyboardAwareSafeAreaScrollView>
       <Text variant={"h1"}>{getSchoolName(route.params, schoolNames)}</Text>
       <Grid isLoaded={isLoaded} minChildrenWidth={140} childrenHeight={"90px"}>
         {departments.map((departmentCode, index) => {
@@ -67,6 +67,6 @@ export default function ExploreSchoolScreen() {
           );
         })}
       </Grid>
-    </SafeAreaScrollView>
+    </KeyboardAwareSafeAreaScrollView>
   );
 }

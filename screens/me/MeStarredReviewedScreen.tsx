@@ -7,7 +7,7 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import type { MeNavigationParamList, ClassCode } from "../../shared/types";
-import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
+import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import { getClassCode } from "../../shared/utils";
 import TieredTextButton from "../../components/TieredTextButton";
@@ -27,7 +27,7 @@ export default function MeStarredReviewedScreen() {
   const route = useRoute<MeStarredReviewedScreenRouteProp>();
 
   return (
-    <SafeAreaScrollView>
+    <KeyboardAwareSafeAreaScrollView>
       {/* <Text variant={"h1"}>{route.name.replace(/Me-/gi, "")}</Text> */}
       <Grid minChildrenWidth={140} childrenHeight={"90px"}>
         {["2193", "3193", "4193"].map((classNumber, index) => {
@@ -54,6 +54,6 @@ export default function MeStarredReviewedScreen() {
           );
         })}
       </Grid>
-    </SafeAreaScrollView>
+    </KeyboardAwareSafeAreaScrollView>
   );
 }

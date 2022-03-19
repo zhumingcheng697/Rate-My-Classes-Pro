@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { type MeNavigationParamList } from "../../shared/types";
-import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
+import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 
 type MeSignInScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
@@ -14,7 +14,7 @@ export default function MeSignInScreen() {
   const navigation = useNavigation<MeSignInScreenNavigationProp>();
 
   return (
-    <SafeAreaScrollView>
+    <KeyboardAwareSafeAreaScrollView>
       <VStack marginX={"10px"} space={"8px"}>
         <Box>
           <Text variant={"label"}>Email</Text>
@@ -57,6 +57,6 @@ export default function MeSignInScreen() {
           </Pressable>
         </Box>
       </VStack>
-    </SafeAreaScrollView>
+    </KeyboardAwareSafeAreaScrollView>
   );
 }

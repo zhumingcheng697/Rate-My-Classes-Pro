@@ -9,7 +9,7 @@ import type {
   SchoolInfo,
 } from "../../shared/types";
 import { isSchoolGrad, isObjectEmpty, getSchoolName } from "../../shared/utils";
-import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
+import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import TieredTextButton from "../../components/TieredTextButton";
 
@@ -47,7 +47,7 @@ export default function ExploreUniversityScreen() {
   }, [schoolNames, departmentNames]);
 
   return (
-    <SafeAreaScrollView>
+    <KeyboardAwareSafeAreaScrollView>
       <Text variant={"h1"}>Undergraduate</Text>
       <Grid
         isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}
@@ -93,6 +93,6 @@ export default function ExploreUniversityScreen() {
           );
         })}
       </Grid>
-    </SafeAreaScrollView>
+    </KeyboardAwareSafeAreaScrollView>
   );
 }

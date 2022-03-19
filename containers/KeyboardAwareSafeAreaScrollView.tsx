@@ -16,7 +16,7 @@ type SafeAreaScrollViewProps = {
   children: ReactNode;
 };
 
-export default function SafeAreaScrollView({
+export default function KeyboardAwareSafeAreaScrollView({
   contentContainerProps,
   safeAreaViewProps,
   keyboardAwareScrollViewProps,

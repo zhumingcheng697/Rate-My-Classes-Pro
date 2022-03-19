@@ -11,7 +11,13 @@ export default function TieredTextButton({
   ...rest
 }: TieredTextButtonProps) {
   return (
-    <Pressable {...rest} background={"background.secondary"} borderRadius={12}>
+    <Pressable
+      {...rest}
+      background={"background.secondary"}
+      borderRadius={12}
+      _pressed={{ background: "background.tertiary" }}
+      _hover={{ background: "background.tertiary" }}
+    >
       <VStack height={"100%"} justifyContent={"center"} marginX={2}>
         <Text
           color={"nyu.default"}

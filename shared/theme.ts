@@ -30,6 +30,12 @@ const componentsStyle = {
       minHeight: "100%",
     },
   },
+  Input: {
+    baseStyle: {
+      borderRadius: 10,
+      borderColor: "gray.400",
+    },
+  },
   Text: {
     variants: {
       h1: {

@@ -1,9 +1,9 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
-import ExploreUniversityScreen from "../screens/explore-screens/ExploreUniversityScreen";
-import ExploreSchoolScreen from "../screens/explore-screens/ExploreSchoolScreen";
-import ExploreDepartmentScreen from "../screens/explore-screens/ExploreDepartmentScreen";
-import ClassDetailScreen from "../screens/detail-screens/ClassDetailScreen";
+import ExploreUniversityScreen from "../screens/explore/ExploreUniversityScreen";
+import ExploreSchoolScreen from "../screens/explore/ExploreSchoolScreen";
+import ExploreDepartmentScreen from "../screens/explore/ExploreDepartmentScreen";
+import ClassDetailScreen from "../screens/detail/ClassDetailScreen";
 import { getClassCode } from "../shared/utils";
 import { type ExploreNavigationParamList } from "../shared/types";
 

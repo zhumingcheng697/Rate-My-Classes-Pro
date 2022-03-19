@@ -15,7 +15,7 @@ type GridProps = IFlexProps & {
   spacing?: number;
   minChildrenWidth: number;
   childrenHeight: number | string;
-  children: ReactNode[];
+  children: ReactNode;
 };
 
 export default function Grid({

@@ -3,13 +3,14 @@ import {
   NativeSafeAreaViewProps,
   SafeAreaView,
 } from "react-native-safe-area-context";
-import { type IBoxProps, ScrollView, Box } from "native-base";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { type IBoxProps, Box } from "native-base";
 
 type SafeAreaScrollViewProps = {
   contentContainerProps?: IBoxProps;
   safeAreaProps?: NativeSafeAreaViewProps;
   marginY?: number | string;
-  children: ReactNode | ReactNode[];
+  children: ReactNode;
 };
 
 export default function SafeAreaScrollView({
@@ -21,10 +22,10 @@ export default function SafeAreaScrollView({
   Object.assign({ edges: ["left", "right"] }, safeAreaProps);
 
   return (
-    <ScrollView>
+    <KeyboardAwareScrollView>
       <SafeAreaView {...safeAreaProps}>
         <Box {...contentContainerProps}>{children}</Box>
       </SafeAreaView>
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }

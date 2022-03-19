@@ -1,29 +1,39 @@
 import { type ReactNode } from "react";
 import {
-  NativeSafeAreaViewProps,
   SafeAreaView,
+  type NativeSafeAreaViewProps,
 } from "react-native-safe-area-context";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {
+  KeyboardAwareScrollView,
+  type KeyboardAwareScrollViewProps,
+} from "react-native-keyboard-aware-scroll-view";
 import { type IBoxProps, Box } from "native-base";
 
 type SafeAreaScrollViewProps = {
   contentContainerProps?: IBoxProps;
-  safeAreaProps?: NativeSafeAreaViewProps;
-  marginY?: number | string;
+  safeAreaViewProps?: NativeSafeAreaViewProps;
+  keyboardAwareScrollViewProps?: KeyboardAwareScrollViewProps;
   children: ReactNode;
 };
 
 export default function SafeAreaScrollView({
-  contentContainerProps = { marginY: "10px" },
-  safeAreaProps = { edges: ["left", "right"] },
+  contentContainerProps,
+  safeAreaViewProps,
+  keyboardAwareScrollViewProps,
   children,
 }: SafeAreaScrollViewProps) {
-  Object.assign({ marginY: "10px" }, contentContainerProps);
-  Object.assign({ edges: ["left", "right"] }, safeAreaProps);
+  contentContainerProps = Object.assign(
+    { marginY: "10px" },
+    contentContainerProps
+  );
+  safeAreaViewProps = Object.assign(
+    { edges: ["left", "right"] },
+    safeAreaViewProps
+  );
 
   return (
-    <KeyboardAwareScrollView>
-      <SafeAreaView {...safeAreaProps}>
+    <KeyboardAwareScrollView {...keyboardAwareScrollViewProps}>
+      <SafeAreaView {...safeAreaViewProps}>
         <Box {...contentContainerProps}>{children}</Box>
       </SafeAreaView>
     </KeyboardAwareScrollView>

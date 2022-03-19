@@ -1,4 +1,4 @@
-import { Text, Button, Input, VStack, Box } from "native-base";
+import { Text, Button, Input, VStack, Box, Pressable } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
@@ -38,23 +38,33 @@ export default function MeSignUpScreen() {
           <Input variant={"password"} />
         </Box>
         <Button
-          marginY={"10px"}
+          marginY={"15px"}
           onPress={() => {
             navigation.replace("Me-Account");
           }}
         >
           Sign Up
         </Button>
+        <Box>
+          <Text textAlign={"center"}>Already have an account?</Text>
+          <Pressable
+            onPress={() => {
+              navigation.replace("Me-SignIn");
+            }}
+          >
+            {({ isPressed, isHovered }) => (
+              <Text
+                color={"nyu.default"}
+                fontWeight={"medium"}
+                textAlign={"center"}
+                opacity={isPressed || isHovered ? 0.5 : 1}
+              >
+                Sign In
+              </Text>
+            )}
+          </Pressable>
+        </Box>
       </VStack>
-      <Button
-        variant={"link"}
-        marginX={"10px"}
-        onPress={() => {
-          navigation.replace("Me-SignIn");
-        }}
-      >
-        Already have an account? Sign In.
-      </Button>
     </SafeAreaScrollView>
   );
 }

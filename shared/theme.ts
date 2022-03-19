@@ -12,7 +12,9 @@ export const colorStyle = {
     secondary: "#f2f2f7",
     tertiary: "#e5e5ea",
   },
-  nyu: "#57068c",
+  nyu: {
+    default: "#57068c",
+  },
 };
 
 const componentsStyle = {

@@ -20,7 +20,7 @@ export default function ClassDetailScreen() {
       <Text variant={"h1"}>Lorem ipsum dolor sit amet</Text>
       <Text variant={"h2"}>
         {getSchoolNameByInfo(classInfo, schoolNames)}
-        {" | "}
+        {": "}
         {getDepartmentNameByInfo(classInfo, departmentNames)}
       </Text>
       {!!classInfo.description && (

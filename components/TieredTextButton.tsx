@@ -14,7 +14,7 @@ export default function TieredTextButton({
     <Pressable {...rest} background={"background.secondary"} borderRadius={12}>
       <VStack height={"100%"} justifyContent={"center"} marginX={2}>
         <Text
-          color={"nyu"}
+          color={"nyu.default"}
           fontSize={"md"}
           fontWeight={"medium"}
           lineHeight={"sm"}

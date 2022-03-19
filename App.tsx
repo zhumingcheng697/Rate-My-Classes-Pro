@@ -17,7 +17,8 @@ const navigationTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: colorStyle.nyu,
+    primary: colorStyle.nyu.default,
+    background: colorStyle.background.primary,
   },
 };
 

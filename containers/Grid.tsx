@@ -28,6 +28,8 @@ export default function Grid({
   children,
   ...rest
 }: GridProps) {
+  skeletonProps = Object.assign({ borderRadius: 12 }, skeletonProps);
+
   const acutalMargin = Math.max(spacing, 2);
   const actualChildWidth = Math.max(minChildWidth, 60);
 
@@ -43,8 +45,6 @@ export default function Grid({
     : [...Array(skeletonCount)].map((_, index) => (
         <Skeleton key={index} {...skeletonProps} />
       ));
-
-  Object.assign({ borderRadius: 12 }, skeletonProps);
 
   return (
     <Flex

@@ -32,6 +32,7 @@ export default function SearchClassScreen() {
   return (
     <SafeAreaView edges={["left", "right"]}>
       <Pressable
+        isDisabled={!!query}
         onPress={() => {
           Keyboard.dismiss();
         }}
@@ -39,7 +40,7 @@ export default function SearchClassScreen() {
         <VStack height={"100%"}>
           <SearchBar margin={"10px"} value={query} onChangeText={setQuery} />
           {query ? (
-            <ScrollView>
+            <ScrollView keyboardDismissMode={"on-drag"}>
               <Grid minChildrenWidth={140} childrenHeight={"90px"}>
                 {["2193", "3193", "4193"].map((classNumber, index) => {
                   const classCode: ClassCode = {

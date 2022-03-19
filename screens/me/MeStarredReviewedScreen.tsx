@@ -9,7 +9,7 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 import type { MeNavigationParamList, ClassCode } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
-import { getClassCode } from "../../shared/utils";
+import { getClassCode, placeholderClassNumbers } from "../../shared/utils";
 import TieredTextButton from "../../components/TieredTextButton";
 
 type MeStarredReviewedScreenNavigationProp = StackNavigationProp<
@@ -30,7 +30,7 @@ export default function MeStarredReviewedScreen() {
     <KeyboardAwareSafeAreaScrollView>
       {/* <Text variant={"h1"}>{route.name.replace(/Me-/gi, "")}</Text> */}
       <Grid minChildrenWidth={140} childrenHeight={"90px"}>
-        {["2193", "3193", "4193"].map((classNumber, index) => {
+        {placeholderClassNumbers.map((classNumber, index) => {
           const classCode: ClassCode = {
             schoolCode: "UY",
             departmentCode: "DM",

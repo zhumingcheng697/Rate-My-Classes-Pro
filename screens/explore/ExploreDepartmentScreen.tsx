@@ -14,6 +14,7 @@ import {
   getSchoolName,
   getDepartmentName,
   getClassCode,
+  placeholderClassNumbers,
 } from "../../shared/utils";
 import TieredTextButton from "../../components/TieredTextButton";
 
@@ -40,7 +41,7 @@ export default function ExploreDepartmentScreen() {
       </Text>
       <Text variant={"h2"}>{getSchoolName(route.params, schoolNames)}</Text>
       <Grid minChildrenWidth={140} childrenHeight={"90px"}>
-        {["2193", "3193", "4193"].map((classNumber, index) => {
+        {placeholderClassNumbers.map((classNumber, index) => {
           const classCode: ClassCode = { ...route.params, classNumber };
 
           return (

@@ -39,3 +39,24 @@ export function getDepartmentName(
     departmentCode.toUpperCase()
   );
 }
+
+export const placeholderClassNumbers = [
+  "1001",
+  "1003",
+  "1113",
+  "1114",
+  "1123",
+  "1133",
+  "1134",
+  "1143",
+  "2023",
+  "2024",
+  "2034",
+  "2124",
+  "2193",
+  "3144",
+  "3193",
+  "4193",
+  "4793",
+  "6313",
+];

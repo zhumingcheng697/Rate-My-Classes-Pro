@@ -56,7 +56,7 @@ export default function ExploreSchoolScreen() {
               department,
               departmentNames
             )}
-            secondaryText={department.toUpperCase()}
+            secondaryText={`${department.toUpperCase()}-${schoolCode.toUpperCase()}`}
             onPress={() => {
               navigation.navigate("Explore-Department", {
                 ...route.params,

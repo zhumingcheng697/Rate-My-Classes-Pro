@@ -13,6 +13,7 @@ import Grid from "../../containers/Grid";
 import {
   getSchoolNameByInfo,
   getDepartmentNameByInfo,
+  getClassCode,
 } from "../../shared/utils";
 import TieredTextButton from "../../components/TieredTextButton";
 
@@ -45,7 +46,7 @@ export default function ExploreDepartmentScreen() {
           <TieredTextButton
             key={index}
             primaryText={"Lorem ipsum dolor sit amet"}
-            secondaryText={classNumber}
+            secondaryText={getClassCode({ ...route.params, classNumber })}
             onPress={() => {
               navigation.navigate("Explore-Detail", {
                 ...route.params,

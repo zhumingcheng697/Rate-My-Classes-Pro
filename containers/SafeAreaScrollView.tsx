@@ -3,27 +3,27 @@ import {
   NativeSafeAreaViewProps,
   SafeAreaView,
 } from "react-native-safe-area-context";
-import { type IStackProps, ScrollView, VStack } from "native-base";
+import { type IBoxProps, ScrollView, Box } from "native-base";
 
 type SafeAreaScrollViewProps = {
-  vstackProps?: IStackProps;
+  contentContainerProps?: IBoxProps;
   safeAreaProps?: NativeSafeAreaViewProps;
   marginY?: number | string;
   children: ReactNode | ReactNode[];
 };
 
 export default function SafeAreaScrollView({
-  vstackProps = { marginY: "10px" },
+  contentContainerProps = { marginY: "10px" },
   safeAreaProps = { edges: ["left", "right"] },
   children,
 }: SafeAreaScrollViewProps) {
-  Object.assign({ marginY: "10px" }, vstackProps);
+  Object.assign({ marginY: "10px" }, contentContainerProps);
   Object.assign({ edges: ["left", "right"] }, safeAreaProps);
 
   return (
     <ScrollView>
       <SafeAreaView {...safeAreaProps}>
-        <VStack {...vstackProps}>{children}</VStack>
+        <Box {...contentContainerProps}>{children}</Box>
       </SafeAreaView>
     </ScrollView>
   );

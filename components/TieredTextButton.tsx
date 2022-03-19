@@ -1,4 +1,4 @@
-import { Pressable, VStack, Text, type IPressableProps } from "native-base";
+import { Pressable, Box, Text, type IPressableProps } from "native-base";
 
 type TieredTextButtonProps = IPressableProps & {
   primaryText: string;
@@ -18,7 +18,7 @@ export default function TieredTextButton({
       _pressed={{ background: "background.tertiary" }}
       _hover={{ background: "background.tertiary" }}
     >
-      <VStack height={"100%"} justifyContent={"center"} marginX={2}>
+      <Box height={"100%"} justifyContent={"center"} marginX={2}>
         <Text
           color={"nyu.default"}
           fontSize={"md"}
@@ -30,7 +30,7 @@ export default function TieredTextButton({
           {primaryText}
         </Text>
         {secondaryText && <Text textAlign={"center"}>{secondaryText}</Text>}
-      </VStack>
+      </Box>
     </Pressable>
   );
 }

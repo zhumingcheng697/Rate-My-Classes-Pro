@@ -1,6 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
 import MeAccountScreen from "../screens/me/MeAccountScreen";
+import MeStarredReviewedScreen from "../screens/me/MeStarredReviewedScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import { getClassCode } from "../shared/utils";
@@ -18,14 +19,14 @@ export default function MeNavigation() {
       />
       <Stack.Screen
         name={"Me-Starred"}
-        component={PlaceHolderScreen}
+        component={MeStarredReviewedScreen}
         options={{
           title: "Starred",
         }}
       />
       <Stack.Screen
         name={"Me-Reviewed"}
-        component={PlaceHolderScreen}
+        component={MeStarredReviewedScreen}
         options={{
           title: "Reviewd",
         }}

@@ -7,7 +7,7 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import { type ExploreNavigationParamList } from "../../shared/types";
+import type { ExploreNavigationParamList, ClassCode } from "../../shared/types";
 import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import {
@@ -41,7 +41,7 @@ export default function ExploreDepartmentScreen() {
       <Text variant={"h2"}>{getSchoolName(route.params, schoolNames)}</Text>
       <Grid minChildrenWidth={140} childrenHeight={"90px"}>
         {["2193", "3193", "4193"].map((classNumber, index) => {
-          const classCode = { ...route.params, classNumber };
+          const classCode: ClassCode = { ...route.params, classNumber };
 
           return (
             <TieredTextButton

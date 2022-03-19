@@ -4,7 +4,10 @@ import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import { type ExploreNavigationParamList } from "../../shared/types";
+import type {
+  ExploreNavigationParamList,
+  SchoolInfo,
+} from "../../shared/types";
 import { isSchoolGrad, isObjectEmpty, getSchoolName } from "../../shared/utils";
 import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
 import Grid from "../../containers/Grid";
@@ -52,7 +55,7 @@ export default function ExploreUniversityScreen() {
         childrenHeight={"90px"}
       >
         {undergradCodes.map((schoolCode, index) => {
-          const schoolInfo = { schoolCode };
+          const schoolInfo: SchoolInfo = { schoolCode };
 
           return (
             <TieredTextButton
@@ -76,7 +79,7 @@ export default function ExploreUniversityScreen() {
         childrenHeight={"90px"}
       >
         {gradCodes.map((schoolCode, index) => {
-          const schoolInfo = { schoolCode };
+          const schoolInfo: SchoolInfo = { schoolCode };
 
           return (
             <TieredTextButton

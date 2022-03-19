@@ -30,6 +30,10 @@ export default function KeyboardAwareSafeAreaScrollView({
     { edges: ["left", "right"] },
     safeAreaViewProps
   );
+  keyboardAwareScrollViewProps = Object.assign(
+    { keyboardShouldPersistTaps: "handled" },
+    keyboardAwareScrollViewProps
+  );
 
   return (
     <KeyboardAwareScrollView {...keyboardAwareScrollViewProps}>

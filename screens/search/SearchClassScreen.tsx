@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ScrollView, Text, Spacer, Pressable } from "native-base";
+import { ScrollView, Text, Pressable, Center } from "native-base";
 import { Keyboard } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
@@ -16,6 +16,8 @@ type SearchClassScreenNavigationProp = StackNavigationProp<
   "Search-Class"
 >;
 
+const searchBarHeight = 38;
+
 export default function SearchClassScreen() {
   const navigation = useNavigation<SearchClassScreenNavigationProp>();
   const [query, setQuery] = useState("");
@@ -24,6 +26,7 @@ export default function SearchClassScreen() {
   return (
     <SafeAreaView edges={["left", "right"]}>
       <Pressable
+        paddingBottom={`${searchBarHeight + 20}px`}
         height={"100%"}
         isDisabled={!!query}
         onPress={() => {
@@ -31,6 +34,7 @@ export default function SearchClassScreen() {
         }}
       >
         <SearchBar
+          height={`${searchBarHeight}px`}
           margin={"10px"}
           value={query}
           onChangeText={setQuery}
@@ -38,8 +42,12 @@ export default function SearchClassScreen() {
           onBlur={() => setFocused(false)}
         />
         {query ? (
-          <ScrollView keyboardDismissMode={"on-drag"}>
-            <Grid minChildrenWidth={140} childrenHeight={"90px"}>
+          <ScrollView height={"100%"} keyboardDismissMode={"on-drag"}>
+            <Grid
+              marginBottom={"10px"}
+              minChildrenWidth={140}
+              childrenHeight={"90px"}
+            >
               {["2193", "3193", "4193"].map((classNumber, index) => {
                 const classCode: ClassCode = {
                   schoolCode: "UY",
@@ -67,13 +75,11 @@ export default function SearchClassScreen() {
           </ScrollView>
         ) : (
           !focused && (
-            <>
-              <Spacer key={"spacer-top"} />
-              <Text key={"text-center"} fontSize={15} textAlign={"center"}>
+            <Center height={"100%"}>
+              <Text fontSize={15} textAlign={"center"}>
                 Search Classes by Title or Description
               </Text>
-              <Spacer key={"spacer-down"} />
-            </>
+            </Center>
           )
         )}
       </Pressable>

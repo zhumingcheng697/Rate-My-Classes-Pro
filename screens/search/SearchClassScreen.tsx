@@ -14,8 +14,9 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import type { SearchNavigationParamList, ClassCode } from "../../shared/types";
-import Grid from "../../containers/Grid";
 import { getClassCode } from "../../shared/utils";
+import Grid from "../../containers/Grid";
+import SearchBar from "../../components/SearchBar";
 import TieredTextButton from "../../components/TieredTextButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -36,43 +37,7 @@ export default function SearchClassScreen() {
         }}
       >
         <VStack height={"100%"}>
-          <Input
-            size={"lg"}
-            margin={"10px"}
-            borderWidth={1.5}
-            placeholder={"Search"}
-            _focus={{ borderColor: "nyu.default" }}
-            value={query}
-            onChangeText={setQuery}
-            leftElement={
-              <Icon
-                marginLeft={"5px"}
-                marginRight={"-5px"}
-                size={"sm"}
-                color={"gray.400"}
-                as={<Ionicons name={"search"} />}
-              />
-            }
-            rightElement={
-              query ? (
-                <Pressable
-                  onPress={() => {
-                    setQuery("");
-                  }}
-                >
-                  {({ isPressed, isHovered }) => (
-                    <Icon
-                      marginLeft={"-5px"}
-                      marginRight={"5px"}
-                      size={"sm"}
-                      color={isPressed || isHovered ? "gray.500" : "gray.400"}
-                      as={<Ionicons name={"close-circle"} />}
-                    />
-                  )}
-                </Pressable>
-              ) : undefined
-            }
-          ></Input>
+          <SearchBar margin={"10px"} value={query} onChangeText={setQuery} />
           {query ? (
             <ScrollView>
               <Grid minChildrenWidth={140} childrenHeight={"90px"}>

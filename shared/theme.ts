@@ -31,6 +31,13 @@ const componentsStyle = {
     },
   },
   Input: {
+    defaultProps: {
+      size: "lg",
+      borderWidth: 1.5,
+      _focus: {
+        borderColor: "nyu.default",
+      },
+    },
     baseStyle: {
       borderRadius: 10,
       borderColor: "gray.400",

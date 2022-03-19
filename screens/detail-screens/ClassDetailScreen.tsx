@@ -4,10 +4,7 @@ import { useSelector } from "react-redux";
 
 import { type ClassInfo } from "../../shared/types";
 import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
-import {
-  getDepartmentNameByInfo,
-  getSchoolNameByInfo,
-} from "../../shared/utils";
+import { getDepartmentName, getSchoolName } from "../../shared/utils";
 
 export default function ClassDetailScreen() {
   const route = useRoute();
@@ -19,9 +16,9 @@ export default function ClassDetailScreen() {
     <SafeAreaScrollView>
       <Text variant={"h1"}>Lorem ipsum dolor sit amet</Text>
       <Text variant={"h2"}>
-        {getSchoolNameByInfo(classInfo, schoolNames)}
+        {getSchoolName(classInfo, schoolNames)}
         {": "}
-        {getDepartmentNameByInfo(classInfo, departmentNames)}
+        {getDepartmentName(classInfo, departmentNames)}
       </Text>
       {!!classInfo.description && (
         <Text fontSize={"md"} margin={"10px"}>

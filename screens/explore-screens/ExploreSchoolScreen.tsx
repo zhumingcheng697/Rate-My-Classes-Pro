@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Text, Button } from "native-base";
+import { Text } from "native-base";
 import {
   useNavigation,
   useRoute,
@@ -13,8 +13,8 @@ import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import TieredTextButton from "../../components/TieredTextButton";
 import {
-  getSchoolNameByInfo,
-  getDepartmentNameByCode,
+  getSchoolName,
+  getDepartmentName,
   isObjectEmpty,
 } from "../../shared/utils";
 
@@ -44,27 +44,22 @@ export default function ExploreSchoolScreen() {
 
   return (
     <SafeAreaScrollView>
-      <Text variant={"h1"}>
-        {getSchoolNameByInfo(route.params, schoolNames)}
-      </Text>
+      <Text variant={"h1"}>{getSchoolName(route.params, schoolNames)}</Text>
       <Grid isLoaded={isLoaded} minChildrenWidth={140} childrenHeight={"90px"}>
-        {departments.map((department, index) => (
-          <TieredTextButton
-            key={index}
-            primaryText={getDepartmentNameByCode(
-              schoolCode,
-              department,
-              departmentNames
-            )}
-            secondaryText={`${department.toUpperCase()}-${schoolCode.toUpperCase()}`}
-            onPress={() => {
-              navigation.navigate("Explore-Department", {
-                ...route.params,
-                departmentCode: department,
-              });
-            }}
-          />
-        ))}
+        {departments.map((departmentCode, index) => {
+          const departmentInfo = { ...route.params, departmentCode };
+
+          return (
+            <TieredTextButton
+              key={index}
+              primaryText={getDepartmentName(departmentInfo, departmentNames)}
+              secondaryText={`${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`}
+              onPress={() => {
+                navigation.navigate("Explore-Department", departmentInfo);
+              }}
+            />
+          );
+        })}
       </Grid>
     </SafeAreaScrollView>
   );

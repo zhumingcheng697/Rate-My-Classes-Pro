@@ -23,38 +23,19 @@ export function isObjectEmpty(obj: object) {
   return Object.keys(obj).length === 0;
 }
 
-export function getSchoolNameByCode(
-  schoolCode: string,
+export function getSchoolName(
+  { schoolCode }: SchoolInfo,
   schoolNameRecord: SchoolNameRecord
 ) {
   return (schoolNameRecord || {})[schoolCode] || schoolCode.toUpperCase();
 }
 
-export function getSchoolNameByInfo(
-  { schoolCode }: SchoolInfo,
-  schoolNameRecord: SchoolNameRecord
-) {
-  return getSchoolNameByCode(schoolCode, schoolNameRecord);
-}
-
-export function getDepartmentNameByCode(
-  schoolCode: string,
-  departmentCode: string,
+export function getDepartmentName(
+  { schoolCode, departmentCode }: DepartmentInfo,
   departmentNameRecord: DepartmentNameRecord
 ) {
   return (
     ((departmentNameRecord || {})[schoolCode] || {})[departmentCode] ||
     departmentCode.toUpperCase()
-  );
-}
-
-export function getDepartmentNameByInfo(
-  { schoolCode, departmentCode }: DepartmentInfo,
-  departmentNameRecord: DepartmentNameRecord
-) {
-  return getDepartmentNameByCode(
-    schoolCode,
-    departmentCode,
-    departmentNameRecord
   );
 }

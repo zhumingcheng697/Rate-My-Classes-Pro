@@ -1,15 +1,11 @@
 import { useMemo } from "react";
-import { Text, Button, Pressable, VStack } from "native-base";
+import { Text } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
 import { type ExploreNavigationParamList } from "../../shared/types";
-import {
-  isSchoolGrad,
-  isObjectEmpty,
-  getSchoolNameByCode,
-} from "../../shared/utils";
+import { isSchoolGrad, isObjectEmpty, getSchoolName } from "../../shared/utils";
 import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import TieredTextButton from "../../components/TieredTextButton";
@@ -55,18 +51,20 @@ export default function ExploreUniversityScreen() {
         minChildrenWidth={140}
         childrenHeight={"90px"}
       >
-        {undergradCodes.map((code, index) => (
-          <TieredTextButton
-            key={index}
-            primaryText={getSchoolNameByCode(code, schoolNames)}
-            secondaryText={code.toUpperCase()}
-            onPress={() => {
-              navigation.navigate("Explore-School", {
-                schoolCode: code,
-              });
-            }}
-          />
-        ))}
+        {undergradCodes.map((schoolCode, index) => {
+          const schoolInfo = { schoolCode };
+
+          return (
+            <TieredTextButton
+              key={index}
+              primaryText={getSchoolName(schoolInfo, schoolNames)}
+              secondaryText={schoolCode.toUpperCase()}
+              onPress={() => {
+                navigation.navigate("Explore-School", schoolInfo);
+              }}
+            />
+          );
+        })}
       </Grid>
 
       <Text variant={"h1"} marginTop={"16px"}>
@@ -77,18 +75,20 @@ export default function ExploreUniversityScreen() {
         minChildrenWidth={140}
         childrenHeight={"90px"}
       >
-        {gradCodes.map((code, index) => (
-          <TieredTextButton
-            key={index}
-            primaryText={getSchoolNameByCode(code, schoolNames)}
-            secondaryText={code.toUpperCase()}
-            onPress={() => {
-              navigation.navigate("Explore-School", {
-                schoolCode: code,
-              });
-            }}
-          />
-        ))}
+        {gradCodes.map((schoolCode, index) => {
+          const schoolInfo = { schoolCode };
+
+          return (
+            <TieredTextButton
+              key={index}
+              primaryText={getSchoolName(schoolInfo, schoolNames)}
+              secondaryText={schoolCode.toUpperCase()}
+              onPress={() => {
+                navigation.navigate("Explore-School", schoolInfo);
+              }}
+            />
+          );
+        })}
       </Grid>
     </SafeAreaScrollView>
   );

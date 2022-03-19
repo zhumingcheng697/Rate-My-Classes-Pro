@@ -1,4 +1,4 @@
-import { Text, Button } from "native-base";
+import { Text } from "native-base";
 import {
   useNavigation,
   useRoute,
@@ -11,8 +11,8 @@ import { type ExploreNavigationParamList } from "../../shared/types";
 import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import {
-  getSchoolNameByInfo,
-  getDepartmentNameByInfo,
+  getSchoolName,
+  getDepartmentName,
   getClassCode,
 } from "../../shared/utils";
 import TieredTextButton from "../../components/TieredTextButton";
@@ -36,28 +36,29 @@ export default function ExploreDepartmentScreen() {
   return (
     <SafeAreaScrollView>
       <Text variant={"h1"}>
-        {getDepartmentNameByInfo(route.params, departmentNames)}
+        {getDepartmentName(route.params, departmentNames)}
       </Text>
-      <Text variant={"h2"}>
-        {getSchoolNameByInfo(route.params, schoolNames)}
-      </Text>
+      <Text variant={"h2"}>{getSchoolName(route.params, schoolNames)}</Text>
       <Grid minChildrenWidth={140} childrenHeight={"90px"}>
-        {["2193", "3193", "4193"].map((classNumber, index) => (
-          <TieredTextButton
-            key={index}
-            primaryText={"Lorem ipsum dolor sit amet"}
-            secondaryText={getClassCode({ ...route.params, classNumber })}
-            onPress={() => {
-              navigation.navigate("Explore-Detail", {
-                ...route.params,
-                classNumber,
-                name: classNumber,
-                description:
-                  "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas modi explicabo fuga, eum libero ipsum magnam. Dolores, vel vero nobis doloribus voluptatibus soluta ratione adipisci repellat voluptatem libero ipsam rerum.",
-              });
-            }}
-          />
-        ))}
+        {["2193", "3193", "4193"].map((classNumber, index) => {
+          const classCode = { ...route.params, classNumber };
+
+          return (
+            <TieredTextButton
+              key={index}
+              primaryText={"Lorem ipsum dolor sit amet"}
+              secondaryText={getClassCode(classCode)}
+              onPress={() => {
+                navigation.navigate("Explore-Detail", {
+                  ...classCode,
+                  name: classNumber,
+                  description:
+                    "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas modi explicabo fuga, eum libero ipsum magnam. Dolores, vel vero nobis doloribus voluptatibus soluta ratione adipisci repellat voluptatem libero ipsam rerum.",
+                });
+              }}
+            />
+          );
+        })}
       </Grid>
     </SafeAreaScrollView>
   );

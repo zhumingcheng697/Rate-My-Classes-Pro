@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ExploreUniversityScreen from "../screens/explore/ExploreUniversityScreen";
 import ExploreSchoolScreen from "../screens/explore/ExploreSchoolScreen";
 import ExploreDepartmentScreen from "../screens/explore/ExploreDepartmentScreen";
-import ClassDetailScreen from "../screens/detail/DetailScreen";
+import DetailScreen from "../screens/detail/DetailScreen";
 import { getClassCode } from "../shared/utils";
 import { type ExploreNavigationParamList } from "../shared/types";
 
@@ -33,7 +33,7 @@ export default function ExploreNavigation() {
       />
       <Stack.Screen
         name={"Explore-Detail"}
-        component={ClassDetailScreen}
+        component={DetailScreen}
         options={({ route }) => ({
           title: getClassCode(route.params),
         })}

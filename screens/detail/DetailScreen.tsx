@@ -6,7 +6,7 @@ import { type ClassInfo } from "../../shared/types";
 import SafeAreaScrollView from "../../containers/SafeAreaScrollView";
 import { getDepartmentName, getSchoolName } from "../../shared/utils";
 
-export default function ClassDetailScreen() {
+export default function DetailScreen() {
   const route = useRoute();
   const classInfo = route.params as ClassInfo;
   const schoolNames = useSelector((state) => state.schoolNameRecord);

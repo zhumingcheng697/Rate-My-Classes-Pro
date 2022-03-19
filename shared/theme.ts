@@ -42,6 +42,14 @@ const componentsStyle = {
       borderRadius: 10,
       borderColor: "gray.400",
     },
+    variants: {
+      password: {
+        type: "password",
+        keyboardType: "visible-password",
+        autoCapitalize: "none",
+        autoCorrect: false,
+      },
+    },
   },
   Text: {
     variants: {
@@ -54,6 +62,10 @@ const componentsStyle = {
         fontWeight: "semibold",
         fontSize: "2xl",
         ...headerBaseStyle,
+      },
+      label: {
+        fontSize: "md",
+        marginBottom: "2px",
       },
     },
   },

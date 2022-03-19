@@ -32,7 +32,14 @@ export default function MeAccountScreen() {
       >
         Reviewed
       </Button>
-      <Button margin={"10px"}>Sign Out</Button>
+      <Button
+        margin={"10px"}
+        onPress={() => {
+          navigation.replace("Me-SignIn");
+        }}
+      >
+        Sign Out
+      </Button>
     </SafeAreaScrollView>
   );
 }

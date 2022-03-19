@@ -20,7 +20,7 @@ type GridProps = IFlexProps & {
 
 export default function Grid({
   isLoaded = true,
-  skeletonCount = 10,
+  skeletonCount = 12,
   skeletonProps,
   spacing = 5,
   minChildrenWidth: minChildWidth,

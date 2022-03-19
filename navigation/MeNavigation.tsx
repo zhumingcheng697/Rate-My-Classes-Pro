@@ -2,8 +2,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import MeAccountScreen from "../screens/me/MeAccountScreen";
 import MeStarredReviewedScreen from "../screens/me/MeStarredReviewedScreen";
+import MeSignUpScreen from "../screens/me/MeSignUpScreen";
+import MeSignInScreen from "../screens/me/MeSignInScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
-import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import { getClassCode } from "../shared/utils";
 import { type MeNavigationParamList } from "../shared/types";
 
@@ -33,14 +34,14 @@ export default function MeNavigation() {
       />
       <Stack.Screen
         name={"Me-SignIn"}
-        component={PlaceHolderScreen}
+        component={MeSignInScreen}
         options={{
           title: "Sign In",
         }}
       />
       <Stack.Screen
         name={"Me-SignUp"}
-        component={PlaceHolderScreen}
+        component={MeSignUpScreen}
         options={{
           title: "Sign Up",
         }}

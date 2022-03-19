@@ -69,7 +69,7 @@ export default function SearchClassScreen() {
             !focused && (
               <>
                 <Spacer key={"spacer-top"} />
-                <Text key={"text-center"} textAlign={"center"}>
+                <Text key={"text-center"} fontSize={15} textAlign={"center"}>
                   Search Classes by Title or Description
                 </Text>
                 <Spacer key={"spacer-down"} />

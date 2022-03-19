@@ -15,7 +15,7 @@ export default function MeSignInScreen() {
 
   return (
     <SafeAreaScrollView>
-      <VStack marginX={"10px"} space={"5px"}>
+      <VStack marginX={"10px"} space={"8px"}>
         <Box>
           <Text variant={"label"}>Email</Text>
           <Input

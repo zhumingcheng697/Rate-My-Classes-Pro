@@ -15,7 +15,7 @@ export default function MeSignUpScreen() {
 
   return (
     <SafeAreaScrollView>
-      <VStack marginX={"10px"} space={"5px"}>
+      <VStack marginX={"10px"} space={"8px"}>
         <Box>
           <Text variant={"label"}>Username</Text>
           <Input autoCompleteType={"username"} />

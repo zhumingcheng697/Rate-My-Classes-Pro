@@ -64,7 +64,7 @@ const componentsStyle = {
         ...headerBaseStyle,
       },
       label: {
-        fontSize: "md",
+        fontSize: 15,
         marginBottom: "2px",
       },
     },

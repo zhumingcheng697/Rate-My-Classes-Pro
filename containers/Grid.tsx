@@ -21,7 +21,7 @@ type GridProps = IFlexProps & {
 export default function Grid({
   isLoaded = true,
   skeletonCount = 10,
-  skeletonProps = { borderRadius: 12 },
+  skeletonProps,
   spacing = 5,
   minChildrenWidth: minChildWidth,
   childrenHeight: childHeight,
@@ -43,6 +43,8 @@ export default function Grid({
     : [...Array(skeletonCount)].map((_, index) => (
         <Skeleton key={index} {...skeletonProps} />
       ));
+
+  Object.assign({ borderRadius: 12 }, skeletonProps);
 
   return (
     <Flex

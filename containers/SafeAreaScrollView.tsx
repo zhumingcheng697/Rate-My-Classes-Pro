@@ -17,6 +17,9 @@ export default function SafeAreaScrollView({
   safeAreaProps = { edges: ["left", "right"] },
   children,
 }: SafeAreaScrollViewProps) {
+  Object.assign({ marginY: "10px" }, vstackProps);
+  Object.assign({ edges: ["left", "right"] }, safeAreaProps);
+
   return (
     <ScrollView>
       <SafeAreaView {...safeAreaProps}>

@@ -28,7 +28,7 @@ export default function MeStarredReviewedScreen() {
 
   return (
     <SafeAreaScrollView>
-      <Text variant={"h1"}>{route.name.replace(/Me-/gi, "")}</Text>
+      {/* <Text variant={"h1"}>{route.name.replace(/Me-/gi, "")}</Text> */}
       <Grid minChildrenWidth={140} childrenHeight={"90px"}>
         {["2193", "3193", "4193"].map((classNumber, index) => {
           const classCode: ClassCode = {

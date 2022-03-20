@@ -15,7 +15,7 @@ import TieredTextButton from "../../components/TieredTextButton";
 
 type ExploreUniversityScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
-  "Explore-University"
+  "University"
 >;
 
 export default function ExploreUniversityScreen() {
@@ -57,7 +57,7 @@ export default function ExploreUniversityScreen() {
           primaryText={getSchoolName(schoolInfo, schoolNames)}
           secondaryText={schoolCode.toUpperCase()}
           onPress={() => {
-            navigation.navigate("Explore-School", schoolInfo);
+            navigation.navigate("School", schoolInfo);
           }}
         />
       );

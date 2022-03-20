@@ -8,7 +8,7 @@ import PlainTextButton from "../../components/PlainTextButton";
 
 type MeSignUpScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
-  "Me-SignUp"
+  "SignUp"
 >;
 
 export default function MeSignUpScreen() {
@@ -41,7 +41,7 @@ export default function MeSignUpScreen() {
         <Button
           marginY={"15px"}
           onPress={() => {
-            navigation.replace("Me-Account");
+            navigation.replace("Account");
           }}
         >
           <Text variant={"button"}>Sign Up</Text>
@@ -51,7 +51,7 @@ export default function MeSignUpScreen() {
           <PlainTextButton
             title={"Sign In"}
             onPress={() => {
-              navigation.replace("Me-SignIn");
+              navigation.replace("SignIn");
             }}
           />
         </Box>

@@ -20,12 +20,12 @@ import TieredTextButton from "../../components/TieredTextButton";
 
 type ExploreDepartmentScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
-  "Explore-Department"
+  "Department"
 >;
 
 type ExploreDepartmentScreenRouteProp = RouteProp<
   ExploreNavigationParamList,
-  "Explore-Department"
+  "Department"
 >;
 
 export default function ExploreDepartmentScreen() {
@@ -52,7 +52,7 @@ export default function ExploreDepartmentScreen() {
                 primaryText={"Lorem ipsum dolor sit amet"}
                 secondaryText={getClassCode(classCode)}
                 onPress={() => {
-                  navigation.navigate("Explore-Detail", {
+                  navigation.navigate("Detail", {
                     ...classCode,
                     name: classNumber,
                     description:

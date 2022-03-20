@@ -15,47 +15,29 @@ export default function MeNavigation() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name={"Me-Account"}
+        name={"Account"}
         component={MeAccountScreen}
         options={{ title: "Me" }}
       />
+      <Stack.Screen name={"Starred"} component={MeStarredReviewedScreen} />
+      <Stack.Screen name={"Reviewed"} component={MeStarredReviewedScreen} />
+      <Stack.Screen name={"Settings"} component={PlaceHolderScreen} />
       <Stack.Screen
-        name={"Me-Starred"}
-        component={MeStarredReviewedScreen}
-        options={{
-          title: "Starred",
-        }}
-      />
-      <Stack.Screen
-        name={"Me-Reviewed"}
-        component={MeStarredReviewedScreen}
-        options={{
-          title: "Reviewed",
-        }}
-      />
-      <Stack.Screen
-        name={"Me-Settings"}
-        component={PlaceHolderScreen}
-        options={{
-          title: "Settings",
-        }}
-      />
-      <Stack.Screen
-        name={"Me-SignIn"}
+        name={"SignIn"}
         component={MeSignInScreen}
         options={{
           title: "Sign In",
         }}
       />
       <Stack.Screen
-        name={"Me-SignUp"}
+        name={"SignUp"}
         component={MeSignUpScreen}
         options={{
           title: "Sign Up",
         }}
       />
       <Stack.Screen
-        name={"Me-Detail"}
+        name={"Detail"}
         component={DetailScreen}
         options={({ route }) => ({
           title: getClassCode(route.params),

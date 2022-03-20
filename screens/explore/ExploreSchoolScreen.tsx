@@ -23,12 +23,12 @@ import {
 
 type ExploreSchoolScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
-  "Explore-School"
+  "School"
 >;
 
 type ExploreSchoolScreenRouteProp = RouteProp<
   ExploreNavigationParamList,
-  "Explore-School"
+  "School"
 >;
 
 export default function ExploreSchoolScreen() {
@@ -63,7 +63,7 @@ export default function ExploreSchoolScreen() {
                 primaryText={getDepartmentName(departmentInfo, departmentNames)}
                 secondaryText={`${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`}
                 onPress={() => {
-                  navigation.navigate("Explore-Department", departmentInfo);
+                  navigation.navigate("Department", departmentInfo);
                 }}
               />
             );

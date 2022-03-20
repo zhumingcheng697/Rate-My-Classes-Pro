@@ -13,26 +13,26 @@ export default function ExploreNavigation() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name={"Explore-University"}
+        name={"University"}
         component={ExploreUniversityScreen}
         options={{ title: "Explore" }}
       />
       <Stack.Screen
-        name={"Explore-School"}
+        name={"School"}
         component={ExploreSchoolScreen}
         options={({ route }) => ({
           title: route.params.schoolCode.toUpperCase(),
         })}
       />
       <Stack.Screen
-        name={"Explore-Department"}
+        name={"Department"}
         component={ExploreDepartmentScreen}
         options={({ route }) => ({
           title: `${route.params.departmentCode.toUpperCase()}-${route.params.schoolCode.toUpperCase()}`,
         })}
       />
       <Stack.Screen
-        name={"Explore-Detail"}
+        name={"Detail"}
         component={DetailScreen}
         options={({ route }) => ({
           title: getClassCode(route.params),

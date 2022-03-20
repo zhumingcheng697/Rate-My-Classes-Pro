@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 type SearchClassScreenNavigationProp = StackNavigationProp<
   SearchNavigationParamList,
-  "Search-Class"
+  "Search"
 >;
 
 const searchBarHeight = 38;
@@ -61,7 +61,7 @@ export default function SearchClassScreen() {
                       primaryText={"Lorem ipsum dolor sit amet"}
                       secondaryText={getClassCode(classCode)}
                       onPress={() => {
-                        navigation.navigate("Search-Detail", {
+                        navigation.navigate("Detail", {
                           ...classCode,
                           name: classNumber,
                           description:

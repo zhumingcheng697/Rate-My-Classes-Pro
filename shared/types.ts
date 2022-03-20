@@ -26,23 +26,26 @@ export type RootNavigationParamList = {
 };
 
 export type ExploreNavigationParamList = {
-  "Explore-University": undefined;
-  "Explore-School": SchoolInfo;
-  "Explore-Department": DepartmentInfo;
-  "Explore-Detail": ClassInfo;
+  University: undefined;
+  School: SchoolInfo;
+  Department: DepartmentInfo;
+  Detail: ClassInfo;
+  Review: ClassInfo;
 };
 
 export type SearchNavigationParamList = {
-  "Search-Class": undefined;
-  "Search-Detail": ClassInfo;
+  Search: undefined;
+  Detail: ClassInfo;
+  Review: ClassInfo;
 };
 
 export type MeNavigationParamList = {
-  "Me-Account": undefined;
-  "Me-Starred": undefined;
-  "Me-Reviewed": undefined;
-  "Me-Settings": undefined;
-  "Me-SignIn": undefined;
-  "Me-SignUp": undefined;
-  "Me-Detail": ClassInfo;
+  Account: undefined;
+  Starred: undefined;
+  Reviewed: undefined;
+  Settings: undefined;
+  SignIn: undefined;
+  SignUp: undefined;
+  Detail: ClassInfo;
+  Review: ClassInfo;
 };

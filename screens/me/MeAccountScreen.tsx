@@ -9,7 +9,7 @@ import LeftAlignedButton from "../../components/LeftAlignedButton";
 
 type MeAccountScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
-  "Me-Account"
+  "Account"
 >;
 
 export default function MeAccountScreen() {
@@ -50,7 +50,7 @@ export default function MeAccountScreen() {
                 background={"red.600"}
                 onPress={() => {
                   setShowAlert(false);
-                  navigation.replace("Me-SignIn");
+                  navigation.replace("SignIn");
                 }}
               >
                 Sign Out
@@ -65,19 +65,19 @@ export default function MeAccountScreen() {
           <LeftAlignedButton
             title={"Starred"}
             onPress={() => {
-              navigation.push("Me-Starred");
+              navigation.push("Starred");
             }}
           />
           <LeftAlignedButton
             title={"Reviewed"}
             onPress={() => {
-              navigation.push("Me-Reviewed");
+              navigation.push("Reviewed");
             }}
           />
           <LeftAlignedButton
             title={"Settings"}
             onPress={() => {
-              navigation.push("Me-Settings");
+              navigation.push("Settings");
             }}
           />
           <LeftAlignedButton

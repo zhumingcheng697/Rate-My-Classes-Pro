@@ -14,12 +14,12 @@ import TieredTextButton from "../../components/TieredTextButton";
 
 type MeStarredReviewedScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
-  "Me-Starred" | "Me-Reviewed"
+  "Starred" | "Reviewed"
 >;
 
 type MeStarredReviewedScreenRouteProp = RouteProp<
   MeNavigationParamList,
-  "Me-Starred" | "Me-Reviewed"
+  "Starred" | "Reviewed"
 >;
 
 export default function MeStarredReviewedScreen() {
@@ -45,7 +45,7 @@ export default function MeStarredReviewedScreen() {
                 primaryText={"Lorem ipsum dolor sit amet"}
                 secondaryText={getClassCode(classCode)}
                 onPress={() => {
-                  navigation.navigate("Me-Detail", {
+                  navigation.navigate("Detail", {
                     ...classCode,
                     name: classNumber,
                     description:

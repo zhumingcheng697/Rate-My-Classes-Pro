@@ -1,3 +1,4 @@
+import { type ReactText } from "react";
 import {
   Pressable,
   type IPressableProps,
@@ -6,13 +7,15 @@ import {
 } from "native-base";
 
 type PlainTextButtonProps = {
-  title: string;
+  title?: string;
   _text?: ITextProps;
+  children?: ReactText;
 };
 
 export default function PlainTextButton({
   title,
   _text,
+  children,
   ...rest
 }: PlainTextButtonProps & Omit<IPressableProps, keyof PlainTextButtonProps>) {
   _text = Object.assign(
@@ -28,7 +31,7 @@ export default function PlainTextButton({
     <Pressable {...rest}>
       {({ isPressed, isHovered }) => (
         <Text {..._text} opacity={isPressed || isHovered ? 0.5 : 1}>
-          {title}
+          {title ?? children ?? "Button"}
         </Text>
       )}
     </Pressable>

@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { useCallback, type ReactNode } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useWindowDimensions } from "react-native";
 import {
@@ -52,12 +52,13 @@ export default function Grid({
     (windowWidth - acutalMargin * 2) / (actualChildWidth + acutalMargin * 2);
   const columns = Math.max(Math.floor(ratio), 1);
 
-  const actualChildren: (info: GridRenderItemInfo) => ReactNode = isLoaded
-    ? children
-    : (info) =>
-        [...Array(skeletonCount)].map((_, index) => (
-          <Skeleton key={index} {...info} {...skeletonProps} />
-        ));
+  const skeletonChildren = useCallback(
+    (info: GridRenderItemInfo) =>
+      [...Array(skeletonCount)].map((_, index) => (
+        <Skeleton key={index} {...info} {...skeletonProps} />
+      )),
+    [skeletonCount, skeletonProps]
+  );
 
   const heightProps = {
     height: childHeight,
@@ -78,11 +79,11 @@ export default function Grid({
       flexWrap={"wrap"}
       marginX={acutalMargin + "px"}
     >
-      {actualChildren({
+      {(isLoaded ? children : skeletonChildren)({
         width:
           (windowWidth - acutalMargin * (columns + 1) * 2) / columns + "px",
-        ...heightProps,
         margin: acutalMargin + "px",
+        ...heightProps,
       })}
     </Flex>
   );

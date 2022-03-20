@@ -46,9 +46,7 @@ export default function MeSignInScreen() {
           >
             {({ isPressed, isHovered }) => (
               <Text
-                color={"nyu.default"}
-                fontWeight={"medium"}
-                textAlign={"center"}
+                variant={"textButton"}
                 opacity={isPressed || isHovered ? 0.5 : 1}
               >
                 Sign Up

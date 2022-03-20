@@ -115,6 +115,11 @@ const componentsStyle = {
         color: colorStyle.nyu.default,
         ...buttonTextBaseStyle,
       },
+      textButton: {
+        color: colorStyle.nyu.default,
+        fontWeight: "medium",
+        textAlign: "center",
+      },
     },
   },
 };

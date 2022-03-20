@@ -48,7 +48,7 @@ export default function ExploreSchoolScreen() {
   return (
     <KeyboardAwareSafeAreaScrollView>
       <Text variant={"h1"}>{getSchoolName(route.params, schoolNames)}</Text>
-      <Grid isLoaded={isLoaded} minChildWidth={140} childHeight={"90px"}>
+      <Grid isLoaded={isLoaded}>
         {(info) =>
           departments.map((departmentCode, index) => {
             const departmentInfo: DepartmentInfo = {

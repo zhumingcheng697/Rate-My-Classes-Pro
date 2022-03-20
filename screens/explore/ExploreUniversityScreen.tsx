@@ -68,22 +68,14 @@ export default function ExploreUniversityScreen() {
   return (
     <KeyboardAwareSafeAreaScrollView>
       <Text variant={"h1"}>Undergraduate</Text>
-      <Grid
-        isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}
-        minChildWidth={140}
-        childHeight={"90px"}
-      >
+      <Grid isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}>
         {(info) => undergradCodes.map(schoolCodeToNavigationButton(info))}
       </Grid>
 
       <Text variant={"h1"} marginTop={"16px"}>
         Graduate
       </Text>
-      <Grid
-        isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}
-        minChildWidth={140}
-        childHeight={"90px"}
-      >
+      <Grid isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}>
         {(info) => gradCodes.map(schoolCodeToNavigationButton(info))}
       </Grid>
     </KeyboardAwareSafeAreaScrollView>

@@ -40,7 +40,7 @@ export default function ExploreDepartmentScreen() {
         {getDepartmentName(route.params, departmentNames)}
       </Text>
       <Text variant={"h2"}>{getSchoolName(route.params, schoolNames)}</Text>
-      <Grid minChildWidth={140} childHeight={"90px"}>
+      <Grid>
         {(info) =>
           placeholderClassNumbers.map((classNumber, index) => {
             const classCode: ClassCode = { ...route.params, classNumber };

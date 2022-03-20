@@ -11,7 +11,9 @@ import {
 export type GridRenderItemInfo = {
   width: string;
   margin: string;
-  height: string | number;
+  height?: string | number;
+  minHeight?: string | number;
+  maxHeight?: string | number;
 };
 
 type GridProps = {
@@ -19,8 +21,10 @@ type GridProps = {
   skeletonCount?: number;
   skeletonProps?: ISkeletonProps;
   spacing?: number;
-  minChildWidth: number;
-  childHeight: number | string;
+  minChildWidth?: number;
+  childHeight?: number | string;
+  minChildHeight?: number | string;
+  maxChildHeight?: string | number;
   children: (info: GridRenderItemInfo) => ReactNode;
 };
 
@@ -29,8 +33,10 @@ export default function Grid({
   skeletonCount = 12,
   skeletonProps,
   spacing = 5,
-  minChildWidth,
+  minChildWidth = 140,
   childHeight,
+  minChildHeight,
+  maxChildHeight,
   children,
   ...rest
 }: GridProps & Omit<IFlexProps, keyof GridProps>) {
@@ -53,6 +59,15 @@ export default function Grid({
           <Skeleton key={index} {...info} {...skeletonProps} />
         ));
 
+  const heightProps = {
+    height: childHeight,
+    minHeight:
+      !childHeight && !minChildHeight && !maxChildHeight
+        ? "90px"
+        : minChildHeight,
+    maxHeight: maxChildHeight,
+  };
+
   return (
     <Flex
       {...rest}
@@ -66,7 +81,7 @@ export default function Grid({
       {actualChildren({
         width:
           (windowWidth - acutalMargin * (columns + 1) * 2) / columns + "px",
-        height: childHeight,
+        ...heightProps,
         margin: acutalMargin + "px",
       })}
     </Flex>

@@ -35,7 +35,7 @@ export default function MeSignInScreen() {
             navigation.replace("Me-Account");
           }}
         >
-          Sign In
+          <Text variant={"button"}>Sign In</Text>
         </Button>
         <Box>
           <Text textAlign={"center"}>Don’t have an account yet?</Text>

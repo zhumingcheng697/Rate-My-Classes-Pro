@@ -17,28 +17,33 @@ export default function MeAccountScreen() {
     <KeyboardAwareSafeAreaScrollView>
       <Text variant={"h1"}>McCoy Applseed</Text>
       <Button
+        variant={"subtle"}
         margin={"10px"}
         onPress={() => {
           navigation.push("Me-Starred");
         }}
       >
-        Starred
+        <Text variant={"subtleButton"}>Starred</Text>
       </Button>
       <Button
+        variant={"subtle"}
         margin={"10px"}
         onPress={() => {
           navigation.push("Me-Reviewed");
         }}
       >
-        Reviewed
+        <Text variant={"subtleButton"}>Reviewed</Text>
       </Button>
       <Button
+        variant={"subtle"}
         margin={"10px"}
         onPress={() => {
           navigation.replace("Me-SignIn");
         }}
       >
-        Sign Out
+        <Text color={"red.600"} variant={"button"}>
+          Sign Out
+        </Text>
       </Button>
     </KeyboardAwareSafeAreaScrollView>
   );

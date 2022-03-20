@@ -6,6 +6,11 @@ const headerBaseStyle = {
   marginY: "3px",
 };
 
+const buttonTextBaseStyle = {
+  fontWeight: "semibold",
+  fontSize: "md",
+};
+
 export const colorStyle = {
   background: {
     primary: "#ffffff",
@@ -23,11 +28,27 @@ const componentsStyle = {
       solid: {
         borderRadius: 10,
         background: colorStyle.nyu.default,
+        _text: {
+          color: "white",
+        },
         _pressed: {
           opacity: 0.5,
         },
         _hover: {
           opacity: 0.5,
+        },
+      },
+      subtle: {
+        borderRadius: 10,
+        background: colorStyle.background.secondary,
+        _text: {
+          color: colorStyle.nyu.default,
+        },
+        _pressed: {
+          background: colorStyle.background.tertiary,
+        },
+        _hover: {
+          background: colorStyle.background.tertiary,
         },
       },
     },
@@ -82,6 +103,14 @@ const componentsStyle = {
       },
       label: {
         marginBottom: "2px",
+      },
+      button: {
+        color: "white",
+        ...buttonTextBaseStyle,
+      },
+      subtleButton: {
+        color: colorStyle.nyu.default,
+        ...buttonTextBaseStyle,
       },
     },
   },

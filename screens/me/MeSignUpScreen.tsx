@@ -43,7 +43,7 @@ export default function MeSignUpScreen() {
             navigation.replace("Me-Account");
           }}
         >
-          Sign Up
+          <Text variant={"button"}>Sign Up</Text>
         </Button>
         <Box>
           <Text textAlign={"center"}>Already have an account?</Text>

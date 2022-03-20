@@ -7,13 +7,13 @@ import { type MeNavigationParamList } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LeftAlignedButton from "../../components/LeftAlignedButton";
 
-type MeAccountScreenNavigationProp = StackNavigationProp<
+type AccountScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
   "Account"
 >;
 
-export default function MeAccountScreen() {
-  const navigation = useNavigation<MeAccountScreenNavigationProp>();
+export default function AccountScreen() {
+  const navigation = useNavigation<AccountScreenNavigationProp>();
   const ref = useRef();
   const [showAlert, setShowAlert] = useState(false);
 

@@ -12,19 +12,19 @@ import Grid from "../../containers/Grid";
 import { getClassCode, placeholderClassNumbers } from "../../shared/utils";
 import TieredTextButton from "../../components/TieredTextButton";
 
-type MeStarredReviewedScreenNavigationProp = StackNavigationProp<
+type StarredReviewedScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
   "Starred" | "Reviewed"
 >;
 
-type MeStarredReviewedScreenRouteProp = RouteProp<
+type StarredReviewedScreenRouteProp = RouteProp<
   MeNavigationParamList,
   "Starred" | "Reviewed"
 >;
 
-export default function MeStarredReviewedScreen() {
-  const navigation = useNavigation<MeStarredReviewedScreenNavigationProp>();
-  const route = useRoute<MeStarredReviewedScreenRouteProp>();
+export default function StarredReviewedScreen() {
+  const navigation = useNavigation<StarredReviewedScreenNavigationProp>();
+  const route = useRoute<StarredReviewedScreenRouteProp>();
 
   return (
     <KeyboardAwareSafeAreaScrollView>

@@ -6,13 +6,13 @@ import { type MeNavigationParamList } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import PlainTextButton from "../../components/PlainTextButton";
 
-type MeSignUpScreenNavigationProp = StackNavigationProp<
+type SignUpScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
   "SignUp"
 >;
 
-export default function MeSignUpScreen() {
-  const navigation = useNavigation<MeSignUpScreenNavigationProp>();
+export default function SignUpScreen() {
+  const navigation = useNavigation<SignUpScreenNavigationProp>();
 
   return (
     <KeyboardAwareSafeAreaScrollView>

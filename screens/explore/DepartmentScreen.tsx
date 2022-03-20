@@ -18,19 +18,19 @@ import {
 } from "../../shared/utils";
 import TieredTextButton from "../../components/TieredTextButton";
 
-type ExploreDepartmentScreenNavigationProp = StackNavigationProp<
+type DepartmentScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
   "Department"
 >;
 
-type ExploreDepartmentScreenRouteProp = RouteProp<
+type DepartmentScreenRouteProp = RouteProp<
   ExploreNavigationParamList,
   "Department"
 >;
 
-export default function ExploreDepartmentScreen() {
-  const navigation = useNavigation<ExploreDepartmentScreenNavigationProp>();
-  const route = useRoute<ExploreDepartmentScreenRouteProp>();
+export default function DepartmentScreen() {
+  const navigation = useNavigation<DepartmentScreenNavigationProp>();
+  const route = useRoute<DepartmentScreenRouteProp>();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
 

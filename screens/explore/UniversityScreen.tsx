@@ -13,13 +13,13 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import Grid, { type GridRenderItemInfo } from "../../containers/Grid";
 import TieredTextButton from "../../components/TieredTextButton";
 
-type ExploreUniversityScreenNavigationProp = StackNavigationProp<
+type UniversityScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
   "University"
 >;
 
-export default function ExploreUniversityScreen() {
-  const navigation = useNavigation<ExploreUniversityScreenNavigationProp>();
+export default function UniversityScreen() {
+  const navigation = useNavigation<UniversityScreenNavigationProp>();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const isSchoolNameLoaded = !!schoolNames && !isObjectEmpty(schoolNames);

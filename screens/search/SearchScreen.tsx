@@ -11,7 +11,7 @@ import SearchBar from "../../components/SearchBar";
 import TieredTextButton from "../../components/TieredTextButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-type SearchClassScreenNavigationProp = StackNavigationProp<
+type SearchScreenNavigationProp = StackNavigationProp<
   SearchNavigationParamList,
   "Search"
 >;
@@ -19,8 +19,8 @@ type SearchClassScreenNavigationProp = StackNavigationProp<
 const searchBarHeight = 38;
 const dividerHeight = 1;
 
-export default function SearchClassScreen() {
-  const navigation = useNavigation<SearchClassScreenNavigationProp>();
+export default function SearchScreen() {
+  const navigation = useNavigation<SearchScreenNavigationProp>();
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
 

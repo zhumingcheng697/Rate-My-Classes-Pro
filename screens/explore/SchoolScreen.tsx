@@ -21,19 +21,16 @@ import {
   isObjectEmpty,
 } from "../../shared/utils";
 
-type ExploreSchoolScreenNavigationProp = StackNavigationProp<
+type SchoolScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
   "School"
 >;
 
-type ExploreSchoolScreenRouteProp = RouteProp<
-  ExploreNavigationParamList,
-  "School"
->;
+type SchoolScreenRouteProp = RouteProp<ExploreNavigationParamList, "School">;
 
-export default function ExploreSchoolScreen() {
-  const navigation = useNavigation<ExploreSchoolScreenNavigationProp>();
-  const route = useRoute<ExploreSchoolScreenRouteProp>();
+export default function SchoolScreen() {
+  const navigation = useNavigation<SchoolScreenNavigationProp>();
+  const route = useRoute<SchoolScreenRouteProp>();
   const { schoolCode } = route.params;
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);

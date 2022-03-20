@@ -10,12 +10,15 @@ import {
 } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-type LeftAlignedButtonProps = {
+type LeftAlignedButtonBaseProps = {
   title?: string;
   _text?: ITextProps;
   showChevron?: boolean;
   children?: ReactText;
 };
+
+export type LeftAlignedButtonProps = LeftAlignedButtonBaseProps &
+  Omit<IButtonProps, keyof LeftAlignedButtonBaseProps>;
 
 export default function LeftAlignedButton({
   title,
@@ -23,7 +26,7 @@ export default function LeftAlignedButton({
   showChevron = true,
   children,
   ...rest
-}: LeftAlignedButtonProps & Omit<IButtonProps, keyof LeftAlignedButtonProps>) {
+}: LeftAlignedButtonProps) {
   return (
     <Button {...rest} variant={"subtle"}>
       <Flex

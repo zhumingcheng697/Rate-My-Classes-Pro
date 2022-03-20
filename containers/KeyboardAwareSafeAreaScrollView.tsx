@@ -9,7 +9,7 @@ import {
 } from "react-native-keyboard-aware-scroll-view";
 import { type IBoxProps, Box } from "native-base";
 
-type KeyboardAwareSafeAreaScrollViewProps = {
+export type KeyboardAwareSafeAreaScrollViewProps = {
   contentContainerProps?: IBoxProps;
   safeAreaViewProps?: NativeSafeAreaViewProps;
   keyboardAwareScrollViewProps?: KeyboardAwareScrollViewProps;

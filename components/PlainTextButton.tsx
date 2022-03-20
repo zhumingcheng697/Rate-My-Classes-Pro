@@ -6,18 +6,21 @@ import {
   type ITextProps,
 } from "native-base";
 
-type PlainTextButtonProps = {
+type PlainTextButtonBaseProps = {
   title?: string;
   _text?: ITextProps;
   children?: ReactText;
 };
+
+export type PlainTextButtonProps = PlainTextButtonBaseProps &
+  Omit<IPressableProps, keyof PlainTextButtonBaseProps>;
 
 export default function PlainTextButton({
   title,
   _text,
   children,
   ...rest
-}: PlainTextButtonProps & Omit<IPressableProps, keyof PlainTextButtonProps>) {
+}: PlainTextButtonProps) {
   _text = Object.assign(
     {
       color: "nyu.default",

@@ -1,15 +1,18 @@
 import { Text, Button, type IButtonProps } from "native-base";
 
-type TieredTextButtonProps = {
+type TieredTextButtonBaseProps = {
   primaryText: string;
   secondaryText?: string;
 };
+
+export type TieredTextButtonProps = TieredTextButtonBaseProps &
+  Omit<IButtonProps, keyof TieredTextButtonBaseProps>;
 
 export default function TieredTextButton({
   primaryText,
   secondaryText,
   ...rest
-}: TieredTextButtonProps & Omit<IButtonProps, keyof TieredTextButtonProps>) {
+}: TieredTextButtonProps) {
   return (
     <Button {...rest} variant={"subtle"}>
       <Text

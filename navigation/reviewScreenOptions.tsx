@@ -27,7 +27,7 @@ type ReviewScreenRouteProp = RouteProp<
   "Review"
 >;
 
-type ReviewScreenOptionsProp = {
+export type ReviewScreenOptionsProp = {
   navigation: ReviewScreenNavigationProp;
   route: ReviewScreenRouteProp;
 };

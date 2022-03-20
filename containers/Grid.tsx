@@ -16,7 +16,7 @@ export type GridRenderItemInfo = {
   maxHeight?: string | number;
 };
 
-type GridProps = {
+type GridBaseProps = {
   isLoaded?: boolean;
   skeletonCount?: number;
   skeletonProps?: ISkeletonProps;
@@ -27,6 +27,8 @@ type GridProps = {
   maxChildHeight?: string | number;
   children: (info: GridRenderItemInfo) => ReactNode;
 };
+
+export type GridProps = GridBaseProps & Omit<IFlexProps, keyof GridBaseProps>;
 
 export default function Grid({
   isLoaded = true,
@@ -39,7 +41,7 @@ export default function Grid({
   maxChildHeight,
   children,
   ...rest
-}: GridProps & Omit<IFlexProps, keyof GridProps>) {
+}: GridProps) {
   skeletonProps = Object.assign({ borderRadius: 10 }, skeletonProps);
 
   const acutalMargin = Math.max(spacing, 2);

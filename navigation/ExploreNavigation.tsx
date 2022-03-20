@@ -1,8 +1,8 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
-import ExploreUniversityScreen from "../screens/explore/ExploreUniversityScreen";
-import ExploreSchoolScreen from "../screens/explore/ExploreSchoolScreen";
-import ExploreDepartmentScreen from "../screens/explore/ExploreDepartmentScreen";
+import UniversityScreen from "../screens/explore/UniversityScreen";
+import SchoolScreen from "../screens/explore/SchoolScreen";
+import DepartmentScreen from "../screens/explore/DepartmentScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import reviewScreenOptions from "./reviewScreenOptions";
@@ -16,19 +16,19 @@ export default function ExploreNavigation() {
     <Stack.Navigator>
       <Stack.Screen
         name={"University"}
-        component={ExploreUniversityScreen}
+        component={UniversityScreen}
         options={{ title: "Explore" }}
       />
       <Stack.Screen
         name={"School"}
-        component={ExploreSchoolScreen}
+        component={SchoolScreen}
         options={({ route }) => ({
           title: route.params.schoolCode.toUpperCase(),
         })}
       />
       <Stack.Screen
         name={"Department"}
-        component={ExploreDepartmentScreen}
+        component={DepartmentScreen}
         options={({ route }) => ({
           title: `${route.params.departmentCode.toUpperCase()}-${route.params.schoolCode.toUpperCase()}`,
         })}

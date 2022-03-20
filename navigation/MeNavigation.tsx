@@ -1,9 +1,9 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
-import MeAccountScreen from "../screens/me/MeAccountScreen";
-import MeStarredReviewedScreen from "../screens/me/MeStarredReviewedScreen";
-import MeSignUpScreen from "../screens/me/MeSignUpScreen";
-import MeSignInScreen from "../screens/me/MeSignInScreen";
+import AccountScreen from "../screens/me/AccountScreen";
+import StarredReviewedScreen from "../screens/me/StarredReviewedScreen";
+import SignUpScreen from "../screens/me/SignUpScreen";
+import SignInScreen from "../screens/me/SignInScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import reviewScreenOptions from "./reviewScreenOptions";
@@ -17,22 +17,22 @@ export default function MeNavigation() {
     <Stack.Navigator>
       <Stack.Screen
         name={"Account"}
-        component={MeAccountScreen}
+        component={AccountScreen}
         options={{ title: "Me" }}
       />
-      <Stack.Screen name={"Starred"} component={MeStarredReviewedScreen} />
-      <Stack.Screen name={"Reviewed"} component={MeStarredReviewedScreen} />
+      <Stack.Screen name={"Starred"} component={StarredReviewedScreen} />
+      <Stack.Screen name={"Reviewed"} component={StarredReviewedScreen} />
       <Stack.Screen name={"Settings"} component={PlaceHolderScreen} />
       <Stack.Screen
         name={"SignIn"}
-        component={MeSignInScreen}
+        component={SignInScreen}
         options={{
           title: "Sign In",
         }}
       />
       <Stack.Screen
         name={"SignUp"}
-        component={MeSignUpScreen}
+        component={SignUpScreen}
         options={{
           title: "Sign Up",
         }}

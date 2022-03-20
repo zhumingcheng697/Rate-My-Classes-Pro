@@ -1,4 +1,9 @@
-import { createStackNavigator } from "@react-navigation/stack";
+import { Platform } from "react-native";
+import { type StackNavigationProp } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/stack";
 
 import ExploreUniversityScreen from "../screens/explore/ExploreUniversityScreen";
 import ExploreSchoolScreen from "../screens/explore/ExploreSchoolScreen";
@@ -7,8 +12,14 @@ import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import { getClassCode } from "../shared/utils";
 import { type ExploreNavigationParamList } from "../shared/types";
+import PlainTextButton from "../components/PlainTextButton";
 
 const Stack = createStackNavigator<ExploreNavigationParamList>();
+
+type ReviewNavigationProp = StackNavigationProp<
+  ExploreNavigationParamList,
+  "Review"
+>;
 
 export default function ExploreNavigation() {
   return (
@@ -42,9 +53,35 @@ export default function ExploreNavigation() {
       <Stack.Screen
         name={"Review"}
         component={PlaceHolderScreen}
-        options={{
+        options={({ navigation }: { navigation: ReviewNavigationProp }) => ({
           presentation: "modal",
-        }}
+          gestureEnabled: false,
+          headerLeft: (props) => {
+            return (
+              <PlainTextButton
+                marginLeft={"10px"}
+                title={"Cancel"}
+                _text={{ fontSize: "md", fontWeight: "normal" }}
+                onPress={navigation.goBack}
+                {...props}
+              />
+            );
+          },
+          headerRight: (props) => {
+            return (
+              <PlainTextButton
+                marginRight={"10px"}
+                title={"Save"}
+                _text={{ fontSize: "md", fontWeight: "semibold" }}
+                onPress={navigation.goBack}
+                {...props}
+              />
+            );
+          },
+          ...(Platform.OS === "ios" || Platform.OS === "macos"
+            ? TransitionPresets.ModalSlideFromBottomIOS
+            : TransitionPresets.ScaleFromCenterAndroid),
+        })}
       />
     </Stack.Navigator>
   );

@@ -1,4 +1,4 @@
-import { Text } from "native-base";
+import { Text, Button } from "native-base";
 import {
   useNavigation,
   useRoute,
@@ -14,7 +14,6 @@ import type {
 } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { getDepartmentName, getSchoolName } from "../../shared/utils";
-import LeftAlignedButton from "../../components/LeftAlignedButton";
 
 type DetailScreenNavigationProp = StackNavigationProp<
   | ExploreNavigationParamList
@@ -50,13 +49,14 @@ export default function DetailScreen() {
           {classInfo.description}
         </Text>
       )}
-      <LeftAlignedButton
-        marginX={"10px"}
-        title={"Review"}
+      <Button
+        margin={"10px"}
         onPress={() => {
           navigation.navigate("Review", classInfo);
         }}
-      />
+      >
+        <Text variant={"button"}>Review</Text>
+      </Button>
     </KeyboardAwareSafeAreaScrollView>
   );
 }

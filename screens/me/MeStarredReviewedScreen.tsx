@@ -29,7 +29,7 @@ export default function MeStarredReviewedScreen() {
   return (
     <KeyboardAwareSafeAreaScrollView>
       {/* <Text variant={"h1"}>{route.name.replace(/Me-/gi, "")}</Text> */}
-      <Grid minChildrenWidth={140} childrenHeight={"90px"}>
+      <Grid minChildWidth={140} childHeight={"90px"}>
         {(info) =>
           placeholderClassNumbers.map((classNumber, index) => {
             const classCode: ClassCode = {

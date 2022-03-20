@@ -45,12 +45,7 @@ export default function SearchClassScreen() {
         <Divider height={`${dividerHeight}px`} />
         {query ? (
           <ScrollView height={"100%"} keyboardDismissMode={"on-drag"}>
-            <Grid
-              marginTop={"5px"}
-              marginBottom={"10px"}
-              minChildrenWidth={140}
-              childrenHeight={"90px"}
-            >
+            <Grid marginY={"10px"} minChildWidth={140} childHeight={"90px"}>
               {(info) =>
                 placeholderClassNumbers.map((classNumber, index) => {
                   const classCode: ClassCode = {

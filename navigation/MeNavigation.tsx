@@ -29,7 +29,7 @@ export default function MeNavigation() {
         name={"Me-Reviewed"}
         component={MeStarredReviewedScreen}
         options={{
-          title: "Reviewd",
+          title: "Reviewed",
         }}
       />
       <Stack.Screen

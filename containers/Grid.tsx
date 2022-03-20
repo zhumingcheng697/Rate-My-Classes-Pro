@@ -8,7 +8,7 @@ import {
   type ISkeletonProps,
 } from "native-base";
 
-type GridRenderItemInfo = {
+export type GridRenderItemInfo = {
   width: string;
   margin: string;
   height: string | number;
@@ -19,8 +19,8 @@ type GridProps = {
   skeletonCount?: number;
   skeletonProps?: ISkeletonProps;
   spacing?: number;
-  minChildrenWidth: number;
-  childrenHeight: number | string;
+  minChildWidth: number;
+  childHeight: number | string;
   children: (info: GridRenderItemInfo) => ReactNode;
 };
 
@@ -29,8 +29,8 @@ export default function Grid({
   skeletonCount = 12,
   skeletonProps,
   spacing = 5,
-  minChildrenWidth: minChildWidth,
-  childrenHeight: childHeight,
+  minChildWidth,
+  childHeight,
   children,
   ...rest
 }: GridProps & Omit<IFlexProps, keyof GridProps>) {

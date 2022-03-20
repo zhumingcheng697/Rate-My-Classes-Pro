@@ -70,8 +70,8 @@ export default function ExploreUniversityScreen() {
       <Text variant={"h1"}>Undergraduate</Text>
       <Grid
         isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}
-        minChildrenWidth={140}
-        childrenHeight={"90px"}
+        minChildWidth={140}
+        childHeight={"90px"}
       >
         {(info) => undergradCodes.map(schoolCodeToNavigationButton(info))}
       </Grid>
@@ -81,8 +81,8 @@ export default function ExploreUniversityScreen() {
       </Text>
       <Grid
         isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}
-        minChildrenWidth={140}
-        childrenHeight={"90px"}
+        minChildWidth={140}
+        childHeight={"90px"}
       >
         {(info) => gradCodes.map(schoolCodeToNavigationButton(info))}
       </Grid>

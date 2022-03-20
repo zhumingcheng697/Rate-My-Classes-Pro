@@ -41,6 +41,7 @@ export type MeNavigationParamList = {
   "Me-Account": undefined;
   "Me-Starred": undefined;
   "Me-Reviewed": undefined;
+  "Me-Settings": undefined;
   "Me-SignIn": undefined;
   "Me-SignUp": undefined;
   "Me-Detail": ClassInfo;

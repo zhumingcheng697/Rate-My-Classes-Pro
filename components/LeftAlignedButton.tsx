@@ -9,16 +9,18 @@ import {
 } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-type NavigationButtonProps = {
+type LeftAlignedButtonProps = {
   title: string;
   _text?: ITextProps;
+  showChevron?: boolean;
 };
 
-export default function NavigationButton({
+export default function LeftAlignedButton({
   title,
   _text,
+  showChevron = true,
   ...rest
-}: NavigationButtonProps & Omit<IButtonProps, keyof NavigationButtonProps>) {
+}: LeftAlignedButtonProps & Omit<IButtonProps, keyof LeftAlignedButtonProps>) {
   return (
     <Button {...rest} variant={"subtle"}>
       <Flex
@@ -30,7 +32,12 @@ export default function NavigationButton({
           {title}
         </Text>
         <Spacer />
-        <Icon marginRight={"-5px"} as={<Ionicons name={"chevron-forward"} />} />
+        {showChevron && (
+          <Icon
+            marginRight={"-5px"}
+            as={<Ionicons name={"chevron-forward"} />}
+          />
+        )}
       </Flex>
     </Button>
   );

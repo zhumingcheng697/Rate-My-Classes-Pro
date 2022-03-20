@@ -5,6 +5,7 @@ import MeStarredReviewedScreen from "../screens/me/MeStarredReviewedScreen";
 import MeSignUpScreen from "../screens/me/MeSignUpScreen";
 import MeSignInScreen from "../screens/me/MeSignInScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
+import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import { getClassCode } from "../shared/utils";
 import { type MeNavigationParamList } from "../shared/types";
 
@@ -30,6 +31,13 @@ export default function MeNavigation() {
         component={MeStarredReviewedScreen}
         options={{
           title: "Reviewed",
+        }}
+      />
+      <Stack.Screen
+        name={"Me-Settings"}
+        component={PlaceHolderScreen}
+        options={{
+          title: "Settings",
         }}
       />
       <Stack.Screen

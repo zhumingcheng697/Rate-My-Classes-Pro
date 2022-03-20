@@ -4,7 +4,7 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { type MeNavigationParamList } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
-import NavigationButton from "../../components/NavigationButton";
+import LeftAlignedButton from "../../components/LeftAlignedButton";
 
 type MeAccountScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
@@ -17,23 +17,31 @@ export default function MeAccountScreen() {
   return (
     <KeyboardAwareSafeAreaScrollView>
       <Text variant={"h1"}>McCoy Applseed</Text>
-      <NavigationButton
+      <LeftAlignedButton
         title={"Starred"}
         margin={"10px"}
         onPress={() => {
           navigation.push("Me-Starred");
         }}
       />
-      <NavigationButton
+      <LeftAlignedButton
         title={"Reviewed"}
         margin={"10px"}
         onPress={() => {
           navigation.push("Me-Reviewed");
         }}
       />
-      <NavigationButton
+      <LeftAlignedButton
+        title={"Settings"}
+        margin={"10px"}
+        onPress={() => {
+          navigation.push("Me-Settings");
+        }}
+      />
+      <LeftAlignedButton
         title={"Sign Out"}
         _text={{ color: "red.600" }}
+        showChevron={false}
         margin={"10px"}
         onPress={() => {
           navigation.replace("Me-SignIn");

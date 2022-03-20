@@ -76,7 +76,7 @@ export default function SearchClassScreen() {
         ) : (
           !focused && (
             <Center height={"100%"}>
-              <Text fontSize={15} textAlign={"center"}>
+              <Text textAlign={"center"}>
                 Search Classes by Title or Description
               </Text>
             </Center>

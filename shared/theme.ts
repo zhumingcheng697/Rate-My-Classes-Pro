@@ -66,6 +66,9 @@ const componentsStyle = {
     },
   },
   Text: {
+    baseStyle: {
+      fontSize: 15,
+    },
     variants: {
       h1: {
         fontWeight: "bold",
@@ -78,7 +81,6 @@ const componentsStyle = {
         ...headerBaseStyle,
       },
       label: {
-        fontSize: 15,
         marginBottom: "2px",
       },
     },

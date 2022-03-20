@@ -29,7 +29,11 @@ export default function TieredTextButton({
         >
           {primaryText}
         </Text>
-        {secondaryText && <Text textAlign={"center"}>{secondaryText}</Text>}
+        {secondaryText && (
+          <Text fontSize={"sm"} textAlign={"center"}>
+            {secondaryText}
+          </Text>
+        )}
       </Box>
     </Pressable>
   );

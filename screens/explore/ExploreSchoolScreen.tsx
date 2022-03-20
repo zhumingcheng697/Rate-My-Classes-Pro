@@ -49,23 +49,26 @@ export default function ExploreSchoolScreen() {
     <KeyboardAwareSafeAreaScrollView>
       <Text variant={"h1"}>{getSchoolName(route.params, schoolNames)}</Text>
       <Grid isLoaded={isLoaded} minChildrenWidth={140} childrenHeight={"90px"}>
-        {departments.map((departmentCode, index) => {
-          const departmentInfo: DepartmentInfo = {
-            ...route.params,
-            departmentCode,
-          };
+        {(info) =>
+          departments.map((departmentCode, index) => {
+            const departmentInfo: DepartmentInfo = {
+              ...route.params,
+              departmentCode,
+            };
 
-          return (
-            <TieredTextButton
-              key={index}
-              primaryText={getDepartmentName(departmentInfo, departmentNames)}
-              secondaryText={`${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`}
-              onPress={() => {
-                navigation.navigate("Explore-Department", departmentInfo);
-              }}
-            />
-          );
-        })}
+            return (
+              <TieredTextButton
+                key={index}
+                {...info}
+                primaryText={getDepartmentName(departmentInfo, departmentNames)}
+                secondaryText={`${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`}
+                onPress={() => {
+                  navigation.navigate("Explore-Department", departmentInfo);
+                }}
+              />
+            );
+          })
+        }
       </Grid>
     </KeyboardAwareSafeAreaScrollView>
   );

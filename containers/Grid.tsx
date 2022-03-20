@@ -1,4 +1,4 @@
-import { Children, type ReactNode, cloneElement } from "react";
+import { type ReactNode } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useWindowDimensions } from "react-native";
 import {
@@ -8,14 +8,20 @@ import {
   type ISkeletonProps,
 } from "native-base";
 
-type GridProps = IFlexProps & {
+type GridRenderItemInfo = {
+  width: string;
+  margin: string;
+  height: string | number;
+};
+
+type GridProps = {
   isLoaded?: boolean;
   skeletonCount?: number;
   skeletonProps?: ISkeletonProps;
   spacing?: number;
   minChildrenWidth: number;
   childrenHeight: number | string;
-  children: ReactNode;
+  children: (info: GridRenderItemInfo) => ReactNode;
 };
 
 export default function Grid({
@@ -27,7 +33,7 @@ export default function Grid({
   childrenHeight: childHeight,
   children,
   ...rest
-}: GridProps) {
+}: GridProps & Omit<IFlexProps, keyof GridProps>) {
   skeletonProps = Object.assign({ borderRadius: 10 }, skeletonProps);
 
   const acutalMargin = Math.max(spacing, 2);
@@ -40,11 +46,12 @@ export default function Grid({
     (windowWidth - acutalMargin * 2) / (actualChildWidth + acutalMargin * 2);
   const columns = Math.max(Math.floor(ratio), 1);
 
-  const actualChildren = isLoaded
+  const actualChildren: (info: GridRenderItemInfo) => ReactNode = isLoaded
     ? children
-    : [...Array(skeletonCount)].map((_, index) => (
-        <Skeleton key={index} {...skeletonProps} />
-      ));
+    : (info) =>
+        [...Array(skeletonCount)].map((_, index) => (
+          <Skeleton key={index} {...info} {...skeletonProps} />
+        ));
 
   return (
     <Flex
@@ -56,14 +63,12 @@ export default function Grid({
       flexWrap={"wrap"}
       marginX={acutalMargin + "px"}
     >
-      {Children.map(actualChildren, (child) =>
-        cloneElement(child, {
-          width:
-            (windowWidth - acutalMargin * (columns + 1) * 2) / columns + "px",
-          height: childHeight,
-          margin: acutalMargin + "px",
-        })
-      )}
+      {actualChildren({
+        width:
+          (windowWidth - acutalMargin * (columns + 1) * 2) / columns + "px",
+        height: childHeight,
+        margin: acutalMargin + "px",
+      })}
     </Flex>
   );
 }

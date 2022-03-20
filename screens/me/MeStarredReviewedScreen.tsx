@@ -30,29 +30,32 @@ export default function MeStarredReviewedScreen() {
     <KeyboardAwareSafeAreaScrollView>
       {/* <Text variant={"h1"}>{route.name.replace(/Me-/gi, "")}</Text> */}
       <Grid minChildrenWidth={140} childrenHeight={"90px"}>
-        {placeholderClassNumbers.map((classNumber, index) => {
-          const classCode: ClassCode = {
-            schoolCode: "UY",
-            departmentCode: "DM",
-            classNumber,
-          };
+        {(info) =>
+          placeholderClassNumbers.map((classNumber, index) => {
+            const classCode: ClassCode = {
+              schoolCode: "UY",
+              departmentCode: "DM",
+              classNumber,
+            };
 
-          return (
-            <TieredTextButton
-              key={index}
-              primaryText={"Lorem ipsum dolor sit amet"}
-              secondaryText={getClassCode(classCode)}
-              onPress={() => {
-                navigation.navigate("Me-Detail", {
-                  ...classCode,
-                  name: classNumber,
-                  description:
-                    "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas modi explicabo fuga, eum libero ipsum magnam. Dolores, vel vero nobis doloribus voluptatibus soluta ratione adipisci repellat voluptatem libero ipsam rerum.",
-                });
-              }}
-            />
-          );
-        })}
+            return (
+              <TieredTextButton
+                key={index}
+                {...info}
+                primaryText={"Lorem ipsum dolor sit amet"}
+                secondaryText={getClassCode(classCode)}
+                onPress={() => {
+                  navigation.navigate("Me-Detail", {
+                    ...classCode,
+                    name: classNumber,
+                    description:
+                      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas modi explicabo fuga, eum libero ipsum magnam. Dolores, vel vero nobis doloribus voluptatibus soluta ratione adipisci repellat voluptatem libero ipsam rerum.",
+                  });
+                }}
+              />
+            );
+          })
+        }
       </Grid>
     </KeyboardAwareSafeAreaScrollView>
   );

@@ -54,20 +54,23 @@ export default function ExploreUniversityScreen() {
         minChildrenWidth={140}
         childrenHeight={"90px"}
       >
-        {undergradCodes.map((schoolCode, index) => {
-          const schoolInfo: SchoolInfo = { schoolCode };
+        {(info) =>
+          undergradCodes.map((schoolCode, index) => {
+            const schoolInfo: SchoolInfo = { schoolCode };
 
-          return (
-            <TieredTextButton
-              key={index}
-              primaryText={getSchoolName(schoolInfo, schoolNames)}
-              secondaryText={schoolCode.toUpperCase()}
-              onPress={() => {
-                navigation.navigate("Explore-School", schoolInfo);
-              }}
-            />
-          );
-        })}
+            return (
+              <TieredTextButton
+                key={index}
+                {...info}
+                primaryText={getSchoolName(schoolInfo, schoolNames)}
+                secondaryText={schoolCode.toUpperCase()}
+                onPress={() => {
+                  navigation.navigate("Explore-School", schoolInfo);
+                }}
+              />
+            );
+          })
+        }
       </Grid>
 
       <Text variant={"h1"} marginTop={"16px"}>
@@ -78,20 +81,23 @@ export default function ExploreUniversityScreen() {
         minChildrenWidth={140}
         childrenHeight={"90px"}
       >
-        {gradCodes.map((schoolCode, index) => {
-          const schoolInfo: SchoolInfo = { schoolCode };
+        {(info) =>
+          gradCodes.map((schoolCode, index) => {
+            const schoolInfo: SchoolInfo = { schoolCode };
 
-          return (
-            <TieredTextButton
-              key={index}
-              primaryText={getSchoolName(schoolInfo, schoolNames)}
-              secondaryText={schoolCode.toUpperCase()}
-              onPress={() => {
-                navigation.navigate("Explore-School", schoolInfo);
-              }}
-            />
-          );
-        })}
+            return (
+              <TieredTextButton
+                key={index}
+                {...info}
+                primaryText={getSchoolName(schoolInfo, schoolNames)}
+                secondaryText={schoolCode.toUpperCase()}
+                onPress={() => {
+                  navigation.navigate("Explore-School", schoolInfo);
+                }}
+              />
+            );
+          })
+        }
       </Grid>
     </KeyboardAwareSafeAreaScrollView>
   );

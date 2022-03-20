@@ -7,6 +7,7 @@ const headerBaseStyle = {
 };
 
 const buttonTextBaseStyle = {
+  textAlign: "center",
   fontWeight: "semibold",
   fontSize: "md",
 };
@@ -30,6 +31,7 @@ const componentsStyle = {
         background: colorStyle.nyu.default,
         _text: {
           color: "white",
+          ...buttonTextBaseStyle,
         },
         _pressed: {
           opacity: 0.5,
@@ -43,6 +45,7 @@ const componentsStyle = {
         background: colorStyle.background.secondary,
         _text: {
           color: colorStyle.nyu.default,
+          ...buttonTextBaseStyle,
         },
         _pressed: {
           background: colorStyle.background.tertiary,

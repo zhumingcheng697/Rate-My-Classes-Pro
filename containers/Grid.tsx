@@ -28,7 +28,7 @@ export default function Grid({
   children,
   ...rest
 }: GridProps) {
-  skeletonProps = Object.assign({ borderRadius: 12 }, skeletonProps);
+  skeletonProps = Object.assign({ borderRadius: 10 }, skeletonProps);
 
   const acutalMargin = Math.max(spacing, 2);
   const actualChildWidth = Math.max(minChildWidth, 60);

@@ -77,11 +77,7 @@ export default class App extends Component<undefined, AppState> {
                   Please check your internet connection or try again later.
                 </AlertDialog.Body>
                 <AlertDialog.Footer>
-                  <Button
-                    ref={ref}
-                    background={"nyu.default"}
-                    onPress={this.clearLoadError.bind(this)}
-                  >
+                  <Button ref={ref} onPress={this.clearLoadError.bind(this)}>
                     OK
                   </Button>
                 </AlertDialog.Footer>

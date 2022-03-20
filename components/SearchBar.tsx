@@ -1,7 +1,7 @@
 import { Input, Pressable, Icon, type IInputProps } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-type SearchBarProp = IInputProps & {
+type SearchBarProps = {
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
@@ -12,7 +12,7 @@ export default function SearchBar({
   onChangeText,
   placeholder = "Search",
   ...rest
-}: SearchBarProp) {
+}: SearchBarProps & Omit<IInputProps, keyof SearchBarProps>) {
   return (
     <Input
       {...rest}

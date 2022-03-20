@@ -24,6 +24,12 @@ export const colorStyle = {
 };
 
 const componentsStyle = {
+  Icon: {
+    defaultProps: {
+      size: "sm",
+      color: "gray.400",
+    },
+  },
   Button: {
     variants: {
       solid: {

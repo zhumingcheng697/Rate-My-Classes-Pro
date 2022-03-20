@@ -1,9 +1,10 @@
-import { Text, Button } from "native-base";
+import { Text } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { type MeNavigationParamList } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
+import NavigationButton from "../../components/NavigationButton";
 
 type MeAccountScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
@@ -16,35 +17,28 @@ export default function MeAccountScreen() {
   return (
     <KeyboardAwareSafeAreaScrollView>
       <Text variant={"h1"}>McCoy Applseed</Text>
-      <Button
-        variant={"subtle"}
+      <NavigationButton
+        title={"Starred"}
         margin={"10px"}
         onPress={() => {
           navigation.push("Me-Starred");
         }}
-      >
-        <Text variant={"subtleButton"}>Starred</Text>
-      </Button>
-      <Button
-        variant={"subtle"}
+      />
+      <NavigationButton
+        title={"Reviewed"}
         margin={"10px"}
         onPress={() => {
           navigation.push("Me-Reviewed");
         }}
-      >
-        <Text variant={"subtleButton"}>Reviewed</Text>
-      </Button>
-      <Button
-        variant={"subtle"}
+      />
+      <NavigationButton
+        title={"Sign Out"}
+        _text={{ color: "red.600" }}
         margin={"10px"}
         onPress={() => {
           navigation.replace("Me-SignIn");
         }}
-      >
-        <Text color={"red.600"} variant={"button"}>
-          Sign Out
-        </Text>
-      </Button>
+      />
     </KeyboardAwareSafeAreaScrollView>
   );
 }

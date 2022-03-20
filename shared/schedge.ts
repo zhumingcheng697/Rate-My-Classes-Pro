@@ -1,9 +1,9 @@
 import type { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
 
 const baseUrl = "https://schedge.a1liu.com";
-const suffix = "?full=true";
 
-const composeUrl = (path: string) => baseUrl + path + suffix;
+const composeUrl = (path: string, query: string = "?full=true") =>
+  baseUrl + path + query;
 
 type NameRecord = {
   name: string;

@@ -9,7 +9,7 @@ import {
 } from "react-native-keyboard-aware-scroll-view";
 import { type IBoxProps, Box } from "native-base";
 
-type SafeAreaScrollViewProps = {
+type KeyboardAwareSafeAreaScrollViewProps = {
   contentContainerProps?: IBoxProps;
   safeAreaViewProps?: NativeSafeAreaViewProps;
   keyboardAwareScrollViewProps?: KeyboardAwareScrollViewProps;
@@ -21,7 +21,7 @@ export default function KeyboardAwareSafeAreaScrollView({
   safeAreaViewProps,
   keyboardAwareScrollViewProps,
   children,
-}: SafeAreaScrollViewProps) {
+}: KeyboardAwareSafeAreaScrollViewProps) {
   contentContainerProps = Object.assign(
     { marginY: "10px" },
     contentContainerProps

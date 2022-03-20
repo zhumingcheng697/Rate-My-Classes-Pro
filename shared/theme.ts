@@ -18,6 +18,20 @@ export const colorStyle = {
 };
 
 const componentsStyle = {
+  Button: {
+    variants: {
+      solid: {
+        borderRadius: 10,
+        background: colorStyle.nyu.default,
+        _pressed: {
+          opacity: 0.5,
+        },
+        _hover: {
+          opacity: 0.5,
+        },
+      },
+    },
+  },
   Skeleton: {
     baseStyle: {
       startColor: colorStyle.background.secondary,
@@ -33,9 +47,9 @@ const componentsStyle = {
   Input: {
     defaultProps: {
       size: "lg",
-      borderWidth: 1.5,
+      borderWidth: 1,
       _focus: {
-        borderColor: "nyu.default",
+        borderColor: "gray.400",
       },
     },
     baseStyle: {

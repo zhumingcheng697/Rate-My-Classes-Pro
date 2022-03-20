@@ -19,6 +19,8 @@ export default function SearchBar({
       placeholder={placeholder}
       value={value}
       onChangeText={onChangeText}
+      enablesReturnKeyAutomatically={true}
+      returnKeyType={"search"}
       leftElement={
         <Icon
           marginLeft={"5px"}

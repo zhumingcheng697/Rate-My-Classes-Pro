@@ -26,10 +26,12 @@ export default function KeyboardAwareSafeAreaScrollView({
     { marginY: "10px" },
     contentContainerProps
   );
+
   safeAreaViewProps = Object.assign(
     { edges: ["left", "right"] },
     safeAreaViewProps
   );
+
   keyboardAwareScrollViewProps = Object.assign(
     { keyboardShouldPersistTaps: "handled" },
     keyboardAwareScrollViewProps

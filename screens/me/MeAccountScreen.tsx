@@ -1,4 +1,4 @@
-import { Text } from "native-base";
+import { Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
@@ -17,36 +17,35 @@ export default function MeAccountScreen() {
   return (
     <KeyboardAwareSafeAreaScrollView>
       <Text variant={"h1"}>McCoy Applseed</Text>
-      <LeftAlignedButton
-        title={"Starred"}
-        margin={"10px"}
-        onPress={() => {
-          navigation.push("Me-Starred");
-        }}
-      />
-      <LeftAlignedButton
-        title={"Reviewed"}
-        margin={"10px"}
-        onPress={() => {
-          navigation.push("Me-Reviewed");
-        }}
-      />
-      <LeftAlignedButton
-        title={"Settings"}
-        margin={"10px"}
-        onPress={() => {
-          navigation.push("Me-Settings");
-        }}
-      />
-      <LeftAlignedButton
-        title={"Sign Out"}
-        _text={{ color: "red.600" }}
-        showChevron={false}
-        margin={"10px"}
-        onPress={() => {
-          navigation.replace("Me-SignIn");
-        }}
-      />
+      <VStack margin={"10px"} space={"12px"}>
+        <LeftAlignedButton
+          title={"Starred"}
+          onPress={() => {
+            navigation.push("Me-Starred");
+          }}
+        />
+        <LeftAlignedButton
+          title={"Reviewed"}
+          onPress={() => {
+            navigation.push("Me-Reviewed");
+          }}
+        />
+        <LeftAlignedButton
+          title={"Settings"}
+          onPress={() => {
+            navigation.push("Me-Settings");
+          }}
+        />
+        <LeftAlignedButton
+          title={"Sign Out"}
+          _text={{ color: "red.600" }}
+          showChevron={false}
+          marginTop={"15px"}
+          onPress={() => {
+            navigation.replace("Me-SignIn");
+          }}
+        />
+      </VStack>
     </KeyboardAwareSafeAreaScrollView>
   );
 }

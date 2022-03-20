@@ -16,7 +16,7 @@ export type ClassCode = DepartmentInfo & {
 
 export type ClassInfo = ClassCode & {
   name: string;
-  description: string;
+  description?: string;
 };
 
 export type RootNavigationParamList = {

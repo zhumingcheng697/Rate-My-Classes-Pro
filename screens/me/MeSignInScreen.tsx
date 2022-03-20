@@ -4,6 +4,7 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { type MeNavigationParamList } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
+import PlainTextButton from "../../components/PlainTextButton";
 
 type MeSignInScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
@@ -39,20 +40,12 @@ export default function MeSignInScreen() {
         </Button>
         <Box>
           <Text textAlign={"center"}>Don’t have an account yet?</Text>
-          <Pressable
+          <PlainTextButton
+            title={"Sign Up"}
             onPress={() => {
               navigation.replace("Me-SignUp");
             }}
-          >
-            {({ isPressed, isHovered }) => (
-              <Text
-                variant={"textButton"}
-                opacity={isPressed || isHovered ? 0.5 : 1}
-              >
-                Sign Up
-              </Text>
-            )}
-          </Pressable>
+          />
         </Box>
       </VStack>
     </KeyboardAwareSafeAreaScrollView>

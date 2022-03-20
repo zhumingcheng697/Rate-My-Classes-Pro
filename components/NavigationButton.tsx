@@ -9,7 +9,7 @@ import {
 } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-type NavigationButtonProps = Omit<IButtonProps, "_text" | "title"> & {
+type NavigationButtonProps = {
   title: string;
   _text?: ITextProps;
 };
@@ -18,7 +18,7 @@ export default function NavigationButton({
   title,
   _text,
   ...rest
-}: NavigationButtonProps) {
+}: NavigationButtonProps & Omit<IButtonProps, keyof NavigationButtonProps>) {
   return (
     <Button {...rest} variant={"subtle"}>
       <Flex

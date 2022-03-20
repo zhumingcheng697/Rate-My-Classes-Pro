@@ -26,6 +26,8 @@ export default function LeftAlignedButton({
       <Flex
         justifyContent={"space-evenly"}
         flexDirection={"row"}
+        alignItems={"center"}
+        alignContent={"center"}
         width={"100%"}
       >
         <Text {..._text} variant={"subtleButton"}>
@@ -35,6 +37,7 @@ export default function LeftAlignedButton({
         {showChevron && (
           <Icon
             marginRight={"-5px"}
+            size={"5"}
             as={<Ionicons name={"chevron-forward"} />}
           />
         )}

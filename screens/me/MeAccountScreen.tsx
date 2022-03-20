@@ -65,19 +65,19 @@ export default function MeAccountScreen() {
           <LeftAlignedButton
             title={"Starred"}
             onPress={() => {
-              navigation.push("Starred");
+              navigation.navigate("Starred");
             }}
           />
           <LeftAlignedButton
             title={"Reviewed"}
             onPress={() => {
-              navigation.push("Reviewed");
+              navigation.navigate("Reviewed");
             }}
           />
           <LeftAlignedButton
             title={"Settings"}
             onPress={() => {
-              navigation.push("Settings");
+              navigation.navigate("Settings");
             }}
           />
           <LeftAlignedButton

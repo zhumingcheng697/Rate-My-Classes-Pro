@@ -1,6 +1,6 @@
-import { Pressable, Box, Text, type IPressableProps } from "native-base";
+import { Text, Button, type IButtonProps } from "native-base";
 
-type TieredTextButtonProps = IPressableProps & {
+type TieredTextButtonProps = IButtonProps & {
   primaryText: string;
   secondaryText?: string;
 };
@@ -11,30 +11,20 @@ export default function TieredTextButton({
   ...rest
 }: TieredTextButtonProps) {
   return (
-    <Pressable
-      {...rest}
-      background={"background.secondary"}
-      borderRadius={12}
-      _pressed={{ background: "background.tertiary" }}
-      _hover={{ background: "background.tertiary" }}
-    >
-      <Box height={"100%"} justifyContent={"center"} marginX={2}>
-        <Text
-          color={"nyu.default"}
-          fontSize={"md"}
-          fontWeight={"medium"}
-          lineHeight={"sm"}
-          textAlign={"center"}
-          numberOfLines={2}
-        >
-          {primaryText}
+    <Button {...rest} variant={"subtle"}>
+      <Text
+        variant={"subtleButton"}
+        fontWeight={"medium"}
+        lineHeight={"sm"}
+        numberOfLines={2}
+      >
+        {primaryText}
+      </Text>
+      {secondaryText && (
+        <Text fontSize={"sm"} textAlign={"center"} numberOfLines={2}>
+          {secondaryText}
         </Text>
-        {secondaryText && (
-          <Text fontSize={"sm"} textAlign={"center"}>
-            {secondaryText}
-          </Text>
-        )}
-      </Box>
-    </Pressable>
+      )}
+    </Button>
   );
 }

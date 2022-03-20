@@ -6,6 +6,7 @@ import MeSignUpScreen from "../screens/me/MeSignUpScreen";
 import MeSignInScreen from "../screens/me/MeSignInScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
+import reviewScreenOptions from "./reviewScreenOptions";
 import { getClassCode } from "../shared/utils";
 import { type MeNavigationParamList } from "../shared/types";
 
@@ -46,9 +47,7 @@ export default function MeNavigation() {
       <Stack.Screen
         name={"Review"}
         component={PlaceHolderScreen}
-        options={{
-          presentation: "modal",
-        }}
+        options={reviewScreenOptions}
       />
     </Stack.Navigator>
   );

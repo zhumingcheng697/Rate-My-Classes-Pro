@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import SearchClassScreen from "../screens/search/SearchClassScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
+import reviewScreenOptions from "./reviewScreenOptions";
 import { getClassCode } from "../shared/utils";
 import { type SearchNavigationParamList } from "../shared/types";
 
@@ -22,9 +23,7 @@ export default function SearchNavigation() {
       <Stack.Screen
         name={"Review"}
         component={PlaceHolderScreen}
-        options={{
-          presentation: "modal",
-        }}
+        options={reviewScreenOptions}
       />
     </Stack.Navigator>
   );

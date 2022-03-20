@@ -43,6 +43,13 @@ export default function MeNavigation() {
           title: getClassCode(route.params),
         })}
       />
+      <Stack.Screen
+        name={"Review"}
+        component={PlaceHolderScreen}
+        options={{
+          presentation: "modal",
+        }}
+      />
     </Stack.Navigator>
   );
 }

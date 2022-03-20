@@ -4,6 +4,7 @@ import ExploreUniversityScreen from "../screens/explore/ExploreUniversityScreen"
 import ExploreSchoolScreen from "../screens/explore/ExploreSchoolScreen";
 import ExploreDepartmentScreen from "../screens/explore/ExploreDepartmentScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
+import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import { getClassCode } from "../shared/utils";
 import { type ExploreNavigationParamList } from "../shared/types";
 
@@ -37,6 +38,13 @@ export default function ExploreNavigation() {
         options={({ route }) => ({
           title: getClassCode(route.params),
         })}
+      />
+      <Stack.Screen
+        name={"Review"}
+        component={PlaceHolderScreen}
+        options={{
+          presentation: "modal",
+        }}
       />
     </Stack.Navigator>
   );

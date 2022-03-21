@@ -18,8 +18,8 @@ export default function TieredTextButton({
   return (
     <Button {...rest} paddingX={"0"} variant={"subtle"}>
       <Text
-        maxWidth={width}
-        paddingX={"10px"}
+        width={width}
+        paddingX={"8px"}
         variant={"subtleButton"}
         fontWeight={"medium"}
         lineHeight={"sm"}
@@ -29,8 +29,8 @@ export default function TieredTextButton({
       </Text>
       {secondaryText && (
         <Text
-          maxWidth={width}
-          paddingX={"10px"}
+          width={width}
+          paddingX={"8px"}
           fontSize={"sm"}
           textAlign={"center"}
           numberOfLines={2}

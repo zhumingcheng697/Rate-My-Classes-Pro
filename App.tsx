@@ -10,9 +10,24 @@ import nativeBaseTheme, { colorStyle } from "./shared/theme";
 import reducer from "./redux/reducers";
 import { getSchoolNames, getDepartmentNames } from "./shared/schedge";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "./redux/actions";
-import { isObjectEmpty } from "./shared/utils";
 
 const store = createStore(reducer);
+
+type Theme = typeof nativeBaseTheme;
+
+declare module "native-base" {
+  interface ICustomTheme extends Theme {}
+}
+
+type RootState = ReturnType<typeof store.getState>;
+
+declare module "react-redux" {
+  interface DefaultRootState extends RootState {}
+}
+
+type AppState = {
+  loadError: boolean;
+};
 
 const navigationTheme = {
   ...DefaultTheme,
@@ -21,10 +36,6 @@ const navigationTheme = {
     primary: colorStyle.nyu.default,
     background: colorStyle.background.primary,
   },
-};
-
-type AppState = {
-  loadError: boolean;
 };
 
 export default class App extends Component<undefined, AppState> {
@@ -89,16 +100,4 @@ export default class App extends Component<undefined, AppState> {
       </Provider>
     );
   }
-}
-
-type ThemeType = typeof nativeBaseTheme;
-
-declare module "native-base" {
-  interface ICustomTheme extends ThemeType {}
-}
-
-type RootState = ReturnType<typeof store.getState>;
-
-declare module "react-redux" {
-  interface DefaultRootState extends RootState {}
 }

@@ -69,6 +69,9 @@ const componentsStyle = {
     },
   },
   ScrollView: {
+    defaultProps: {
+      keyboardShouldPersistTaps: "handled",
+    },
     baseStyle: {
       background: colorStyle.background.primary,
       minHeight: "100%",
@@ -76,6 +79,7 @@ const componentsStyle = {
   },
   Input: {
     defaultProps: {
+      backgroundColor: "transparent",
       size: "lg",
       borderWidth: 1,
       _focus: {
@@ -89,7 +93,6 @@ const componentsStyle = {
     variants: {
       password: {
         type: "password",
-        keyboardType: "visible-password",
         autoCapitalize: "none",
         autoCorrect: false,
       },

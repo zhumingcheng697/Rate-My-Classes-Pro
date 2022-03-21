@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ScrollView, Text, Pressable, Center, Divider } from "native-base";
+import { ScrollView, Text, Pressable, Center, Divider, Box } from "native-base";
 import { Keyboard } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
@@ -26,13 +26,9 @@ export default function SearchScreen() {
 
   return (
     <SafeAreaView edges={["left", "right"]}>
-      <Pressable
+      <Box
         paddingBottom={`${searchBarHeight + dividerHeight + 20}px`}
         height={"100%"}
-        isDisabled={!!query}
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
       >
         <SearchBar
           height={`${searchBarHeight}px`}
@@ -74,16 +70,21 @@ export default function SearchScreen() {
               }
             </Grid>
           </ScrollView>
+        ) : !focused ? (
+          <Center height={"100%"}>
+            <Text textAlign={"center"}>
+              Search Classes by Title or Description
+            </Text>
+          </Center>
         ) : (
-          !focused && (
-            <Center height={"100%"}>
-              <Text textAlign={"center"}>
-                Search Classes by Title or Description
-              </Text>
-            </Center>
-          )
+          <Pressable
+            height={"100%"}
+            onPress={() => {
+              Keyboard.dismiss();
+            }}
+          />
         )}
-      </Pressable>
+      </Box>
     </SafeAreaView>
   );
 }

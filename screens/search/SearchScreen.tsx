@@ -19,6 +19,9 @@ type SearchScreenNavigationProp = StackNavigationProp<
   "Search"
 >;
 
+const searchBarHeight = 38;
+const dividerHeight = 1;
+
 export default function SearchScreen() {
   const navigation = useNavigation<SearchScreenNavigationProp>();
   const [query, setQuery] = useState("");
@@ -42,13 +45,14 @@ export default function SearchScreen() {
     >
       <Box background={"background.primary"}>
         <SearchBar
+          height={`${searchBarHeight}px`}
           margin={"10px"}
           value={query}
           onChangeText={setQuery}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
         />
-        <Divider />
+        <Divider height={`${dividerHeight}px`} />
       </Box>
       {query ? (
         <Grid marginY={"10px"}>
@@ -83,7 +87,13 @@ export default function SearchScreen() {
         !focused && (
           <Center
             height={`${
-              height - insets.top - insets.bottom - headerHeight - tabBarHeight
+              height -
+              insets.top -
+              insets.bottom -
+              headerHeight -
+              tabBarHeight -
+              searchBarHeight -
+              dividerHeight
             }px`}
           >
             <Text textAlign={"center"}>

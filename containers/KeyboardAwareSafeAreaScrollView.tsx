@@ -1,4 +1,5 @@
 import { Children, type ReactNode } from "react";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import {
   SafeAreaView,
   type NativeSafeAreaViewProps,
@@ -21,6 +22,8 @@ export default function KeyboardAwareSafeAreaScrollView({
   wrapChildrenInIndividualSafeAreaViews = false,
   children,
 }: KeyboardAwareSafeAreaScrollViewProps) {
+  const tabBarHeight = useBottomTabBarHeight();
+
   safeAreaViewProps = Object.assign(
     { edges: ["left", "right"] },
     safeAreaViewProps
@@ -29,6 +32,7 @@ export default function KeyboardAwareSafeAreaScrollView({
   keyboardAwareScrollViewProps = Object.assign(
     {
       keyboardShouldPersistTaps: "handled",
+      extraScrollHeight: -tabBarHeight,
     },
     keyboardAwareScrollViewProps
   );

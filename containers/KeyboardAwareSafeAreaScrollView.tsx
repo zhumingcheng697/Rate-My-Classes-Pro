@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { Children, type ReactNode } from "react";
 import {
   SafeAreaView,
   type NativeSafeAreaViewProps,
@@ -7,41 +7,41 @@ import {
   KeyboardAwareScrollView,
   type KeyboardAwareScrollViewProps,
 } from "react-native-keyboard-aware-scroll-view";
-import { type IBoxProps, Box } from "native-base";
 
 export type KeyboardAwareSafeAreaScrollViewProps = {
-  contentContainerProps?: IBoxProps;
   safeAreaViewProps?: NativeSafeAreaViewProps;
   keyboardAwareScrollViewProps?: KeyboardAwareScrollViewProps;
+  wrapChildrenInIndividualSafeAreaViews?: boolean;
   children: ReactNode;
 };
 
 export default function KeyboardAwareSafeAreaScrollView({
-  contentContainerProps,
   safeAreaViewProps,
   keyboardAwareScrollViewProps,
+  wrapChildrenInIndividualSafeAreaViews = false,
   children,
 }: KeyboardAwareSafeAreaScrollViewProps) {
-  contentContainerProps = Object.assign(
-    { marginY: "10px" },
-    contentContainerProps
-  );
-
   safeAreaViewProps = Object.assign(
     { edges: ["left", "right"] },
     safeAreaViewProps
   );
 
   keyboardAwareScrollViewProps = Object.assign(
-    { keyboardShouldPersistTaps: "handled" },
+    {
+      keyboardShouldPersistTaps: "handled",
+    },
     keyboardAwareScrollViewProps
   );
 
   return (
     <KeyboardAwareScrollView {...keyboardAwareScrollViewProps}>
-      <SafeAreaView {...safeAreaViewProps}>
-        <Box {...contentContainerProps}>{children}</Box>
-      </SafeAreaView>
+      {wrapChildrenInIndividualSafeAreaViews ? (
+        Children.map(children, (child) => (
+          <SafeAreaView {...safeAreaViewProps}>{child}</SafeAreaView>
+        ))
+      ) : (
+        <SafeAreaView {...safeAreaViewProps}>{children}</SafeAreaView>
+      )}
     </KeyboardAwareScrollView>
   );
 }

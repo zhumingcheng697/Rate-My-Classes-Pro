@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Text } from "native-base";
+import { Text, Box } from "native-base";
 import {
   useNavigation,
   useRoute,
@@ -44,29 +44,34 @@ export default function SchoolScreen() {
 
   return (
     <KeyboardAwareSafeAreaScrollView>
-      <Text variant={"h1"}>{getSchoolName(route.params, schoolNames)}</Text>
-      <Grid isLoaded={isLoaded}>
-        {(info) =>
-          departments.map((departmentCode, index) => {
-            const departmentInfo: DepartmentInfo = {
-              ...route.params,
-              departmentCode,
-            };
+      <Box marginY={"10px"}>
+        <Text variant={"h1"}>{getSchoolName(route.params, schoolNames)}</Text>
+        <Grid isLoaded={isLoaded}>
+          {(info) =>
+            departments.map((departmentCode, index) => {
+              const departmentInfo: DepartmentInfo = {
+                ...route.params,
+                departmentCode,
+              };
 
-            return (
-              <TieredTextButton
-                key={index}
-                {...info}
-                primaryText={getDepartmentName(departmentInfo, departmentNames)}
-                secondaryText={`${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`}
-                onPress={() => {
-                  navigation.navigate("Department", departmentInfo);
-                }}
-              />
-            );
-          })
-        }
-      </Grid>
+              return (
+                <TieredTextButton
+                  key={index}
+                  {...info}
+                  primaryText={getDepartmentName(
+                    departmentInfo,
+                    departmentNames
+                  )}
+                  secondaryText={`${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`}
+                  onPress={() => {
+                    navigation.navigate("Department", departmentInfo);
+                  }}
+                />
+              );
+            })
+          }
+        </Grid>
+      </Box>
     </KeyboardAwareSafeAreaScrollView>
   );
 }

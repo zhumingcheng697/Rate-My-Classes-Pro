@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Text, VStack, AlertDialog, Button } from "native-base";
+import { Text, VStack, AlertDialog, Button, Box } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
@@ -60,36 +60,38 @@ export default function AccountScreen() {
         </AlertDialog.Content>
       </AlertDialog>
       <KeyboardAwareSafeAreaScrollView>
-        <Text variant={"h1"}>McCoy Applseed</Text>
-        <VStack margin={"10px"} space={"12px"}>
-          <LeftAlignedButton
-            title={"Starred"}
-            onPress={() => {
-              navigation.navigate("Starred");
-            }}
-          />
-          <LeftAlignedButton
-            title={"Reviewed"}
-            onPress={() => {
-              navigation.navigate("Reviewed");
-            }}
-          />
-          <LeftAlignedButton
-            title={"Settings"}
-            onPress={() => {
-              navigation.navigate("Settings");
-            }}
-          />
-          <LeftAlignedButton
-            title={"Sign Out"}
-            _text={{ color: "red.600" }}
-            showChevron={false}
-            marginTop={"15px"}
-            onPress={() => {
-              setShowAlert(true);
-            }}
-          />
-        </VStack>
+        <Box marginY={"10px"}>
+          <Text variant={"h1"}>McCoy Applseed</Text>
+          <VStack margin={"10px"} space={"12px"}>
+            <LeftAlignedButton
+              title={"Starred"}
+              onPress={() => {
+                navigation.navigate("Starred");
+              }}
+            />
+            <LeftAlignedButton
+              title={"Reviewed"}
+              onPress={() => {
+                navigation.navigate("Reviewed");
+              }}
+            />
+            <LeftAlignedButton
+              title={"Settings"}
+              onPress={() => {
+                navigation.navigate("Settings");
+              }}
+            />
+            <LeftAlignedButton
+              title={"Sign Out"}
+              _text={{ color: "red.600" }}
+              showChevron={false}
+              marginTop={"15px"}
+              onPress={() => {
+                setShowAlert(true);
+              }}
+            />
+          </VStack>
+        </Box>
       </KeyboardAwareSafeAreaScrollView>
     </>
   );

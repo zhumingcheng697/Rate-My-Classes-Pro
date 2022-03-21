@@ -1,4 +1,4 @@
-import { Text, Button } from "native-base";
+import { Text, Button, Box } from "native-base";
 import {
   useNavigation,
   useRoute,
@@ -38,25 +38,27 @@ export default function DetailScreen() {
 
   return (
     <KeyboardAwareSafeAreaScrollView>
-      <Text variant={"h1"}>Lorem ipsum dolor sit amet</Text>
-      <Text variant={"h2"}>
-        {getSchoolName(classInfo, schoolNames)}
-        {": "}
-        {getDepartmentName(classInfo, departmentNames)}
-      </Text>
-      {!!classInfo.description && (
-        <Text fontSize={"md"} margin={"10px"}>
-          {classInfo.description}
+      <Box marginY={"10px"}>
+        <Text variant={"h1"}>Lorem ipsum dolor sit amet</Text>
+        <Text variant={"h2"}>
+          {getSchoolName(classInfo, schoolNames)}
+          {": "}
+          {getDepartmentName(classInfo, departmentNames)}
         </Text>
-      )}
-      <Button
-        margin={"10px"}
-        onPress={() => {
-          navigation.navigate("Review", classInfo);
-        }}
-      >
-        <Text variant={"button"}>Review</Text>
-      </Button>
+        {!!classInfo.description && (
+          <Text fontSize={"md"} margin={"10px"}>
+            {classInfo.description}
+          </Text>
+        )}
+        <Button
+          margin={"10px"}
+          onPress={() => {
+            navigation.navigate("Review", classInfo);
+          }}
+        >
+          <Text variant={"button"}>Review</Text>
+        </Button>
+      </Box>
     </KeyboardAwareSafeAreaScrollView>
   );
 }

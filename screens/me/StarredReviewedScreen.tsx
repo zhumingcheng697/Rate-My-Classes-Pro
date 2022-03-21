@@ -1,4 +1,4 @@
-import { Text } from "native-base";
+import { Text, Box } from "native-base";
 import {
   useNavigation,
   useRoute,
@@ -28,35 +28,37 @@ export default function StarredReviewedScreen() {
 
   return (
     <KeyboardAwareSafeAreaScrollView>
-      {/* <Text variant={"h1"}>{route.name.replace(/Me-/gi, "")}</Text> */}
-      <Grid>
-        {(info) =>
-          placeholderClassNumbers.map((classNumber, index) => {
-            const classCode: ClassCode = {
-              schoolCode: "UY",
-              departmentCode: "DM",
-              classNumber,
-            };
+      <Box marginY={"10px"}>
+        {/* <Text variant={"h1"}>{route.name.replace(/Me-/gi, "")}</Text> */}
+        <Grid>
+          {(info) =>
+            placeholderClassNumbers.map((classNumber, index) => {
+              const classCode: ClassCode = {
+                schoolCode: "UY",
+                departmentCode: "DM",
+                classNumber,
+              };
 
-            return (
-              <TieredTextButton
-                key={index}
-                {...info}
-                primaryText={"Lorem ipsum dolor sit amet"}
-                secondaryText={getClassCode(classCode)}
-                onPress={() => {
-                  navigation.navigate("Detail", {
-                    ...classCode,
-                    name: classNumber,
-                    description:
-                      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas modi explicabo fuga, eum libero ipsum magnam. Dolores, vel vero nobis doloribus voluptatibus soluta ratione adipisci repellat voluptatem libero ipsam rerum.",
-                  });
-                }}
-              />
-            );
-          })
-        }
-      </Grid>
+              return (
+                <TieredTextButton
+                  key={index}
+                  {...info}
+                  primaryText={"Lorem ipsum dolor sit amet"}
+                  secondaryText={getClassCode(classCode)}
+                  onPress={() => {
+                    navigation.navigate("Detail", {
+                      ...classCode,
+                      name: classNumber,
+                      description:
+                        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas modi explicabo fuga, eum libero ipsum magnam. Dolores, vel vero nobis doloribus voluptatibus soluta ratione adipisci repellat voluptatem libero ipsam rerum.",
+                    });
+                  }}
+                />
+              );
+            })
+          }
+        </Grid>
+      </Box>
     </KeyboardAwareSafeAreaScrollView>
   );
 }

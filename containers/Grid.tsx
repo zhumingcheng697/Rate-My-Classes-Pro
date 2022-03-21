@@ -35,7 +35,7 @@ export default function Grid({
   skeletonCount = 12,
   skeletonProps,
   spacing = 5,
-  minChildWidth = 140,
+  minChildWidth = 165,
   childHeight,
   minChildHeight,
   maxChildHeight,

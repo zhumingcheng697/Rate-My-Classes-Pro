@@ -1,14 +1,14 @@
 import { type ReactText } from "react";
 import {
   Flex,
-  Spacer,
   Icon,
-  Button,
-  type IButtonProps,
+  Pressable,
+  type IPressableProps,
   Text,
   type ITextProps,
 } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { buttonBaseStyle } from "../shared/theme";
 
 type LeftAlignedButtonBaseProps = {
   title?: string;
@@ -18,7 +18,7 @@ type LeftAlignedButtonBaseProps = {
 };
 
 export type LeftAlignedButtonProps = LeftAlignedButtonBaseProps &
-  Omit<IButtonProps, keyof LeftAlignedButtonBaseProps>;
+  Omit<IPressableProps, keyof LeftAlignedButtonBaseProps>;
 
 export default function LeftAlignedButton({
   title,
@@ -28,26 +28,32 @@ export default function LeftAlignedButton({
   ...rest
 }: LeftAlignedButtonProps) {
   return (
-    <Button {...rest} variant={"subtle"}>
-      <Flex
-        justifyContent={"space-evenly"}
-        flexDirection={"row"}
-        alignItems={"center"}
-        alignContent={"center"}
-        width={"100%"}
-      >
-        <Text {..._text} variant={"subtleButton"}>
-          {title ?? children ?? "Button"}
-        </Text>
-        <Spacer />
-        {showChevron && (
-          <Icon
-            marginRight={"-5px"}
-            size={"5"}
-            as={<Ionicons name={"chevron-forward"} />}
-          />
-        )}
-      </Flex>
-    </Button>
+    <Pressable {...rest}>
+      {({ isPressed, isHovered }) => (
+        <Flex
+          {...buttonBaseStyle}
+          justifyContent={"space-between"}
+          flexDirection={"row"}
+          alignItems={"center"}
+          alignContent={"center"}
+          background={
+            isPressed || isHovered
+              ? "background.tertiary"
+              : "background.secondary"
+          }
+        >
+          <Text {..._text} variant={"subtleButton"}>
+            {title ?? children ?? "Button"}
+          </Text>
+          {showChevron && (
+            <Icon
+              marginRight={"-5px"}
+              size={"5"}
+              as={<Ionicons name={"chevron-forward"} />}
+            />
+          )}
+        </Flex>
+      )}
+    </Pressable>
   );
 }

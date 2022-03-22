@@ -61,5 +61,5 @@ export default ({
   },
   ...(Platform.OS === "ios" || Platform.OS === "macos"
     ? TransitionPresets.ModalSlideFromBottomIOS
-    : TransitionPresets.ScaleFromCenterAndroid),
+    : TransitionPresets.DefaultTransition),
 });

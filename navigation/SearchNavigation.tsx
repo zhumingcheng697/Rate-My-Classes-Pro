@@ -1,4 +1,7 @@
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/stack";
 
 import SearchScreen from "../screens/search/SearchScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
@@ -11,7 +14,7 @@ const Stack = createStackNavigator<SearchNavigationParamList>();
 
 export default function SearchNavigation() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ ...TransitionPresets.DefaultTransition }}>
       <Stack.Screen name={"Search"} component={SearchScreen} />
       <Stack.Screen
         name={"Detail"}

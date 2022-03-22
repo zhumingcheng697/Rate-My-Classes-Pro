@@ -1,4 +1,7 @@
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/stack";
 
 import AccountScreen from "../screens/me/AccountScreen";
 import StarredReviewedScreen from "../screens/me/StarredReviewedScreen";
@@ -14,7 +17,7 @@ const Stack = createStackNavigator<MeNavigationParamList>();
 
 export default function MeNavigation() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ ...TransitionPresets.DefaultTransition }}>
       <Stack.Screen
         name={"Account"}
         component={AccountScreen}

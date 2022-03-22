@@ -1,4 +1,7 @@
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/stack";
 
 import UniversityScreen from "../screens/explore/UniversityScreen";
 import SchoolScreen from "../screens/explore/SchoolScreen";
@@ -13,7 +16,7 @@ const Stack = createStackNavigator<ExploreNavigationParamList>();
 
 export default function ExploreNavigation() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ ...TransitionPresets.DefaultTransition }}>
       <Stack.Screen
         name={"University"}
         component={UniversityScreen}

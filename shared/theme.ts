@@ -1,5 +1,16 @@
 import { extendTheme } from "native-base";
 
+export const colorStyle = {
+  background: {
+    primary: "#ffffff",
+    secondary: "#f2f2f7",
+    tertiary: "#e5e5ea",
+  },
+  nyu: {
+    default: "#57068c",
+  },
+};
+
 const headerBaseStyle = {
   lineHeight: "1.05em",
   marginX: "10px",
@@ -12,15 +23,10 @@ const buttonTextBaseStyle = {
   fontSize: "md",
 };
 
-export const colorStyle = {
-  background: {
-    primary: "#ffffff",
-    secondary: "#f2f2f7",
-    tertiary: "#e5e5ea",
-  },
-  nyu: {
-    default: "#57068c",
-  },
+export const buttonBaseStyle = {
+  paddingX: "12px",
+  paddingY: "8px",
+  borderRadius: 10,
 };
 
 const componentsStyle = {
@@ -33,7 +39,7 @@ const componentsStyle = {
   Button: {
     variants: {
       solid: {
-        borderRadius: 10,
+        ...buttonBaseStyle,
         background: colorStyle.nyu.default,
         _text: {
           color: "white",
@@ -47,7 +53,7 @@ const componentsStyle = {
         },
       },
       subtle: {
-        borderRadius: 10,
+        ...buttonBaseStyle,
         background: colorStyle.background.secondary,
         _text: {
           color: colorStyle.nyu.default,

@@ -19,7 +19,7 @@ type SearchScreenNavigationProp = StackNavigationProp<
   "Search"
 >;
 
-const searchBarHeight = 38;
+const searchBarHeight = 39;
 const dividerHeight = 1;
 
 export default function SearchScreen() {

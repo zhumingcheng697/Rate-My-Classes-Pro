@@ -16,6 +16,8 @@ export default function SearchBar({
   placeholder = "Search",
   ...rest
 }: SearchBarProps) {
+  const pressedHoverStyle = { _icon: { color: "gray.300" } };
+
   return (
     <Input
       {...rest}
@@ -35,21 +37,18 @@ export default function SearchBar({
       }
       rightElement={
         value ? (
-          <Pressable
+          <IconButton
+            color={"gray.400"}
+            variant={"unstyled"}
+            _pressed={pressedHoverStyle}
+            _hover={pressedHoverStyle}
+            icon={
+              <Icon size={"22px"} as={<Ionicons name={"close-circle"} />} />
+            }
             onPress={() => {
               onChangeText("");
             }}
-          >
-            {({ isPressed, isHovered }) => (
-              <Icon
-                marginLeft={"-5px"}
-                marginRight={"5px"}
-                size={"sm"}
-                color={isPressed || isHovered ? "gray.500" : "gray.400"}
-                as={<Ionicons name={"close-circle"} />}
-              />
-            )}
-          </Pressable>
+          />
         ) : undefined
       }
     />

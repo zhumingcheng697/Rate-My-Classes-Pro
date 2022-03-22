@@ -1,4 +1,4 @@
-import { Input, Pressable, Icon, type IInputProps } from "native-base";
+import { Input, IconButton, Icon, type IInputProps } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 type SearchBarBaseProps = {
@@ -21,6 +21,7 @@ export default function SearchBar({
   return (
     <Input
       {...rest}
+      px={"3px"}
       placeholder={placeholder}
       value={value}
       onChangeText={onChangeText}
@@ -29,8 +30,7 @@ export default function SearchBar({
       leftElement={
         <Icon
           marginLeft={"5px"}
-          marginRight={"-5px"}
-          size={"sm"}
+          size={"22px"}
           color={"gray.400"}
           as={<Ionicons name={"search"} />}
         />
@@ -42,6 +42,7 @@ export default function SearchBar({
             variant={"unstyled"}
             _pressed={pressedHoverStyle}
             _hover={pressedHoverStyle}
+            padding={"5px"}
             icon={
               <Icon size={"22px"} as={<Ionicons name={"close-circle"} />} />
             }

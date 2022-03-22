@@ -48,7 +48,7 @@ export default function LeftAlignedButton({
           {showChevron && (
             <Icon
               marginRight={"-5px"}
-              size={"5"}
+              size={"18px"}
               as={<Ionicons name={"chevron-forward"} />}
             />
           )}

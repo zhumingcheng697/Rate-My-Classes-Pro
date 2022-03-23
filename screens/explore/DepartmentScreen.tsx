@@ -1,5 +1,5 @@
-import { Component } from "react";
-import { Text, Box } from "native-base";
+import { Component, createRef } from "react";
+import { Text, Box, AlertDialog, Button } from "native-base";
 import {
   useNavigation,
   useRoute,
@@ -96,36 +96,64 @@ class DepartmentScreenView extends Component<
       });
   }
 
+  clearLoadError() {
+    this.setState({ loadError: false });
+  }
+
   render() {
     const { navigation, route, schoolNames, departmentNames } = this.props;
     const { classes, loadError } = this.state;
+    const ref = createRef();
 
     return (
-      <KeyboardAwareSafeAreaScrollView>
-        <Box marginY={"10px"}>
-          <Text variant={"h1"}>
-            {getDepartmentName(route.params, departmentNames)}
-          </Text>
-          <Text variant={"h2"}>{getSchoolName(route.params, schoolNames)}</Text>
-          <Grid isLoaded={!!classes.length && !loadError}>
-            {(info) =>
-              classes.map((classInfo, index) => {
-                return (
-                  <TieredTextButton
-                    key={index}
-                    {...info}
-                    primaryText={classInfo.name}
-                    secondaryText={getClassCode(classInfo)}
-                    onPress={() => {
-                      navigation.navigate("Detail", classInfo);
-                    }}
-                  />
-                );
-              })
-            }
-          </Grid>
-        </Box>
-      </KeyboardAwareSafeAreaScrollView>
+      <>
+        <AlertDialog
+          leastDestructiveRef={ref}
+          isOpen={this.state.loadError}
+          onClose={this.clearLoadError.bind(this)}
+        >
+          <AlertDialog.Content>
+            <AlertDialog.Header>
+              Unable to Load Class Information
+            </AlertDialog.Header>
+            <AlertDialog.Body>
+              Please check your internet connection or try again later.
+            </AlertDialog.Body>
+            <AlertDialog.Footer>
+              <Button ref={ref} onPress={this.clearLoadError.bind(this)}>
+                OK
+              </Button>
+            </AlertDialog.Footer>
+          </AlertDialog.Content>
+        </AlertDialog>
+        <KeyboardAwareSafeAreaScrollView>
+          <Box marginY={"10px"}>
+            <Text variant={"h1"}>
+              {getDepartmentName(route.params, departmentNames)}
+            </Text>
+            <Text variant={"h2"}>
+              {getSchoolName(route.params, schoolNames)}
+            </Text>
+            <Grid isLoaded={!!classes.length && !loadError}>
+              {(info) =>
+                classes.map((classInfo, index) => {
+                  return (
+                    <TieredTextButton
+                      key={index}
+                      {...info}
+                      primaryText={classInfo.name}
+                      secondaryText={getClassCode(classInfo)}
+                      onPress={() => {
+                        navigation.navigate("Detail", classInfo);
+                      }}
+                    />
+                  );
+                })
+              }
+            </Grid>
+          </Box>
+        </KeyboardAwareSafeAreaScrollView>
+      </>
     );
   }
 }

@@ -47,7 +47,10 @@ export default function DetailScreen() {
         </Text>
         {!!classInfo.description && (
           <Text fontSize={"md"} margin={"10px"}>
-            {classInfo.description}
+            {classInfo.description.replace(
+              /([a-z0-9])[\s\n]+([^\s\n])/gi,
+              "$1 $2"
+            )}
           </Text>
         )}
         <Button

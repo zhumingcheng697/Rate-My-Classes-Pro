@@ -1,3 +1,4 @@
+import { Component } from "react";
 import { Text, Box } from "native-base";
 import {
   useNavigation,
@@ -7,7 +8,12 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import type { ExploreNavigationParamList, ClassCode } from "../../shared/types";
+import type {
+  ExploreNavigationParamList,
+  ClassInfo,
+  SchoolNameRecord,
+  DepartmentNameRecord,
+} from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import {
@@ -16,7 +22,10 @@ import {
   getClassCode,
   placeholderClassNumbers,
 } from "../../shared/utils";
+import { getCurrentClasses } from "../../shared/schedge";
 import TieredTextButton from "../../components/TieredTextButton";
+
+const DEBUGGING = false;
 
 type DepartmentScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -35,37 +44,88 @@ export default function DepartmentScreen() {
   const departmentNames = useSelector((state) => state.departmentNameRecord);
 
   return (
-    <KeyboardAwareSafeAreaScrollView>
-      <Box marginY={"10px"}>
-        <Text variant={"h1"}>
-          {getDepartmentName(route.params, departmentNames)}
-        </Text>
-        <Text variant={"h2"}>{getSchoolName(route.params, schoolNames)}</Text>
-        <Grid>
-          {(info) =>
-            placeholderClassNumbers.map((classNumber, index) => {
-              const classCode: ClassCode = { ...route.params, classNumber };
-
-              return (
-                <TieredTextButton
-                  key={index}
-                  {...info}
-                  primaryText={"Lorem ipsum dolor sit amet"}
-                  secondaryText={getClassCode(classCode)}
-                  onPress={() => {
-                    navigation.navigate("Detail", {
-                      ...classCode,
-                      name: classNumber,
-                      description:
-                        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas modi explicabo fuga, eum libero ipsum magnam. Dolores, vel vero nobis doloribus voluptatibus soluta ratione adipisci repellat voluptatem libero ipsam rerum.",
-                    });
-                  }}
-                />
-              );
-            })
-          }
-        </Grid>
-      </Box>
-    </KeyboardAwareSafeAreaScrollView>
+    <DepartmentScreenView
+      navigation={navigation}
+      route={route}
+      schoolNames={schoolNames}
+      departmentNames={departmentNames}
+    />
   );
+}
+
+type DepartmentScreenViewProps = {
+  navigation: DepartmentScreenNavigationProp;
+  route: DepartmentScreenRouteProp;
+  schoolNames: SchoolNameRecord;
+  departmentNames: DepartmentNameRecord;
+};
+
+type DepartmentScreenViewState = {
+  classes: ClassInfo[];
+  loadError: boolean;
+};
+
+class DepartmentScreenView extends Component<
+  DepartmentScreenViewProps,
+  DepartmentScreenViewState
+> {
+  state: DepartmentScreenViewState = {
+    classes: [],
+    loadError: false,
+  };
+
+  componentDidMount() {
+    if (DEBUGGING) {
+      this.setState({
+        classes: placeholderClassNumbers.map((classNumber) => ({
+          ...this.props.route.params,
+          classNumber,
+          name: "Lorem ipsum dolor sit amet",
+        })),
+      });
+      return;
+    }
+
+    getCurrentClasses(this.props.route.params)
+      .then((classes) => {
+        this.setState({ classes });
+      })
+      .catch((e) => {
+        console.error(e);
+        this.setState({ loadError: true });
+      });
+  }
+
+  render() {
+    const { navigation, route, schoolNames, departmentNames } = this.props;
+    const { classes, loadError } = this.state;
+
+    return (
+      <KeyboardAwareSafeAreaScrollView>
+        <Box marginY={"10px"}>
+          <Text variant={"h1"}>
+            {getDepartmentName(route.params, departmentNames)}
+          </Text>
+          <Text variant={"h2"}>{getSchoolName(route.params, schoolNames)}</Text>
+          <Grid isLoaded={!!classes.length && !loadError}>
+            {(info) =>
+              classes.map((classInfo, index) => {
+                return (
+                  <TieredTextButton
+                    key={index}
+                    {...info}
+                    primaryText={classInfo.name}
+                    secondaryText={getClassCode(classInfo)}
+                    onPress={() => {
+                      navigation.navigate("Detail", classInfo);
+                    }}
+                  />
+                );
+              })
+            }
+          </Grid>
+        </Box>
+      </KeyboardAwareSafeAreaScrollView>
+    );
+  }
 }

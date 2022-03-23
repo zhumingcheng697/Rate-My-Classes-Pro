@@ -39,7 +39,7 @@ export default function DetailScreen() {
   return (
     <KeyboardAwareSafeAreaScrollView>
       <Box marginY={"10px"}>
-        <Text variant={"h1"}>Lorem ipsum dolor sit amet</Text>
+        <Text variant={"h1"}>{classInfo.name}</Text>
         <Text variant={"h2"}>
           {getSchoolName(classInfo, schoolNames)}
           {": "}

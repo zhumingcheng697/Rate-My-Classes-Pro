@@ -1,4 +1,9 @@
-import type { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
+import type {
+  SchoolNameRecord,
+  DepartmentNameRecord,
+  DepartmentInfo,
+  ClassInfo,
+} from "../shared/types";
 
 const baseUrl = "https://schedge.a1liu.com";
 
@@ -12,6 +17,12 @@ type NameRecord = {
 type SchedgeSchoolNameRecord = Record<string, NameRecord>;
 
 type SchedgeDepartmentNameRecord = Record<string, Record<string, NameRecord>>;
+
+type SchedgeClassRecord = {
+  name: string;
+  deptCourseId: string;
+  description?: string;
+}[];
 
 export async function getSchoolNames(): Promise<SchoolNameRecord> {
   const res = await fetch(composeUrl("/schools"));
@@ -56,4 +67,24 @@ export async function getDepartmentNames(): Promise<DepartmentNameRecord> {
   }
 
   return record;
+}
+
+export async function getCurrentClasses({
+  schoolCode,
+  departmentCode,
+}: DepartmentInfo): Promise<ClassInfo[]> {
+  const res = await fetch(
+    composeUrl(`/current/current/${schoolCode}/${departmentCode}`)
+  );
+  const json: SchedgeClassRecord = await res.json();
+
+  return json
+    .map(({ name, description, deptCourseId }) => ({
+      schoolCode,
+      departmentCode,
+      classNumber: deptCourseId,
+      name,
+      description,
+    }))
+    .sort((a, b) => parseInt(a.classNumber) - parseInt(b.classNumber));
 }

@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import { Text, Box } from "native-base";
 import {
   useNavigation,

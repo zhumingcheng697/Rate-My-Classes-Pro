@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { Text, Box } from "native-base";
 import {
   useNavigation,

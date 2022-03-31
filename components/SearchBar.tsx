@@ -1,3 +1,4 @@
+import React from "react";
 import { Input, IconButton, Icon, type IInputProps } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 

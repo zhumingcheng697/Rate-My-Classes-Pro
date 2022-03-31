@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback } from "react";
 import { Text, Box } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Text, VStack, Button, Box } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";

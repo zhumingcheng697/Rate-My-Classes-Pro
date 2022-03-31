@@ -1,4 +1,4 @@
-import { type ReactText } from "react";
+import React, { type ReactText } from "react";
 import {
   Flex,
   Icon,

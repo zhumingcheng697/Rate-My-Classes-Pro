@@ -1,3 +1,4 @@
+import React from "react";
 import { Text, Button, type IButtonProps } from "native-base";
 
 type TieredTextButtonBaseProps = {

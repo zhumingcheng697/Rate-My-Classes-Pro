@@ -1,4 +1,4 @@
-import { useCallback, type ReactNode } from "react";
+import React, { useCallback, type ReactNode } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useWindowDimensions } from "react-native";
 import {

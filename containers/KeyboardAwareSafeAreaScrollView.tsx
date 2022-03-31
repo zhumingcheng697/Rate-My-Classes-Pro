@@ -1,4 +1,4 @@
-import { Children, type ReactNode } from "react";
+import React, { Children, type ReactNode } from "react";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import {
   SafeAreaView,

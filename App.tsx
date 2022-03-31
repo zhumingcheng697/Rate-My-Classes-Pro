@@ -41,7 +41,7 @@ const navigationTheme = {
   },
 };
 
-export default class App extends Component<undefined, AppState> {
+export default class App extends Component<{}, AppState> {
   state: AppState = {
     loadError: false,
   };

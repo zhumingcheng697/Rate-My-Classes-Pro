@@ -1,9 +1,9 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
 import { NativeBaseProvider } from "native-base";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 import RootNavigation from "./navigation/RootNavigation";
 import nativeBaseTheme, { colorStyle } from "./shared/theme";
@@ -11,6 +11,8 @@ import reducer from "./redux/reducers";
 import { getSchoolNames, getDepartmentNames } from "./shared/schedge";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "./redux/actions";
 import AlertPopup from "./components/AlertPopup";
+
+Ionicons.loadFont();
 
 const store = createStore(reducer);
 
@@ -73,7 +75,6 @@ export default class App extends Component<undefined, AppState> {
       <Provider store={store}>
         <NativeBaseProvider theme={nativeBaseTheme}>
           <NavigationContainer theme={navigationTheme}>
-            <StatusBar style="auto" />
             <AlertPopup
               isOpen={this.state.loadError}
               onClose={this.clearLoadError.bind(this)}

@@ -45,7 +45,7 @@ export default function DepartmentScreen() {
   const departmentNames = useSelector((state) => state.departmentNameRecord);
 
   return (
-    <DepartmentScreenView
+    <DepartmentScreenComponent
       navigation={navigation}
       route={route}
       schoolNames={schoolNames}
@@ -54,23 +54,23 @@ export default function DepartmentScreen() {
   );
 }
 
-type DepartmentScreenViewProps = {
+type DepartmentScreenComponentProps = {
   navigation: DepartmentScreenNavigationProp;
   route: DepartmentScreenRouteProp;
   schoolNames: SchoolNameRecord;
   departmentNames: DepartmentNameRecord;
 };
 
-type DepartmentScreenViewState = {
+type DepartmentScreenComponentState = {
   classes: ClassInfo[];
   loadError: boolean;
 };
 
-class DepartmentScreenView extends Component<
-  DepartmentScreenViewProps,
-  DepartmentScreenViewState
+class DepartmentScreenComponent extends Component<
+  DepartmentScreenComponentProps,
+  DepartmentScreenComponentState
 > {
-  state: DepartmentScreenViewState = {
+  state: DepartmentScreenComponentState = {
     classes: [],
     loadError: false,
   };

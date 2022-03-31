@@ -1,5 +1,5 @@
-import { Component, createRef } from "react";
-import { Text, Box, AlertDialog, Button } from "native-base";
+import { Component } from "react";
+import { Text, Box } from "native-base";
 import {
   useNavigation,
   useRoute,
@@ -24,6 +24,7 @@ import {
 } from "../../shared/utils";
 import { getCurrentClasses } from "../../shared/schedge";
 import TieredTextButton from "../../components/TieredTextButton";
+import AlertPopup from "../../components/AlertPopup";
 
 const DEBUGGING = false;
 
@@ -103,29 +104,13 @@ class DepartmentScreenView extends Component<
   render() {
     const { navigation, route, schoolNames, departmentNames } = this.props;
     const { classes, loadError } = this.state;
-    const ref = createRef();
 
     return (
       <>
-        <AlertDialog
-          leastDestructiveRef={ref}
+        <AlertPopup
           isOpen={this.state.loadError}
           onClose={this.clearLoadError.bind(this)}
-        >
-          <AlertDialog.Content>
-            <AlertDialog.Header>
-              Unable to Load Class Information
-            </AlertDialog.Header>
-            <AlertDialog.Body>
-              Please check your internet connection or try again later.
-            </AlertDialog.Body>
-            <AlertDialog.Footer>
-              <Button ref={ref} onPress={this.clearLoadError.bind(this)}>
-                OK
-              </Button>
-            </AlertDialog.Footer>
-          </AlertDialog.Content>
-        </AlertDialog>
+        />
         <KeyboardAwareSafeAreaScrollView>
           <Box marginY={"10px"}>
             <Text variant={"h1"}>

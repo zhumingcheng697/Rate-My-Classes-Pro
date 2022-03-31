@@ -1,7 +1,7 @@
-import { Component, createRef } from "react";
+import { Component } from "react";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { NativeBaseProvider, AlertDialog, Button } from "native-base";
+import { NativeBaseProvider } from "native-base";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 
@@ -10,6 +10,7 @@ import nativeBaseTheme, { colorStyle } from "./shared/theme";
 import reducer from "./redux/reducers";
 import { getSchoolNames, getDepartmentNames } from "./shared/schedge";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "./redux/actions";
+import AlertPopup from "./components/AlertPopup";
 
 const store = createStore(reducer);
 
@@ -68,32 +69,15 @@ export default class App extends Component<undefined, AppState> {
   }
 
   render() {
-    const ref = createRef();
-
     return (
       <Provider store={store}>
         <NativeBaseProvider theme={nativeBaseTheme}>
           <NavigationContainer theme={navigationTheme}>
             <StatusBar style="auto" />
-            <AlertDialog
-              leastDestructiveRef={ref}
+            <AlertPopup
               isOpen={this.state.loadError}
               onClose={this.clearLoadError.bind(this)}
-            >
-              <AlertDialog.Content>
-                <AlertDialog.Header>
-                  Unable to Load Class Information
-                </AlertDialog.Header>
-                <AlertDialog.Body>
-                  Please check your internet connection or try again later.
-                </AlertDialog.Body>
-                <AlertDialog.Footer>
-                  <Button ref={ref} onPress={this.clearLoadError.bind(this)}>
-                    OK
-                  </Button>
-                </AlertDialog.Footer>
-              </AlertDialog.Content>
-            </AlertDialog>
+            />
             <RootNavigation />
           </NavigationContainer>
         </NativeBaseProvider>

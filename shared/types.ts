@@ -2,6 +2,8 @@ export type SchoolNameRecord = Record<string, string>;
 
 export type DepartmentNameRecord = Record<string, Record<string, string>>;
 
+export type StarredClassRecord = Record<string, boolean>;
+
 export type SchoolInfo = {
   schoolCode: string;
 };

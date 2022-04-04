@@ -1,8 +1,14 @@
-import type { SchoolNameRecord, DepartmentNameRecord } from "../shared/types";
+import type {
+  SchoolNameRecord,
+  DepartmentNameRecord,
+  ClassCode,
+} from "../shared/types";
 
 export enum ActionType {
   setSchoolNameRecord = "SET_SCHOOL_NAME_RECORD",
   setDepartmentNameRecord = "SET_DEPARTMENT_NAME_RECORD",
+  starClass = "STAR_CLASS",
+  unstarClass = "UNSTAR_CLASS",
 }
 
 export type SchoolNameAction = {
@@ -13,4 +19,9 @@ export type SchoolNameAction = {
 export type DepartmentNameAction = {
   type: ActionType.setDepartmentNameRecord;
   payload?: DepartmentNameRecord;
+};
+
+export type StarClassAction = {
+  type: ActionType.starClass | ActionType.unstarClass;
+  payload?: ClassCode;
 };

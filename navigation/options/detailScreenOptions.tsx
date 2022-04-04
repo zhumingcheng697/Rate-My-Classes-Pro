@@ -1,24 +1,20 @@
 import React from "react";
+import { IconButton, Icon } from "native-base";
 import { type RouteProp } from "@react-navigation/native";
 import {
   type StackNavigationProp,
   type StackNavigationOptions,
 } from "@react-navigation/stack";
+import { useSelector, useDispatch } from "react-redux";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
-import PlainTextButton from "../../components/PlainTextButton";
+import { starClass, unstarClass } from "../../redux/actions";
 import type {
   ExploreNavigationParamList,
   SearchNavigationParamList,
   MeNavigationParamList,
 } from "../../shared/types";
 import { getFullClassCode } from "../../shared/utils";
-
-type DetailScreenNavigationProp = StackNavigationProp<
-  | ExploreNavigationParamList
-  | SearchNavigationParamList
-  | MeNavigationParamList,
-  "Detail"
->;
 
 type DetailScreenRouteProp = RouteProp<
   | ExploreNavigationParamList
@@ -28,22 +24,40 @@ type DetailScreenRouteProp = RouteProp<
 >;
 
 export type DetailScreenOptionsProp = {
-  navigation: DetailScreenNavigationProp;
   route: DetailScreenRouteProp;
 };
 
 export default ({
-  navigation,
   route,
 }: DetailScreenOptionsProp): StackNavigationOptions => ({
   title: getFullClassCode(route.params),
   headerRight: (props) => {
+    const starredClasses = useSelector((state) => state.starredClassRecord);
+    const dispatch = useDispatch();
+    const isStarred = !!starredClasses[getFullClassCode(route.params)];
+    const pressedHoverStyle = { _icon: { opacity: 0.5 } };
+
     return (
-      <PlainTextButton
-        marginRight={"10px"}
-        title={"Star/Unstar"}
-        _text={{ fontSize: "md", fontWeight: "semibold" }}
-        // onPress={navigation.goBack}
+      <IconButton
+        variant={"unstyled"}
+        marginRight={"5px"}
+        padding={"5px"}
+        _pressed={pressedHoverStyle}
+        _hover={pressedHoverStyle}
+        icon={
+          <Icon
+            color={isStarred ? "yellow.400" : "gray.300"}
+            size={"22px"}
+            as={<Ionicons name={"star" + (isStarred ? "" : "-outline")} />}
+          />
+        }
+        onPress={() => {
+          if (isStarred) {
+            unstarClass(dispatch)(route.params);
+          } else {
+            starClass(dispatch)(route.params);
+          }
+        }}
         {...props}
       />
     );

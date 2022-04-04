@@ -4,6 +4,7 @@ import {
   type SchoolInfo,
   type DepartmentInfo,
   type ClassCode,
+  SemesterType,
 } from "./types";
 
 export function getFullDepartmentCode({
@@ -22,6 +23,19 @@ export function getFullClassCode({
     schoolCode,
     departmentCode,
   })} ${classNumber.toUpperCase()}`;
+}
+
+export function getSemesterName(semesterCode: SemesterType) {
+  switch (semesterCode) {
+    case SemesterType.fa:
+      return "Fall";
+    case SemesterType.ja:
+      return "J-Term";
+    case SemesterType.sp:
+      return "Spring";
+    case SemesterType.su:
+      return "Summer";
+  }
 }
 
 export function isSchoolGrad(schoolCode: string) {

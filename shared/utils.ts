@@ -6,12 +6,22 @@ import {
   type ClassCode,
 } from "./types";
 
+export function getFullDepartmentCode({
+  schoolCode,
+  departmentCode,
+}: DepartmentInfo): string {
+  return `${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`;
+}
+
 export function getFullClassCode({
   schoolCode,
   departmentCode,
   classNumber,
 }: ClassCode): string {
-  return `${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()} ${classNumber.toUpperCase()}`;
+  return `${getFullDepartmentCode({
+    schoolCode,
+    departmentCode,
+  })} ${classNumber.toUpperCase()}`;
 }
 
 export function isSchoolGrad(schoolCode: string) {

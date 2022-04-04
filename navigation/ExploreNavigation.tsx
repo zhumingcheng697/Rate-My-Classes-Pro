@@ -12,6 +12,7 @@ import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import reviewScreenOptions from "./options/reviewScreenOptions";
 import detailScreenOptions from "./options/detailScreenOptions";
 import { type ExploreNavigationParamList } from "../shared/types";
+import { getFullDepartmentCode } from "../shared/utils";
 
 const Stack = createStackNavigator<ExploreNavigationParamList>();
 
@@ -34,7 +35,7 @@ export default function ExploreNavigation() {
         name={"Department"}
         component={DepartmentScreen}
         options={({ route }) => ({
-          title: `${route.params.departmentCode.toUpperCase()}-${route.params.schoolCode.toUpperCase()}`,
+          title: getFullDepartmentCode(route.params),
         })}
       />
       <Stack.Screen

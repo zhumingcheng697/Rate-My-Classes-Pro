@@ -10,7 +10,7 @@ import DepartmentScreen from "../screens/explore/DepartmentScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import reviewScreenOptions from "./reviewScreenOptions";
-import { getClassCode } from "../shared/utils";
+import { getFullClassCode } from "../shared/utils";
 import { type ExploreNavigationParamList } from "../shared/types";
 
 const Stack = createStackNavigator<ExploreNavigationParamList>();
@@ -41,7 +41,7 @@ export default function ExploreNavigation() {
         name={"Detail"}
         component={DetailScreen}
         options={({ route }) => ({
-          title: getClassCode(route.params),
+          title: getFullClassCode(route.params),
         })}
       />
       <Stack.Screen

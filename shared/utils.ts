@@ -6,7 +6,7 @@ import {
   type ClassCode,
 } from "./types";
 
-export function getClassCode({
+export function getFullClassCode({
   schoolCode,
   departmentCode,
   classNumber,

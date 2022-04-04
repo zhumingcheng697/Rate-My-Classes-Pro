@@ -10,7 +10,7 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 import type { MeNavigationParamList, ClassCode } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
-import { getClassCode, placeholderClassNumbers } from "../../shared/utils";
+import { getFullClassCode, placeholderClassNumbers } from "../../shared/utils";
 import TieredTextButton from "../../components/TieredTextButton";
 
 type StarredReviewedScreenNavigationProp = StackNavigationProp<
@@ -45,7 +45,7 @@ export default function StarredReviewedScreen() {
                   key={index}
                   {...info}
                   primaryText={"Lorem ipsum dolor sit amet"}
-                  secondaryText={getClassCode(classCode)}
+                  secondaryText={getFullClassCode(classCode)}
                   onPress={() => {
                     navigation.navigate("Detail", {
                       ...classCode,

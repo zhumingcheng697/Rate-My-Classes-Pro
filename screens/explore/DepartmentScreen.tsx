@@ -19,7 +19,7 @@ import Grid from "../../containers/Grid";
 import {
   getSchoolName,
   getDepartmentName,
-  getClassCode,
+  getFullClassCode,
   placeholderClassNumbers,
 } from "../../shared/utils";
 import { getCurrentClasses } from "../../shared/schedge";
@@ -127,7 +127,7 @@ class DepartmentScreenComponent extends Component<
                       key={index}
                       {...info}
                       primaryText={classInfo.name}
-                      secondaryText={getClassCode(classInfo)}
+                      secondaryText={getFullClassCode(classInfo)}
                       onPress={() => {
                         navigation.navigate("Detail", classInfo);
                       }}

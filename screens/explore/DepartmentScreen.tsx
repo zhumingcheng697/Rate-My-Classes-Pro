@@ -8,11 +8,12 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import type {
-  ExploreNavigationParamList,
-  ClassInfo,
-  SchoolNameRecord,
-  DepartmentNameRecord,
+import {
+  type ExploreNavigationParamList,
+  type ClassInfo,
+  type SchoolNameRecord,
+  type DepartmentNameRecord,
+  ErrorType,
 } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
@@ -53,11 +54,6 @@ export default function DepartmentScreen() {
       departmentNames={departmentNames}
     />
   );
-}
-
-enum ErrorType {
-  loadFailed = "LOAD_FAILED",
-  noData = "NO_DATA",
 }
 
 type DepartmentScreenComponentProps = {

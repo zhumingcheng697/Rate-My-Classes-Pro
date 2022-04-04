@@ -51,3 +51,8 @@ export type MeNavigationParamList = {
   Detail: ClassInfo;
   Review: ClassInfo;
 };
+
+export enum ErrorType {
+  loadFailed = "LOAD_FAILED",
+  noData = "NO_DATA",
+}

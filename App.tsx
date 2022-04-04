@@ -8,8 +8,10 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import RootNavigation from "./navigation/RootNavigation";
 import nativeBaseTheme, { colorStyle } from "./shared/theme";
 import reducer from "./redux/reducers";
-import { getSchoolNames, getDepartmentNames } from "./shared/schedge";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "./redux/actions";
+import { getSchoolNames, getDepartmentNames } from "./shared/schedge";
+import { ErrorType } from "./shared/types";
+import { isObjectEmpty } from "./shared/utils";
 import AlertPopup from "./components/AlertPopup";
 
 Ionicons.loadFont();
@@ -29,7 +31,8 @@ declare module "react-redux" {
 }
 
 type AppState = {
-  loadError: boolean;
+  error: ErrorType | null;
+  showAlert: boolean;
 };
 
 const navigationTheme = {
@@ -43,31 +46,40 @@ const navigationTheme = {
 
 export default class App extends Component<{}, AppState> {
   state: AppState = {
-    loadError: false,
+    error: null,
+    showAlert: false,
   };
 
   componentDidMount() {
     getSchoolNames()
       .then((record) => {
-        setSchoolNameRecord(store.dispatch)(record);
+        if (record && !isObjectEmpty(record)) {
+          setSchoolNameRecord(store.dispatch)(record);
+        } else {
+          this.setState({ error: ErrorType.noData, showAlert: true });
+        }
       })
       .catch((e) => {
         console.error(e);
-        this.setState({ loadError: true });
+        this.setState({ error: ErrorType.loadFailed, showAlert: true });
       });
 
     getDepartmentNames()
       .then((record) => {
-        setDepartmentNameRecord(store.dispatch)(record);
+        if (record && !isObjectEmpty(record)) {
+          setDepartmentNameRecord(store.dispatch)(record);
+        } else {
+          this.setState({ error: ErrorType.noData, showAlert: true });
+        }
       })
       .catch((e) => {
         console.error(e);
-        this.setState({ loadError: true });
+        this.setState({ error: ErrorType.loadFailed, showAlert: true });
       });
   }
 
   clearLoadError() {
-    this.setState({ loadError: false });
+    this.setState({ showAlert: false });
   }
 
   render() {
@@ -76,7 +88,12 @@ export default class App extends Component<{}, AppState> {
         <NativeBaseProvider theme={nativeBaseTheme}>
           <NavigationContainer theme={navigationTheme}>
             <AlertPopup
-              isOpen={this.state.loadError}
+              body={
+                this.state.error === ErrorType.noData
+                  ? "This might be an issue with Schedge, our API provider for classes."
+                  : undefined
+              }
+              isOpen={this.state.showAlert}
               onClose={this.clearLoadError.bind(this)}
             />
             <RootNavigation />

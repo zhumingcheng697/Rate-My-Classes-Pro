@@ -19,6 +19,7 @@ import Grid from "../../containers/Grid";
 import {
   getSchoolName,
   getDepartmentName,
+  getFullDepartmentCode,
   getFullClassCode,
   placeholderClassNumbers,
 } from "../../shared/utils";
@@ -54,6 +55,11 @@ export default function DepartmentScreen() {
   );
 }
 
+enum ErrorType {
+  loadFailed = "LOAD_FAILED",
+  noData = "NO_DATA",
+}
+
 type DepartmentScreenComponentProps = {
   navigation: DepartmentScreenNavigationProp;
   route: DepartmentScreenRouteProp;
@@ -63,7 +69,8 @@ type DepartmentScreenComponentProps = {
 
 type DepartmentScreenComponentState = {
   classes: ClassInfo[];
-  loadError: boolean;
+  error: ErrorType | null;
+  showAlert: boolean;
 };
 
 class DepartmentScreenComponent extends Component<
@@ -72,7 +79,8 @@ class DepartmentScreenComponent extends Component<
 > {
   state: DepartmentScreenComponentState = {
     classes: [],
-    loadError: false,
+    error: null,
+    showAlert: false,
   };
 
   componentDidMount() {
@@ -89,27 +97,40 @@ class DepartmentScreenComponent extends Component<
 
     getCurrentClasses(this.props.route.params)
       .then((classes) => {
-        this.setState({ classes });
+        if (classes && classes.length) {
+          this.setState({ classes });
+        } else {
+          this.setState({ showAlert: true, error: ErrorType.noData });
+        }
       })
       .catch((e) => {
         console.error(e);
-        this.setState({ loadError: true });
+        this.setState({ showAlert: true, error: ErrorType.loadFailed });
       });
   }
 
-  clearLoadError() {
-    this.setState({ loadError: false });
+  goBackOnError() {
+    this.setState({ showAlert: false });
+    this.props.navigation.goBack();
   }
 
   render() {
     const { navigation, route, schoolNames, departmentNames } = this.props;
-    const { classes, loadError } = this.state;
+    const { classes, showAlert, error } = this.state;
 
     return (
       <>
         <AlertPopup
-          isOpen={this.state.loadError}
-          onClose={this.clearLoadError.bind(this)}
+          header={error === ErrorType.noData ? "No Classes Offered" : undefined}
+          body={
+            error === ErrorType.noData
+              ? `The ${getFullDepartmentCode(
+                  route.params
+                )} department is not offering any classes for the semester.`
+              : undefined
+          }
+          isOpen={showAlert}
+          onClose={this.goBackOnError.bind(this)}
         />
         <KeyboardAwareSafeAreaScrollView>
           <Box marginY={"10px"}>
@@ -119,7 +140,7 @@ class DepartmentScreenComponent extends Component<
             <Text variant={"h2"}>
               {getSchoolName(route.params, schoolNames)}
             </Text>
-            <Grid isLoaded={!!classes.length && !loadError}>
+            <Grid isLoaded={!!classes.length && !error}>
               {(info) =>
                 classes.map((classInfo, index) => {
                   return (

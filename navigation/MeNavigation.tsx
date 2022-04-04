@@ -11,7 +11,7 @@ import SignInScreen from "../screens/me/SignInScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import reviewScreenOptions from "./options/reviewScreenOptions";
-import { getFullClassCode } from "../shared/utils";
+import detailScreenOptions from "./options/detailScreenOptions";
 import { type MeNavigationParamList } from "../shared/types";
 
 const Stack = createStackNavigator<MeNavigationParamList>();
@@ -44,9 +44,7 @@ export default function MeNavigation() {
       <Stack.Screen
         name={"Detail"}
         component={DetailScreen}
-        options={({ route }) => ({
-          title: getFullClassCode(route.params),
-        })}
+        options={detailScreenOptions}
       />
       <Stack.Screen
         name={"Review"}

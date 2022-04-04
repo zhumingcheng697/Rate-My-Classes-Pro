@@ -7,7 +7,7 @@ import {
 import SearchScreen from "../screens/search/SearchScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
-import reviewScreenOptions from "./reviewScreenOptions";
+import reviewScreenOptions from "./options/reviewScreenOptions";
 import { getFullClassCode } from "../shared/utils";
 import { type SearchNavigationParamList } from "../shared/types";
 

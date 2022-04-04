@@ -9,7 +9,7 @@ import SchoolScreen from "../screens/explore/SchoolScreen";
 import DepartmentScreen from "../screens/explore/DepartmentScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
-import reviewScreenOptions from "./reviewScreenOptions";
+import reviewScreenOptions from "./options/reviewScreenOptions";
 import { getFullClassCode } from "../shared/utils";
 import { type ExploreNavigationParamList } from "../shared/types";
 

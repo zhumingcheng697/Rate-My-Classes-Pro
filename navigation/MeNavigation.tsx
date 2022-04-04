@@ -10,7 +10,7 @@ import SignUpScreen from "../screens/me/SignUpScreen";
 import SignInScreen from "../screens/me/SignInScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
-import reviewScreenOptions from "./reviewScreenOptions";
+import reviewScreenOptions from "./options/reviewScreenOptions";
 import { getFullClassCode } from "../shared/utils";
 import { type MeNavigationParamList } from "../shared/types";
 

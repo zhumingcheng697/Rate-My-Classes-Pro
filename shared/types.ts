@@ -22,13 +22,13 @@ export type ClassInfo = ClassCode & {
 };
 
 export type RootNavigationParamList = {
-  "Explore-Tab": undefined;
-  "Search-Tab": undefined;
-  "Me-Tab": undefined;
+  "Explore-Tab": never;
+  "Search-Tab": never;
+  "Me-Tab": never;
 };
 
 export type ExploreNavigationParamList = {
-  University: undefined;
+  University: never;
   School: SchoolInfo;
   Department: DepartmentInfo;
   Detail: ClassInfo;
@@ -36,18 +36,18 @@ export type ExploreNavigationParamList = {
 };
 
 export type SearchNavigationParamList = {
-  Search: undefined;
+  Search: never;
   Detail: ClassInfo;
   Review: ClassInfo;
 };
 
 export type MeNavigationParamList = {
-  Account: undefined;
-  Starred: undefined;
-  Reviewed: undefined;
-  Settings: undefined;
-  SignIn: undefined;
-  SignUp: undefined;
+  Account: never;
+  Starred: never;
+  Reviewed: never;
+  Settings: never;
+  SignIn: never;
+  SignUp: never;
   Detail: ClassInfo;
   Review: ClassInfo;
 };

@@ -8,24 +8,6 @@ import {
   SemesterInfo,
 } from "./types";
 
-export function getFullDepartmentCode({
-  schoolCode,
-  departmentCode,
-}: DepartmentInfo): string {
-  return `${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`;
-}
-
-export function getFullClassCode({
-  schoolCode,
-  departmentCode,
-  classNumber,
-}: ClassCode): string {
-  return `${getFullDepartmentCode({
-    schoolCode,
-    departmentCode,
-  })} ${classNumber.toUpperCase()}`;
-}
-
 export const semesters = [
   SemesterType.fa,
   SemesterType.ja,
@@ -50,13 +32,22 @@ export function getFullSemesterName({ semester, year }: SemesterInfo) {
   return `${getSemesterName(semester)} ${year}`;
 }
 
-export function isSchoolGrad(schoolCode: string) {
-  const code = schoolCode.toUpperCase();
-  return code.startsWith("G") || code === "DN";
+export function getFullDepartmentCode({
+  schoolCode,
+  departmentCode,
+}: DepartmentInfo): string {
+  return `${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`;
 }
 
-export function isObjectEmpty(obj: object) {
-  return Object.keys(obj).length === 0;
+export function getFullClassCode({
+  schoolCode,
+  departmentCode,
+  classNumber,
+}: ClassCode): string {
+  return `${getFullDepartmentCode({
+    schoolCode,
+    departmentCode,
+  })} ${classNumber.toUpperCase()}`;
 }
 
 export function getSchoolName(
@@ -74,6 +65,15 @@ export function getDepartmentName(
     ((departmentNameRecord || {})[schoolCode] || {})[departmentCode] ||
     departmentCode.toUpperCase()
   );
+}
+
+export function isSchoolGrad(schoolCode: string) {
+  const code = schoolCode.toUpperCase();
+  return code.startsWith("G") || code === "DN";
+}
+
+export function isObjectEmpty(obj: object) {
+  return Object.keys(obj).length === 0;
 }
 
 export const placeholderClassNumbers = [

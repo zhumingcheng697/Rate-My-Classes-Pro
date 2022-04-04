@@ -39,13 +39,16 @@ export default function SearchBar({
       rightElement={
         value ? (
           <IconButton
-            color={"gray.400"}
             variant={"unstyled"}
             _pressed={pressedHoverStyle}
             _hover={pressedHoverStyle}
             padding={"5px"}
             icon={
-              <Icon size={"22px"} as={<Ionicons name={"close-circle"} />} />
+              <Icon
+                size={"22px"}
+                color={"gray.400"}
+                as={<Ionicons name={"close-circle"} />}
+              />
             }
             onPress={() => {
               onChangeText("");

@@ -21,6 +21,23 @@ export type ClassInfo = ClassCode & {
   description?: string;
 };
 
+export enum ErrorType {
+  loadFailed = "LOAD_FAILED",
+  noData = "NO_DATA",
+}
+
+export enum SemesterType {
+  fa = "fa",
+  ja = "ja",
+  sp = "sp",
+  su = "su",
+}
+
+export type SemesterInfo = {
+  semester: SemesterType;
+  year: number;
+};
+
 export type RootNavigationParamList = {
   "Explore-Tab": never;
   "Search-Tab": never;
@@ -51,8 +68,3 @@ export type MeNavigationParamList = {
   Detail: ClassInfo;
   Review: ClassInfo;
 };
-
-export enum ErrorType {
-  loadFailed = "LOAD_FAILED",
-  noData = "NO_DATA",
-}

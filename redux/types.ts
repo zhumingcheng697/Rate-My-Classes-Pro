@@ -1,7 +1,7 @@
 import type {
   SchoolNameRecord,
   DepartmentNameRecord,
-  ClassCode,
+  ClassInfo,
 } from "../shared/types";
 
 export enum ActionType {
@@ -23,5 +23,5 @@ export type DepartmentNameAction = {
 
 export type StarClassAction = {
   type: ActionType.starClass | ActionType.unstarClass;
-  payload?: ClassCode;
+  payload?: ClassInfo;
 };

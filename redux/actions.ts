@@ -2,7 +2,7 @@ import { type Dispatch } from "redux";
 import type {
   SchoolNameRecord,
   DepartmentNameRecord,
-  ClassCode,
+  ClassInfo,
 } from "../shared/types";
 import {
   type SchoolNameAction,
@@ -30,17 +30,17 @@ export const setDepartmentNameRecord =
   };
 
 export const starClass =
-  (dispath: Dispatch<StarClassAction>) => (classCode: ClassCode) => {
+  (dispath: Dispatch<StarClassAction>) => (classInfo: ClassInfo) => {
     dispath({
       type: ActionType.starClass,
-      payload: classCode,
+      payload: classInfo,
     });
   };
 
 export const unstarClass =
-  (dispath: Dispatch<StarClassAction>) => (classCode: ClassCode) => {
+  (dispath: Dispatch<StarClassAction>) => (classInfo: ClassInfo) => {
     dispath({
       type: ActionType.unstarClass,
-      payload: classCode,
+      payload: classInfo,
     });
   };

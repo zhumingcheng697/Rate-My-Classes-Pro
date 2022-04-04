@@ -8,7 +8,7 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import type { MeNavigationParamList, ClassCode } from "../../shared/types";
+import type { MeNavigationParamList, ClassInfo } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import {
@@ -39,26 +39,24 @@ export default function StarredReviewedScreen() {
         <Grid>
           {(info) =>
             (route.name === "Starred"
-              ? (Object.keys(starredClasses)
-                  .map(parseClassCode)
-                  .filter((e) => e != null) as ClassCode[])
-              : placeholderClassNumbers.map((classNumber) => ({
+              ? Object.values(starredClasses)
+              : (placeholderClassNumbers.map((classNumber) => ({
                   schoolCode: "UY",
                   departmentCode: "DM",
                   classNumber,
-                }))
-            ).map((classCode, index) => (
+                  name: "Lorem ipsum dolor sit amet.",
+                })) as ClassInfo[])
+            ).map((classInfo, index) => (
               <TieredTextButton
                 key={index}
                 {...info}
-                primaryText={"Lorem ipsum dolor sit amet"}
-                secondaryText={getFullClassCode(classCode)}
+                primaryText={classInfo.name}
+                secondaryText={getFullClassCode(classInfo)}
                 onPress={() => {
                   navigation.navigate("Detail", {
-                    ...classCode,
-                    name: classCode.classNumber,
                     description:
                       "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas modi explicabo fuga, eum libero ipsum magnam. Dolores, vel vero nobis doloribus voluptatibus soluta ratione adipisci repellat voluptatem libero ipsam rerum.",
+                    ...classInfo,
                   });
                 }}
               />

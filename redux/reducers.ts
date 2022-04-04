@@ -41,7 +41,7 @@ function starredClassReducer(
   if (!!action.payload) {
     if (action.type === ActionType.starClass) {
       const newState = { ...state };
-      newState[getFullClassCode(action.payload)] = true;
+      newState[getFullClassCode(action.payload)] = { ...action.payload };
       return newState;
     } else if (action.type === ActionType.unstarClass) {
       const newState = { ...state };

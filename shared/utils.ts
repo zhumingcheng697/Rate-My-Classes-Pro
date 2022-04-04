@@ -14,19 +14,6 @@ export function getFullClassCode({
   return `${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()} ${classNumber.toUpperCase()}`;
 }
 
-export function parseClassCode(classCode: string): ClassCode | null {
-  const matches = classCode.match(/^([a-z0-9]+)-([a-z]{2,3}) (.+)$/i);
-  if (matches && matches[1] && matches[2] && matches[3]) {
-    return {
-      departmentCode: matches[1],
-      schoolCode: matches[2],
-      classNumber: matches[3],
-    };
-  }
-
-  return null;
-}
-
 export function isSchoolGrad(schoolCode: string) {
   const code = schoolCode.toUpperCase();
   return code.startsWith("G") || code === "DN";

@@ -11,11 +11,7 @@ import { useSelector } from "react-redux";
 import type { MeNavigationParamList, ClassInfo } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
-import {
-  getFullClassCode,
-  parseClassCode,
-  placeholderClassNumbers,
-} from "../../shared/utils";
+import { getFullClassCode, placeholderClassNumbers } from "../../shared/utils";
 import TieredTextButton from "../../components/TieredTextButton";
 
 type StarredReviewedScreenNavigationProp = StackNavigationProp<

@@ -74,7 +74,7 @@ export async function getCurrentClasses({
   departmentCode,
 }: DepartmentInfo): Promise<ClassInfo[]> {
   const res = await fetch(
-    composeUrl(`/current/current/${schoolCode}/${departmentCode}`)
+    composeUrl(`/2022/fa/${schoolCode}/${departmentCode}`)
   );
   const json: SchedgeClassRecord = await res.json();
 

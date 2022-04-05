@@ -4,6 +4,7 @@ import {
   useNavigation,
   useRoute,
   type RouteProp,
+  useIsFocused,
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
@@ -30,6 +31,7 @@ export default function StarredReviewedScreen() {
   const navigation = useNavigation<StarredReviewedScreenNavigationProp>();
   const route = useRoute<StarredReviewedScreenRouteProp>();
   const [alertDismissed, setAlertDismissed] = useState(false);
+  const isFocused = useIsFocused();
 
   const classes =
     route.name === "Starred"
@@ -46,7 +48,7 @@ export default function StarredReviewedScreen() {
       <AlertPopup
         header={`No ${route.name} Classes`}
         body={`You have not ${route.name.toLowerCase()} any classes yet. Come back later when you have ${route.name.toLowerCase()} some classes.`}
-        isOpen={!classes.length && !alertDismissed}
+        isOpen={!classes.length && !alertDismissed && isFocused}
         onClose={() => {
           setAlertDismissed(true);
           navigation.goBack();

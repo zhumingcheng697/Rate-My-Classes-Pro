@@ -7,9 +7,9 @@ import type {
 import {
   type SchoolNameAction,
   type DepartmentNameAction,
+  type SettingsAction,
   type StarClassAction,
   ActionType,
-  SemesterAction,
 } from "./types";
 import Semester from "../shared/semester";
 
@@ -32,10 +32,18 @@ export const setDepartmentNameRecord =
   };
 
 export const selectSemester =
-  (dispath: Dispatch<SemesterAction>) => (semester: Semester) => {
+  (dispath: Dispatch<SettingsAction>) => (semester: Semester) => {
     dispath({
       type: ActionType.selectSemester,
       payload: semester,
+    });
+  };
+
+export const setShowPreviousSemesters =
+  (dispath: Dispatch<SettingsAction>) => (showPreviousSemesters: boolean) => {
+    dispath({
+      type: ActionType.setShowPreviousSemesters,
+      payload: showPreviousSemesters,
     });
   };
 

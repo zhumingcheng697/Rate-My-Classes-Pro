@@ -38,17 +38,6 @@ function departmentNameReducer(
   return state;
 }
 
-function semesterReducer(
-  state: Semester = Semester.predictCurrentSemester(),
-  action: SemesterAction
-) {
-  if (action.type === ActionType.selectSemester && !!action.payload) {
-    return action.payload;
-  }
-
-  return state;
-}
-
 function settingsReducer(
   state: Settings = {
     selectedSemester: Semester.predictCurrentSemester(),
@@ -100,6 +89,5 @@ export default combineReducers({
   schoolNameRecord: schoolNameReducer,
   departmentNameRecord: departmentNameReducer,
   settings: settingsReducer,
-  selectedSemester: semesterReducer,
   starredClassRecord: starredClassReducer,
 });

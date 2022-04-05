@@ -13,6 +13,7 @@ import {
   type SchoolNameRecord,
   type DepartmentNameRecord,
   type ClassInfo,
+  type Settings,
   ErrorType,
 } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
@@ -24,7 +25,6 @@ import {
   getFullClassCode,
   placeholderClassNumbers,
 } from "../../shared/utils";
-import Semester from "../../shared/semester";
 import { getClasses } from "../../shared/schedge";
 import TieredTextButton from "../../components/TieredTextButton";
 import AlertPopup from "../../components/AlertPopup";
@@ -46,7 +46,7 @@ export default function DepartmentScreen() {
   const route = useRoute<DepartmentScreenRouteProp>();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-  const selectedSemester = useSelector((state) => state.selectedSemester);
+  const settings = useSelector((state) => state.settings);
 
   return (
     <DepartmentScreenComponent
@@ -54,7 +54,7 @@ export default function DepartmentScreen() {
       route={route}
       schoolNames={schoolNames}
       departmentNames={departmentNames}
-      selectedSemester={selectedSemester}
+      settings={settings}
     />
   );
 }
@@ -64,7 +64,7 @@ type DepartmentScreenComponentProps = {
   route: DepartmentScreenRouteProp;
   schoolNames: SchoolNameRecord;
   departmentNames: DepartmentNameRecord;
-  selectedSemester: Semester;
+  settings: Settings;
 };
 
 type DepartmentScreenComponentState = {
@@ -84,7 +84,7 @@ class DepartmentScreenComponent extends Component<
   };
 
   componentDidMount() {
-    const { route, selectedSemester } = this.props;
+    const { route, settings } = this.props;
 
     if (DEBUGGING) {
       this.setState({
@@ -97,7 +97,7 @@ class DepartmentScreenComponent extends Component<
       return;
     }
 
-    getClasses(route.params, selectedSemester)
+    getClasses(route.params, settings.selectedSemester)
       .then((classes) => {
         if (classes && classes.length) {
           this.setState({ classes });

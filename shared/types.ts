@@ -1,3 +1,5 @@
+import Semester from "./semester";
+
 export type SchoolNameRecord = Record<string, string>;
 
 export type DepartmentNameRecord = Record<string, Record<string, string>>;
@@ -25,6 +27,11 @@ export enum ErrorType {
   loadFailed = "LOAD_FAILED",
   noData = "NO_DATA",
 }
+
+export type Settings = {
+  selectedSemester: Semester;
+  showPreviousSemesters: boolean;
+};
 
 export type ExploreNavigationParamList = {
   University: undefined;

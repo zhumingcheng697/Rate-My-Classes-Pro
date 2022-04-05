@@ -3,11 +3,13 @@ import type {
   SchoolNameRecord,
   DepartmentNameRecord,
   StarredClassRecord,
+  Settings,
 } from "../shared/types";
 import {
   type SchoolNameAction,
   type DepartmentNameAction,
   type SemesterAction,
+  type SettingsAction,
   type StarClassAction,
   ActionType,
 } from "./types";
@@ -47,6 +49,34 @@ function semesterReducer(
   return state;
 }
 
+function settingsReducer(
+  state: Settings = {
+    selectedSemester: Semester.predictCurrentSemester(),
+    showPreviousSemesters: false,
+  },
+  action: SettingsAction
+) {
+  if (action.type === ActionType.selectSemester) {
+    if (action.payload) {
+      state.selectedSemester = action.payload;
+    }
+  } else if (action.type === ActionType.setShowPreviousSemesters) {
+    if (typeof action.payload !== "undefined") {
+      state.showPreviousSemesters = action.payload;
+    }
+  }
+
+  if (
+    !Semester.getSemesterOptions(state.showPreviousSemesters).find((semester) =>
+      Semester.equals(semester, state.selectedSemester)
+    )
+  ) {
+    state.selectedSemester = Semester.predictCurrentSemester();
+  }
+
+  return state;
+}
+
 function starredClassReducer(
   state: StarredClassRecord = {},
   action: StarClassAction
@@ -69,6 +99,7 @@ function starredClassReducer(
 export default combineReducers({
   schoolNameRecord: schoolNameReducer,
   departmentNameRecord: departmentNameReducer,
+  settings: settingsReducer,
   selectedSemester: semesterReducer,
   starredClassRecord: starredClassReducer,
 });

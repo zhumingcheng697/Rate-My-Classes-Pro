@@ -3,7 +3,7 @@ import type {
   DepartmentNameRecord,
   DepartmentInfo,
   ClassInfo,
-} from "../shared/types";
+} from "./types";
 import Semester from "./semester";
 
 const baseUrl = "https://schedge.a1liu.com";

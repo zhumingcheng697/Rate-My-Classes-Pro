@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box } from "native-base";
 import {
   useNavigation,
@@ -13,6 +13,7 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import Grid from "../../containers/Grid";
 import { getFullClassCode, placeholderClassNumbers } from "../../shared/utils";
 import TieredTextButton from "../../components/TieredTextButton";
+import AlertPopup from "../../components/AlertPopup";
 
 type StarredReviewedScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
@@ -28,21 +29,33 @@ export default function StarredReviewedScreen() {
   const starredClasses = useSelector((state) => state.starredClassRecord);
   const navigation = useNavigation<StarredReviewedScreenNavigationProp>();
   const route = useRoute<StarredReviewedScreenRouteProp>();
+  const [alertDismissed, setAlertDismissed] = useState(false);
+
+  const classes =
+    route.name === "Starred"
+      ? Object.values(starredClasses)
+      : (placeholderClassNumbers.map((classNumber) => ({
+          schoolCode: "UY",
+          departmentCode: "DM",
+          classNumber,
+          name: "Lorem ipsum dolor sit amet.",
+        })) as ClassInfo[]);
 
   return (
     <KeyboardAwareSafeAreaScrollView>
+      <AlertPopup
+        header={`No ${route.name} Classes`}
+        body={`You have not ${route.name.toLowerCase()} any classes yet. Come back later when you have ${route.name.toLowerCase()} some classes.`}
+        isOpen={!classes.length && !alertDismissed}
+        onClose={() => {
+          setAlertDismissed(true);
+          navigation.goBack();
+        }}
+      />
       <Box marginY={"10px"}>
-        <Grid>
+        <Grid isLoaded={!!classes.length}>
           {(info) =>
-            (route.name === "Starred"
-              ? Object.values(starredClasses)
-              : (placeholderClassNumbers.map((classNumber) => ({
-                  schoolCode: "UY",
-                  departmentCode: "DM",
-                  classNumber,
-                  name: "Lorem ipsum dolor sit amet.",
-                })) as ClassInfo[])
-            ).map((classInfo, index) => (
+            classes.map((classInfo, index) => (
               <TieredTextButton
                 key={index}
                 {...info}

@@ -9,10 +9,10 @@ import {
 } from "./types";
 
 export const semesters = [
-  SemesterType.ja,
-  SemesterType.sp,
-  SemesterType.su,
-  SemesterType.fa,
+  SemesterType.jTerm,
+  SemesterType.spring,
+  SemesterType.summer,
+  SemesterType.fall,
 ];
 
 export function predictCurrentSemester() {
@@ -23,13 +23,13 @@ export function predictCurrentSemester() {
   let semester;
 
   if (month <= 1) {
-    semester = SemesterType.ja;
+    semester = SemesterType.jTerm;
   } else if (month <= 5) {
-    semester = SemesterType.sp;
+    semester = SemesterType.spring;
   } else if (month <= 8) {
-    semester = SemesterType.su;
+    semester = SemesterType.summer;
   } else {
-    semester = SemesterType.fa;
+    semester = SemesterType.fall;
   }
 
   return { semester, year };
@@ -43,14 +43,14 @@ export function predictFurthestSemester() {
   let semester;
 
   if (month < 3) {
-    semester = SemesterType.su;
+    semester = SemesterType.summer;
   } else if (month < 9) {
-    semester = SemesterType.fa;
+    semester = SemesterType.fall;
   } else if (month < 10) {
-    semester = SemesterType.ja;
+    semester = SemesterType.jTerm;
     year += 1;
   } else {
-    semester = SemesterType.sp;
+    semester = SemesterType.spring;
     year += 1;
   }
 
@@ -59,13 +59,13 @@ export function predictFurthestSemester() {
 
 export function getSemesterName(semesterCode: SemesterType) {
   switch (semesterCode) {
-    case SemesterType.ja:
+    case SemesterType.jTerm:
       return "J-Term";
-    case SemesterType.sp:
+    case SemesterType.spring:
       return "Spring";
-    case SemesterType.su:
+    case SemesterType.summer:
       return "Summer";
-    case SemesterType.fa:
+    case SemesterType.fall:
       return "Fall";
   }
 }

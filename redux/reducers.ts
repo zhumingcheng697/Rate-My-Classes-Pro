@@ -3,9 +3,7 @@ import type {
   SchoolNameRecord,
   DepartmentNameRecord,
   StarredClassRecord,
-  SemesterInfo,
 } from "../shared/types";
-import { getFullClassCode, predictCurrentSemester } from "../shared/utils";
 import {
   type SchoolNameAction,
   type DepartmentNameAction,
@@ -13,6 +11,8 @@ import {
   type StarClassAction,
   ActionType,
 } from "./types";
+import { getFullClassCode } from "../shared/utils";
+import Semester from "../shared/semester";
 
 function schoolNameReducer(
   state: SchoolNameRecord = {},
@@ -37,7 +37,7 @@ function departmentNameReducer(
 }
 
 function semesterReducer(
-  state: SemesterInfo = predictCurrentSemester(),
+  state: Semester = Semester.predictCurrentSemester(),
   action: SemesterAction
 ) {
   if (action.type === ActionType.selectSemester && !!action.payload) {

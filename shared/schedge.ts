@@ -3,9 +3,8 @@ import type {
   DepartmentNameRecord,
   DepartmentInfo,
   ClassInfo,
-  SemesterInfo,
 } from "../shared/types";
-import { predictCurrentSemester } from "./utils";
+import Semester from "./semester";
 
 const baseUrl = "https://schedge.a1liu.com";
 
@@ -73,10 +72,12 @@ export async function getDepartmentNames(): Promise<DepartmentNameRecord> {
 
 export async function getClasses(
   { schoolCode, departmentCode }: DepartmentInfo,
-  { semester, year }: SemesterInfo
+  semester: Semester
 ): Promise<ClassInfo[]> {
   const res = await fetch(
-    composeUrl(`/${year}/${semester}/${schoolCode}/${departmentCode}`)
+    composeUrl(
+      `/${semester.schoolYear}/${semester.semesterCode}/${schoolCode}/${departmentCode}`
+    )
   );
   const json: SchedgeClassRecord = await res.json();
 

@@ -7,7 +7,7 @@ export enum SemesterCode {
   fall = "fa",
 }
 
-export class Semester {
+export default class Semester {
   static readonly semesterCodes = [
     SemesterCode.jTerm,
     SemesterCode.spring,

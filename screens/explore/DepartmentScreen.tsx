@@ -12,7 +12,6 @@ import {
   type ExploreNavigationParamList,
   type SchoolNameRecord,
   type DepartmentNameRecord,
-  type SemesterInfo,
   type ClassInfo,
   ErrorType,
 } from "../../shared/types";
@@ -25,6 +24,7 @@ import {
   getFullClassCode,
   placeholderClassNumbers,
 } from "../../shared/utils";
+import Semester from "../../shared/semester";
 import { getClasses } from "../../shared/schedge";
 import TieredTextButton from "../../components/TieredTextButton";
 import AlertPopup from "../../components/AlertPopup";
@@ -64,7 +64,7 @@ type DepartmentScreenComponentProps = {
   route: DepartmentScreenRouteProp;
   schoolNames: SchoolNameRecord;
   departmentNames: DepartmentNameRecord;
-  selectedSemester: SemesterInfo;
+  selectedSemester: Semester;
 };
 
 type DepartmentScreenComponentState = {

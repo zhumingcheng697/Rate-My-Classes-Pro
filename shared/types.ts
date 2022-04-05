@@ -26,24 +26,6 @@ export enum ErrorType {
   noData = "NO_DATA",
 }
 
-export enum SemesterCode {
-  jTerm = "ja",
-  spring = "sp",
-  summer = "su",
-  fall = "fa",
-}
-
-export type SemesterInfo = {
-  semester: SemesterCode;
-  year: number;
-};
-
-export type RootNavigationParamList = {
-  "Explore-Tab": never;
-  "Search-Tab": never;
-  "Me-Tab": never;
-};
-
 export type ExploreNavigationParamList = {
   University: undefined;
   School: SchoolInfo;

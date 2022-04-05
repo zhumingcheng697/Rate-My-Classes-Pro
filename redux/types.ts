@@ -1,9 +1,9 @@
 import type {
   SchoolNameRecord,
   DepartmentNameRecord,
-  SemesterInfo,
   ClassInfo,
 } from "../shared/types";
+import Semester from "../shared/semester";
 
 export enum ActionType {
   setSchoolNameRecord = "SET_SCHOOL_NAME_RECORD",
@@ -25,7 +25,7 @@ export type DepartmentNameAction = {
 
 export type SemesterAction = {
   type: ActionType.selectSemester;
-  payload?: SemesterInfo;
+  payload?: Semester;
 };
 
 export type StarClassAction = {

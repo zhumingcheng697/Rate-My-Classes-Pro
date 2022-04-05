@@ -1,78 +1,10 @@
-import {
-  type SchoolNameRecord,
-  type DepartmentNameRecord,
-  type SchoolInfo,
-  type DepartmentInfo,
-  type ClassCode,
-  SemesterCode,
-  SemesterInfo,
+import type {
+  SchoolNameRecord,
+  DepartmentNameRecord,
+  SchoolInfo,
+  DepartmentInfo,
+  ClassCode,
 } from "./types";
-
-export const semesters = [
-  SemesterCode.jTerm,
-  SemesterCode.spring,
-  SemesterCode.summer,
-  SemesterCode.fall,
-];
-
-export function predictCurrentSemester() {
-  const today = new Date();
-  const month = today.getMonth() + 1;
-  const year = today.getFullYear();
-
-  let semester;
-
-  if (month <= 1) {
-    semester = SemesterCode.jTerm;
-  } else if (month <= 5) {
-    semester = SemesterCode.spring;
-  } else if (month <= 8) {
-    semester = SemesterCode.summer;
-  } else {
-    semester = SemesterCode.fall;
-  }
-
-  return { semester, year };
-}
-
-export function predictFurthestSemester() {
-  const today = new Date();
-  const month = today.getMonth() + 1;
-  let year = today.getFullYear();
-
-  let semester;
-
-  if (month < 3) {
-    semester = SemesterCode.summer;
-  } else if (month < 9) {
-    semester = SemesterCode.fall;
-  } else if (month < 10) {
-    semester = SemesterCode.jTerm;
-    year += 1;
-  } else {
-    semester = SemesterCode.spring;
-    year += 1;
-  }
-
-  return { semester, year };
-}
-
-export function getSemesterName(semesterCode: SemesterCode) {
-  switch (semesterCode) {
-    case SemesterCode.jTerm:
-      return "J-Term";
-    case SemesterCode.spring:
-      return "Spring";
-    case SemesterCode.summer:
-      return "Summer";
-    case SemesterCode.fall:
-      return "Fall";
-  }
-}
-
-export function getFullSemesterName({ semester, year }: SemesterInfo) {
-  return `${getSemesterName(semester)} ${year}`;
-}
 
 export function getFullDepartmentCode({
   schoolCode,
@@ -116,6 +48,10 @@ export function isSchoolGrad(schoolCode: string) {
 
 export function isObjectEmpty(obj: object) {
   return Object.keys(obj).length === 0;
+}
+
+export function mod(lhs: number, rhs: number) {
+  return ((lhs % rhs) + rhs) % rhs;
 }
 
 export const placeholderClassNumbers = [

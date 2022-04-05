@@ -18,11 +18,11 @@ export default class Semester {
   private static numOfSemesters = Semester.semesterCodes.length;
 
   readonly semesterCode: SemesterCode;
-  readonly schoolYear: number;
+  readonly year: number;
 
-  constructor(semester: SemesterCode, schoolYear: number) {
+  constructor(semester: SemesterCode, year: number) {
     this.semesterCode = semester;
-    this.schoolYear = Math.floor(schoolYear);
+    this.year = Math.floor(year);
   }
 
   getSemesterName() {
@@ -39,13 +39,12 @@ export default class Semester {
   }
 
   toString() {
-    return `${this.getSemesterName()} ${this.schoolYear}`;
+    return `${this.getSemesterName()} ${this.year}`;
   }
 
   static predictCurrentSemester() {
     const today = new Date();
     const month = today.getMonth() + 1;
-    const year = today.getFullYear();
 
     let semesterCode;
 
@@ -59,7 +58,7 @@ export default class Semester {
       semesterCode = SemesterCode.fall;
     }
 
-    return new Semester(semesterCode, year);
+    return new Semester(semesterCode, today.getFullYear());
   }
 
   static predictFurthestSemester() {
@@ -85,9 +84,7 @@ export default class Semester {
   }
 
   static equals(lhs: Semester, rhs: Semester) {
-    return (
-      lhs.semesterCode === rhs.semesterCode && lhs.schoolYear === rhs.schoolYear
-    );
+    return lhs.semesterCode === rhs.semesterCode && lhs.year === rhs.year;
   }
 
   prev(n: number = -1) {
@@ -97,7 +94,7 @@ export default class Semester {
   next(n: number = 1) {
     let index =
       Semester.semesterCodes.indexOf(this.semesterCode) + Math.floor(n);
-    const year = this.schoolYear + Math.floor(index / Semester.numOfSemesters);
+    const year = this.year + Math.floor(index / Semester.numOfSemesters);
     index = mod(index, Semester.numOfSemesters);
 
     return new Semester(Semester.semesterCodes[index], year);

@@ -17,40 +17,38 @@ export default function SignInScreen() {
 
   return (
     <KeyboardAwareSafeAreaScrollView>
-      <Box marginY={"10px"}>
-        <VStack marginX={"10px"} space={"8px"}>
-          <Box>
-            <Text variant={"label"}>Email</Text>
-            <Input
-              autoCompleteType={"email"}
-              autoCorrect={false}
-              autoCapitalize={"none"}
-              keyboardType={"email-address"}
-            />
-          </Box>
-          <Box>
-            <Text variant={"label"}>Password</Text>
-            <Input variant={"password"} />
-          </Box>
-          <Button
-            marginY={"15px"}
+      <VStack margin={"10px"} space={"8px"}>
+        <Box>
+          <Text variant={"label"}>Email</Text>
+          <Input
+            autoCompleteType={"email"}
+            autoCorrect={false}
+            autoCapitalize={"none"}
+            keyboardType={"email-address"}
+          />
+        </Box>
+        <Box>
+          <Text variant={"label"}>Password</Text>
+          <Input variant={"password"} />
+        </Box>
+        <Button
+          marginY={"15px"}
+          onPress={() => {
+            navigation.replace("Account");
+          }}
+        >
+          <Text variant={"button"}>Sign In</Text>
+        </Button>
+        <Box>
+          <Text textAlign={"center"}>Don’t have an account yet?</Text>
+          <PlainTextButton
+            title={"Sign Up"}
             onPress={() => {
-              navigation.replace("Account");
+              navigation.replace("SignUp");
             }}
-          >
-            <Text variant={"button"}>Sign In</Text>
-          </Button>
-          <Box>
-            <Text textAlign={"center"}>Don’t have an account yet?</Text>
-            <PlainTextButton
-              title={"Sign Up"}
-              onPress={() => {
-                navigation.replace("SignUp");
-              }}
-            />
-          </Box>
-        </VStack>
-      </Box>
+          />
+        </Box>
+      </VStack>
     </KeyboardAwareSafeAreaScrollView>
   );
 }

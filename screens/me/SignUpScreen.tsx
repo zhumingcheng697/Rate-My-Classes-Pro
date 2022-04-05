@@ -17,48 +17,46 @@ export default function SignUpScreen() {
 
   return (
     <KeyboardAwareSafeAreaScrollView>
-      <Box marginY={"10px"}>
-        <VStack marginX={"10px"} space={"8px"}>
-          <Box>
-            <Text variant={"label"}>Username</Text>
-            <Input autoCompleteType={"username"} />
-          </Box>
-          <Box>
-            <Text variant={"label"}>Email</Text>
-            <Input
-              autoCompleteType={"email"}
-              autoCorrect={false}
-              autoCapitalize={"none"}
-              keyboardType={"email-address"}
-            />
-          </Box>
-          <Box>
-            <Text variant={"label"}>Password</Text>
-            <Input variant={"password"} />
-          </Box>
-          <Box>
-            <Text variant={"label"}>Confirm Password</Text>
-            <Input variant={"password"} />
-          </Box>
-          <Button
-            marginY={"15px"}
+      <VStack margin={"10px"} space={"8px"}>
+        <Box>
+          <Text variant={"label"}>Username</Text>
+          <Input autoCompleteType={"username"} />
+        </Box>
+        <Box>
+          <Text variant={"label"}>Email</Text>
+          <Input
+            autoCompleteType={"email"}
+            autoCorrect={false}
+            autoCapitalize={"none"}
+            keyboardType={"email-address"}
+          />
+        </Box>
+        <Box>
+          <Text variant={"label"}>Password</Text>
+          <Input variant={"password"} />
+        </Box>
+        <Box>
+          <Text variant={"label"}>Confirm Password</Text>
+          <Input variant={"password"} />
+        </Box>
+        <Button
+          marginY={"15px"}
+          onPress={() => {
+            navigation.replace("Account");
+          }}
+        >
+          <Text variant={"button"}>Sign Up</Text>
+        </Button>
+        <Box>
+          <Text textAlign={"center"}>Already have an account?</Text>
+          <PlainTextButton
+            title={"Sign In"}
             onPress={() => {
-              navigation.replace("Account");
+              navigation.replace("SignIn");
             }}
-          >
-            <Text variant={"button"}>Sign Up</Text>
-          </Button>
-          <Box>
-            <Text textAlign={"center"}>Already have an account?</Text>
-            <PlainTextButton
-              title={"Sign In"}
-              onPress={() => {
-                navigation.replace("SignIn");
-              }}
-            />
-          </Box>
-        </VStack>
-      </Box>
+          />
+        </Box>
+      </VStack>
     </KeyboardAwareSafeAreaScrollView>
   );
 }

@@ -8,14 +8,14 @@ export enum SemesterCode {
 }
 
 export default class Semester {
-  static readonly semesterCodes = [
+  private static readonly semesterCodes = [
     SemesterCode.jTerm,
     SemesterCode.spring,
     SemesterCode.summer,
     SemesterCode.fall,
   ];
 
-  private static numOfSemesters = Semester.semesterCodes.length;
+  private static readonly numOfSemesters = Semester.semesterCodes.length;
 
   readonly semesterCode: SemesterCode;
   readonly year: number;
@@ -83,12 +83,25 @@ export default class Semester {
     return new Semester(semesterCode, year);
   }
 
+  static getSemesterOptions(prev: number = 3) {
+    const semesterOptions = [];
+    let start = Semester.predictCurrentSemester().prev(Math.max(prev, 0));
+    const end = Semester.predictFurthestSemester().next();
+
+    while (!Semester.equals(start, end)) {
+      semesterOptions.push(start);
+      start = start.next();
+    }
+
+    return semesterOptions;
+  }
+
   static equals(lhs: Semester, rhs: Semester) {
     return lhs.semesterCode === rhs.semesterCode && lhs.year === rhs.year;
   }
 
-  prev(n: number = -1) {
-    return this.next(n);
+  prev(n: number = 1) {
+    return this.next(-n);
   }
 
   next(n: number = 1) {

@@ -45,25 +45,26 @@ function settingsReducer(
   },
   action: SettingsAction
 ) {
+  const newState = { ...state };
   if (action.type === ActionType.selectSemester) {
     if (action.payload) {
-      state.selectedSemester = action.payload;
+      newState.selectedSemester = action.payload;
     }
   } else if (action.type === ActionType.setShowPreviousSemesters) {
     if (typeof action.payload !== "undefined") {
-      state.showPreviousSemesters = action.payload;
+      newState.showPreviousSemesters = action.payload;
     }
   }
 
   if (
-    !Semester.getSemesterOptions(state.showPreviousSemesters).find((semester) =>
-      Semester.equals(semester, state.selectedSemester)
+    !Semester.getSemesterOptions(newState.showPreviousSemesters).find(
+      (semester) => Semester.equals(semester, newState.selectedSemester)
     )
   ) {
-    state.selectedSemester = Semester.predictCurrentSemester();
+    newState.selectedSemester = Semester.predictCurrentSemester();
   }
 
-  return state;
+  return newState;
 }
 
 function starredClassReducer(

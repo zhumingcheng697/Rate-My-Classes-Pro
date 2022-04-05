@@ -24,7 +24,7 @@ import {
   getFullClassCode,
   placeholderClassNumbers,
 } from "../../shared/utils";
-import { getCurrentClasses } from "../../shared/schedge";
+import { getClasses } from "../../shared/schedge";
 import TieredTextButton from "../../components/TieredTextButton";
 import AlertPopup from "../../components/AlertPopup";
 
@@ -91,7 +91,7 @@ class DepartmentScreenComponent extends Component<
       return;
     }
 
-    getCurrentClasses(this.props.route.params)
+    getClasses(this.props.route.params)
       .then((classes) => {
         if (classes && classes.length) {
           this.setState({ classes });

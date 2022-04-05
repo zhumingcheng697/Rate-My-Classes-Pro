@@ -29,6 +29,17 @@ export const buttonBaseStyle = {
   borderRadius: 10,
 };
 
+const inputSelectBaseStyle = { borderRadius: 10, borderColor: "gray.400" };
+
+const inputSelectDefaultProps = {
+  backgroundColor: "transparent",
+  size: "lg",
+  borderWidth: 1,
+  _focus: {
+    borderColor: "gray.400",
+  },
+};
+
 const componentsStyle = {
   Icon: {
     defaultProps: {
@@ -85,16 +96,10 @@ const componentsStyle = {
   },
   Input: {
     defaultProps: {
-      backgroundColor: "transparent",
-      size: "lg",
-      borderWidth: 1,
-      _focus: {
-        borderColor: "gray.400",
-      },
+      ...inputSelectDefaultProps,
     },
     baseStyle: {
-      borderRadius: 10,
-      borderColor: "gray.400",
+      ...inputSelectBaseStyle,
     },
     variants: {
       password: {
@@ -102,6 +107,26 @@ const componentsStyle = {
         autoCapitalize: "none",
         autoCorrect: false,
       },
+    },
+  },
+  Select: {
+    defaultProps: {
+      ...inputSelectDefaultProps,
+      _actionSheetContent: {
+        padding: "10px",
+      },
+      _item: {
+        marginX: "0px",
+        marginY: "2px",
+        padding: "10px",
+        borderRadius: 10,
+      },
+      _selectedItem: {
+        _text: { fontWeight: "semibold", color: "nyu.default" },
+      },
+    },
+    baseStyle: {
+      ...inputSelectBaseStyle,
     },
   },
   Text: {

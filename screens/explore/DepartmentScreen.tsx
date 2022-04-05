@@ -10,9 +10,10 @@ import { useSelector } from "react-redux";
 
 import {
   type ExploreNavigationParamList,
-  type ClassInfo,
   type SchoolNameRecord,
   type DepartmentNameRecord,
+  type SemesterInfo,
+  type ClassInfo,
   ErrorType,
 } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
@@ -45,6 +46,7 @@ export default function DepartmentScreen() {
   const route = useRoute<DepartmentScreenRouteProp>();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
+  const selectedSemester = useSelector((state) => state.selectedSemester);
 
   return (
     <DepartmentScreenComponent
@@ -52,6 +54,7 @@ export default function DepartmentScreen() {
       route={route}
       schoolNames={schoolNames}
       departmentNames={departmentNames}
+      selectedSemester={selectedSemester}
     />
   );
 }
@@ -61,6 +64,7 @@ type DepartmentScreenComponentProps = {
   route: DepartmentScreenRouteProp;
   schoolNames: SchoolNameRecord;
   departmentNames: DepartmentNameRecord;
+  selectedSemester: SemesterInfo;
 };
 
 type DepartmentScreenComponentState = {
@@ -80,10 +84,12 @@ class DepartmentScreenComponent extends Component<
   };
 
   componentDidMount() {
+    const { route, selectedSemester } = this.props;
+
     if (DEBUGGING) {
       this.setState({
         classes: placeholderClassNumbers.map((classNumber) => ({
-          ...this.props.route.params,
+          ...route.params,
           classNumber,
           name: "Lorem ipsum dolor sit amet",
         })),
@@ -91,7 +97,7 @@ class DepartmentScreenComponent extends Component<
       return;
     }
 
-    getClasses(this.props.route.params)
+    getClasses(route.params, selectedSemester)
       .then((classes) => {
         if (classes && classes.length) {
           this.setState({ classes });

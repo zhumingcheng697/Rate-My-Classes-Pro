@@ -73,7 +73,7 @@ export async function getDepartmentNames(): Promise<DepartmentNameRecord> {
 
 export async function getClasses(
   { schoolCode, departmentCode }: DepartmentInfo,
-  { semester, year }: SemesterInfo = predictCurrentSemester()
+  { semester, year }: SemesterInfo
 ): Promise<ClassInfo[]> {
   const res = await fetch(
     composeUrl(`/${year}/${semester}/${schoolCode}/${departmentCode}`)

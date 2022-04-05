@@ -1,5 +1,7 @@
 import { extendTheme } from "native-base";
 
+export const inputSelectHeight = 39;
+
 export const colorStyle = {
   background: {
     primary: "#ffffff",
@@ -29,7 +31,11 @@ export const buttonBaseStyle = {
   borderRadius: 10,
 };
 
-const inputSelectBaseStyle = { borderRadius: 10, borderColor: "gray.400" };
+const inputSelectBaseStyle = {
+  borderRadius: 10,
+  borderColor: "gray.400",
+  height: `${inputSelectHeight}px`,
+};
 
 const inputSelectDefaultProps = {
   backgroundColor: "transparent",

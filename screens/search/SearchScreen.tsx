@@ -7,6 +7,7 @@ import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
+import { inputSelectHeight } from "../../shared/theme";
 import type { SearchNavigationParamList, ClassCode } from "../../shared/types";
 import { getFullClassCode, placeholderClassNumbers } from "../../shared/utils";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
@@ -19,7 +20,6 @@ type SearchScreenNavigationProp = StackNavigationProp<
   "Search"
 >;
 
-const searchBarHeight = 39;
 const dividerHeight = 1;
 
 export default function SearchScreen() {
@@ -45,7 +45,7 @@ export default function SearchScreen() {
     >
       <Box background={"background.primary"}>
         <SearchBar
-          height={`${searchBarHeight}px`}
+          height={`${inputSelectHeight}px`}
           margin={"10px"}
           value={query}
           onChangeText={setQuery}
@@ -92,7 +92,7 @@ export default function SearchScreen() {
               insets.bottom -
               headerHeight -
               tabBarHeight -
-              searchBarHeight -
+              inputSelectHeight -
               dividerHeight
             }px`}
           >

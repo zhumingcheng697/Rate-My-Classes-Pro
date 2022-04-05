@@ -24,11 +24,6 @@ export type DepartmentNameAction = {
   payload?: DepartmentNameRecord;
 };
 
-export type SemesterAction = {
-  type: ActionType.selectSemester;
-  payload?: Semester;
-};
-
 export type SettingsAction =
   | { type: ActionType.selectSemester; payload?: Semester }
   | { type: ActionType.setShowPreviousSemesters; payload?: boolean };

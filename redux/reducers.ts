@@ -8,7 +8,6 @@ import type {
 import {
   type SchoolNameAction,
   type DepartmentNameAction,
-  type SemesterAction,
   type SettingsAction,
   type StarClassAction,
   ActionType,
@@ -45,26 +44,33 @@ function settingsReducer(
   },
   action: SettingsAction
 ) {
-  const newState = { ...state };
+  function validateSettings(state: Settings) {
+    if (
+      !Semester.getSemesterOptions(state.showPreviousSemesters).some(
+        (semester) => Semester.equals(semester, state.selectedSemester)
+      )
+    ) {
+      state.selectedSemester = Semester.predictCurrentSemester();
+    }
+
+    return state;
+  }
+
   if (action.type === ActionType.selectSemester) {
     if (action.payload) {
+      const newState = { ...state };
       newState.selectedSemester = action.payload;
+      return validateSettings(newState);
     }
   } else if (action.type === ActionType.setShowPreviousSemesters) {
     if (typeof action.payload !== "undefined") {
+      const newState = { ...state };
       newState.showPreviousSemesters = action.payload;
+      return validateSettings(newState);
     }
   }
 
-  if (
-    !Semester.getSemesterOptions(newState.showPreviousSemesters).find(
-      (semester) => Semester.equals(semester, newState.selectedSemester)
-    )
-  ) {
-    newState.selectedSemester = Semester.predictCurrentSemester();
-  }
-
-  return newState;
+  return state;
 }
 
 function starredClassReducer(

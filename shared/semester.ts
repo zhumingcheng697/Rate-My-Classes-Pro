@@ -100,6 +100,14 @@ export default class Semester {
     return lhs.semesterCode === rhs.semesterCode && lhs.year === rhs.year;
   }
 
+  static between(lhs: Semester, rhs: Semester) {
+    return (
+      (lhs.year - rhs.year) * Semester.numOfSemesters +
+      Semester.semesterCodes.indexOf(lhs.semesterCode) -
+      Semester.semesterCodes.indexOf(rhs.semesterCode)
+    );
+  }
+
   prev(n: number = 1) {
     return this.next(-n);
   }

@@ -35,6 +35,28 @@ export function predictCurrentSemester() {
   return { semester, year };
 }
 
+export function predictFurthestSemester() {
+  const today = new Date();
+  const month = today.getMonth() + 1;
+  let year = today.getFullYear();
+
+  let semester;
+
+  if (month < 3) {
+    semester = SemesterType.su;
+  } else if (month < 9) {
+    semester = SemesterType.fa;
+  } else if (month < 10) {
+    semester = SemesterType.ja;
+    year += 1;
+  } else {
+    semester = SemesterType.sp;
+    year += 1;
+  }
+
+  return { semester, year };
+}
+
 export function getSemesterName(semesterCode: SemesterType) {
   switch (semesterCode) {
     case SemesterType.ja:

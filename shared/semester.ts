@@ -86,7 +86,7 @@ export default class Semester {
 
   static equals(lhs: Semester, rhs: Semester) {
     return (
-      lhs.semesterCode === rhs.semesterCode && rhs.schoolYear === rhs.schoolYear
+      lhs.semesterCode === rhs.semesterCode && lhs.schoolYear === rhs.schoolYear
     );
   }
 

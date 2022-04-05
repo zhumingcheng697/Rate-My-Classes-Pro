@@ -3,11 +3,13 @@ import type {
   SchoolNameRecord,
   DepartmentNameRecord,
   StarredClassRecord,
+  SemesterInfo,
 } from "../shared/types";
-import { getFullClassCode } from "../shared/utils";
+import { getFullClassCode, predictCurrentSemester } from "../shared/utils";
 import {
   type SchoolNameAction,
   type DepartmentNameAction,
+  type SemesterAction,
   type StarClassAction,
   ActionType,
 } from "./types";
@@ -28,6 +30,17 @@ function departmentNameReducer(
   action: DepartmentNameAction
 ) {
   if (action.type === ActionType.setDepartmentNameRecord && !!action.payload) {
+    return action.payload;
+  }
+
+  return state;
+}
+
+function semesterReducer(
+  state: SemesterInfo = predictCurrentSemester(),
+  action: SemesterAction
+) {
+  if (action.type === ActionType.selectSemester && !!action.payload) {
     return action.payload;
   }
 
@@ -56,5 +69,6 @@ function starredClassReducer(
 export default combineReducers({
   schoolNameRecord: schoolNameReducer,
   departmentNameRecord: departmentNameReducer,
+  selectedSemester: semesterReducer,
   starredClassRecord: starredClassReducer,
 });

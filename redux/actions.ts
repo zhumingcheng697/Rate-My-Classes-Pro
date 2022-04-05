@@ -2,6 +2,7 @@ import { type Dispatch } from "redux";
 import type {
   SchoolNameRecord,
   DepartmentNameRecord,
+  SemesterInfo,
   ClassInfo,
 } from "../shared/types";
 import {
@@ -9,6 +10,7 @@ import {
   type DepartmentNameAction,
   type StarClassAction,
   ActionType,
+  SemesterAction,
 } from "./types";
 
 export const setSchoolNameRecord =
@@ -26,6 +28,14 @@ export const setDepartmentNameRecord =
     dispath({
       type: ActionType.setDepartmentNameRecord,
       payload: departmentNameRecord,
+    });
+  };
+
+export const selectSemester =
+  (dispath: Dispatch<SemesterAction>) => (semesterInfo: SemesterInfo) => {
+    dispath({
+      type: ActionType.selectSemester,
+      payload: semesterInfo,
     });
   };
 

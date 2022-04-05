@@ -1,5 +1,3 @@
-import { mod } from "./utils";
-
 export enum SemesterCode {
   jTerm = "ja",
   spring = "sp",
@@ -116,7 +114,9 @@ export default class Semester {
     let index =
       Semester.semesterCodes.indexOf(this.semesterCode) + Math.floor(n);
     const year = this.year + Math.floor(index / Semester.numOfSemesters);
-    index = mod(index, Semester.numOfSemesters);
+    index =
+      ((index % Semester.numOfSemesters) + Semester.numOfSemesters) %
+      Semester.numOfSemesters;
 
     return new Semester(Semester.semesterCodes[index], year);
   }

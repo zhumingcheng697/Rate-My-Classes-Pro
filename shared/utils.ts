@@ -50,10 +50,6 @@ export function isObjectEmpty(obj: object) {
   return Object.keys(obj).length === 0;
 }
 
-export function mod(lhs: number, rhs: number) {
-  return ((lhs % rhs) + rhs) % rhs;
-}
-
 export const placeholderClassNumbers = [
   "1001",
   "1003",

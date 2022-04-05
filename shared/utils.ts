@@ -9,10 +9,10 @@ import {
 } from "./types";
 
 export const semesters = [
-  SemesterType.fa,
   SemesterType.ja,
   SemesterType.sp,
   SemesterType.su,
+  SemesterType.fa,
 ];
 
 export function predictCurrentSemester() {
@@ -37,14 +37,14 @@ export function predictCurrentSemester() {
 
 export function getSemesterName(semesterCode: SemesterType) {
   switch (semesterCode) {
-    case SemesterType.fa:
-      return "Fall";
     case SemesterType.ja:
       return "J-Term";
     case SemesterType.sp:
       return "Spring";
     case SemesterType.su:
       return "Summer";
+    case SemesterType.fa:
+      return "Fall";
   }
 }
 

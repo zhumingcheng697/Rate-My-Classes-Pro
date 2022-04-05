@@ -27,10 +27,10 @@ export enum ErrorType {
 }
 
 export enum SemesterType {
-  fa = "fa",
   ja = "ja",
   sp = "sp",
   su = "su",
+  fa = "fa",
 }
 
 export type SemesterInfo = {

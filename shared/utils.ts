@@ -4,15 +4,15 @@ import {
   type SchoolInfo,
   type DepartmentInfo,
   type ClassCode,
-  SemesterType,
+  SemesterCode,
   SemesterInfo,
 } from "./types";
 
 export const semesters = [
-  SemesterType.jTerm,
-  SemesterType.spring,
-  SemesterType.summer,
-  SemesterType.fall,
+  SemesterCode.jTerm,
+  SemesterCode.spring,
+  SemesterCode.summer,
+  SemesterCode.fall,
 ];
 
 export function predictCurrentSemester() {
@@ -23,13 +23,13 @@ export function predictCurrentSemester() {
   let semester;
 
   if (month <= 1) {
-    semester = SemesterType.jTerm;
+    semester = SemesterCode.jTerm;
   } else if (month <= 5) {
-    semester = SemesterType.spring;
+    semester = SemesterCode.spring;
   } else if (month <= 8) {
-    semester = SemesterType.summer;
+    semester = SemesterCode.summer;
   } else {
-    semester = SemesterType.fall;
+    semester = SemesterCode.fall;
   }
 
   return { semester, year };
@@ -43,29 +43,29 @@ export function predictFurthestSemester() {
   let semester;
 
   if (month < 3) {
-    semester = SemesterType.summer;
+    semester = SemesterCode.summer;
   } else if (month < 9) {
-    semester = SemesterType.fall;
+    semester = SemesterCode.fall;
   } else if (month < 10) {
-    semester = SemesterType.jTerm;
+    semester = SemesterCode.jTerm;
     year += 1;
   } else {
-    semester = SemesterType.spring;
+    semester = SemesterCode.spring;
     year += 1;
   }
 
   return { semester, year };
 }
 
-export function getSemesterName(semesterCode: SemesterType) {
+export function getSemesterName(semesterCode: SemesterCode) {
   switch (semesterCode) {
-    case SemesterType.jTerm:
+    case SemesterCode.jTerm:
       return "J-Term";
-    case SemesterType.spring:
+    case SemesterCode.spring:
       return "Spring";
-    case SemesterType.summer:
+    case SemesterCode.summer:
       return "Summer";
-    case SemesterType.fall:
+    case SemesterCode.fall:
       return "Fall";
   }
 }

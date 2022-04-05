@@ -26,7 +26,7 @@ export enum ErrorType {
   noData = "NO_DATA",
 }
 
-export enum SemesterType {
+export enum SemesterCode {
   jTerm = "ja",
   spring = "sp",
   summer = "su",
@@ -34,7 +34,7 @@ export enum SemesterType {
 }
 
 export type SemesterInfo = {
-  semester: SemesterType;
+  semester: SemesterCode;
   year: number;
 };
 

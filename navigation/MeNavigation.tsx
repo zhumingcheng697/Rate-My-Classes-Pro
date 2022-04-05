@@ -6,6 +6,7 @@ import {
 
 import AccountScreen from "../screens/me/AccountScreen";
 import StarredReviewedScreen from "../screens/me/StarredReviewedScreen";
+import SettingsScreen from "../screens/me/SettingsScreen";
 import SignUpScreen from "../screens/me/SignUpScreen";
 import SignInScreen from "../screens/me/SignInScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
@@ -26,7 +27,7 @@ export default function MeNavigation() {
       />
       <Stack.Screen name={"Starred"} component={StarredReviewedScreen} />
       <Stack.Screen name={"Reviewed"} component={StarredReviewedScreen} />
-      <Stack.Screen name={"Settings"} component={PlaceHolderScreen} />
+      <Stack.Screen name={"Settings"} component={SettingsScreen} />
       <Stack.Screen
         name={"SignIn"}
         component={SignInScreen}

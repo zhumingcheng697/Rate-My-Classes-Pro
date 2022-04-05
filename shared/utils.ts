@@ -15,6 +15,26 @@ export const semesters = [
   SemesterType.su,
 ];
 
+export function predictCurrentSemester() {
+  const today = new Date();
+  const month = today.getMonth() + 1;
+  const year = today.getFullYear();
+
+  let semester;
+
+  if (month <= 1) {
+    semester = SemesterType.ja;
+  } else if (month <= 5) {
+    semester = SemesterType.sp;
+  } else if (month <= 8) {
+    semester = SemesterType.su;
+  } else {
+    semester = SemesterType.fa;
+  }
+
+  return { semester, year };
+}
+
 export function getSemesterName(semesterCode: SemesterType) {
   switch (semesterCode) {
     case SemesterType.fa:

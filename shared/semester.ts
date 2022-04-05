@@ -81,9 +81,11 @@ export default class Semester {
     return new Semester(semesterCode, year);
   }
 
-  static getSemesterOptions(prev: number = 3) {
+  static getSemesterOptions(showPrev: boolean = false) {
     const semesterOptions = [];
-    let start = Semester.predictCurrentSemester().prev(Math.max(prev, 0));
+    let start = Semester.predictCurrentSemester().prev(
+      Math.max(showPrev ? 3 : 0, 0)
+    );
     const end = Semester.predictFurthestSemester().next();
 
     while (!Semester.equals(start, end)) {

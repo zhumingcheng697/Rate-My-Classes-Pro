@@ -45,7 +45,7 @@ export type RootNavigationParamList = {
 };
 
 export type ExploreNavigationParamList = {
-  University: never;
+  University: undefined;
   School: SchoolInfo;
   Department: DepartmentInfo;
   Detail: ClassInfo;
@@ -53,18 +53,23 @@ export type ExploreNavigationParamList = {
 };
 
 export type SearchNavigationParamList = {
-  Search: never;
+  Search: undefined;
   Detail: ClassInfo;
   Review: ClassInfo;
 };
 
 export type MeNavigationParamList = {
-  Account: never;
-  Starred: never;
-  Reviewed: never;
-  Settings: never;
-  SignIn: never;
-  SignUp: never;
+  Account: undefined;
+  Starred: undefined;
+  Reviewed: undefined;
+  Settings: undefined;
+  SignIn: undefined;
+  SignUp: undefined;
   Detail: ClassInfo;
   Review: ClassInfo;
+};
+export type RootNavigationParamList = {
+  "Explore-Tab": undefined;
+  "Search-Tab": undefined;
+  "Me-Tab": undefined;
 };

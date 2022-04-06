@@ -1,27 +1,26 @@
-import React, { useState, useRef } from "react";
-import {
-  Select,
-  Icon,
-  Box,
-  Text,
-  HStack,
-  Switch,
-  Spacer,
-  VStack,
-} from "native-base";
+import React, { useMemo, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Select, Icon, Box, Text, HStack, Switch, VStack } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import Semester from "../../shared/semester";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
+import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
+
+type SemesterOptionRecord = Record<string, Semester>;
 
 export default function SettingsScreen() {
-  const semesterOptions = useRef(Semester.getSemesterOptions().reverse());
-  const [selectedIndex, setSelectedIndex] = useState(() =>
-    semesterOptions.current.findIndex(
-      (semester) =>
-        semester.toString() === Semester.predictCurrentSemester().toString()
-    )
-  );
+  const dispatch = useDispatch();
+  const settings = useSelector((state) => state.settings);
+  const semesterOptions = useMemo(() => {
+    const record: SemesterOptionRecord = {};
+    for (let semester of Semester.getSemesterOptions(
+      settings.showPreviousSemesters
+    ).reverse()) {
+      record[semester.toString()] = semester;
+    }
+    return record;
+  }, [settings.showPreviousSemesters]);
 
   return (
     <KeyboardAwareSafeAreaScrollView>
@@ -29,9 +28,10 @@ export default function SettingsScreen() {
         <Box>
           <Text variant={"label"}>Semester</Text>
           <Select
-            defaultValue={selectedIndex.toString()}
-            selectedValue={selectedIndex.toString()}
-            onValueChange={(value) => setSelectedIndex(parseInt(value))}
+            selectedValue={settings.selectedSemester.toString()}
+            onValueChange={(semesterName) => {
+              selectSemester(dispatch)(semesterOptions[semesterName]);
+            }}
             _selectedItem={{
               endIcon: (
                 <Icon
@@ -41,11 +41,11 @@ export default function SettingsScreen() {
               ),
             }}
           >
-            {semesterOptions.current.map((semester, index) => (
+            {Object.keys(semesterOptions).map((semesterName) => (
               <Select.Item
-                key={index.toString()}
-                label={semester.toString()}
-                value={index.toString()}
+                key={semesterName}
+                label={semesterName}
+                value={semesterName}
               />
             ))}
           </Select>
@@ -56,7 +56,11 @@ export default function SettingsScreen() {
           alignItems={"center"}
         >
           <Text fontSize={"17px"}>Show Previous Semesters</Text>
-          <Switch onTrackColor={"nyu.default"} />
+          <Switch
+            isChecked={settings.showPreviousSemesters}
+            onValueChange={setShowPreviousSemesters(dispatch)}
+            onTrackColor={"nyu.default"}
+          />
         </HStack>
       </VStack>
     </KeyboardAwareSafeAreaScrollView>

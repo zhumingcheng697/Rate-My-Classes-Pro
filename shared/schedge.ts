@@ -6,10 +6,7 @@ import type {
 } from "./types";
 import Semester from "./semester";
 
-const baseUrl = "https://schedge.a1liu.com";
-
-const composeUrl = (path: string, query: string = "?full=true") =>
-  baseUrl + path + query;
+type URLParams = Record<string, string | number | boolean>;
 
 type NameRecord = {
   name: string;
@@ -28,6 +25,16 @@ type SchedgeClassRecord = {
     school: string;
   };
 }[];
+
+const baseUrl = "https://schedge.a1liu.com";
+
+const composeUrl = (path: string, params: URLParams = { full: true }) =>
+  baseUrl + path + "?" + composeQuery(params);
+
+const composeQuery = (params: URLParams) =>
+  Object.entries(params)
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&");
 
 export async function getSchoolNames(): Promise<SchoolNameRecord> {
   const res = await fetch(composeUrl("/schools"));
@@ -102,10 +109,15 @@ export async function searchClasses(
   semester: Semester
 ): Promise<ClassInfo[]> {
   const res = await fetch(
-    composeUrl(
-      `/${semester.year}/${semester.semesterCode}/search`,
-      `?full=true&query=${query}&limit=50`
-    )
+    composeUrl(`/${semester.year}/${semester.semesterCode}/search`, {
+      full: true,
+      query,
+      limit: 50,
+      titleWeight: 3,
+      descriptionWeight: 2,
+      notesWeight: 1,
+      prereqsWeight: 1,
+    })
   );
 
   const json: SchedgeClassRecord = await res.json();

@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Select, Icon, Box, Text, HStack, Switch, VStack } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";

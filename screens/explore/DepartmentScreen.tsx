@@ -25,6 +25,7 @@ import {
   getFullClassCode,
   placeholderClassNumbers,
 } from "../../shared/utils";
+import Semester from "../../shared/semester";
 import { getClasses } from "../../shared/schedge";
 import TieredTextButton from "../../components/TieredTextButton";
 import AlertPopup from "../../components/AlertPopup";
@@ -116,6 +117,23 @@ class DepartmentScreenComponent extends Component<
     this.props.navigation.goBack();
   }
 
+  noDataErrorMessage() {
+    const { route, settings } = this.props;
+
+    const diff = Semester.between(
+      Semester.predictCurrentSemester(),
+      settings.selectedSemester
+    );
+
+    return `The ${getFullDepartmentCode(route.params)} department ${
+      diff > 0
+        ? "did not offer"
+        : diff < 0
+        ? "will not be offering"
+        : "is not offering"
+    } any classes for ${settings.selectedSemester.toString()}.`;
+  }
+
   render() {
     const { navigation, route, schoolNames, departmentNames } = this.props;
     const { classes, showAlert, error } = this.state;
@@ -125,11 +143,7 @@ class DepartmentScreenComponent extends Component<
         <AlertPopup
           header={error === ErrorType.noData ? "No Classes Offered" : undefined}
           body={
-            error === ErrorType.noData
-              ? `The ${getFullDepartmentCode(
-                  route.params
-                )} department is not offering any classes for the semester.`
-              : undefined
+            error === ErrorType.noData ? this.noDataErrorMessage() : undefined
           }
           isOpen={showAlert}
           onClose={this.goBackOnError.bind(this)}

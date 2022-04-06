@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useWindowDimensions } from "react-native";
 import { useSelector } from "react-redux";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Text, Center, Divider, Box } from "native-base";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -22,6 +21,7 @@ type SearchScreenNavigationProp = StackNavigationProp<
 >;
 
 const dividerHeight = 1;
+const searchBarMargin = 10;
 
 export default function SearchScreen() {
   const navigation = useNavigation<SearchScreenNavigationProp>();
@@ -30,7 +30,6 @@ export default function SearchScreen() {
   const { selectedSemester } = useSelector((state) => state.settings);
 
   const { height } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
 
@@ -48,7 +47,7 @@ export default function SearchScreen() {
       <Box background={"background.primary"}>
         <SearchBar
           height={`${inputSelectHeight}px`}
-          margin={"10px"}
+          margin={`${searchBarMargin}px`}
           value={query}
           onChangeText={setQuery}
           onFocus={() => setFocused(true)}
@@ -90,12 +89,11 @@ export default function SearchScreen() {
           <Center
             height={`${
               height -
-              insets.top -
-              insets.bottom -
               headerHeight -
               tabBarHeight -
               inputSelectHeight -
-              dividerHeight
+              dividerHeight -
+              searchBarMargin * 2
             }px`}
           >
             <Text textAlign={"center"} fontSize={"md"}>

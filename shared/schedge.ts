@@ -23,6 +23,10 @@ type SchedgeClassRecord = {
   name: string;
   deptCourseId: string;
   description?: string;
+  subjectCode: {
+    code: string;
+    school: string;
+  };
 }[];
 
 export async function getSchoolNames(): Promise<SchoolNameRecord> {
@@ -79,15 +83,38 @@ export async function getClasses(
       `/${semester.year}/${semester.semesterCode}/${schoolCode}/${departmentCode}`
     )
   );
+
   const json: SchedgeClassRecord = await res.json();
 
   return json
-    .map(({ name, description, deptCourseId }) => ({
+    .map(({ name, deptCourseId, description }) => ({
       schoolCode,
       departmentCode,
       classNumber: deptCourseId,
       name,
-      description,
+      description: description ?? "",
     }))
     .sort((a, b) => parseInt(a.classNumber) - parseInt(b.classNumber));
+}
+
+export async function searchClasses(
+  query: string,
+  semester: Semester
+): Promise<ClassInfo[]> {
+  const res = await fetch(
+    composeUrl(
+      `/${semester.year}/${semester.semesterCode}/search`,
+      `?full=true&query=${query}&limit=50`
+    )
+  );
+
+  const json: SchedgeClassRecord = await res.json();
+
+  return json.map(({ name, deptCourseId, description, subjectCode }) => ({
+    schoolCode: subjectCode.school,
+    departmentCode: subjectCode.code,
+    classNumber: deptCourseId,
+    name,
+    description: description ?? "",
+  }));
 }

@@ -14,7 +14,6 @@ import {
   type SchoolNameRecord,
   type DepartmentNameRecord,
   type ClassInfo,
-  type Settings,
   ErrorType,
 } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
@@ -87,14 +86,12 @@ class DepartmentScreenComponent extends Component<
 
   componentDidMount() {
     this.loadClasses();
-    console.log("loadClasses on mount");
   }
 
   componentDidUpdate(prevProps: DepartmentScreenComponentProps) {
     const { selectedSemester } = this.props;
     if (!Semester.equals(prevProps.selectedSemester, selectedSemester)) {
       this.loadClasses();
-      console.log("loadClasses on update");
     }
   }
 

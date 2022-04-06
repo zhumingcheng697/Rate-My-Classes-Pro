@@ -61,7 +61,7 @@ export default class App extends Component<{}, AppState> {
       })
       .catch((e) => {
         console.error(e);
-        this.setState({ error: ErrorType.loadFailed, showAlert: true });
+        this.setState({ error: ErrorType.network, showAlert: true });
       });
 
     getDepartmentNames()
@@ -74,7 +74,7 @@ export default class App extends Component<{}, AppState> {
       })
       .catch((e) => {
         console.error(e);
-        this.setState({ error: ErrorType.loadFailed, showAlert: true });
+        this.setState({ error: ErrorType.network, showAlert: true });
       });
   }
 

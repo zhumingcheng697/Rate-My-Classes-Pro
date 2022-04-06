@@ -108,7 +108,7 @@ class DepartmentScreenComponent extends Component<
       })
       .catch((e) => {
         console.error(e);
-        this.setState({ showAlert: true, error: ErrorType.loadFailed });
+        this.setState({ showAlert: true, error: ErrorType.network });
       });
   }
 

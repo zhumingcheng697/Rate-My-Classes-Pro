@@ -14,7 +14,7 @@ export type AlertPopupProps = AlertPopupBaseProps &
 
 export default function AlertPopup({
   header = "Unable to Load Class Information",
-  body = "Please check your internet connection or try again later.",
+  body = "Please check your network connection or try again later.",
   footer,
   onClose,
   ...rest

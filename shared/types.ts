@@ -24,8 +24,8 @@ export type ClassInfo = ClassCode & {
 };
 
 export enum ErrorType {
-  loadFailed = "LOAD_FAILED",
-  noData = "NO_DATA",
+  network = "NETWORK_ERROR",
+  noData = "NO_DATA_ERROR",
 }
 
 export type Settings = {

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Text, Box } from "native-base";
 import {
+  useIsFocused,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -23,14 +24,11 @@ import {
   getDepartmentName,
   getFullDepartmentCode,
   getFullClassCode,
-  placeholderClassNumbers,
 } from "../../shared/utils";
 import Semester from "../../shared/semester";
 import { getClasses } from "../../shared/schedge";
 import TieredTextButton from "../../components/TieredTextButton";
 import AlertPopup from "../../components/AlertPopup";
-
-const DEBUGGING = false;
 
 type DepartmentScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -48,6 +46,7 @@ export default function DepartmentScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const { selectedSemester } = useSelector((state) => state.settings);
+  const isFocused = useIsFocused();
 
   return (
     <DepartmentScreenComponent
@@ -56,6 +55,7 @@ export default function DepartmentScreen() {
       schoolNames={schoolNames}
       departmentNames={departmentNames}
       selectedSemester={selectedSemester}
+      isFocused={isFocused}
     />
   );
 }
@@ -66,6 +66,7 @@ type DepartmentScreenComponentProps = {
   schoolNames: SchoolNameRecord;
   departmentNames: DepartmentNameRecord;
   selectedSemester: Semester;
+  isFocused: boolean;
 };
 
 type DepartmentScreenComponentState = {
@@ -85,18 +86,20 @@ class DepartmentScreenComponent extends Component<
   };
 
   componentDidMount() {
-    const { route, selectedSemester } = this.props;
+    this.loadClasses();
+    console.log("loadClasses on mount");
+  }
 
-    if (DEBUGGING) {
-      this.setState({
-        classes: placeholderClassNumbers.map((classNumber) => ({
-          ...route.params,
-          classNumber,
-          name: "Lorem ipsum dolor sit amet",
-        })),
-      });
-      return;
+  componentDidUpdate(prevProps: DepartmentScreenComponentProps) {
+    const { selectedSemester } = this.props;
+    if (!Semester.equals(prevProps.selectedSemester, selectedSemester)) {
+      this.loadClasses();
+      console.log("loadClasses on update");
     }
+  }
+
+  loadClasses() {
+    const { route, selectedSemester } = this.props;
 
     getClasses(route.params, selectedSemester)
       .then((classes) => {
@@ -135,7 +138,8 @@ class DepartmentScreenComponent extends Component<
   }
 
   render() {
-    const { navigation, route, schoolNames, departmentNames } = this.props;
+    const { navigation, route, schoolNames, departmentNames, isFocused } =
+      this.props;
     const { classes, showAlert, error } = this.state;
 
     return (
@@ -145,7 +149,7 @@ class DepartmentScreenComponent extends Component<
           body={
             error === ErrorType.noData ? this.noDataErrorMessage() : undefined
           }
-          isOpen={showAlert}
+          isOpen={showAlert && isFocused}
           onClose={this.goBackOnError.bind(this)}
         />
         <KeyboardAwareSafeAreaScrollView>

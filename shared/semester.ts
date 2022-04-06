@@ -83,9 +83,7 @@ export default class Semester {
 
   static getSemesterOptions(showPrev: boolean = false) {
     const semesterOptions = [];
-    let start = Semester.predictCurrentSemester().prev(
-      Math.max(showPrev ? 3 : 0, 0)
-    );
+    let start = Semester.predictCurrentSemester().prev(showPrev ? 4 : 0);
     const end = Semester.predictFurthestSemester().next();
 
     while (!Semester.equals(start, end)) {

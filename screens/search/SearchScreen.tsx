@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useWindowDimensions } from "react-native";
+import { useSelector } from "react-redux";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Text, Center, Divider, Box } from "native-base";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -26,6 +27,7 @@ export default function SearchScreen() {
   const navigation = useNavigation<SearchScreenNavigationProp>();
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
+  const { selectedSemester } = useSelector((state) => state.settings);
 
   const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -96,8 +98,11 @@ export default function SearchScreen() {
               dividerHeight
             }px`}
           >
-            <Text textAlign={"center"}>
-              Search Classes by Title or Description
+            <Text textAlign={"center"} fontSize={"md"}>
+              Search {selectedSemester.toString()} Classes
+            </Text>
+            <Text textAlign={"center"} fontSize={"sm"}>
+              (By Title or Description)
             </Text>
           </Center>
         )

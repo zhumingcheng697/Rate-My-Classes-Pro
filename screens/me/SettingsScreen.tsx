@@ -11,16 +11,18 @@ type SemesterOptionRecord = Record<string, Semester>;
 
 export default function SettingsScreen() {
   const dispatch = useDispatch();
-  const settings = useSelector((state) => state.settings);
+  const { selectedSemester, showPreviousSemesters } = useSelector(
+    (state) => state.settings
+  );
   const semesterOptions = useMemo(() => {
     const record: SemesterOptionRecord = {};
     for (let semester of Semester.getSemesterOptions(
-      settings.showPreviousSemesters
+      showPreviousSemesters
     ).reverse()) {
       record[semester.toString()] = semester;
     }
     return record;
-  }, [settings.showPreviousSemesters]);
+  }, [showPreviousSemesters]);
 
   return (
     <KeyboardAwareSafeAreaScrollView>
@@ -28,7 +30,7 @@ export default function SettingsScreen() {
         <Box>
           <Text variant={"label"}>Semester</Text>
           <Select
-            selectedValue={settings.selectedSemester.toString()}
+            selectedValue={selectedSemester.toString()}
             onValueChange={(semesterName) => {
               selectSemester(dispatch)(semesterOptions[semesterName]);
             }}
@@ -57,7 +59,7 @@ export default function SettingsScreen() {
         >
           <Text fontSize={"17px"}>Show Previous Semesters</Text>
           <Switch
-            isChecked={settings.showPreviousSemesters}
+            isChecked={showPreviousSemesters}
             onValueChange={setShowPreviousSemesters(dispatch)}
             onTrackColor={"nyu.default"}
           />

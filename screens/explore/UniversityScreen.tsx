@@ -22,7 +22,7 @@ export default function UniversityScreen() {
   const navigation = useNavigation<UniversityScreenNavigationProp>();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-  const settings = useSelector((state) => state.settings);
+  const { selectedSemester } = useSelector((state) => state.settings);
   const isSchoolNameLoaded = !!schoolNames && !isObjectEmpty(schoolNames);
   const isDepartmentNameLoaded =
     !!departmentNames && !isObjectEmpty(departmentNames);
@@ -69,7 +69,7 @@ export default function UniversityScreen() {
   return (
     <KeyboardAwareSafeAreaScrollView>
       <Box marginY={"10px"}>
-        <Text variant={"h1"}>{settings.selectedSemester.toString()}</Text>
+        <Text variant={"h1"}>{selectedSemester.toString()}</Text>
         <Text variant={"h2"}>Undergraduate</Text>
         <Grid isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}>
           {(info) => undergradCodes.map(schoolCodeToNavigationButton(info))}

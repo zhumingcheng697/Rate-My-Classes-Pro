@@ -47,7 +47,7 @@ export default function DepartmentScreen() {
   const route = useRoute<DepartmentScreenRouteProp>();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-  const settings = useSelector((state) => state.settings);
+  const { selectedSemester } = useSelector((state) => state.settings);
 
   return (
     <DepartmentScreenComponent
@@ -55,7 +55,7 @@ export default function DepartmentScreen() {
       route={route}
       schoolNames={schoolNames}
       departmentNames={departmentNames}
-      settings={settings}
+      selectedSemester={selectedSemester}
     />
   );
 }
@@ -65,7 +65,7 @@ type DepartmentScreenComponentProps = {
   route: DepartmentScreenRouteProp;
   schoolNames: SchoolNameRecord;
   departmentNames: DepartmentNameRecord;
-  settings: Settings;
+  selectedSemester: Semester;
 };
 
 type DepartmentScreenComponentState = {
@@ -85,7 +85,7 @@ class DepartmentScreenComponent extends Component<
   };
 
   componentDidMount() {
-    const { route, settings } = this.props;
+    const { route, selectedSemester } = this.props;
 
     if (DEBUGGING) {
       this.setState({
@@ -98,7 +98,7 @@ class DepartmentScreenComponent extends Component<
       return;
     }
 
-    getClasses(route.params, settings.selectedSemester)
+    getClasses(route.params, selectedSemester)
       .then((classes) => {
         if (classes && classes.length) {
           this.setState({ classes });
@@ -118,11 +118,11 @@ class DepartmentScreenComponent extends Component<
   }
 
   noDataErrorMessage() {
-    const { route, settings } = this.props;
+    const { route, selectedSemester } = this.props;
 
     const diff = Semester.between(
       Semester.predictCurrentSemester(),
-      settings.selectedSemester
+      selectedSemester
     );
 
     return `The ${getFullDepartmentCode(route.params)} department ${
@@ -131,7 +131,7 @@ class DepartmentScreenComponent extends Component<
         : diff < 0
         ? "will not be offering"
         : "is not offering"
-    } any classes for ${settings.selectedSemester.toString()}.`;
+    } any classes for ${selectedSemester.toString()}.`;
   }
 
   render() {

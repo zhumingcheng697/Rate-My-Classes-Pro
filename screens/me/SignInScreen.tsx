@@ -34,7 +34,7 @@ export default function SignInScreen() {
         <Button
           marginY={"15px"}
           onPress={() => {
-            navigation.replace("AccountSignedIn");
+            navigation.navigate("Account", { isSignedIn: true });
           }}
         >
           <Text variant={"button"}>Sign In</Text>

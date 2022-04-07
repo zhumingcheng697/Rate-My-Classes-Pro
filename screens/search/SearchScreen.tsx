@@ -99,7 +99,7 @@ export default function SearchScreen() {
         />
         <Divider height={`${dividerHeight}px`} />
       </Box>
-      {focused || query ? (
+      {focused || matchedClasses.length || !isLoaded ? (
         <Grid marginY={"10px"} isLoaded={isLoaded}>
           {(info) =>
             matchedClasses.map((classInfo, index) => {
@@ -119,6 +119,7 @@ export default function SearchScreen() {
         </Grid>
       ) : (
         <Center
+          marginX={"10px"}
           height={`${
             height -
             headerHeight -
@@ -129,10 +130,9 @@ export default function SearchScreen() {
           }px`}
         >
           <Text textAlign={"center"} fontSize={"md"}>
-            Search {selectedSemester.toString()} Classes
-          </Text>
-          <Text textAlign={"center"} fontSize={"sm"}>
-            (By Title or Description)
+            {query
+              ? `No Matches Found in ${selectedSemester.toString()}`
+              : `Search ${selectedSemester.toString()} Classes`}
           </Text>
         </Center>
       )}

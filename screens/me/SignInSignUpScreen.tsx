@@ -81,7 +81,7 @@ export default function SignInSignUpScreen() {
               : "Already have an account?"}
           </Text>
           <PlainTextButton
-            title={"Sign Up"}
+            title={isSigningIn ? "Sign Up" : "Sign In"}
             onPress={() => {
               navigation.navigate("SignInSignUp", {
                 isSigningIn: !isSigningIn,

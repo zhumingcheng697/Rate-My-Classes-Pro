@@ -8,9 +8,7 @@ export const colorStyle = {
     secondary: "#f2f2f7",
     tertiary: "#e5e5ea",
   },
-  nyu: {
-    default: "#57068c",
-  },
+  nyu: "#57068c",
 };
 
 const headerBaseStyle = {
@@ -57,7 +55,7 @@ const componentsStyle = {
     variants: {
       solid: {
         ...buttonBaseStyle,
-        background: colorStyle.nyu.default,
+        background: colorStyle.nyu,
         _text: {
           color: "white",
           ...buttonTextBaseStyle,
@@ -76,7 +74,7 @@ const componentsStyle = {
         ...buttonBaseStyle,
         background: colorStyle.background.secondary,
         _text: {
-          color: colorStyle.nyu.default,
+          color: colorStyle.nyu,
           ...buttonTextBaseStyle,
         },
         _disabled: {
@@ -134,7 +132,7 @@ const componentsStyle = {
         borderRadius: 10,
       },
       _selectedItem: {
-        _text: { fontWeight: "semibold", color: "nyu.default" },
+        _text: { fontWeight: "semibold", color: colorStyle.nyu },
       },
     },
     baseStyle: {
@@ -164,7 +162,7 @@ const componentsStyle = {
         ...buttonTextBaseStyle,
       },
       subtleButton: {
-        color: colorStyle.nyu.default,
+        color: colorStyle.nyu,
         ...buttonTextBaseStyle,
       },
     },

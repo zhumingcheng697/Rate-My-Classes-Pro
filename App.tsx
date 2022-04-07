@@ -39,7 +39,7 @@ const navigationTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: colorStyle.nyu.default,
+    primary: colorStyle.nyu,
     background: colorStyle.background.primary,
   },
 };

@@ -23,7 +23,7 @@ export default function PlainTextButton({
 }: PlainTextButtonProps) {
   _text = Object.assign(
     {
-      color: "nyu.default",
+      color: "nyu",
       fontWeight: "medium",
       textAlign: "center",
     },

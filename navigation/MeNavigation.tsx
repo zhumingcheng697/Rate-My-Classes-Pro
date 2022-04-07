@@ -21,7 +21,12 @@ export default function MeNavigation() {
   return (
     <Stack.Navigator screenOptions={{ ...TransitionPresets.DefaultTransition }}>
       <Stack.Screen
-        name={"Account"}
+        name={"AccountSignedIn"}
+        component={AccountScreen}
+        options={{ title: "Me" }}
+      />
+      <Stack.Screen
+        name={"AccountNotSignedIn"}
         component={AccountScreen}
         options={{ title: "Me" }}
       />

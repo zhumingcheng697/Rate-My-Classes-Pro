@@ -49,7 +49,8 @@ export type SearchNavigationParamList = {
 } & StackNavigationSharedParamList;
 
 export type MeNavigationParamList = {
-  Account: undefined;
+  AccountSignedIn: undefined;
+  AccountNotSignedIn: undefined;
   Starred: undefined;
   Reviewed: undefined;
   Settings: undefined;

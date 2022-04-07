@@ -10,7 +10,7 @@ import AlertPopup from "../../components/AlertPopup";
 
 type AccountScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
-  "Account"
+  "AccountSignedIn" | "AccountNotSignedIn"
 >;
 
 export default function AccountScreen() {

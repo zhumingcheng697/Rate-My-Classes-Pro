@@ -8,23 +8,15 @@ import {
 } from "@react-navigation/stack";
 
 import PlainTextButton from "../../components/PlainTextButton";
-import type {
-  ExploreNavigationParamList,
-  SearchNavigationParamList,
-  MeNavigationParamList,
-} from "../../shared/types";
+import { type StackNavigationSharedParamList } from "../../shared/types";
 
 type ReviewScreenNavigationProp = StackNavigationProp<
-  | ExploreNavigationParamList
-  | SearchNavigationParamList
-  | MeNavigationParamList,
+  StackNavigationSharedParamList,
   "Review"
 >;
 
 type ReviewScreenRouteProp = RouteProp<
-  | ExploreNavigationParamList
-  | SearchNavigationParamList
-  | MeNavigationParamList,
+  StackNavigationSharedParamList,
   "Review"
 >;
 

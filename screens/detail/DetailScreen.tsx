@@ -8,25 +8,17 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import type {
-  ExploreNavigationParamList,
-  SearchNavigationParamList,
-  MeNavigationParamList,
-} from "../../shared/types";
+import type { StackNavigationSharedParamList } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { getDepartmentName, getSchoolName } from "../../shared/utils";
 
 type DetailScreenNavigationProp = StackNavigationProp<
-  | ExploreNavigationParamList
-  | SearchNavigationParamList
-  | MeNavigationParamList,
+  StackNavigationSharedParamList,
   "Detail"
 >;
 
 type DetailScreenRouteProp = RouteProp<
-  | ExploreNavigationParamList
-  | SearchNavigationParamList
-  | MeNavigationParamList,
+  StackNavigationSharedParamList,
   "Detail"
 >;
 

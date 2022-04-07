@@ -11,6 +11,7 @@ import SignUpScreen from "../screens/me/SignUpScreen";
 import SignInScreen from "../screens/me/SignInScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
+import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
 import reviewScreenOptions from "./options/reviewScreenOptions";
 import detailScreenOptions from "./options/detailScreenOptions";
 import { type MeNavigationParamList } from "../shared/types";
@@ -32,16 +33,12 @@ export default function MeNavigation() {
       <Stack.Screen
         name={"SignIn"}
         component={SignInScreen}
-        options={{
-          title: "Sign In",
-        }}
+        options={signInSignUpScreenOptions}
       />
       <Stack.Screen
         name={"SignUp"}
         component={SignUpScreen}
-        options={{
-          title: "Sign Up",
-        }}
+        options={signInSignUpScreenOptions}
       />
       <Stack.Screen
         name={"Detail"}

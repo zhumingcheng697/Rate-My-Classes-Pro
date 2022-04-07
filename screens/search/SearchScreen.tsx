@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
-import { useWindowDimensions } from "react-native";
+import { Keyboard, useWindowDimensions } from "react-native";
 import { useSelector } from "react-redux";
 import { Text, Center, Divider, Box } from "native-base";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -15,9 +15,10 @@ import type {
 } from "../../shared/types";
 import { isObjectEmpty } from "../../shared/utils";
 import { searchClasses } from "../../shared/schedge";
+import Semester from "../../shared/semester";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import SearchBar from "../../components/SearchBar";
-import Semester from "../../shared/semester";
+import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
 
 type SearchScreenNavigationProp =
@@ -32,6 +33,7 @@ export default function SearchScreen() {
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [searchFailed, setSearchFailed] = useState(false);
   const [matchedClasses, setMatchedClass] = useState<ClassInfo[]>([]);
   const { selectedSemester } = useSelector((state) => state.settings);
   const schoolNames = useSelector((state) => state.schoolNameRecord);
@@ -112,6 +114,9 @@ export default function SearchScreen() {
               })
               .catch((e) => {
                 console.error(e);
+                Keyboard.dismiss();
+                setMatchedClass([]);
+                setSearchFailed(true);
               });
           }, delay);
         } else {
@@ -127,53 +132,63 @@ export default function SearchScreen() {
   }, [query, selectedSemester, schoolCodes, departmentNames]);
 
   return (
-    <KeyboardAwareSafeAreaScrollView
-      wrapChildrenInIndividualSafeAreaViews={true}
-      keyboardAwareScrollViewProps={{
-        keyboardDismissMode: "on-drag",
-        scrollEnabled: !!query,
-        stickyHeaderIndices: [0],
-        enableAutomaticScroll: false,
-        enableResetScrollToCoords: false,
-      }}
-    >
-      <Box background={"background.primary"}>
-        <SearchBar
-          height={`${inputSelectHeight}px`}
-          margin={`${searchBarMargin}px`}
-          value={query}
-          onChangeText={setQuery}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-        />
-        <Divider height={`${dividerHeight}px`} />
-      </Box>
-      {focused || matchedClasses.length || !isLoaded ? (
-        <ClassesGrid
-          marginY={"10px"}
-          isLoaded={isLoaded}
-          classes={matchedClasses}
-          navigation={navigation}
-        />
-      ) : (
-        <Center
-          marginX={"10px"}
-          height={`${
-            height -
-            headerHeight -
-            tabBarHeight -
-            inputSelectHeight -
-            dividerHeight -
-            searchBarMargin * 2
-          }px`}
-        >
-          <Text textAlign={"center"} fontSize={"md"}>
-            {query
-              ? `No Matches Found in ${selectedSemester.toString()}`
-              : `Search ${selectedSemester.toString()} Classes`}
-          </Text>
-        </Center>
-      )}
-    </KeyboardAwareSafeAreaScrollView>
+    <>
+      <AlertPopup
+        avoidKeyboard={true}
+        isOpen={searchFailed}
+        onClose={() => {
+          setSearchFailed(false);
+          setIsLoaded(true);
+        }}
+      />
+      <KeyboardAwareSafeAreaScrollView
+        wrapChildrenInIndividualSafeAreaViews={true}
+        keyboardAwareScrollViewProps={{
+          keyboardDismissMode: "on-drag",
+          scrollEnabled: !!query,
+          stickyHeaderIndices: [0],
+          enableAutomaticScroll: false,
+          enableResetScrollToCoords: false,
+        }}
+      >
+        <Box background={"background.primary"}>
+          <SearchBar
+            height={`${inputSelectHeight}px`}
+            margin={`${searchBarMargin}px`}
+            value={query}
+            onChangeText={setQuery}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+          />
+          <Divider height={`${dividerHeight}px`} />
+        </Box>
+        {focused || matchedClasses.length || !isLoaded ? (
+          <ClassesGrid
+            marginY={"10px"}
+            isLoaded={isLoaded}
+            classes={matchedClasses}
+            navigation={navigation}
+          />
+        ) : (
+          <Center
+            marginX={"10px"}
+            height={`${
+              height -
+              headerHeight -
+              tabBarHeight -
+              inputSelectHeight -
+              dividerHeight -
+              searchBarMargin * 2
+            }px`}
+          >
+            <Text textAlign={"center"} fontSize={"md"}>
+              {query
+                ? `No Matches Found in ${selectedSemester.toString()}`
+                : `Search ${selectedSemester.toString()} Classes`}
+            </Text>
+          </Center>
+        )}
+      </KeyboardAwareSafeAreaScrollView>
+    </>
   );
 }

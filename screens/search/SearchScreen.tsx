@@ -9,22 +9,19 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { inputSelectHeight } from "../../shared/theme";
 import type {
-  SearchNavigationParamList,
   ClassInfo,
+  StackNavigationSharedParamList,
   DepartmentNameRecord,
 } from "../../shared/types";
-import { getFullClassCode, isObjectEmpty } from "../../shared/utils";
+import { isObjectEmpty } from "../../shared/utils";
 import { searchClasses } from "../../shared/schedge";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
-import Grid from "../../containers/Grid";
 import SearchBar from "../../components/SearchBar";
-import TieredTextButton from "../../components/TieredTextButton";
 import Semester from "../../shared/semester";
+import ClassesGrid from "../../components/ClassesGrid";
 
-type SearchScreenNavigationProp = StackNavigationProp<
-  SearchNavigationParamList,
-  "Search"
->;
+type SearchScreenNavigationProp =
+  StackNavigationProp<StackNavigationSharedParamList>;
 
 const dividerHeight = 1;
 const searchBarMargin = 10;
@@ -145,23 +142,12 @@ export default function SearchScreen() {
         <Divider height={`${dividerHeight}px`} />
       </Box>
       {focused || matchedClasses.length || !isLoaded ? (
-        <Grid marginY={"10px"} isLoaded={isLoaded}>
-          {(info) =>
-            matchedClasses.map((classInfo, index) => {
-              return (
-                <TieredTextButton
-                  key={index}
-                  {...info}
-                  primaryText={classInfo.name}
-                  secondaryText={getFullClassCode(classInfo)}
-                  onPress={() => {
-                    navigation.navigate("Detail", classInfo);
-                  }}
-                />
-              );
-            })
-          }
-        </Grid>
+        <ClassesGrid
+          marginY={"10px"}
+          isLoaded={isLoaded}
+          classes={matchedClasses}
+          navigation={navigation}
+        />
       ) : (
         <Center
           marginX={"10px"}

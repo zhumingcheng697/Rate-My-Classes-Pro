@@ -10,27 +10,24 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
 import {
-  type ExploreNavigationParamList,
   type ClassInfo,
+  type StackNavigationSharedParamList,
+  type ExploreNavigationParamList,
   ErrorType,
 } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
-import Grid from "../../containers/Grid";
 import {
   getSchoolName,
   getDepartmentName,
   getFullDepartmentCode,
-  getFullClassCode,
 } from "../../shared/utils";
 import Semester from "../../shared/semester";
 import { getClasses } from "../../shared/schedge";
-import TieredTextButton from "../../components/TieredTextButton";
 import AlertPopup from "../../components/AlertPopup";
+import ClassesGrid from "../../components/ClassesGrid";
 
-type DepartmentScreenNavigationProp = StackNavigationProp<
-  ExploreNavigationParamList,
-  "Department"
->;
+type DepartmentScreenNavigationProp =
+  StackNavigationProp<StackNavigationSharedParamList>;
 
 type DepartmentScreenRouteProp = RouteProp<
   ExploreNavigationParamList,
@@ -98,23 +95,11 @@ export default function DepartmentScreen() {
             {getDepartmentName(route.params, departmentNames)}
           </Text>
           <Text variant={"h2"}>{getSchoolName(route.params, schoolNames)}</Text>
-          <Grid isLoaded={!!classes.length && !error}>
-            {(info) =>
-              classes.map((classInfo, index) => {
-                return (
-                  <TieredTextButton
-                    key={index}
-                    {...info}
-                    primaryText={classInfo.name}
-                    secondaryText={getFullClassCode(classInfo)}
-                    onPress={() => {
-                      navigation.navigate("Detail", classInfo);
-                    }}
-                  />
-                );
-              })
-            }
-          </Grid>
+          <ClassesGrid
+            isLoaded={!!classes.length && !error}
+            classes={classes}
+            navigation={navigation}
+          />
         </Box>
       </KeyboardAwareSafeAreaScrollView>
     </>

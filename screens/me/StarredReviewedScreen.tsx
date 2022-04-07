@@ -9,17 +9,18 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import type { MeNavigationParamList, ClassInfo } from "../../shared/types";
-import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
-import Grid from "../../containers/Grid";
-import { getFullClassCode, placeholderClassNumbers } from "../../shared/utils";
-import TieredTextButton from "../../components/TieredTextButton";
-import AlertPopup from "../../components/AlertPopup";
-
-type StarredReviewedScreenNavigationProp = StackNavigationProp<
+import type {
+  ClassInfo,
+  StackNavigationSharedParamList,
   MeNavigationParamList,
-  "Starred" | "Reviewed"
->;
+} from "../../shared/types";
+import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
+import { placeholderClassNumbers } from "../../shared/utils";
+import AlertPopup from "../../components/AlertPopup";
+import ClassesGrid from "../../components/ClassesGrid";
+
+type StarredReviewedScreenNavigationProp =
+  StackNavigationProp<StackNavigationSharedParamList>;
 
 type StarredReviewedScreenRouteProp = RouteProp<
   MeNavigationParamList,
@@ -55,25 +56,11 @@ export default function StarredReviewedScreen() {
         }}
       />
       <Box marginY={"10px"}>
-        <Grid isLoaded={!!classes.length}>
-          {(info) =>
-            classes.map((classInfo, index) => (
-              <TieredTextButton
-                key={index}
-                {...info}
-                primaryText={classInfo.name}
-                secondaryText={getFullClassCode(classInfo)}
-                onPress={() => {
-                  navigation.navigate("Detail", {
-                    description:
-                      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas modi explicabo fuga, eum libero ipsum magnam. Dolores, vel vero nobis doloribus voluptatibus soluta ratione adipisci repellat voluptatem libero ipsam rerum.",
-                    ...classInfo,
-                  });
-                }}
-              />
-            ))
-          }
-        </Grid>
+        <ClassesGrid
+          isLoaded={!!classes.length}
+          classes={classes}
+          navigation={navigation}
+        />
       </Box>
     </KeyboardAwareSafeAreaScrollView>
   );

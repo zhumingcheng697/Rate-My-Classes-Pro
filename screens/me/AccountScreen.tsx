@@ -1,5 +1,8 @@
 import React, { useState } from "react";
+import { useWindowDimensions } from "react-native";
 import { Text, VStack, Button, Box } from "native-base";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import {
   useNavigation,
   useRoute,
@@ -25,6 +28,10 @@ export default function AccountScreen() {
   const route = useRoute<AccountScreenRouteProp>();
   const isFocused = useIsFocused();
   const [showAlert, setShowAlert] = useState(false);
+
+  const { height } = useWindowDimensions();
+  const headerHeight = useHeaderHeight();
+  const tabBarHeight = useBottomTabBarHeight();
 
   const isSignedIn = route.params.isSignedIn;
 
@@ -68,65 +75,82 @@ export default function AccountScreen() {
         />
       )}
       <KeyboardAwareSafeAreaScrollView>
-        <Box marginY={"10px"}>
-          <Text variant={"h1"}>
-            {isSignedIn ? "McCoy Applseed" : "Rate My Classes Pro"}
-          </Text>
-          <VStack margin={"10px"} space={"12px"}>
-            {isSignedIn && (
-              <>
-                <LeftAlignedButton
-                  title={"Starred"}
-                  onPress={() => {
-                    navigation.navigate("Starred");
-                  }}
-                />
-                <LeftAlignedButton
-                  title={"Reviewed"}
-                  onPress={() => {
-                    navigation.navigate("Reviewed");
-                  }}
-                />
-              </>
-            )}
-            {!isSignedIn && (
-              <>
-                <LeftAlignedButton
-                  showChevron={false}
-                  title={"Sign In"}
-                  onPress={() => {
-                    navigation.navigate("SignInSignUp", { isSigningIn: true });
-                  }}
-                />
-                <LeftAlignedButton
-                  showChevron={false}
-                  marginBottom={"15px"}
-                  title={"Sign Up"}
-                  onPress={() => {
-                    navigation.navigate("SignInSignUp", { isSigningIn: false });
-                  }}
-                />
-              </>
-            )}
-            <LeftAlignedButton
-              title={"Settings"}
-              onPress={() => {
-                navigation.navigate("Settings");
-              }}
-            />
-            {isSignedIn && (
+        <VStack
+          marginY={"10px"}
+          space={"10px"}
+          minHeight={`${height - headerHeight - tabBarHeight - 20}px`}
+        >
+          <Box>
+            {isSignedIn && <Text variant={"h1"}>{"McCoy Applseed"}</Text>}
+            <VStack margin={"10px"} space={"12px"}>
+              {isSignedIn && (
+                <>
+                  <LeftAlignedButton
+                    title={"Starred"}
+                    onPress={() => {
+                      navigation.navigate("Starred");
+                    }}
+                  />
+                  <LeftAlignedButton
+                    title={"Reviewed"}
+                    onPress={() => {
+                      navigation.navigate("Reviewed");
+                    }}
+                  />
+                </>
+              )}
+              {!isSignedIn && (
+                <>
+                  <LeftAlignedButton
+                    showChevron={false}
+                    title={"Sign In"}
+                    onPress={() => {
+                      navigation.navigate("SignInSignUp", {
+                        isSigningIn: true,
+                      });
+                    }}
+                  />
+                  <LeftAlignedButton
+                    showChevron={false}
+                    marginBottom={"15px"}
+                    title={"Sign Up"}
+                    onPress={() => {
+                      navigation.navigate("SignInSignUp", {
+                        isSigningIn: false,
+                      });
+                    }}
+                  />
+                </>
+              )}
               <LeftAlignedButton
-                title={"Sign Out"}
-                _text={{ color: "red.600" }}
-                showChevron={false}
-                marginTop={"15px"}
+                title={"Settings"}
                 onPress={() => {
-                  setShowAlert(true);
+                  navigation.navigate("Settings");
                 }}
               />
-            )}
-          </VStack>
-        </Box>
+              {isSignedIn && (
+                <LeftAlignedButton
+                  title={"Sign Out"}
+                  _text={{ color: "red.600" }}
+                  showChevron={false}
+                  marginTop={"15px"}
+                  onPress={() => {
+                    setShowAlert(true);
+                  }}
+                />
+              )}
+            </VStack>
+          </Box>
+          <Box flexGrow={1}></Box>
+          <Box>
+            <Text textAlign={"center"} fontSize={"md"} fontWeight={"medium"}>
+              Rate My Classes Pro
+            </Text>
+            <Text textAlign={"center"} fontSize={"sm"}>
+              © 2022 Mingcheng (McCoy) Zhu
+            </Text>
+          </Box>
+        </VStack>
       </KeyboardAwareSafeAreaScrollView>
     </>
   );

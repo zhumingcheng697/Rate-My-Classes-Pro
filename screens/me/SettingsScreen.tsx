@@ -28,7 +28,7 @@ export default function SettingsScreen() {
     <KeyboardAwareSafeAreaScrollView>
       <VStack margin={"10px"} space={"20px"}>
         <Box>
-          <Text variant={"label"} fontWeight={"semibold"} color={"nyu.default"}>
+          <Text variant={"label"} fontWeight={"semibold"} color={"nyu"}>
             Semester
           </Text>
           <Select
@@ -38,10 +38,7 @@ export default function SettingsScreen() {
             }}
             _selectedItem={{
               endIcon: (
-                <Icon
-                  color={"nyu.default"}
-                  as={<Ionicons name={"checkmark"} />}
-                />
+                <Icon color={"nyu"} as={<Ionicons name={"checkmark"} />} />
               ),
             }}
           >
@@ -59,13 +56,13 @@ export default function SettingsScreen() {
           alignContent={"center"}
           alignItems={"center"}
         >
-          <Text fontSize={"17px"} fontWeight={"semibold"} color={"nyu.default"}>
+          <Text fontSize={"17px"} fontWeight={"semibold"} color={"nyu"}>
             Show Previous Semesters
           </Text>
           <Switch
             isChecked={showPreviousSemesters}
             onValueChange={setShowPreviousSemesters(dispatch)}
-            onTrackColor={"nyu.default"}
+            onTrackColor={"nyu"}
           />
         </HStack>
       </VStack>

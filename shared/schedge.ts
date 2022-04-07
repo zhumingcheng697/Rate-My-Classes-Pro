@@ -43,22 +43,31 @@ export async function getSchoolNames(): Promise<SchoolNameRecord> {
   const record: SchoolNameRecord = {};
 
   const fallbackMap: Record<string, string> = {
-    NT: "Non-Credit Tisch School of the Arts",
-    GH: "NYU Abu Dhabi - Graduate",
     CD: "College of Dentistry Continuing Education",
     DN: "College of Dentistry - Graduate",
+    GH: "NYU Abu Dhabi - Graduate",
+    NT: "Non-Credit Tisch School of the Arts",
   };
 
-  for (let schoolCode of Object.keys(json).sort(
-    (a, b) => (isSchoolGrad(a) ? 1 : 0) - (isSchoolGrad(b) ? 1 : 0)
-  )) {
-    let name = json[schoolCode].name;
+  for (let schoolCode of Object.keys(json)
+    .concat(Object.keys(fallbackMap))
+    .sort(
+      (a, b) =>
+        (isSchoolGrad(a) ? 1 : 0) +
+        (a in fallbackMap ? 0.5 : 0) -
+        (isSchoolGrad(b) ? 1 : 0) -
+        (b in fallbackMap ? 0.5 : 0)
+    )) {
+    let name = json[schoolCode]?.name;
     if (!name) {
       const code = schoolCode.toUpperCase();
       if (code in fallbackMap) {
         name = fallbackMap[code];
+      } else {
+        continue;
       }
     }
+
     record[schoolCode] = name;
   }
 
@@ -70,9 +79,7 @@ export async function getDepartmentNames(): Promise<DepartmentNameRecord> {
   const json: SchedgeDepartmentNameRecord = await res.json();
   const record: DepartmentNameRecord = {};
 
-  for (let schoolCode of Object.keys(json).sort(
-    (a, b) => (isSchoolGrad(a) ? 1 : 0) - (isSchoolGrad(b) ? 1 : 0)
-  )) {
+  for (let schoolCode in json) {
     if (!record[schoolCode]) {
       record[schoolCode] = {};
     }

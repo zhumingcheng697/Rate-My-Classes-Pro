@@ -12,12 +12,12 @@ import { type MeNavigationParamList } from "../../shared/types";
 
 type SignInSignUpScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
-  "SignIn" | "SignUp"
+  "SignInSignUp"
 >;
 
 type SignInSignUpScreenRouteProp = RouteProp<
   MeNavigationParamList,
-  "SignIn" | "SignUp"
+  "SignInSignUp"
 >;
 
 export type SignInSignUpScreenOptionsProp = {
@@ -31,7 +31,7 @@ export default ({
 }: SignInSignUpScreenOptionsProp): StackNavigationOptions => ({
   presentation: "modal",
   gestureEnabled: false,
-  title: route.name === "SignIn" ? "Sign In" : "Sign Up",
+  title: route.params.isSigningIn ? "Sign In" : "Sign Up",
   headerLeft: (props) => {
     return (
       <PlainTextButton

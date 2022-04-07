@@ -53,8 +53,7 @@ export type MeNavigationParamList = {
   Starred: undefined;
   Reviewed: undefined;
   Settings: undefined;
-  SignIn: undefined;
-  SignUp: undefined;
+  SignInSignUp: { isSigningIn: boolean };
 } & StackNavigationSharedParamList;
 
 export type RootNavigationParamList = {

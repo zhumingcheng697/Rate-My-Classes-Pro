@@ -7,8 +7,7 @@ import {
 import AccountScreen from "../screens/me/AccountScreen";
 import StarredReviewedScreen from "../screens/me/StarredReviewedScreen";
 import SettingsScreen from "../screens/me/SettingsScreen";
-import SignUpScreen from "../screens/me/SignUpScreen";
-import SignInScreen from "../screens/me/SignInScreen";
+import SignInSignUpScreen from "../screens/me/SignInSignUpScreen";
 import DetailScreen from "../screens/detail/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
@@ -31,13 +30,9 @@ export default function MeNavigation() {
       <Stack.Screen name={"Reviewed"} component={StarredReviewedScreen} />
       <Stack.Screen name={"Settings"} component={SettingsScreen} />
       <Stack.Screen
-        name={"SignIn"}
-        component={SignInScreen}
-        options={signInSignUpScreenOptions}
-      />
-      <Stack.Screen
-        name={"SignUp"}
-        component={SignUpScreen}
+        name={"SignInSignUp"}
+        component={SignInSignUpScreen}
+        initialParams={{ isSigningIn: false }}
         options={signInSignUpScreenOptions}
       />
       <Stack.Screen

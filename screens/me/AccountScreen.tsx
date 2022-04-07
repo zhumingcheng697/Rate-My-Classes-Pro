@@ -73,18 +73,40 @@ export default function AccountScreen() {
             {isSignedIn ? "McCoy Applseed" : "Rate My Classes Pro"}
           </Text>
           <VStack margin={"10px"} space={"12px"}>
-            <LeftAlignedButton
-              title={isSignedIn ? "Starred" : "Sign In"}
-              onPress={() => {
-                navigation.navigate(isSignedIn ? "Starred" : "SignIn");
-              }}
-            />
-            <LeftAlignedButton
-              title={isSignedIn ? "Reviewed" : "Sign Up"}
-              onPress={() => {
-                navigation.navigate(isSignedIn ? "Reviewed" : "SignUp");
-              }}
-            />
+            {isSignedIn && (
+              <>
+                <LeftAlignedButton
+                  title={"Starred"}
+                  onPress={() => {
+                    navigation.navigate("Starred");
+                  }}
+                />
+
+                <LeftAlignedButton
+                  title={"Reviewed"}
+                  onPress={() => {
+                    navigation.navigate("Reviewed");
+                  }}
+                />
+              </>
+            )}
+            {!isSignedIn && (
+              <>
+                <LeftAlignedButton
+                  title={"Sign In"}
+                  onPress={() => {
+                    navigation.navigate("SignInSignUp", { isSigningIn: true });
+                  }}
+                />
+
+                <LeftAlignedButton
+                  title={"Sign Up"}
+                  onPress={() => {
+                    navigation.navigate("SignInSignUp", { isSigningIn: false });
+                  }}
+                />
+              </>
+            )}
             <LeftAlignedButton
               title={"Settings"}
               onPress={() => {

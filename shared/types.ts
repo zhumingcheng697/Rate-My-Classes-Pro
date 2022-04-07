@@ -33,19 +33,20 @@ export type Settings = {
   showPreviousSemesters: boolean;
 };
 
-export type ExploreNavigationParamList = {
-  University: undefined;
-  School: SchoolInfo;
-  Department: DepartmentInfo;
+export type StackNavigationSharedParamList = {
   Detail: ClassInfo;
   Review: ClassInfo;
 };
 
+export type ExploreNavigationParamList = {
+  University: undefined;
+  School: SchoolInfo;
+  Department: DepartmentInfo;
+} & StackNavigationSharedParamList;
+
 export type SearchNavigationParamList = {
   Search: undefined;
-  Detail: ClassInfo;
-  Review: ClassInfo;
-};
+} & StackNavigationSharedParamList;
 
 export type MeNavigationParamList = {
   Account: undefined;
@@ -54,9 +55,8 @@ export type MeNavigationParamList = {
   Settings: undefined;
   SignIn: undefined;
   SignUp: undefined;
-  Detail: ClassInfo;
-  Review: ClassInfo;
-};
+} & StackNavigationSharedParamList;
+
 export type RootNavigationParamList = {
   "Explore-Tab": undefined;
   "Search-Tab": undefined;

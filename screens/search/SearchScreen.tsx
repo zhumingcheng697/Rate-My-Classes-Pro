@@ -43,6 +43,39 @@ export default function SearchScreen() {
 
   const schoolCodes = useMemo(() => Object.keys(schoolNames), [schoolNames]);
 
+  const compareClasses = useCallback(
+    (
+      schoolCodes: string[],
+      departmentNames: DepartmentNameRecord,
+      a: ClassInfo,
+      b: ClassInfo
+    ) => {
+      if (a.schoolCode !== b.schoolCode) {
+        return (
+          schoolCodes.indexOf(a.schoolCode) - schoolCodes.indexOf(b.schoolCode)
+        );
+      }
+
+      if (a.departmentCode !== b.departmentCode) {
+        const departmentsA = Object.keys(departmentNames[a.schoolCode] ?? {});
+        const departmentsB = Object.keys(departmentNames[b.schoolCode] ?? {});
+        return (
+          departmentsA.indexOf(a.departmentCode) -
+          departmentsB.indexOf(b.departmentCode)
+        );
+      }
+
+      if (a.classNumber < b.classNumber) {
+        return -1;
+      } else if (a.classNumber > b.classNumber) {
+        return 1;
+      } else {
+        return 0;
+      }
+    },
+    []
+  );
+
   const search = useCallback(
     (() => {
       let timeoutId: ReturnType<typeof setTimeout>;
@@ -67,35 +100,9 @@ export default function SearchScreen() {
               .then((matches) => {
                 if (!shouldDiscard) {
                   if (schoolCodes.length && !isObjectEmpty(departmentNames)) {
-                    matches.sort((a, b) => {
-                      if (a.schoolCode !== b.schoolCode) {
-                        return (
-                          schoolCodes.indexOf(a.schoolCode) -
-                          schoolCodes.indexOf(b.schoolCode)
-                        );
-                      }
-
-                      if (a.departmentCode !== b.departmentCode) {
-                        const departmentsA = Object.keys(
-                          departmentNames[a.schoolCode] ?? {}
-                        );
-                        const departmentsB = Object.keys(
-                          departmentNames[b.schoolCode] ?? {}
-                        );
-                        return (
-                          departmentsA.indexOf(a.departmentCode) -
-                          departmentsB.indexOf(b.departmentCode)
-                        );
-                      }
-
-                      if (a.classNumber < b.classNumber) {
-                        return -1;
-                      } else if (a.classNumber > b.classNumber) {
-                        return 1;
-                      } else {
-                        return 0;
-                      }
-                    });
+                    matches.sort((a, b) =>
+                      compareClasses(schoolCodes, departmentNames, a, b)
+                    );
                   }
                   setMatchedClass(matches);
                   setIsLoaded(true);

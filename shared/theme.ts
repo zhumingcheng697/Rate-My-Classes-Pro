@@ -62,6 +62,9 @@ const componentsStyle = {
           color: "white",
           ...buttonTextBaseStyle,
         },
+        _disabled: {
+          opacity: 0.5,
+        },
         _pressed: {
           opacity: 0.5,
         },
@@ -75,6 +78,9 @@ const componentsStyle = {
         _text: {
           color: colorStyle.nyu.default,
           ...buttonTextBaseStyle,
+        },
+        _disabled: {
+          background: colorStyle.background.tertiary,
         },
         _pressed: {
           background: colorStyle.background.tertiary,

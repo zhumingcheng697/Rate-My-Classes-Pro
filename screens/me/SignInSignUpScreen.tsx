@@ -74,27 +74,21 @@ export default function SignInSignUpScreen() {
             <Text variant={"button"}>Sign Up</Text>
           </Button>
         )}
-        {isSigningIn ? (
-          <Box>
-            <Text textAlign={"center"}>Don’t have an account yet?</Text>
-            <PlainTextButton
-              title={"Sign Up"}
-              onPress={() => {
-                navigation.navigate("SignInSignUp", { isSigningIn: false });
-              }}
-            />
-          </Box>
-        ) : (
-          <Box>
-            <Text textAlign={"center"}>Already have an account?</Text>
-            <PlainTextButton
-              title={"Sign In"}
-              onPress={() => {
-                navigation.navigate("SignInSignUp", { isSigningIn: true });
-              }}
-            />
-          </Box>
-        )}
+        <Box>
+          <Text textAlign={"center"}>
+            {isSigningIn
+              ? "Don’t have an account yet?"
+              : "Already have an account?"}
+          </Text>
+          <PlainTextButton
+            title={"Sign Up"}
+            onPress={() => {
+              navigation.navigate("SignInSignUp", {
+                isSigningIn: !isSigningIn,
+              });
+            }}
+          />
+        </Box>
       </VStack>
     </KeyboardAwareSafeAreaScrollView>
   );

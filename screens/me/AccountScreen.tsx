@@ -92,12 +92,15 @@ export default function AccountScreen() {
             {!isSignedIn && (
               <>
                 <LeftAlignedButton
+                  showChevron={false}
                   title={"Sign In"}
                   onPress={() => {
                     navigation.navigate("SignInSignUp", { isSigningIn: true });
                   }}
                 />
                 <LeftAlignedButton
+                  showChevron={false}
+                  marginBottom={"15px"}
                   title={"Sign Up"}
                   onPress={() => {
                     navigation.navigate("SignInSignUp", { isSigningIn: false });

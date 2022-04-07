@@ -5,6 +5,7 @@ import type {
   ClassInfo,
 } from "./types";
 import Semester from "./semester";
+import { isSchoolGrad } from "./utils";
 
 type URLParams = Record<string, string | number | boolean>;
 
@@ -48,7 +49,9 @@ export async function getSchoolNames(): Promise<SchoolNameRecord> {
     DN: "College of Dentistry - Graduate",
   };
 
-  for (let schoolCode in json) {
+  for (let schoolCode of Object.keys(json).sort(
+    (a, b) => (isSchoolGrad(a) ? 1 : 0) - (isSchoolGrad(b) ? 1 : 0)
+  )) {
     let name = json[schoolCode].name;
     if (!name) {
       const code = schoolCode.toUpperCase();
@@ -67,7 +70,9 @@ export async function getDepartmentNames(): Promise<DepartmentNameRecord> {
   const json: SchedgeDepartmentNameRecord = await res.json();
   const record: DepartmentNameRecord = {};
 
-  for (let schoolCode in json) {
+  for (let schoolCode of Object.keys(json).sort(
+    (a, b) => (isSchoolGrad(a) ? 1 : 0) - (isSchoolGrad(b) ? 1 : 0)
+  )) {
     if (!record[schoolCode]) {
       record[schoolCode] = {};
     }

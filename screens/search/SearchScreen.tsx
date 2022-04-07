@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { useWindowDimensions } from "react-native";
 import { useSelector } from "react-redux";
 import { Text, Center, Divider, Box } from "native-base";
@@ -8,13 +8,18 @@ import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { inputSelectHeight } from "../../shared/theme";
-import type { SearchNavigationParamList, ClassInfo } from "../../shared/types";
-import { getFullClassCode } from "../../shared/utils";
+import type {
+  SearchNavigationParamList,
+  ClassInfo,
+  DepartmentNameRecord,
+} from "../../shared/types";
+import { getFullClassCode, isObjectEmpty } from "../../shared/utils";
 import { searchClasses } from "../../shared/schedge";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import SearchBar from "../../components/SearchBar";
 import TieredTextButton from "../../components/TieredTextButton";
+import Semester from "../../shared/semester";
 
 type SearchScreenNavigationProp = StackNavigationProp<
   SearchNavigationParamList,
@@ -32,17 +37,26 @@ export default function SearchScreen() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [matchedClasses, setMatchedClass] = useState<ClassInfo[]>([]);
   const { selectedSemester } = useSelector((state) => state.settings);
+  const schoolNames = useSelector((state) => state.schoolNameRecord);
+  const departmentNames = useSelector((state) => state.departmentNameRecord);
 
   const { height } = useWindowDimensions();
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
+
+  const schoolCodes = useMemo(() => Object.keys(schoolNames), [schoolNames]);
 
   const search = useCallback(
     (() => {
       let timeoutId: ReturnType<typeof setTimeout>;
       let shouldDiscard = true;
 
-      return (query: string, selectedSemester) => {
+      return (
+        query: string,
+        selectedSemester: Semester,
+        schoolCodes: string[],
+        departmentNames: DepartmentNameRecord
+      ) => {
         clearTimeout(timeoutId);
         setMatchedClass([]);
         shouldDiscard = true;
@@ -55,6 +69,37 @@ export default function SearchScreen() {
             searchClasses(query, selectedSemester)
               .then((matches) => {
                 if (!shouldDiscard) {
+                  if (schoolCodes.length && !isObjectEmpty(departmentNames)) {
+                    matches.sort((a, b) => {
+                      if (a.schoolCode !== b.schoolCode) {
+                        return (
+                          schoolCodes.indexOf(a.schoolCode) -
+                          schoolCodes.indexOf(b.schoolCode)
+                        );
+                      }
+
+                      if (a.departmentCode !== b.departmentCode) {
+                        const departmentsA = Object.keys(
+                          departmentNames[a.schoolCode] ?? {}
+                        );
+                        const departmentsB = Object.keys(
+                          departmentNames[b.schoolCode] ?? {}
+                        );
+                        return (
+                          departmentsA.indexOf(a.departmentCode) -
+                          departmentsB.indexOf(b.departmentCode)
+                        );
+                      }
+
+                      if (a.classNumber < b.classNumber) {
+                        return -1;
+                      } else if (a.classNumber > b.classNumber) {
+                        return 1;
+                      } else {
+                        return 0;
+                      }
+                    });
+                  }
                   setMatchedClass(matches);
                   setIsLoaded(true);
                 } else {
@@ -74,8 +119,8 @@ export default function SearchScreen() {
   );
 
   useEffect(() => {
-    search(query, selectedSemester);
-  }, [query, selectedSemester]);
+    search(query, selectedSemester, schoolCodes, departmentNames);
+  }, [query, selectedSemester, schoolCodes, departmentNames]);
 
   return (
     <KeyboardAwareSafeAreaScrollView

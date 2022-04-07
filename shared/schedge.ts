@@ -44,9 +44,9 @@ export async function getSchoolNames(): Promise<SchoolNameRecord> {
 
   const fallbackMap: Record<string, string> = {
     CD: "College of Dentistry Continuing Education",
-    DN: "College of Dentistry - Graduate",
-    GH: "NYU Abu Dhabi - Graduate",
     NT: "Non-Credit Tisch School of the Arts",
+    GH: "NYU Abu Dhabi - Graduate",
+    DN: "College of Dentistry - Graduate",
   };
 
   for (let schoolCode of Object.keys(json)
@@ -58,17 +58,12 @@ export async function getSchoolNames(): Promise<SchoolNameRecord> {
         (isSchoolGrad(b) ? 1 : 0) -
         (b in fallbackMap ? 0.5 : 0)
     )) {
-    let name = json[schoolCode]?.name;
-    if (!name) {
-      const code = schoolCode.toUpperCase();
-      if (code in fallbackMap) {
-        name = fallbackMap[code];
-      } else {
-        continue;
-      }
-    }
+    const name =
+      json[schoolCode]?.name || fallbackMap[schoolCode.toUpperCase()];
 
-    record[schoolCode] = name;
+    if (name) {
+      record[schoolCode] = name;
+    }
   }
 
   return record;

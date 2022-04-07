@@ -1,3 +1,4 @@
+import React from "react";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import type {
@@ -27,10 +28,10 @@ export default function ClassesGrid({
   return (
     <Grid {...rest}>
       {(info) =>
-        classes.map((classInfo, index) => {
+        classes.map((classInfo) => {
           return (
             <TieredTextButton
-              key={index}
+              key={`${getFullClassCode(classInfo)} ${classInfo.name}`}
               {...info}
               primaryText={classInfo.name}
               secondaryText={getFullClassCode(classInfo)}

@@ -28,7 +28,9 @@ export default function SettingsScreen() {
     <KeyboardAwareSafeAreaScrollView>
       <VStack margin={"10px"} space={"20px"}>
         <Box>
-          <Text variant={"label"}>Semester</Text>
+          <Text variant={"label"} fontWeight={"semibold"} color={"nyu.default"}>
+            Semester
+          </Text>
           <Select
             selectedValue={selectedSemester.toString()}
             onValueChange={(semesterName) => {
@@ -57,7 +59,9 @@ export default function SettingsScreen() {
           alignContent={"center"}
           alignItems={"center"}
         >
-          <Text fontSize={"17px"}>Show Previous Semesters</Text>
+          <Text fontSize={"17px"} fontWeight={"semibold"} color={"nyu.default"}>
+            Show Previous Semesters
+          </Text>
           <Switch
             isChecked={showPreviousSemesters}
             onValueChange={setShowPreviousSemesters(dispatch)}

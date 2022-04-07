@@ -55,25 +55,20 @@ export default function SignInSignUpScreen() {
             <Input variant={"password"} />
           </Box>
         )}
-        {isSigningIn ? (
-          <Button
-            marginY={"15px"}
-            onPress={() => {
+        <Button
+          marginY={"15px"}
+          onPress={() => {
+            if (isSigningIn) {
+              console.log("Signing In");
               navigation.navigate("Account", { isSignedIn: true });
-            }}
-          >
-            <Text variant={"button"}>Sign In</Text>
-          </Button>
-        ) : (
-          <Button
-            marginY={"15px"}
-            onPress={() => {
+            } else {
+              console.log("Signing Up");
               navigation.navigate("Account", { isSignedIn: true });
-            }}
-          >
-            <Text variant={"button"}>Sign Up</Text>
-          </Button>
-        )}
+            }
+          }}
+        >
+          <Text variant={"button"}>{isSigningIn ? "Sign In" : "Sign Up"}</Text>
+        </Button>
         <Box>
           <Text textAlign={"center"}>
             {isSigningIn

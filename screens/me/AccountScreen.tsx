@@ -81,7 +81,6 @@ export default function AccountScreen() {
                     navigation.navigate("Starred");
                   }}
                 />
-
                 <LeftAlignedButton
                   title={"Reviewed"}
                   onPress={() => {
@@ -98,7 +97,6 @@ export default function AccountScreen() {
                     navigation.navigate("SignInSignUp", { isSigningIn: true });
                   }}
                 />
-
                 <LeftAlignedButton
                   title={"Sign Up"}
                   onPress={() => {

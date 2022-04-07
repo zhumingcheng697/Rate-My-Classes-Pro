@@ -39,7 +39,7 @@ export default function SchoolScreen() {
   const departments = useMemo(() => {
     if (!isLoaded) return [];
 
-    return Object.keys(departmentNames[schoolCode] ?? {}).sort();
+    return Object.keys(departmentNames[schoolCode] ?? {});
   }, [departmentNames]);
 
   return (

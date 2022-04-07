@@ -72,7 +72,7 @@ export async function getDepartmentNames(): Promise<DepartmentNameRecord> {
       record[schoolCode] = {};
     }
 
-    for (let departmentCode in json[schoolCode]) {
+    for (let departmentCode of Object.keys(json[schoolCode]).sort()) {
       record[schoolCode][departmentCode] =
         json[schoolCode][departmentCode].name;
     }

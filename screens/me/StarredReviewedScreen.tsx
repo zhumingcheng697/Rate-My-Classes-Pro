@@ -42,6 +42,8 @@ export default function StarredReviewedScreen() {
           departmentCode: "DM",
           classNumber,
           name: "Lorem ipsum dolor sit amet.",
+          description:
+            "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas officiis quis voluptatum enim officia eos aliquid, quae cum aliquam vero aperiam beatae similique cupiditate, at ea laboriosam itaque? Quas, expedita.",
         })) as ClassInfo[]);
 
   return (

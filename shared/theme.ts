@@ -130,6 +130,12 @@ const componentsStyle = {
         marginY: "2px",
         padding: "10px",
         borderRadius: 10,
+        _pressed: {
+          background: colorStyle.background.tertiary,
+        },
+        _hover: {
+          background: colorStyle.background.tertiary,
+        },
       },
       _selectedItem: {
         _text: { fontWeight: "semibold", color: colorStyle.nyu },

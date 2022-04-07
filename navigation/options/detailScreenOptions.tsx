@@ -1,10 +1,7 @@
 import React from "react";
 import { IconButton, Icon } from "native-base";
 import { type RouteProp } from "@react-navigation/native";
-import {
-  type StackNavigationProp,
-  type StackNavigationOptions,
-} from "@react-navigation/stack";
+import { type StackNavigationOptions } from "@react-navigation/stack";
 import { useSelector, useDispatch } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 

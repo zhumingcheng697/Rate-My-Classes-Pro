@@ -115,8 +115,8 @@ export async function searchClasses(
       limit: 50,
       titleWeight: 3,
       descriptionWeight: 2,
-      notesWeight: 1,
-      prereqsWeight: 1,
+      notesWeight: 0,
+      prereqsWeight: 0,
     })
   );
 

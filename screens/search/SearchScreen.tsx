@@ -189,7 +189,12 @@ export default function SearchScreen() {
               searchBarMargin * 2
             }px`}
           >
-            <Text textAlign={"center"} fontSize={"md"}>
+            <Text
+              textAlign={"center"}
+              color={"gray.500"}
+              fontWeight={"medium"}
+              fontSize={"md"}
+            >
               {query
                 ? `No Matches Found in ${selectedSemester.toString()}`
                 : `Search ${selectedSemester.toString()} Classes`}

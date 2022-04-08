@@ -143,10 +143,15 @@ export default function AccountScreen() {
           </Box>
           <Box flexGrow={1}></Box>
           <Box>
-            <Text textAlign={"center"} fontSize={"md"} fontWeight={"medium"}>
+            <Text
+              textAlign={"center"}
+              color={"gray.500"}
+              fontSize={"md"}
+              fontWeight={"medium"}
+            >
               Rate My Classes Pro
             </Text>
-            <Text textAlign={"center"} fontSize={"sm"}>
+            <Text textAlign={"center"} color={"gray.500"} fontSize={"sm"}>
               © 2022 Mingcheng (McCoy) Zhu
             </Text>
           </Box>

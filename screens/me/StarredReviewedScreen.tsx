@@ -36,7 +36,9 @@ export default function StarredReviewedScreen() {
 
   const classes =
     route.name === "Starred"
-      ? Object.values(starredClasses)
+      ? Object.values(starredClasses ?? {}).sort(
+          (a, b) => a.starredDate - b.starredDate
+        )
       : (placeholderClassNumbers.map((classNumber) => ({
           schoolCode: "UY",
           departmentCode: "DM",

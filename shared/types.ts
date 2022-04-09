@@ -4,7 +4,10 @@ export type SchoolNameRecord = Record<string, string>;
 
 export type DepartmentNameRecord = Record<string, Record<string, string>>;
 
-export type StarredClassRecord = Record<string, ClassInfo>;
+export type StarredClassRecord = Record<
+  string,
+  ClassInfo & { starredDate: number }
+>;
 
 export type SchoolInfo = {
   schoolCode: string;

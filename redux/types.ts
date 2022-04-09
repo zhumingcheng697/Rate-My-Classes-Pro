@@ -2,6 +2,7 @@ import type {
   SchoolNameRecord,
   DepartmentNameRecord,
   ClassInfo,
+  StarredClassInfo,
 } from "../shared/types";
 import Semester from "../shared/semester";
 
@@ -28,7 +29,6 @@ export type SettingsAction =
   | { type: ActionType.selectSemester; payload?: Semester }
   | { type: ActionType.setShowPreviousSemesters; payload?: boolean };
 
-export type StarClassAction = {
-  type: ActionType.starClass | ActionType.unstarClass;
-  payload?: ClassInfo;
-};
+export type StarClassAction =
+  | { type: ActionType.starClass; payload?: StarredClassInfo }
+  | { type: ActionType.unstarClass; payload?: ClassInfo };

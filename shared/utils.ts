@@ -27,14 +27,14 @@ export function getFullClassCode({
 
 export function getSchoolName(
   { schoolCode }: SchoolInfo,
-  schoolNameRecord: SchoolNameRecord
+  schoolNameRecord: SchoolNameRecord | null
 ) {
   return (schoolNameRecord || {})[schoolCode] || schoolCode.toUpperCase();
 }
 
 export function getDepartmentName(
   { schoolCode, departmentCode }: DepartmentInfo,
-  departmentNameRecord: DepartmentNameRecord
+  departmentNameRecord: DepartmentNameRecord | null
 ) {
   return (
     ((departmentNameRecord || {})[schoolCode] || {})[departmentCode] ||

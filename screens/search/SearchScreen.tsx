@@ -43,7 +43,10 @@ export default function SearchScreen() {
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
 
-  const schoolCodes = useMemo(() => Object.keys(schoolNames), [schoolNames]);
+  const schoolCodes = useMemo(
+    () => Object.keys(schoolNames ?? {}),
+    [schoolNames]
+  );
 
   const search = useCallback(
     (() => {
@@ -54,7 +57,7 @@ export default function SearchScreen() {
         query: string,
         selectedSemester: Semester,
         schoolCodes: string[],
-        departmentNames: DepartmentNameRecord
+        departmentNames: DepartmentNameRecord | null
       ) => {
         clearTimeout(timeoutId);
         setMatchedClass([]);
@@ -68,7 +71,11 @@ export default function SearchScreen() {
             searchClasses(query, selectedSemester)
               .then((matches) => {
                 if (!shouldDiscard) {
-                  if (schoolCodes.length && !isObjectEmpty(departmentNames)) {
+                  if (
+                    schoolCodes.length &&
+                    departmentNames &&
+                    !isObjectEmpty(departmentNames)
+                  ) {
                     matches.sort((a, b) =>
                       compareClasses(schoolCodes, departmentNames, a, b)
                     );

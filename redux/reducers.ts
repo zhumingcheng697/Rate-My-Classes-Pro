@@ -16,7 +16,7 @@ import { getFullClassCode } from "../shared/utils";
 import Semester from "../shared/semester";
 
 function schoolNameReducer(
-  state: SchoolNameRecord = {},
+  state: SchoolNameRecord | null = null,
   action: SchoolNameAction
 ) {
   if (action.type === ActionType.setSchoolNameRecord && !!action.payload) {
@@ -27,7 +27,7 @@ function schoolNameReducer(
 }
 
 function departmentNameReducer(
-  state: DepartmentNameRecord = {},
+  state: DepartmentNameRecord | null = null,
   action: DepartmentNameAction
 ) {
   if (action.type === ActionType.setDepartmentNameRecord && !!action.payload) {

@@ -167,7 +167,7 @@ export default function SearchScreen() {
               textAlign={"center"}
               color={"gray.500"}
               fontWeight={"medium"}
-              fontSize={"md"}
+              fontSize={"17px"}
             >
               {query
                 ? `No Matches Found in ${selectedSemester.toString()}`

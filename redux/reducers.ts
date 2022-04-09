@@ -74,13 +74,13 @@ function settingsReducer(
 }
 
 function starredClassReducer(
-  state: StarredClassRecord = {},
+  state: StarredClassRecord | null = null,
   action: StarClassAction
 ) {
   if (!!action.payload) {
     if (action.type === ActionType.starClass) {
       const newState = { ...state };
-      newState[getFullClassCode(action.payload)] = { ...action.payload };
+      newState[getFullClassCode(action.payload)] = action.payload;
       return newState;
     } else if (action.type === ActionType.unstarClass) {
       const newState = { ...state };

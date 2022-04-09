@@ -25,7 +25,8 @@ export default ({
   headerRight: (props) => {
     const starredClasses = useSelector((state) => state.starredClassRecord);
     const dispatch = useDispatch();
-    const isStarred = !!starredClasses[getFullClassCode(route.params)];
+    const isStarred =
+      starredClasses && !!starredClasses[getFullClassCode(route.params)];
     const pressedHoverStyle = { _icon: { opacity: 0.5 } };
 
     return (

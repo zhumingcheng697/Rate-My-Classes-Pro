@@ -137,3 +137,41 @@ export async function searchClasses(
     description: description ?? "",
   }));
 }
+
+export async function searchClass(
+  { name, schoolCode, departmentCode, classNumber }: ClassInfo,
+  semester: Semester
+): Promise<ClassInfo | null> {
+  const res = await fetch(
+    composeUrl(`/${semester.year}/${semester.semesterCode}/search`, {
+      full: true,
+      query: name,
+      school: schoolCode,
+      subject: departmentCode,
+      titleWeight: 3,
+      descriptionWeight: 0,
+      notesWeight: 0,
+      prereqsWeight: 0,
+    })
+  );
+
+  const json: SchedgeClassRecord = await res.json();
+
+  const match = json.find(
+    (e) => e.name === name && e.deptCourseId === classNumber
+  );
+
+  if (match) {
+    const { name, deptCourseId, description, subjectCode } = match;
+
+    return {
+      schoolCode: subjectCode.school,
+      departmentCode: subjectCode.code,
+      classNumber: deptCourseId,
+      name,
+      description: description ?? "",
+    };
+  }
+
+  return null;
+}

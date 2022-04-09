@@ -29,7 +29,7 @@ export function getSchoolName(
   { schoolCode }: SchoolInfo,
   schoolNameRecord: SchoolNameRecord | null
 ) {
-  return (schoolNameRecord || {})[schoolCode] || schoolCode.toUpperCase();
+  return (schoolNameRecord ?? {})[schoolCode] || schoolCode.toUpperCase();
 }
 
 export function getDepartmentName(
@@ -37,7 +37,7 @@ export function getDepartmentName(
   departmentNameRecord: DepartmentNameRecord | null
 ) {
   return (
-    ((departmentNameRecord || {})[schoolCode] || {})[departmentCode] ||
+    ((departmentNameRecord ?? {})[schoolCode] ?? {})[departmentCode] ||
     departmentCode.toUpperCase()
   );
 }

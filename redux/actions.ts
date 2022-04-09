@@ -51,7 +51,7 @@ export const starClass =
   (dispath: Dispatch<StarClassAction>) => (classInfo: ClassInfo) => {
     dispath({
       type: ActionType.starClass,
-      payload: Object.assign(classInfo, { starredDate: Date.now() }),
+      payload: { ...classInfo, starredDate: Date.now() },
     });
   };
 

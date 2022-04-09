@@ -67,6 +67,13 @@ export default function SearchScreen() {
         );
       }
 
+      const numberLengthA = a.classNumber.replace(/[^0-9]+/gi, "").length;
+      const numberLengthB = b.classNumber.replace(/[^0-9]+/gi, "").length;
+
+      if (numberLengthA !== numberLengthB) {
+        return numberLengthA - numberLengthB;
+      }
+
       if (a.classNumber < b.classNumber) {
         return -1;
       } else if (a.classNumber > b.classNumber) {

@@ -51,7 +51,6 @@ export default function AccountScreen() {
             <Button.Group space={2}>
               <Button
                 variant="unstyled"
-                colorScheme="coolGray"
                 _pressed={{ opacity: 0.5 }}
                 _hover={{ opacity: 0.5 }}
                 onPress={() => {
@@ -81,7 +80,7 @@ export default function AccountScreen() {
           minHeight={`${height - headerHeight - tabBarHeight - 20}px`}
         >
           <Box>
-            {isSignedIn && <Text variant={"h1"}>{"McCoy Applseed"}</Text>}
+            {isSignedIn && <Text variant={"h1"}>{"McCoy Appleseed"}</Text>}
             <VStack margin={"10px"} space={"12px"}>
               {isSignedIn && (
                 <>

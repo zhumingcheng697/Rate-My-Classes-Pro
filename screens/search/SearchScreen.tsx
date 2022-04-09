@@ -13,7 +13,7 @@ import type {
   StackNavigationSharedParamList,
   DepartmentNameRecord,
 } from "../../shared/types";
-import { isObjectEmpty } from "../../shared/utils";
+import { compareClasses, isObjectEmpty } from "../../shared/utils";
 import { searchClasses } from "../../shared/schedge";
 import Semester from "../../shared/semester";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
@@ -44,46 +44,6 @@ export default function SearchScreen() {
   const tabBarHeight = useBottomTabBarHeight();
 
   const schoolCodes = useMemo(() => Object.keys(schoolNames), [schoolNames]);
-
-  const compareClasses = useCallback(
-    (
-      schoolCodes: string[],
-      departmentNames: DepartmentNameRecord,
-      a: ClassInfo,
-      b: ClassInfo
-    ) => {
-      if (a.schoolCode !== b.schoolCode) {
-        return (
-          schoolCodes.indexOf(a.schoolCode) - schoolCodes.indexOf(b.schoolCode)
-        );
-      }
-
-      if (a.departmentCode !== b.departmentCode) {
-        const departmentsA = Object.keys(departmentNames[a.schoolCode] ?? {});
-        const departmentsB = Object.keys(departmentNames[b.schoolCode] ?? {});
-        return (
-          departmentsA.indexOf(a.departmentCode) -
-          departmentsB.indexOf(b.departmentCode)
-        );
-      }
-
-      const numberLengthA = a.classNumber.replace(/[^0-9]+/gi, "").length;
-      const numberLengthB = b.classNumber.replace(/[^0-9]+/gi, "").length;
-
-      if (numberLengthA !== numberLengthB) {
-        return numberLengthA - numberLengthB;
-      }
-
-      if (a.classNumber < b.classNumber) {
-        return -1;
-      } else if (a.classNumber > b.classNumber) {
-        return 1;
-      } else {
-        return 0;
-      }
-    },
-    []
-  );
 
   const search = useCallback(
     (() => {

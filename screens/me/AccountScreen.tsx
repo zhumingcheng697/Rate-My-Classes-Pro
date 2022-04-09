@@ -28,10 +28,8 @@ export default function AccountScreen() {
   const route = useRoute<AccountScreenRouteProp>();
   const isFocused = useIsFocused();
   const [showAlert, setShowAlert] = useState(false);
-
-  const { height } = useWindowDimensions();
-  const headerHeight = useHeaderHeight();
-  const tabBarHeight = useBottomTabBarHeight();
+  const innerHeight =
+    useWindowDimensions().height - useHeaderHeight() - useBottomTabBarHeight();
 
   const isSignedIn = route.params.isSignedIn;
 
@@ -77,7 +75,7 @@ export default function AccountScreen() {
         <VStack
           marginY={"10px"}
           space={"10px"}
-          minHeight={`${height - headerHeight - tabBarHeight - 20}px`}
+          minHeight={`${innerHeight - 20}px`}
         >
           <Box>
             {isSignedIn && <Text variant={"h1"}>{"McCoy Appleseed"}</Text>}

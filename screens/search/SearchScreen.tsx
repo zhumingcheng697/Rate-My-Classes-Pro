@@ -38,10 +38,8 @@ export default function SearchScreen() {
   const { selectedSemester } = useSelector((state) => state.settings);
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-
-  const { height } = useWindowDimensions();
-  const headerHeight = useHeaderHeight();
-  const tabBarHeight = useBottomTabBarHeight();
+  const innerHeight =
+    useWindowDimensions().height - useHeaderHeight() - useBottomTabBarHeight();
 
   const schoolCodes = useMemo(
     () => Object.keys(schoolNames ?? {}),
@@ -155,9 +153,7 @@ export default function SearchScreen() {
           <Center
             marginX={"10px"}
             height={`${
-              height -
-              headerHeight -
-              tabBarHeight -
+              innerHeight -
               inputSelectHeight -
               dividerHeight -
               searchBarMargin * 2

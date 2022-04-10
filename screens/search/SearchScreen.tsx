@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
-import { Keyboard, useWindowDimensions } from "react-native";
+import { useWindowDimensions } from "react-native";
 import { useSelector } from "react-redux";
 import { Text, Center, Divider, Box } from "native-base";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -86,7 +86,6 @@ export default function SearchScreen() {
               })
               .catch((e) => {
                 console.error(e);
-                Keyboard.dismiss();
                 setMatchedClass([]);
                 setSearchFailed(true);
               });

@@ -35,7 +35,7 @@ export type RootNavigationParamList = {
 export type SharedNavigationParamList = {
   Detail: ClassInfo;
   Review: ClassInfo;
-  SignInSignUp: { isSigningIn: boolean };
+  SignInSignUp: { isSigningIn: boolean } | undefined;
 };
 
 export type ExploreNavigationParamList = {

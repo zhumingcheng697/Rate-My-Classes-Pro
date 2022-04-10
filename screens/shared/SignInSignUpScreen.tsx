@@ -40,7 +40,8 @@ export default function SignInSignUpScreen() {
   const [showAlert, setShowAlert] = useState(false);
   const [error, setError] = useState<any>(null);
 
-  const isSigningIn = route.params.isSigningIn;
+  const isSigningIn = route.params?.isSigningIn ?? false;
+
   const actuallySignedIn =
     !!auth.user && auth.user.providerType !== "anon-user";
 

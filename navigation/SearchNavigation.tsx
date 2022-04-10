@@ -32,7 +32,6 @@ export default function SearchNavigation() {
       <Stack.Screen
         name={"SignInSignUp"}
         component={SignInSignUpScreen}
-        initialParams={{ isSigningIn: false }}
         options={signInSignUpScreenOptions}
       />
     </Stack.Navigator>

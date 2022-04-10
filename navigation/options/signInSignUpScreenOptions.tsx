@@ -31,7 +31,7 @@ export default ({
 }: SignInSignUpScreenOptionsProp): StackNavigationOptions => ({
   presentation: "modal",
   gestureEnabled: false,
-  title: route.params.isSigningIn ? "Sign In" : "Sign Up",
+  title: route.params?.isSigningIn ? "Sign In" : "Sign Up",
   headerLeft: (props) => {
     return (
       <PlainTextButton

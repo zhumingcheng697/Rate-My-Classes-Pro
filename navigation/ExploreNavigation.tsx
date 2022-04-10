@@ -8,9 +8,11 @@ import UniversityScreen from "../screens/explore/UniversityScreen";
 import SchoolScreen from "../screens/explore/SchoolScreen";
 import DepartmentScreen from "../screens/explore/DepartmentScreen";
 import DetailScreen from "../screens/shared/DetailScreen";
+import SignInSignUpScreen from "../screens/shared/SignInSignUpScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
-import reviewScreenOptions from "./options/reviewScreenOptions";
 import detailScreenOptions from "./options/detailScreenOptions";
+import reviewScreenOptions from "./options/reviewScreenOptions";
+import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
 import { type ExploreNavigationParamList } from "../shared/types";
 import { getFullDepartmentCode } from "../shared/utils";
 
@@ -47,6 +49,12 @@ export default function ExploreNavigation() {
         name={"Review"}
         component={PlaceHolderScreen}
         options={reviewScreenOptions}
+      />
+      <Stack.Screen
+        name={"SignInSignUp"}
+        component={SignInSignUpScreen}
+        initialParams={{ isSigningIn: false }}
+        options={signInSignUpScreenOptions}
       />
     </Stack.Navigator>
   );

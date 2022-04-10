@@ -6,9 +6,11 @@ import {
 
 import SearchScreen from "../screens/search/SearchScreen";
 import DetailScreen from "../screens/shared/DetailScreen";
+import SignInSignUpScreen from "../screens/shared/SignInSignUpScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
-import reviewScreenOptions from "./options/reviewScreenOptions";
 import detailScreenOptions from "./options/detailScreenOptions";
+import reviewScreenOptions from "./options/reviewScreenOptions";
+import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
 import { type SearchNavigationParamList } from "../shared/types";
 
 const Stack = createStackNavigator<SearchNavigationParamList>();
@@ -26,6 +28,12 @@ export default function SearchNavigation() {
         name={"Review"}
         component={PlaceHolderScreen}
         options={reviewScreenOptions}
+      />
+      <Stack.Screen
+        name={"SignInSignUp"}
+        component={SignInSignUpScreen}
+        initialParams={{ isSigningIn: false }}
+        options={signInSignUpScreenOptions}
       />
     </Stack.Navigator>
   );

@@ -26,9 +26,16 @@ export type Settings = {
   showPreviousSemesters: boolean;
 };
 
+export type RootNavigationParamList = {
+  "Explore-Tab": undefined;
+  "Search-Tab": undefined;
+  "Me-Tab": undefined;
+};
+
 export type StackNavigationSharedParamList = {
   Detail: ClassInfo;
   Review: ClassInfo;
+  SignInSignUp: { isSigningIn: boolean };
 };
 
 export type ExploreNavigationParamList = {
@@ -46,11 +53,4 @@ export type MeNavigationParamList = {
   Starred: undefined;
   Reviewed: undefined;
   Settings: undefined;
-  SignInSignUp: { isSigningIn: boolean };
 } & StackNavigationSharedParamList;
-
-export type RootNavigationParamList = {
-  "Explore-Tab": undefined;
-  "Search-Tab": undefined;
-  "Me-Tab": undefined;
-};

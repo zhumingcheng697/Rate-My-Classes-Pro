@@ -6,8 +6,8 @@ type AuthContext = {
   user: User | null;
   isUserAnonymous: boolean;
   signInAnonymously: () => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
-  signIn: (email: string, password: string) => Promise<void>;
+  signUpWithEmailPassword: (email: string, password: string) => Promise<void>;
+  signInWithEmailPassword: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -18,31 +18,26 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isUserAnonymous, setIsUserAnonymous] = useState(false);
 
   const signInAnonymously = async () => {
-    console.log("signInAnonymously", 1);
     const credentials = Realm.Credentials.anonymous();
     const user = await app.logIn(credentials);
-    console.log("signInAnonymously", 2, credentials, user);
     setUser(user);
     setIsUserAnonymous(true);
   };
 
   // The signIn function takes an email and password and uses the
   // emailPassword authentication provider to log in.
-  const signIn = async (email: string, password: string) => {
-    console.log("signIn", 1);
+  const signInWithEmailPassword = async (email: string, password: string) => {
     const credentials = Realm.Credentials.emailPassword(email, password);
     const user = await app.logIn(credentials);
-    console.log("signIn", 2, credentials, user);
     setUser(user);
     setIsUserAnonymous(false);
   };
 
   // The signUp function takes an email and password and uses the
   // emailPassword authentication provider to register the user.
-  const signUp = async (email: string, password: string) => {
-    console.log("signUp", 1);
+  const signUpWithEmailPassword = async (email: string, password: string) => {
     await app.emailPasswordAuth.registerUser({ email, password });
-    console.log("signUp", 2);
+    await signInWithEmailPassword(email, password);
   };
 
   // The signOut function calls the logOut function on the currently
@@ -63,8 +58,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         user,
         isUserAnonymous,
         signInAnonymously,
-        signIn,
-        signUp,
+        signInWithEmailPassword,
+        signUpWithEmailPassword,
         signOut,
       }}
     >

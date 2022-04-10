@@ -48,7 +48,7 @@ export default function AccountScreen() {
     if (isFocused && isSignedIn !== actuallySignedIn) {
       navigation.replace("Account", { isSignedIn: actuallySignedIn });
     }
-  }, [isSignedIn, actuallySignedIn]);
+  }, [isFocused, isSignedIn, actuallySignedIn]);
 
   return (
     <>

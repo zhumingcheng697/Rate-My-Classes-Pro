@@ -46,9 +46,9 @@ export default function SignInSignUpScreen() {
 
   useEffect(() => {
     if (isFocused && actuallySignedIn) {
-      navigation.navigate("Account", { isSignedIn: true });
+      navigation.navigate("Account");
     }
-  }, [actuallySignedIn]);
+  }, [isFocused, actuallySignedIn]);
 
   useEffect(() => {
     setPassword("");
@@ -134,10 +134,8 @@ export default function SignInSignUpScreen() {
               try {
                 if (isSigningIn) {
                   await auth.signInWithEmailPassword(email, password);
-                  navigation.navigate("Account", { isSignedIn: true });
                 } else {
                   await auth.signUpWithEmailPassword(email, password);
-                  navigation.navigate("Account", { isSignedIn: true });
                 }
                 setError(null);
               } catch (e) {

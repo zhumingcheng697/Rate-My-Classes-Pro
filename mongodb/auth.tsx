@@ -2,7 +2,7 @@ import React, { useContext, useState, ReactNode, createContext } from "react";
 import Realm, { User } from "realm";
 import app from "./app";
 
-type Context = {
+type AuthContext = {
   user: User | null;
   isUserAnonymous: boolean;
   signInAnonymously: () => Promise<void>;
@@ -11,7 +11,7 @@ type Context = {
   signOut: () => Promise<void>;
 };
 
-const AuthContext = createContext<Context | null>(null);
+const Context = createContext<AuthContext | null>(null);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState(app.currentUser);
@@ -58,7 +58,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider
+    <Context.Provider
       value={{
         user,
         isUserAnonymous,
@@ -69,14 +69,14 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </Context.Provider>
   );
 };
 
 // The useAuth hook can be used by components under an AuthProvider to
 // access the auth context value.
 const useAuth = () => {
-  const auth = useContext(AuthContext);
+  const auth = useContext(Context);
   if (auth === null) {
     throw new Error("useAuth() called outside of a AuthProvider?");
   }

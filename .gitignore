@@ -11,6 +11,10 @@ npm-debug.*
 web-build/
 .netlify/
 
+
+*.env
+
+
 # macOS
 .DS_Store
 

@@ -1,4 +1,9 @@
-import React, { useContext, useState, ReactNode, createContext } from "react";
+import React, {
+  useContext,
+  useState,
+  type ReactNode,
+  createContext,
+} from "react";
 import Realm, { User } from "realm";
 import app from "./app";
 
@@ -11,25 +16,31 @@ type AuthContext = {
   signOut: () => Promise<void>;
 };
 
+type AuthProviderProps = { children: ReactNode };
+
 const Context = createContext<AuthContext | null>(null);
 
-const AuthProvider = ({ children }: { children: ReactNode }) => {
+const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState(app.currentUser);
   const [isUserAnonymous, setIsUserAnonymous] = useState(false);
 
   const signInAnonymously = async () => {
+    if (user && !isUserAnonymous) return;
+
     const credentials = Realm.Credentials.anonymous();
-    const user = await app.logIn(credentials);
-    setUser(user);
+    const newUser = await app.logIn(credentials);
+    setUser(newUser);
     setIsUserAnonymous(true);
   };
 
   // The signIn function takes an email and password and uses the
   // emailPassword authentication provider to log in.
   const signInWithEmailPassword = async (email: string, password: string) => {
+    if (user && isUserAnonymous) await signOut();
+
     const credentials = Realm.Credentials.emailPassword(email, password);
-    const user = await app.logIn(credentials);
-    setUser(user);
+    const newUser = await app.logIn(credentials);
+    setUser(newUser);
     setIsUserAnonymous(false);
   };
 
@@ -47,6 +58,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.warn("Not logged in, can't log out!");
       return;
     }
+
+    if (isUserAnonymous) await app.deleteUser(user);
+
     await user.logOut();
     setUser(null);
     setIsUserAnonymous(false);

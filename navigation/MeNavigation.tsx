@@ -23,7 +23,6 @@ export default function MeNavigation() {
       <Stack.Screen
         name={"Account"}
         component={AccountScreen}
-        initialParams={{ isSignedIn: false }}
         options={{ title: "Me" }}
       />
       <Stack.Screen name={"Starred"} component={StarredReviewedScreen} />

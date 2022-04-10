@@ -38,6 +38,11 @@ export default function AccountScreen() {
 
   const isSignedIn = route.params?.isSignedIn ?? actuallySignedIn;
 
+  useEffect(() => {
+    if (!route.params) {
+      navigation.setParams({ isSignedIn: actuallySignedIn });
+    }
+  }, []);
 
   useEffect(() => {
     if (isFocused && isSignedIn !== actuallySignedIn) {

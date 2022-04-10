@@ -4,16 +4,17 @@ import { NativeBaseProvider } from "native-base";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import config from "react-native-config";
+import "react-native-config";
 
 import RootNavigation from "./navigation/RootNavigation";
 import nativeBaseTheme, { colorStyle } from "./shared/theme";
-import reducer from "./redux/reducers";
-import { setDepartmentNameRecord, setSchoolNameRecord } from "./redux/actions";
 import { getSchoolNames, getDepartmentNames } from "./shared/schedge";
 import { ErrorType } from "./shared/types";
 import { isObjectEmpty } from "./shared/utils";
 import AlertPopup from "./components/AlertPopup";
+import reducer from "./redux/reducers";
+import { setDepartmentNameRecord, setSchoolNameRecord } from "./redux/actions";
+import { AuthProvider } from "./mongodb/auth";
 
 Ionicons.loadFont();
 
@@ -31,15 +32,11 @@ declare module "react-redux" {
   interface DefaultRootState extends RootState {}
 }
 
-type Config = {
-  REALM_APP_ID: string;
-};
+type Config = { REALM_APP_ID: string };
 
 declare module "react-native-config" {
   interface NativeConfig extends Config {}
 }
-
-console.log(config.REALM_APP_ID);
 
 type AppState = {
   error: ErrorType | null;
@@ -96,20 +93,22 @@ export default class App extends Component<{}, AppState> {
   render() {
     return (
       <Provider store={store}>
-        <NativeBaseProvider theme={nativeBaseTheme}>
-          <NavigationContainer theme={navigationTheme}>
-            <AlertPopup
-              body={
-                this.state.error === ErrorType.noData
-                  ? "This might be an issue with Schedge, our API provider for classes."
-                  : undefined
-              }
-              isOpen={this.state.showAlert}
-              onClose={this.clearLoadError.bind(this)}
-            />
-            <RootNavigation />
-          </NavigationContainer>
-        </NativeBaseProvider>
+        <AuthProvider>
+          <NativeBaseProvider theme={nativeBaseTheme}>
+            <NavigationContainer theme={navigationTheme}>
+              <AlertPopup
+                body={
+                  this.state.error === ErrorType.noData
+                    ? "This might be an issue with Schedge, our API provider for classes."
+                    : undefined
+                }
+                isOpen={this.state.showAlert}
+                onClose={this.clearLoadError.bind(this)}
+              />
+              <RootNavigation />
+            </NavigationContainer>
+          </NativeBaseProvider>
+        </AuthProvider>
       </Provider>
     );
   }

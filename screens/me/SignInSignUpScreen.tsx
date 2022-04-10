@@ -41,6 +41,13 @@ export default function SignInSignUpScreen() {
   const [error, setError] = useState<any>(null);
 
   const isSigningIn = route.params.isSigningIn;
+  const actuallySignedIn = !!auth.user && !auth.isUserAnonymous;
+
+  useEffect(() => {
+    if (isFocused && actuallySignedIn) {
+      navigation.navigate("Account", { isSignedIn: true });
+    }
+  }, [actuallySignedIn]);
 
   useEffect(() => {
     setPassword("");

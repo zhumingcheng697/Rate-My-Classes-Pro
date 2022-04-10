@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useWindowDimensions } from "react-native";
 import { Text, VStack, Button, Box } from "native-base";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -15,6 +15,7 @@ import { type MeNavigationParamList } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LeftAlignedButton from "../../components/LeftAlignedButton";
 import AlertPopup from "../../components/AlertPopup";
+import { useAuth } from "../../mongodb/auth";
 
 type AccountScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
@@ -30,8 +31,16 @@ export default function AccountScreen() {
   const [showAlert, setShowAlert] = useState(false);
   const innerHeight =
     useWindowDimensions().height - useHeaderHeight() - useBottomTabBarHeight();
+  const auth = useAuth();
 
   const isSignedIn = route.params.isSignedIn;
+  const actuallySignedIn = !!auth.user && !auth.isUserAnonymous;
+
+  useEffect(() => {
+    if (isFocused && isSignedIn !== actuallySignedIn) {
+      navigation.replace("Account", { isSignedIn: actuallySignedIn });
+    }
+  }, [isSignedIn, actuallySignedIn]);
 
   return (
     <>
@@ -60,9 +69,9 @@ export default function AccountScreen() {
               </Button>
               <Button
                 background={"red.600"}
-                onPress={() => {
+                onPress={async () => {
                   setShowAlert(false);
-                  navigation.replace("Account", { isSignedIn: false });
+                  await auth.signOut();
                 }}
               >
                 Sign Out

@@ -5,7 +5,7 @@ import {
 } from "@react-navigation/stack";
 
 import SearchScreen from "../screens/search/SearchScreen";
-import DetailScreen from "../screens/detail/DetailScreen";
+import DetailScreen from "../screens/shared/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import reviewScreenOptions from "./options/reviewScreenOptions";
 import detailScreenOptions from "./options/detailScreenOptions";

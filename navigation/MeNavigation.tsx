@@ -8,7 +8,7 @@ import AccountScreen from "../screens/me/AccountScreen";
 import StarredReviewedScreen from "../screens/me/StarredReviewedScreen";
 import SettingsScreen from "../screens/me/SettingsScreen";
 import SignInSignUpScreen from "../screens/me/SignInSignUpScreen";
-import DetailScreen from "../screens/detail/DetailScreen";
+import DetailScreen from "../screens/shared/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
 import reviewScreenOptions from "./options/reviewScreenOptions";

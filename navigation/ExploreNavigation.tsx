@@ -7,7 +7,7 @@ import {
 import UniversityScreen from "../screens/explore/UniversityScreen";
 import SchoolScreen from "../screens/explore/SchoolScreen";
 import DepartmentScreen from "../screens/explore/DepartmentScreen";
-import DetailScreen from "../screens/detail/DetailScreen";
+import DetailScreen from "../screens/shared/DetailScreen";
 import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import reviewScreenOptions from "./options/reviewScreenOptions";
 import detailScreenOptions from "./options/detailScreenOptions";

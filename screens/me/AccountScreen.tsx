@@ -44,11 +44,11 @@ export default function AccountScreen() {
   }, []);
 
   useEffect(() => {
-    if (isFocused && wasAuthenticated !== isAuthenticated) {
-      if (wasAuthenticated) {
+    if (wasAuthenticated !== isAuthenticated) {
+      if (!wasAuthenticated) {
+        navigation.setParams({ isAuthenticated });
+      } else if (isFocused) {
         navigation.replace("Account", { isAuthenticated });
-      } else {
-        navigation.navigate("Account", { isAuthenticated });
       }
     }
   }, [isFocused, wasAuthenticated, isAuthenticated]);

@@ -157,9 +157,7 @@ export default function SignInSignUpScreen() {
             <PlainTextButton
               title={isSigningIn ? "Sign Up" : "Sign In"}
               onPress={() => {
-                navigation.navigate("SignInSignUp", {
-                  isSigningIn: !isSigningIn,
-                });
+                navigation.setParams({ isSigningIn: !isSigningIn });
               }}
             />
           </Box>

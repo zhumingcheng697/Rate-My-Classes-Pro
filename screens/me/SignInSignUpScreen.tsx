@@ -8,7 +8,7 @@ import {
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
-import { isObjectEmpty } from "../../shared/utils";
+import { isObjectEmpty, formSentence } from "../../shared/utils";
 import { type MeNavigationParamList } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import PlainTextButton from "../../components/PlainTextButton";
@@ -64,7 +64,9 @@ export default function SignInSignUpScreen() {
         header={`Unable to ${isSigningIn ? "Sign In" : "Sign Up"}`}
         body={
           error && !isObjectEmpty(error)
-            ? error.message || JSON.stringify(error)
+            ? error.message
+              ? formSentence(error.message)
+              : JSON.stringify(error)
             : "Unknown Error"
         }
         isOpen={showAlert && isFocused}

@@ -51,6 +51,14 @@ export function isObjectEmpty(obj: object) {
   return Object.keys(obj).length === 0;
 }
 
+export function formSentence(str: string) {
+  return (
+    str.charAt(0).toUpperCase() +
+    str.slice(1) +
+    (/^[a-z0-9]$/i.test(str.charAt(str.length - 1)) ? "." : "")
+  );
+}
+
 export function compareClasses(
   schoolCodes: string[],
   departmentNames: DepartmentNameRecord,

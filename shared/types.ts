@@ -6,22 +6,13 @@ export type DepartmentNameRecord = Record<string, Record<string, string>>;
 
 export type StarredClassRecord = Record<string, StarredClassInfo>;
 
-export type SchoolInfo = {
-  schoolCode: string;
-};
+export type SchoolInfo = { schoolCode: string };
 
-export type DepartmentInfo = SchoolInfo & {
-  departmentCode: string;
-};
+export type DepartmentInfo = SchoolInfo & { departmentCode: string };
 
-export type ClassCode = DepartmentInfo & {
-  classNumber: string;
-};
+export type ClassCode = DepartmentInfo & { classNumber: string };
 
-export type ClassInfo = ClassCode & {
-  name: string;
-  description?: string;
-};
+export type ClassInfo = ClassCode & { name: string; description?: string };
 
 export type StarredClassInfo = ClassInfo & { starredDate: number };
 

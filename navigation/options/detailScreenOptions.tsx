@@ -14,9 +14,7 @@ type DetailScreenRouteProp = RouteProp<
   "Detail"
 >;
 
-export type DetailScreenOptionsProp = {
-  route: DetailScreenRouteProp;
-};
+export type DetailScreenOptionsProp = { route: DetailScreenRouteProp };
 
 export default ({
   route,

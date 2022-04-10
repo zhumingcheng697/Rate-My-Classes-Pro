@@ -9,9 +9,7 @@ import { isSchoolGrad } from "./utils";
 
 type URLParams = Record<string, string | number | boolean>;
 
-type NameRecord = {
-  name: string;
-};
+type NameRecord = { name: string };
 
 type SchedgeSchoolNameRecord = Record<string, NameRecord>;
 

@@ -38,10 +38,7 @@ declare module "react-native-config" {
   interface NativeConfig extends Config {}
 }
 
-type AppState = {
-  error: ErrorType | null;
-  showAlert: boolean;
-};
+type AppState = { error: ErrorType | null; showAlert: boolean };
 
 const navigationTheme = {
   ...DefaultTheme,

@@ -9,8 +9,9 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
 import type { SharedNavigationParamList } from "../../libs/types";
-import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { getDepartmentName, getSchoolName } from "../../libs/utils";
+import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
+import { useAuth } from "../../mongodb/auth";
 
 type DetailScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -25,6 +26,7 @@ export default function DetailScreen() {
   const classInfo = route.params;
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
+  const auth = useAuth();
 
   return (
     <KeyboardAwareSafeAreaScrollView>
@@ -46,10 +48,16 @@ export default function DetailScreen() {
         <Button
           margin={"10px"}
           onPress={() => {
-            navigation.navigate("Review", classInfo);
+            if (auth.isAuthenticated) {
+              navigation.navigate("Review", classInfo);
+            } else {
+              navigation.navigate("SignInSignUp");
+            }
           }}
         >
-          <Text variant={"button"}>Review</Text>
+          <Text variant={"button"}>
+            {auth.isAuthenticated ? "Review" : "Sign Up to Review"}
+          </Text>
         </Button>
       </Box>
     </KeyboardAwareSafeAreaScrollView>

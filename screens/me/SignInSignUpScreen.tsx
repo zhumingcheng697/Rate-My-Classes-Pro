@@ -46,7 +46,7 @@ export default function SignInSignUpScreen() {
 
   useEffect(() => {
     if (isFocused && actuallySignedIn) {
-      navigation.navigate("Account");
+      navigation.goBack();
     }
   }, [isFocused, actuallySignedIn]);
 

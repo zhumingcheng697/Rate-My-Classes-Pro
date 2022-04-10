@@ -46,7 +46,11 @@ export default function AccountScreen() {
 
   useEffect(() => {
     if (isFocused && isSignedIn !== actuallySignedIn) {
-      navigation.replace("Account", { isSignedIn: actuallySignedIn });
+      if (isSignedIn) {
+        navigation.replace("Account", { isSignedIn: actuallySignedIn });
+      } else {
+        navigation.navigate("Account", { isSignedIn: actuallySignedIn });
+      }
     }
   }, [isFocused, isSignedIn, actuallySignedIn]);
 

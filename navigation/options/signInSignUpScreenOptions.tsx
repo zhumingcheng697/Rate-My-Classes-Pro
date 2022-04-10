@@ -8,15 +8,15 @@ import {
 } from "@react-navigation/stack";
 
 import PlainTextButton from "../../components/PlainTextButton";
-import { type StackNavigationSharedParamList } from "../../shared/types";
+import { type SharedNavigationParamList } from "../../shared/types";
 
 type SignInSignUpScreenNavigationProp = StackNavigationProp<
-  StackNavigationSharedParamList,
+  SharedNavigationParamList,
   "SignInSignUp"
 >;
 
 type SignInSignUpScreenRouteProp = RouteProp<
-  StackNavigationSharedParamList,
+  SharedNavigationParamList,
   "SignInSignUp"
 >;
 

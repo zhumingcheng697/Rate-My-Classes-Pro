@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 
 import {
   type ClassInfo,
-  type StackNavigationSharedParamList,
+  type SharedNavigationParamList,
   type ExploreNavigationParamList,
   ErrorType,
 } from "../../shared/types";
@@ -27,7 +27,7 @@ import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
 
 type DepartmentScreenNavigationProp =
-  StackNavigationProp<StackNavigationSharedParamList>;
+  StackNavigationProp<SharedNavigationParamList>;
 
 type DepartmentScreenRouteProp = RouteProp<
   ExploreNavigationParamList,

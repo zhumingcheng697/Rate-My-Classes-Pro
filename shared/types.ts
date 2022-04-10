@@ -32,7 +32,7 @@ export type RootNavigationParamList = {
   "Me-Tab": undefined;
 };
 
-export type StackNavigationSharedParamList = {
+export type SharedNavigationParamList = {
   Detail: ClassInfo;
   Review: ClassInfo;
   SignInSignUp: { isSigningIn: boolean };
@@ -42,15 +42,15 @@ export type ExploreNavigationParamList = {
   University: undefined;
   School: SchoolInfo;
   Department: DepartmentInfo;
-} & StackNavigationSharedParamList;
+} & SharedNavigationParamList;
 
 export type SearchNavigationParamList = {
   Search: undefined;
-} & StackNavigationSharedParamList;
+} & SharedNavigationParamList;
 
 export type MeNavigationParamList = {
   Account: { isSignedIn: boolean } | undefined;
   Starred: undefined;
   Reviewed: undefined;
   Settings: undefined;
-} & StackNavigationSharedParamList;
+} & SharedNavigationParamList;

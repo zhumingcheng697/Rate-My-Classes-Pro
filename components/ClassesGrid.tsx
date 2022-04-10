@@ -1,16 +1,12 @@
 import React from "react";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
-import type {
-  StackNavigationSharedParamList,
-  ClassInfo,
-} from "../shared/types";
+import type { SharedNavigationParamList, ClassInfo } from "../shared/types";
 import Grid, { GridProps } from "../containers/Grid";
 import TieredTextButton from "./TieredTextButton";
 import { getFullClassCode } from "../shared/utils";
 
-type ClassesGridNavigationProp =
-  StackNavigationProp<StackNavigationSharedParamList>;
+type ClassesGridNavigationProp = StackNavigationProp<SharedNavigationParamList>;
 
 type ClassesGridBaseProps = {
   classes: ClassInfo[];

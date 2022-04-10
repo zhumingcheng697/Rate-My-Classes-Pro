@@ -10,7 +10,7 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 import { inputSelectHeight } from "../../shared/theme";
 import type {
   ClassInfo,
-  StackNavigationSharedParamList,
+  SharedNavigationParamList,
   DepartmentNameRecord,
 } from "../../shared/types";
 import { compareClasses, isObjectEmpty } from "../../shared/utils";
@@ -22,7 +22,7 @@ import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
 
 type SearchScreenNavigationProp =
-  StackNavigationProp<StackNavigationSharedParamList>;
+  StackNavigationProp<SharedNavigationParamList>;
 
 const dividerHeight = 1;
 const searchBarMargin = 10;

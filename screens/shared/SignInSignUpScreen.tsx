@@ -9,19 +9,19 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { isObjectEmpty, formSentence } from "../../shared/utils";
-import { type StackNavigationSharedParamList } from "../../shared/types";
+import { type SharedNavigationParamList } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import PlainTextButton from "../../components/PlainTextButton";
 import AlertPopup from "../../components/AlertPopup";
 import { useAuth } from "../../mongodb/auth";
 
 type SignInSignUpScreenNavigationProp = StackNavigationProp<
-  StackNavigationSharedParamList,
+  SharedNavigationParamList,
   "SignInSignUp"
 >;
 
 type SignInSignUpScreenRouteProp = RouteProp<
-  StackNavigationSharedParamList,
+  SharedNavigationParamList,
   "SignInSignUp"
 >;
 

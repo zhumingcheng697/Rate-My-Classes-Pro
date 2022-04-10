@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 
 import type {
   ClassInfo,
-  StackNavigationSharedParamList,
+  SharedNavigationParamList,
   MeNavigationParamList,
 } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
@@ -20,7 +20,7 @@ import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
 
 type StarredReviewedScreenNavigationProp =
-  StackNavigationProp<StackNavigationSharedParamList>;
+  StackNavigationProp<SharedNavigationParamList>;
 
 type StarredReviewedScreenRouteProp = RouteProp<
   MeNavigationParamList,

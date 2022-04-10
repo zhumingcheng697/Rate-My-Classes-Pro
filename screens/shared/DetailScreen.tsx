@@ -8,19 +8,16 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import type { StackNavigationSharedParamList } from "../../shared/types";
+import type { SharedNavigationParamList } from "../../shared/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { getDepartmentName, getSchoolName } from "../../shared/utils";
 
 type DetailScreenNavigationProp = StackNavigationProp<
-  StackNavigationSharedParamList,
+  SharedNavigationParamList,
   "Detail"
 >;
 
-type DetailScreenRouteProp = RouteProp<
-  StackNavigationSharedParamList,
-  "Detail"
->;
+type DetailScreenRouteProp = RouteProp<SharedNavigationParamList, "Detail">;
 
 export default function DetailScreen() {
   const navigation = useNavigation<DetailScreenNavigationProp>();

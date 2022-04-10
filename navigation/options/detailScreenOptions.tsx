@@ -6,13 +6,10 @@ import { useSelector, useDispatch } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { starClass, unstarClass } from "../../redux/actions";
-import { type StackNavigationSharedParamList } from "../../shared/types";
+import { type SharedNavigationParamList } from "../../shared/types";
 import { getFullClassCode } from "../../shared/utils";
 
-type DetailScreenRouteProp = RouteProp<
-  StackNavigationSharedParamList,
-  "Detail"
->;
+type DetailScreenRouteProp = RouteProp<SharedNavigationParamList, "Detail">;
 
 export type DetailScreenOptionsProp = { route: DetailScreenRouteProp };
 

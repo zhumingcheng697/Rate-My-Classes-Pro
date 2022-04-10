@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Text, Button, Input, VStack, Box } from "native-base";
 import {
   useNavigation,
@@ -24,8 +24,24 @@ type SignInSignUpScreenRouteProp = RouteProp<
 export default function SignInSignUpScreen() {
   const navigation = useNavigation<SignInSignUpScreenNavigationProp>();
   const route = useRoute<SignInSignUpScreenRouteProp>();
+  const auth = useAuth();
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [key, setKey] = useState(Math.random());
 
   const isSigningIn = route.params.isSigningIn;
+
+  useEffect(() => {
+    setPassword("");
+    setConfirmPassword("");
+  }, [isSigningIn]);
+
+  const randomizeKey = useCallback(() => {
+    setKey(Math.random());
+  }, []);
 
   return (
     <KeyboardAwareSafeAreaScrollView>
@@ -33,31 +49,51 @@ export default function SignInSignUpScreen() {
         {!isSigningIn && (
           <Box>
             <Text variant={"label"}>Username</Text>
-            <Input autoCompleteType={"username"} />
+            <Input
+              value={username}
+              onChangeText={setUsername}
+              autoCompleteType={"username"}
+              onEndEditing={randomizeKey}
+            />
           </Box>
         )}
         <Box>
           <Text variant={"label"}>Email</Text>
           <Input
+            value={email}
+            onChangeText={setEmail}
             autoCompleteType={"email"}
             autoCorrect={false}
             autoCapitalize={"none"}
             keyboardType={"email-address"}
+            onEndEditing={randomizeKey}
           />
         </Box>
         <Box>
           <Text variant={"label"}>Password</Text>
-          <Input variant={"password"} />
+          <Input
+            key={`${key}`}
+            value={password}
+            onChangeText={setPassword}
+            textContentType={"oneTimeCode"}
+            variant={"password"}
+          />
         </Box>
         {!isSigningIn && (
           <Box>
             <Text variant={"label"}>Confirm Password</Text>
-            <Input variant={"password"} />
+            <Input
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              textContentType={"oneTimeCode"}
+              variant={"password"}
+              onEndEditing={randomizeKey}
+            />
           </Box>
         )}
         <Button
           marginY={"15px"}
-          onPress={() => {
+          onPress={async () => {
             if (isSigningIn) {
               console.log("Signing In");
               navigation.navigate("Account", { isSignedIn: true });

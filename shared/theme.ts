@@ -113,7 +113,8 @@ const componentsStyle = {
     },
     variants: {
       password: {
-        type: "password",
+        secureTextEntry: true,
+        autoComplete: "off",
         autoCapitalize: "none",
         autoCorrect: false,
       },

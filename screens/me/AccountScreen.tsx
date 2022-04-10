@@ -11,7 +11,7 @@ import {
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
-import { type MeNavigationParamList } from "../../shared/types";
+import { type MeNavigationParamList } from "../../libs/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LeftAlignedButton from "../../components/LeftAlignedButton";
 import AlertPopup from "../../components/AlertPopup";

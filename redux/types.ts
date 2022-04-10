@@ -3,8 +3,8 @@ import type {
   DepartmentNameRecord,
   ClassInfo,
   StarredClassInfo,
-} from "../shared/types";
-import Semester from "../shared/semester";
+} from "../libs/types";
+import Semester from "../libs/semester";
 
 export enum ActionType {
   setSchoolNameRecord = "SET_SCHOOL_NAME_RECORD_ACTION",

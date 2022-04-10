@@ -8,9 +8,9 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import type { SharedNavigationParamList } from "../../shared/types";
+import type { SharedNavigationParamList } from "../../libs/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
-import { getDepartmentName, getSchoolName } from "../../shared/utils";
+import { getDepartmentName, getSchoolName } from "../../libs/utils";
 
 type DetailScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,

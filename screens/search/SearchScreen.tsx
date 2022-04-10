@@ -7,15 +7,15 @@ import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
-import { inputSelectHeight } from "../../shared/theme";
+import { inputSelectHeight } from "../../libs/theme";
 import type {
   ClassInfo,
   SharedNavigationParamList,
   DepartmentNameRecord,
-} from "../../shared/types";
-import { compareClasses, isObjectEmpty } from "../../shared/utils";
-import { searchClasses } from "../../shared/schedge";
-import Semester from "../../shared/semester";
+} from "../../libs/types";
+import { compareClasses, isObjectEmpty } from "../../libs/utils";
+import { searchClasses } from "../../libs/schedge";
+import Semester from "../../libs/semester";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import SearchBar from "../../components/SearchBar";
 import AlertPopup from "../../components/AlertPopup";

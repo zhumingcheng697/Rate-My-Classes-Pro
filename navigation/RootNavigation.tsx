@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { type RootNavigationParamList } from "../shared/types";
+import { type RootNavigationParamList } from "../libs/types";
 import ExploreNavigation from "./ExploreNavigation";
 import SearchNavigation from "./SearchNavigation";
 import MeNavigation from "./MeNavigation";

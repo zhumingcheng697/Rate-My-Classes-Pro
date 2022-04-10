@@ -13,8 +13,8 @@ import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import detailScreenOptions from "./options/detailScreenOptions";
 import reviewScreenOptions from "./options/reviewScreenOptions";
 import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
-import { type ExploreNavigationParamList } from "../shared/types";
-import { getFullDepartmentCode } from "../shared/utils";
+import { type ExploreNavigationParamList } from "../libs/types";
+import { getFullDepartmentCode } from "../libs/utils";
 
 const Stack = createStackNavigator<ExploreNavigationParamList>();
 

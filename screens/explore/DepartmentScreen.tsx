@@ -14,15 +14,15 @@ import {
   type SharedNavigationParamList,
   type ExploreNavigationParamList,
   ErrorType,
-} from "../../shared/types";
+} from "../../libs/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import {
   getSchoolName,
   getDepartmentName,
   getFullDepartmentCode,
-} from "../../shared/utils";
-import Semester from "../../shared/semester";
-import { getClasses } from "../../shared/schedge";
+} from "../../libs/utils";
+import Semester from "../../libs/semester";
+import { getClasses } from "../../libs/schedge";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
 

@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import type {
   ExploreNavigationParamList,
   DepartmentInfo,
-} from "../../shared/types";
+} from "../../libs/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import TieredTextButton from "../../components/TieredTextButton";
@@ -19,7 +19,7 @@ import {
   getSchoolName,
   getDepartmentName,
   isObjectEmpty,
-} from "../../shared/utils";
+} from "../../libs/utils";
 
 type SchoolScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,

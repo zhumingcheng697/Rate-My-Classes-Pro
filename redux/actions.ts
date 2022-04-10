@@ -3,7 +3,7 @@ import type {
   SchoolNameRecord,
   DepartmentNameRecord,
   ClassInfo,
-} from "../shared/types";
+} from "../libs/types";
 import {
   type SchoolNameAction,
   type DepartmentNameAction,
@@ -11,7 +11,7 @@ import {
   type StarClassAction,
   ActionType,
 } from "./types";
-import Semester from "../shared/semester";
+import Semester from "../libs/semester";
 
 export const setSchoolNameRecord =
   (dispath: Dispatch<SchoolNameAction>) =>

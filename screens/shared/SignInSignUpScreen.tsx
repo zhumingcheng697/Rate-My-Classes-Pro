@@ -8,8 +8,8 @@ import {
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
-import { isObjectEmpty, formSentence } from "../../shared/utils";
-import { type SharedNavigationParamList } from "../../shared/types";
+import { isObjectEmpty, formSentence } from "../../libs/utils";
+import { type SharedNavigationParamList } from "../../libs/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import PlainTextButton from "../../components/PlainTextButton";
 import AlertPopup from "../../components/AlertPopup";

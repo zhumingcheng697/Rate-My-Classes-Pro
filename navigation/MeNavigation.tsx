@@ -13,7 +13,7 @@ import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import detailScreenOptions from "./options/detailScreenOptions";
 import reviewScreenOptions from "./options/reviewScreenOptions";
 import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
-import { type MeNavigationParamList } from "../shared/types";
+import { type MeNavigationParamList } from "../libs/types";
 
 const Stack = createStackNavigator<MeNavigationParamList>();
 

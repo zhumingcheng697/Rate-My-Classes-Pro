@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Select, Icon, Box, Text, HStack, Switch, VStack } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import Semester from "../../shared/semester";
+import Semester from "../../libs/semester";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
 

@@ -4,7 +4,7 @@ import type {
   DepartmentNameRecord,
   StarredClassRecord,
   Settings,
-} from "../shared/types";
+} from "../libs/types";
 import {
   type SchoolNameAction,
   type DepartmentNameAction,
@@ -12,8 +12,8 @@ import {
   type StarClassAction,
   ActionType,
 } from "./types";
-import { getFullClassCode } from "../shared/utils";
-import Semester from "../shared/semester";
+import { getFullClassCode } from "../libs/utils";
+import Semester from "../libs/semester";
 
 function schoolNameReducer(
   state: SchoolNameRecord | null = null,

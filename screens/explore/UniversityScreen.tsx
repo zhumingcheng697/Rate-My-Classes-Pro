@@ -4,11 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
-import type {
-  ExploreNavigationParamList,
-  SchoolInfo,
-} from "../../shared/types";
-import { isSchoolGrad, isObjectEmpty, getSchoolName } from "../../shared/utils";
+import type { ExploreNavigationParamList, SchoolInfo } from "../../libs/types";
+import { isSchoolGrad, isObjectEmpty, getSchoolName } from "../../libs/utils";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid, { type GridRenderItemInfo } from "../../containers/Grid";
 import TieredTextButton from "../../components/TieredTextButton";

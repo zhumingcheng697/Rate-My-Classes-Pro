@@ -11,7 +11,7 @@ import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import detailScreenOptions from "./options/detailScreenOptions";
 import reviewScreenOptions from "./options/reviewScreenOptions";
 import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
-import { type SearchNavigationParamList } from "../shared/types";
+import { type SearchNavigationParamList } from "../libs/types";
 
 const Stack = createStackNavigator<SearchNavigationParamList>();
 

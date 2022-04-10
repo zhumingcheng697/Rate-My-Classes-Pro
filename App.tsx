@@ -7,10 +7,10 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import "react-native-config";
 
 import RootNavigation from "./navigation/RootNavigation";
-import nativeBaseTheme, { colorStyle } from "./shared/theme";
-import { getSchoolNames, getDepartmentNames } from "./shared/schedge";
-import { ErrorType } from "./shared/types";
-import { isObjectEmpty } from "./shared/utils";
+import nativeBaseTheme, { colorStyle } from "./libs/theme";
+import { getSchoolNames, getDepartmentNames } from "./libs/schedge";
+import { ErrorType } from "./libs/types";
+import { isObjectEmpty } from "./libs/utils";
 import AlertPopup from "./components/AlertPopup";
 import reducer from "./redux/reducers";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "./redux/actions";

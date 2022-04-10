@@ -8,7 +8,7 @@ import {
   type ITextProps,
 } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { buttonBaseStyle } from "../shared/theme";
+import { buttonBaseStyle } from "../libs/theme";
 
 type LeftAlignedButtonBaseProps = {
   title?: string;

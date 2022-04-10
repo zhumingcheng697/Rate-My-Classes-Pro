@@ -13,9 +13,9 @@ import type {
   ClassInfo,
   SharedNavigationParamList,
   MeNavigationParamList,
-} from "../../shared/types";
+} from "../../libs/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
-import { placeholderClassNumbers } from "../../shared/utils";
+import { placeholderClassNumbers } from "../../libs/utils";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
 

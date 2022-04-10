@@ -33,8 +33,11 @@ export default function AccountScreen() {
     useWindowDimensions().height - useHeaderHeight() - useBottomTabBarHeight();
   const auth = useAuth();
 
-  const isSignedIn = route.params.isSignedIn;
-  const actuallySignedIn = !!auth.user && !auth.isUserAnonymous;
+  const actuallySignedIn =
+    !!auth.user && auth.user.providerType !== "anon-user";
+
+  const isSignedIn = route.params?.isSignedIn ?? actuallySignedIn;
+
 
   useEffect(() => {
     if (isFocused && isSignedIn !== actuallySignedIn) {

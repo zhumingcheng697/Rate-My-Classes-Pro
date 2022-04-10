@@ -9,7 +9,6 @@ import app from "./app";
 
 type AuthContext = {
   user: User | null;
-  isUserAnonymous: boolean;
   signInAnonymously: () => Promise<void>;
   signUpWithEmailPassword: (email: string, password: string) => Promise<void>;
   signInWithEmailPassword: (email: string, password: string) => Promise<void>;
@@ -22,26 +21,23 @@ const Context = createContext<AuthContext | null>(null);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState(app.currentUser);
-  const [isUserAnonymous, setIsUserAnonymous] = useState(false);
 
   const signInAnonymously = async () => {
-    if (user && !isUserAnonymous) return;
+    if (user && user.providerType !== "anon-user") return;
 
     const credentials = Realm.Credentials.anonymous();
     const newUser = await app.logIn(credentials);
     setUser(newUser);
-    setIsUserAnonymous(true);
   };
 
   // The signIn function takes an email and password and uses the
   // emailPassword authentication provider to log in.
   const signInWithEmailPassword = async (email: string, password: string) => {
-    if (user && isUserAnonymous) await signOut();
+    if (user && user.providerType === "anon-user") await signOut();
 
     const credentials = Realm.Credentials.emailPassword(email, password);
     const newUser = await app.logIn(credentials);
     setUser(newUser);
-    setIsUserAnonymous(false);
   };
 
   // The signUp function takes an email and password and uses the
@@ -59,18 +55,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    if (isUserAnonymous) await app.deleteUser(user);
+    if (user.providerType === "anon-user") await app.deleteUser(user);
 
     await user.logOut();
     setUser(null);
-    setIsUserAnonymous(false);
   };
 
   return (
     <Context.Provider
       value={{
         user,
-        isUserAnonymous,
         signInAnonymously,
         signInWithEmailPassword,
         signUpWithEmailPassword,

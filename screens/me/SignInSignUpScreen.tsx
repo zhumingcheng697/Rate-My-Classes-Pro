@@ -41,7 +41,8 @@ export default function SignInSignUpScreen() {
   const [error, setError] = useState<any>(null);
 
   const isSigningIn = route.params.isSigningIn;
-  const actuallySignedIn = !!auth.user && !auth.isUserAnonymous;
+  const actuallySignedIn =
+    !!auth.user && auth.user.providerType !== "anon-user";
 
   useEffect(() => {
     if (isFocused && actuallySignedIn) {

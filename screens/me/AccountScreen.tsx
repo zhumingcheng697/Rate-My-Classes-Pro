@@ -35,27 +35,27 @@ export default function AccountScreen() {
 
   const isAuthenticated = auth.isAuthenticated;
 
-  const isSignedIn = route.params?.isSignedIn ?? isAuthenticated;
+  const wasAuthenticated = route.params?.isAuthenticated ?? isAuthenticated;
 
   useEffect(() => {
     if (!route.params) {
-      navigation.setParams({ isSignedIn: isAuthenticated });
+      navigation.setParams({ isAuthenticated });
     }
   }, []);
 
   useEffect(() => {
-    if (isFocused && isSignedIn !== isAuthenticated) {
-      if (isSignedIn) {
-        navigation.replace("Account", { isSignedIn: isAuthenticated });
+    if (isFocused && wasAuthenticated !== isAuthenticated) {
+      if (wasAuthenticated) {
+        navigation.replace("Account", { isAuthenticated });
       } else {
-        navigation.navigate("Account", { isSignedIn: isAuthenticated });
+        navigation.navigate("Account", { isAuthenticated });
       }
     }
-  }, [isFocused, isSignedIn, isAuthenticated]);
+  }, [isFocused, wasAuthenticated, isAuthenticated]);
 
   return (
     <>
-      {isSignedIn && (
+      {wasAuthenticated && (
         <AlertPopup
           isOpen={showAlert && isFocused}
           onClose={() => {
@@ -98,9 +98,11 @@ export default function AccountScreen() {
           minHeight={`${innerHeight - 20}px`}
         >
           <Box>
-            {isSignedIn && <Text variant={"h1"}>{"McCoy Appleseed"}</Text>}
+            {wasAuthenticated && (
+              <Text variant={"h1"}>{"McCoy Appleseed"}</Text>
+            )}
             <VStack margin={"10px"} space={"12px"}>
-              {isSignedIn && (
+              {wasAuthenticated && (
                 <>
                   <LeftAlignedButton
                     title={"Starred"}
@@ -116,7 +118,7 @@ export default function AccountScreen() {
                   />
                 </>
               )}
-              {!isSignedIn && (
+              {!wasAuthenticated && (
                 <>
                   <LeftAlignedButton
                     showChevron={false}
@@ -145,7 +147,7 @@ export default function AccountScreen() {
                   navigation.navigate("Settings");
                 }}
               />
-              {isSignedIn && (
+              {wasAuthenticated && (
                 <LeftAlignedButton
                   title={"Sign Out"}
                   _text={{ color: "red.600" }}

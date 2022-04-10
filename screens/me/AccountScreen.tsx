@@ -33,26 +33,25 @@ export default function AccountScreen() {
     useWindowDimensions().height - useHeaderHeight() - useBottomTabBarHeight();
   const auth = useAuth();
 
-  const actuallySignedIn =
-    !!auth.user && auth.user.providerType !== "anon-user";
+  const isAuthenticated = auth.isAuthenticated;
 
-  const isSignedIn = route.params?.isSignedIn ?? actuallySignedIn;
+  const isSignedIn = route.params?.isSignedIn ?? isAuthenticated;
 
   useEffect(() => {
     if (!route.params) {
-      navigation.setParams({ isSignedIn: actuallySignedIn });
+      navigation.setParams({ isSignedIn: isAuthenticated });
     }
   }, []);
 
   useEffect(() => {
-    if (isFocused && isSignedIn !== actuallySignedIn) {
+    if (isFocused && isSignedIn !== isAuthenticated) {
       if (isSignedIn) {
-        navigation.replace("Account", { isSignedIn: actuallySignedIn });
+        navigation.replace("Account", { isSignedIn: isAuthenticated });
       } else {
-        navigation.navigate("Account", { isSignedIn: actuallySignedIn });
+        navigation.navigate("Account", { isSignedIn: isAuthenticated });
       }
     }
-  }, [isFocused, isSignedIn, actuallySignedIn]);
+  }, [isFocused, isSignedIn, isAuthenticated]);
 
   return (
     <>

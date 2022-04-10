@@ -9,6 +9,7 @@ import app from "./app";
 
 type AuthContext = {
   user: User | null;
+  isAuthenticated: boolean;
   signInAnonymously: () => Promise<void>;
   signUpWithEmailPassword: (email: string, password: string) => Promise<void>;
   signInWithEmailPassword: (email: string, password: string) => Promise<void>;
@@ -22,8 +23,10 @@ const Context = createContext<AuthContext | null>(null);
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState(app.currentUser);
 
+  const isAuthenticated = !!user && user.providerType !== "anon-user";
+
   const signInAnonymously = async () => {
-    if (user && user.providerType !== "anon-user") return;
+    if (isAuthenticated) return;
 
     const credentials = Realm.Credentials.anonymous();
     const newUser = await app.logIn(credentials);
@@ -65,6 +68,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     <Context.Provider
       value={{
         user,
+        isAuthenticated,
         signInAnonymously,
         signInWithEmailPassword,
         signUpWithEmailPassword,

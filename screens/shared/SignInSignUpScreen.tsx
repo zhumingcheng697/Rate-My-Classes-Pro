@@ -42,14 +42,13 @@ export default function SignInSignUpScreen() {
 
   const isSigningIn = route.params?.isSigningIn ?? false;
 
-  const actuallySignedIn =
-    !!auth.user && auth.user.providerType !== "anon-user";
+  const isAuthenticated = auth.isAuthenticated;
 
   useEffect(() => {
-    if (isFocused && actuallySignedIn) {
+    if (isFocused && isAuthenticated) {
       navigation.goBack();
     }
-  }, [isFocused, actuallySignedIn]);
+  }, [isFocused, isAuthenticated]);
 
   useEffect(() => {
     setPassword("");

@@ -142,7 +142,7 @@ export default function SearchScreen() {
           />
           <Divider height={`${dividerHeight}px`} />
         </Box>
-        {focused || matchedClasses.length || !isLoaded ? (
+        {focused || matchedClasses.length || (query && !isLoaded) ? (
           <ClassesGrid
             marginY={"10px"}
             isLoaded={isLoaded}

@@ -1,6 +1,7 @@
 import type {
   SchoolNameRecord,
   DepartmentNameRecord,
+  StarredClassRecord,
   ClassInfo,
   StarredClassInfo,
   Settings,
@@ -34,6 +35,6 @@ export type SettingsAction =
   | { type: ActionType.setShowPreviousSemesters; payload?: boolean };
 
 export type StarClassAction =
-  | { type: ActionType.loadStarredClasses; payload?: StarredClassInfo[] }
+  | { type: ActionType.loadStarredClasses; payload?: StarredClassRecord }
   | { type: ActionType.starClass; payload?: StarredClassInfo }
   | { type: ActionType.unstarClass; payload?: ClassInfo };

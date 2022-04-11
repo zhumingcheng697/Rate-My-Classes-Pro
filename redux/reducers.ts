@@ -83,11 +83,7 @@ function starredClassReducer(
 ) {
   if (!!action.payload) {
     if (action.type === ActionType.loadStarredClasses) {
-      const newState: StarredClassRecord = {};
-      for (let starredClass of action.payload) {
-        newState[getFullClassCode(starredClass)] = starredClass;
-      }
-      return newState;
+      return action.payload;
     } else if (action.type === ActionType.starClass) {
       const newState = { ...state };
       newState[getFullClassCode(action.payload)] = action.payload;

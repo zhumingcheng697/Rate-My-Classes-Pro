@@ -4,9 +4,9 @@ import { type User } from "realm";
 import type {
   SchoolNameRecord,
   DepartmentNameRecord,
+  StarredClassRecord,
   Settings,
   ClassInfo,
-  StarredClassInfo,
 } from "../libs/types";
 import {
   type SchoolNameAction,
@@ -62,7 +62,7 @@ export const setShowPreviousSemesters =
 
 export const loadStarredClasses =
   (dispath: Dispatch<StarClassAction>) =>
-  (starredClasses: StarredClassInfo[]) => {
+  (starredClasses: StarredClassRecord) => {
     dispath({
       type: ActionType.loadStarredClasses,
       payload: starredClasses,

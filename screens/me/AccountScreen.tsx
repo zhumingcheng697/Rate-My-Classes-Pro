@@ -28,6 +28,7 @@ export default function AccountScreen() {
   const navigation = useNavigation<AccountScreenNavigationProp>();
   const route = useRoute<AccountScreenRouteProp>();
   const isFocused = useIsFocused();
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const innerHeight =
     useWindowDimensions().height - useHeaderHeight() - useBottomTabBarHeight();
@@ -81,8 +82,15 @@ export default function AccountScreen() {
               <Button
                 background={"red.600"}
                 onPress={async () => {
+                  setIsSigningOut(true);
                   setShowAlert(false);
-                  await auth.signOut();
+                  try {
+                    await auth.signOut();
+                  } catch (e) {
+                    console.error(e);
+                  } finally {
+                    setIsSigningOut(false);
+                  }
                 }}
               >
                 Sign Out
@@ -153,6 +161,7 @@ export default function AccountScreen() {
                   _text={{ color: "red.600" }}
                   showChevron={false}
                   marginTop={"15px"}
+                  isDisabled={isSigningOut}
                   onPress={() => {
                     setShowAlert(true);
                   }}

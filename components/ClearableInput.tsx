@@ -2,41 +2,47 @@ import React from "react";
 import { Input, IconButton, Icon, type IInputProps } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-type SearchBarBaseProps = {
+type ClearableInputBaseProps = {
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
+  isSearchBar?: boolean;
+  canClear?: boolean;
 };
 
-export type SearchBarProps = SearchBarBaseProps &
-  Omit<IInputProps, keyof SearchBarBaseProps>;
+export type ClearableInputProps = ClearableInputBaseProps &
+  Omit<IInputProps, keyof ClearableInputBaseProps>;
 
-export default function SearchBar({
+export default function ClearableInput({
   value,
   onChangeText,
-  placeholder = "Search",
+  placeholder,
+  isSearchBar = false,
+  canClear,
   ...rest
-}: SearchBarProps) {
+}: ClearableInputProps) {
   const pressedHoverStyle = { _icon: { color: "gray.300" } };
 
   return (
     <Input
       {...rest}
-      px={"3px"}
-      placeholder={placeholder}
+      px={isSearchBar ? "3px" : undefined}
+      placeholder={placeholder ?? isSearchBar ? "Search" : undefined}
       value={value}
       onChangeText={onChangeText}
       returnKeyType={"search"}
       leftElement={
-        <Icon
-          marginLeft={"5px"}
-          size={"22px"}
-          color={"gray.400"}
-          as={<Ionicons name={"search"} />}
-        />
+        isSearchBar ? (
+          <Icon
+            marginLeft={"5px"}
+            size={"22px"}
+            color={"gray.400"}
+            as={<Ionicons name={"search"} />}
+          />
+        ) : undefined
       }
       rightElement={
-        value ? (
+        canClear ?? value ? (
           <IconButton
             variant={"unstyled"}
             _pressed={pressedHoverStyle}

@@ -17,7 +17,7 @@ import { compareClasses, isObjectEmpty } from "../../libs/utils";
 import { searchClasses } from "../../libs/schedge";
 import Semester from "../../libs/semester";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
-import SearchBar from "../../components/SearchBar";
+import ClearableInput from "../../components/ClearableInput";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
 
@@ -123,7 +123,8 @@ export default function SearchScreen() {
         }}
       >
         <Box background={"background.primary"}>
-          <SearchBar
+          <ClearableInput
+            isSearchBar={true}
             margin={`${searchBarMargin}px`}
             value={query}
             onChangeText={setQuery}

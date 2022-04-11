@@ -1,7 +1,8 @@
 import { type User } from "realm";
 
 import { type UserDoc, Collections } from "./types";
-import { Settings } from "../libs/types";
+import { ClassInfo, StarredClassInfo, Settings } from "../libs/types";
+import { getFullClassCode } from "../libs/utils";
 
 const servieName = "mongodb-atlas";
 const dbName = "RateMyClassesPro";
@@ -20,7 +21,7 @@ export function useDB(user: User) {
     await db.collection<UserDoc>(Collections.users).insertOne({
       _id: user.id,
       username,
-      starredClasses: [],
+      starredClasses: {},
       settings: {
         selectedSemester: {
           semester: selectedSemester.semesterCode,

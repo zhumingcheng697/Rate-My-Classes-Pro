@@ -1,5 +1,5 @@
 import { SemesterCode } from "../libs/semester";
-import { type StarredClassInfo } from "../libs/types";
+import { type StarredClassRecord } from "../libs/types";
 
 export enum Collections {
   users = "users",
@@ -8,7 +8,7 @@ export enum Collections {
 export type UserDoc = {
   _id: string;
   username: string;
-  starredClasses: StarredClassInfo[];
+  starredClasses: StarredClassRecord;
   settings: {
     selectedSemester: {
       semester: SemesterCode;

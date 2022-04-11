@@ -2,8 +2,9 @@ import { type Dispatch } from "redux";
 import type {
   SchoolNameRecord,
   DepartmentNameRecord,
-  ClassInfo,
   Settings,
+  ClassInfo,
+  StarredClassInfo,
 } from "../libs/types";
 import {
   type SchoolNameAction,
@@ -53,6 +54,15 @@ export const setShowPreviousSemesters =
     dispath({
       type: ActionType.setShowPreviousSemesters,
       payload: showPreviousSemesters,
+    });
+  };
+
+export const loadStarredClasses =
+  (dispath: Dispatch<StarClassAction>) =>
+  (starredClasses: StarredClassInfo[]) => {
+    dispath({
+      type: ActionType.loadStarredClasses,
+      payload: starredClasses,
     });
   };
 

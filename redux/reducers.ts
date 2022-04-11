@@ -56,8 +56,10 @@ function settingsReducer(
     return state;
   }
 
-  if (action.type === ActionType.loadSettings && action.payload) {
-    return validateSettings(action.payload);
+  if (action.type === ActionType.loadSettings) {
+    if (action.payload) {
+      return validateSettings(action.payload);
+    }
   } else if (action.type === ActionType.selectSemester) {
     if (action.payload) {
       const newState = { ...state };
@@ -80,7 +82,13 @@ function starredClassReducer(
   action: StarClassAction
 ) {
   if (!!action.payload) {
-    if (action.type === ActionType.starClass) {
+    if (action.type === ActionType.loadStarredClasses) {
+      const newState: StarredClassRecord = {};
+      for (let starredClass of action.payload) {
+        newState[getFullClassCode(starredClass)] = starredClass;
+      }
+      return newState;
+    } else if (action.type === ActionType.starClass) {
       const newState = { ...state };
       newState[getFullClassCode(action.payload)] = action.payload;
       return newState;

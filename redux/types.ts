@@ -10,9 +10,10 @@ import Semester from "../libs/semester";
 export enum ActionType {
   setSchoolNameRecord = "SET_SCHOOL_NAME_RECORD_ACTION",
   setDepartmentNameRecord = "SET_DEPARTMENT_NAME_RECORD_ACTION",
-  loadSettings = "LOAD_SETTINGS",
+  loadSettings = "LOAD_SETTINGS_ACTION",
   selectSemester = "SELECT_SEMESTER_ACTION",
   setShowPreviousSemesters = "SET_SHOW_PREVIOUS_SEMESTERS_ACTION",
+  loadStarredClasses = "LOAD_STARRED_CLASSES_ACTION",
   starClass = "STAR_CLASS_ACTION",
   unstarClass = "UNSTAR_CLASS_ACTION",
 }
@@ -33,5 +34,6 @@ export type SettingsAction =
   | { type: ActionType.setShowPreviousSemesters; payload?: boolean };
 
 export type StarClassAction =
+  | { type: ActionType.loadStarredClasses; payload?: StarredClassInfo[] }
   | { type: ActionType.starClass; payload?: StarredClassInfo }
   | { type: ActionType.unstarClass; payload?: ClassInfo };

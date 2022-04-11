@@ -51,6 +51,13 @@ const componentsStyle = {
       color: "gray.400",
     },
   },
+  Pressable: {
+    defaultProps: {
+      _disabled: {
+        opacity: 0.5,
+      },
+    },
+  },
   Button: {
     variants: {
       solid: {

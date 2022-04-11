@@ -124,7 +124,6 @@ export default function SearchScreen() {
       >
         <Box background={"background.primary"}>
           <SearchBar
-            height={`${inputSelectHeight}px`}
             margin={`${searchBarMargin}px`}
             value={query}
             onChangeText={setQuery}

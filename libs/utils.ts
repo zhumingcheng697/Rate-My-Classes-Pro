@@ -11,7 +11,10 @@ export function getFullDepartmentCode({
   schoolCode,
   departmentCode,
 }: DepartmentInfo): string {
-  return `${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`;
+  return `${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`.replace(
+    /\./g,
+    ""
+  );
 }
 
 export function getFullClassCode({
@@ -22,7 +25,7 @@ export function getFullClassCode({
   return `${getFullDepartmentCode({
     schoolCode,
     departmentCode,
-  })} ${classNumber.toUpperCase()}`;
+  })} ${classNumber.toUpperCase().replace(/\./g, "")}`;
 }
 
 export function getSchoolName(

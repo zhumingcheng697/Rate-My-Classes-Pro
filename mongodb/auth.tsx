@@ -31,6 +31,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const isAuthenticated = !!user && user.providerType !== "anon-user";
 
+  const loadUserDoc = async (user: User) => {
+    const db = useDB(user);
+    const userDoc = await db.loadUserDoc();
+
+    if (userDoc) {
+      const { username, starredClasses, settings } = userDoc;
+      const { semester, year } = settings.selectedSemester;
+      setUsername(username);
+      selectSemester(dispatch)(new Semester(semester, year));
+      setShowPreviousSemesters(dispatch)(settings.showPreviousSemesters);
+    }
+  };
+
   const signInAnonymously = async () => {
     if (isAuthenticated) return;
 

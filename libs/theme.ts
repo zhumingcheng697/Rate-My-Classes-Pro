@@ -113,6 +113,7 @@ const componentsStyle = {
   },
   Input: {
     defaultProps: {
+      enablesReturnKeyAutomatically: true,
       ...inputSelectDefaultProps,
     },
     baseStyle: {

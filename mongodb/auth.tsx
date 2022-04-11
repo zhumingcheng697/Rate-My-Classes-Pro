@@ -3,6 +3,7 @@ import React, {
   useState,
   type ReactNode,
   createContext,
+  useEffect,
 } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Realm, { type User } from "realm";

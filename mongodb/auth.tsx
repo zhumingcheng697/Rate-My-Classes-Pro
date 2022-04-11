@@ -74,6 +74,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const signInAnonymously = async () => {
     if (isAuthenticated) return;
 
+    setUsername(null);
     const credentials = Realm.Credentials.anonymous();
     const newUser = await app.logIn(credentials);
     setUser(newUser);
@@ -119,7 +120,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     await user.logOut();
     setUser(null);
-    setUsername(null);
   };
 
   return (

@@ -64,5 +64,31 @@ export function useDB(user: User) {
     );
   }
 
-  return { createUserDoc, loadUserDoc, updateSettings };
+  async function starClass(starredClass: StarredClassInfo) {
+    if (!isAuthenticated) return;
+
+    await db.collection<UserDoc>(Collections.users).updateOne(
+      { _id: user.id },
+      {
+        $set: {
+          [`starredClasses.${getFullClassCode(starredClass)}`]: starredClass,
+        },
+      }
+    );
+  }
+
+  async function unstarClass(classInfo: ClassInfo) {
+    if (!isAuthenticated) return;
+
+    await db.collection<UserDoc>(Collections.users).updateOne(
+      { _id: user.id },
+      {
+        $unset: {
+          [`starredClasses.${getFullClassCode(classInfo)}`]: null,
+        },
+      }
+    );
+  }
+
+  return { createUserDoc, loadUserDoc, updateSettings, starClass, unstarClass };
 }

@@ -31,6 +31,7 @@ export default function SignInSignUpScreen() {
   const auth = useAuth();
   const isFocused = useIsFocused();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,6 +52,7 @@ export default function SignInSignUpScreen() {
   }, [isFocused, isAuthenticated]);
 
   useEffect(() => {
+    setIsLoading(false);
     setPassword("");
     setConfirmPassword("");
   }, [isSigningIn]);
@@ -125,6 +127,7 @@ export default function SignInSignUpScreen() {
           <Button
             marginY={"15px"}
             isDisabled={
+              isLoading ||
               !email ||
               !password ||
               (!isSigningIn &&
@@ -132,6 +135,7 @@ export default function SignInSignUpScreen() {
             }
             onPress={async () => {
               try {
+                setIsLoading(true);
                 if (isSigningIn) {
                   await auth.signInWithEmailPassword(email, password);
                 } else {
@@ -141,6 +145,8 @@ export default function SignInSignUpScreen() {
               } catch (e) {
                 setError(e);
                 setShowAlert(true);
+              } finally {
+                setIsLoading(false);
               }
             }}
           >

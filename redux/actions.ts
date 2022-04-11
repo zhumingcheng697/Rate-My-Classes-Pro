@@ -3,6 +3,7 @@ import type {
   SchoolNameRecord,
   DepartmentNameRecord,
   ClassInfo,
+  Settings,
 } from "../libs/types";
 import {
   type SchoolNameAction,
@@ -28,6 +29,14 @@ export const setDepartmentNameRecord =
     dispath({
       type: ActionType.setDepartmentNameRecord,
       payload: departmentNameRecord,
+    });
+  };
+
+export const loadSettings =
+  (dispath: Dispatch<SettingsAction>) => (settings: Settings) => {
+    dispath({
+      type: ActionType.loadSettings,
+      payload: settings,
     });
   };
 

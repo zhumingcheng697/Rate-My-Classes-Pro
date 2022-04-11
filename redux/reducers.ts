@@ -56,7 +56,9 @@ function settingsReducer(
     return state;
   }
 
-  if (action.type === ActionType.selectSemester) {
+  if (action.type === ActionType.loadSettings && action.payload) {
+    return validateSettings(action.payload);
+  } else if (action.type === ActionType.selectSemester) {
     if (action.payload) {
       const newState = { ...state };
       newState.selectedSemester = action.payload;

@@ -4,8 +4,13 @@ import React, {
   type ReactNode,
   createContext,
 } from "react";
-import Realm, { User } from "realm";
+import { useSelector, useDispatch } from "react-redux";
+import Realm, { type User } from "realm";
+
 import app from "./app";
+import { useDB } from "./db";
+import Semester from "../libs/semester";
+import { loadSettings, loadStarredClasses } from "../redux/actions";
 
 type AuthContext = {
   user: User | null;
@@ -28,21 +33,34 @@ const Context = createContext<AuthContext | null>(null);
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState(app.currentUser);
   const [username, setUsername] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const settings = useSelector((state) => state.settings);
+  const dispatch = useDispatch();
 
   const isAuthenticated = !!user && user.providerType !== "anon-user";
 
   const loadUserDoc = async (user: User) => {
-    const db = useDB(user);
-    const userDoc = await db.loadUserDoc();
+    const userDoc = await useDB(user).loadUserDoc();
 
     if (userDoc) {
       const { username, starredClasses, settings } = userDoc;
-      const { semester, year } = settings.selectedSemester;
+      const { selectedSemester, showPreviousSemesters } = settings;
+      const { semester, year } = selectedSemester;
       setUsername(username);
-      selectSemester(dispatch)(new Semester(semester, year));
-      setShowPreviousSemesters(dispatch)(settings.showPreviousSemesters);
+      loadStarredClasses(dispatch)(starredClasses);
+      loadSettings(dispatch)({
+        selectedSemester: new Semester(semester, year),
+        showPreviousSemesters,
+      });
     }
   };
+
+  if (!isLoaded) {
+    if (user) {
+      loadUserDoc(user);
+    }
+    setIsLoaded(true);
+  }
 
   const signInAnonymously = async () => {
     if (isAuthenticated) return;
@@ -60,6 +78,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const credentials = Realm.Credentials.emailPassword(email, password);
     const newUser = await app.logIn(credentials);
     setUser(newUser);
+    await loadUserDoc(newUser);
   };
 
   // The signUp function takes an email and password and uses the
@@ -69,9 +88,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     email: string,
     password: string
   ) => {
+    if (user && user.providerType === "anon-user") await signOut();
+
     await app.emailPasswordAuth.registerUser({ email, password });
     setUsername(username);
-    await signInWithEmailPassword(email, password);
+    const credentials = Realm.Credentials.emailPassword(email, password);
+    const newUser = await app.logIn(credentials);
+    setUser(newUser);
+    await useDB(newUser).createUserDoc(username, settings);
   };
 
   // The signOut function calls the logOut function on the currently

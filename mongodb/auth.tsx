@@ -77,8 +77,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const credentials = Realm.Credentials.emailPassword(email, password);
     const newUser = await app.logIn(credentials);
-    setUser(newUser);
     await loadUserDoc(newUser);
+    setUser(newUser);
   };
 
   // The signUp function takes an email and password and uses the
@@ -94,8 +94,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setUsername(username);
     const credentials = Realm.Credentials.emailPassword(email, password);
     const newUser = await app.logIn(credentials);
-    setUser(newUser);
     await useDB(newUser).createUserDoc(username, settings);
+    setUser(newUser);
   };
 
   // The signOut function calls the logOut function on the currently

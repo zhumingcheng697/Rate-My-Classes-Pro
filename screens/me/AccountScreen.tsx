@@ -99,7 +99,7 @@ export default function AccountScreen() {
         >
           <Box>
             {wasAuthenticated && (
-              <Text variant={"h1"}>{auth.username ?? "Me"}</Text>
+              <Text variant={"h1"}>{auth.username ?? " "}</Text>
             )}
             <VStack margin={"10px"} space={"12px"}>
               {wasAuthenticated && (

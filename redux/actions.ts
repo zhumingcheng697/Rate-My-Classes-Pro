@@ -1,4 +1,6 @@
 import { type Dispatch } from "redux";
+import { type User } from "realm";
+
 import type {
   SchoolNameRecord,
   DepartmentNameRecord,
@@ -14,6 +16,7 @@ import {
   ActionType,
 } from "./types";
 import Semester from "../libs/semester";
+import { useDB } from "../mongodb/db";
 
 export const setSchoolNameRecord =
   (dispath: Dispatch<SchoolNameAction>) =>
@@ -66,18 +69,30 @@ export const loadStarredClasses =
     });
   };
 
-export const starClass =
-  (dispath: Dispatch<StarClassAction>) => (classInfo: ClassInfo) => {
+export const starClass = (dispath: Dispatch<StarClassAction>, user: User) => {
+  const db = useDB(user);
+
+  return async (classInfo: ClassInfo) => {
+    const starredClass = { ...classInfo, starredDate: Date.now() };
+
     dispath({
       type: ActionType.starClass,
-      payload: { ...classInfo, starredDate: Date.now() },
+      payload: starredClass,
     });
-  };
 
-export const unstarClass =
-  (dispath: Dispatch<StarClassAction>) => (classInfo: ClassInfo) => {
+    await db.starClass(starredClass);
+  };
+};
+
+export const unstarClass = (dispath: Dispatch<StarClassAction>, user: User) => {
+  const db = useDB(user);
+
+  return async (classInfo: ClassInfo) => {
     dispath({
       type: ActionType.unstarClass,
       payload: classInfo,
     });
+
+    await db.unstarClass(classInfo);
   };
+};

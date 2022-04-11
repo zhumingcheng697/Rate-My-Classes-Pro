@@ -90,11 +90,11 @@ export default ({
             />
           }
           onPress={() => {
-            if (auth.isAuthenticated) {
+            if (auth.user && auth.isAuthenticated) {
               if (isStarred) {
-                unstarClass(dispatch)(route.params);
+                unstarClass(dispatch, auth.user)(route.params);
               } else {
-                starClass(dispatch)(route.params);
+                starClass(dispatch, auth.user)(route.params);
               }
             } else {
               setShowAlert(true);

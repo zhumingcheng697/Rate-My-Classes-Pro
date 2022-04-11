@@ -1,4 +1,4 @@
-import { type User } from "realm";
+import Realm, { type User } from "realm";
 
 import { type UserDoc, Collections } from "./types";
 import { ClassInfo, StarredClassInfo, Settings } from "../libs/types";
@@ -35,59 +35,50 @@ export function useDB(user: User) {
   async function loadUserDoc() {
     if (!isAuthenticated) return;
 
-    const userDoc = await db
+    return await db
       .collection<UserDoc>(Collections.users)
       .findOne({ _id: user.id });
+  }
 
-    return userDoc;
+  async function updateUserDoc(update: Realm.Services.MongoDB.Update) {
+    if (!isAuthenticated) return;
+
+    await db
+      .collection<UserDoc>(Collections.users)
+      .updateOne({ _id: user.id }, update);
   }
 
   async function updateSettings({
     selectedSemester,
     showPreviousSemesters,
   }: Settings) {
-    if (!isAuthenticated) return;
-
-    await db.collection<UserDoc>(Collections.users).updateOne(
-      { _id: user.id },
-      {
-        $set: {
-          settings: {
-            selectedSemester: {
-              semester: selectedSemester.semesterCode,
-              year: selectedSemester.year,
-            },
-            showPreviousSemesters,
+    await updateUserDoc({
+      $set: {
+        settings: {
+          selectedSemester: {
+            semester: selectedSemester.semesterCode,
+            year: selectedSemester.year,
           },
+          showPreviousSemesters,
         },
-      }
-    );
+      },
+    });
   }
 
   async function starClass(starredClass: StarredClassInfo) {
-    if (!isAuthenticated) return;
-
-    await db.collection<UserDoc>(Collections.users).updateOne(
-      { _id: user.id },
-      {
-        $set: {
-          [`starredClasses.${getFullClassCode(starredClass)}`]: starredClass,
-        },
-      }
-    );
+    await updateUserDoc({
+      $set: {
+        [`starredClasses.${getFullClassCode(starredClass)}`]: starredClass,
+      },
+    });
   }
 
   async function unstarClass(classInfo: ClassInfo) {
-    if (!isAuthenticated) return;
-
-    await db.collection<UserDoc>(Collections.users).updateOne(
-      { _id: user.id },
-      {
-        $unset: {
-          [`starredClasses.${getFullClassCode(classInfo)}`]: null,
-        },
-      }
-    );
+    await updateUserDoc({
+      $unset: {
+        [`starredClasses.${getFullClassCode(classInfo)}`]: null,
+      },
+    });
   }
 
   return { createUserDoc, loadUserDoc, updateSettings, starClass, unstarClass };

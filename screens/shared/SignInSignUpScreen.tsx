@@ -57,9 +57,9 @@ export default function SignInSignUpScreen() {
     setConfirmPassword("");
   }, [isSigningIn]);
 
-  const randomizeKey = () => {
+  useEffect(() => {
     if (!isSigningIn) setKey(Math.random());
-  };
+  }, [username, email, confirmPassword]);
 
   return (
     <>
@@ -86,7 +86,6 @@ export default function SignInSignUpScreen() {
                 value={username}
                 onChangeText={setUsername}
                 autoCompleteType={"username"}
-                onEndEditing={randomizeKey}
               />
             </Box>
           )}
@@ -99,7 +98,6 @@ export default function SignInSignUpScreen() {
               autoCorrect={false}
               autoCapitalize={"none"}
               keyboardType={"email-address"}
-              onEndEditing={randomizeKey}
             />
           </Box>
           <Box>
@@ -120,7 +118,6 @@ export default function SignInSignUpScreen() {
                 onChangeText={setConfirmPassword}
                 textContentType={"oneTimeCode"}
                 variant={"password"}
-                onEndEditing={randomizeKey}
               />
             </Box>
           )}

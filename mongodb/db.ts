@@ -51,12 +51,14 @@ export function useDB(user: User) {
     await db.collection<UserDoc>(Collections.users).updateOne(
       { _id: user.id },
       {
-        settings: {
-          selectedSemester: {
-            semester: selectedSemester.semesterCode,
-            year: selectedSemester.year,
+        $set: {
+          settings: {
+            selectedSemester: {
+              semester: selectedSemester.semesterCode,
+              year: selectedSemester.year,
+            },
+            showPreviousSemesters,
           },
-          showPreviousSemesters,
         },
       }
     );

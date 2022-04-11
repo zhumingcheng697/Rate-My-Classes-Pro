@@ -135,7 +135,7 @@ export default function SignInSignUpScreen() {
                 if (isSigningIn) {
                   await auth.signInWithEmailPassword(email, password);
                 } else {
-                  await auth.signUpWithEmailPassword(email, password);
+                  await auth.signUpWithEmailPassword(username, email, password);
                 }
                 setError(null);
               } catch (e) {

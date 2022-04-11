@@ -9,10 +9,15 @@ import app from "./app";
 
 type AuthContext = {
   user: User | null;
+  username: string | null;
   isAuthenticated: boolean;
   signInAnonymously: () => Promise<void>;
-  signUpWithEmailPassword: (email: string, password: string) => Promise<void>;
   signInWithEmailPassword: (email: string, password: string) => Promise<void>;
+  signUpWithEmailPassword: (
+    username: string,
+    email: string,
+    password: string
+  ) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -22,6 +27,7 @@ const Context = createContext<AuthContext | null>(null);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState(app.currentUser);
+  const [username, setUsername] = useState<string | null>(null);
 
   const isAuthenticated = !!user && user.providerType !== "anon-user";
 
@@ -45,8 +51,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // The signUp function takes an email and password and uses the
   // emailPassword authentication provider to register the user.
-  const signUpWithEmailPassword = async (email: string, password: string) => {
+  const signUpWithEmailPassword = async (
+    username: string,
+    email: string,
+    password: string
+  ) => {
     await app.emailPasswordAuth.registerUser({ email, password });
+    setUsername(username);
     await signInWithEmailPassword(email, password);
   };
 
@@ -62,12 +73,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     await user.logOut();
     setUser(null);
+    setUsername(null);
   };
 
   return (
     <Context.Provider
       value={{
         user,
+        username,
         isAuthenticated,
         signInAnonymously,
         signInWithEmailPassword,

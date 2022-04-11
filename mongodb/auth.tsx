@@ -17,6 +17,7 @@ type AuthContext = {
   user: User | null;
   username: string | null;
   isAuthenticated: boolean;
+  updateUsername: (username: string) => Promise<void>;
   signInAnonymously: () => Promise<void>;
   signInWithEmailPassword: (email: string, password: string) => Promise<void>;
   signUpWithEmailPassword: (
@@ -62,6 +63,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       loadUserDoc(user);
     }
   }, []);
+
+  const updateUsername = async (username: string) => {
+    if (!isAuthenticated) return;
+
+    setUsername(username);
+    await useDB(user).updateUsername(username);
+  };
 
   const signInAnonymously = async () => {
     if (isAuthenticated) return;
@@ -120,6 +128,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         user,
         username,
         isAuthenticated,
+        updateUsername,
         signInAnonymously,
         signInWithEmailPassword,
         signUpWithEmailPassword,

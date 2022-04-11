@@ -48,6 +48,10 @@ export function useDB(user: User) {
       .updateOne({ _id: user.id }, update);
   }
 
+  async function updateUsername(username: string) {
+    await updateUserDoc({ $set: { username } });
+  }
+
   async function updateSettings({
     selectedSemester,
     showPreviousSemesters,
@@ -81,5 +85,12 @@ export function useDB(user: User) {
     });
   }
 
-  return { createUserDoc, loadUserDoc, updateSettings, starClass, unstarClass };
+  return {
+    createUserDoc,
+    loadUserDoc,
+    updateUsername,
+    updateSettings,
+    starClass,
+    unstarClass,
+  };
 }

@@ -15,6 +15,8 @@ import AlertPopup from "./components/AlertPopup";
 import reducer from "./redux/reducers";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "./redux/actions";
 import { AuthProvider } from "./mongodb/auth";
+import { useDB } from "./mongodb/db";
+import app from "./mongodb/app";
 
 Ionicons.loadFont();
 
@@ -55,7 +57,29 @@ export default class App extends Component<{}, AppState> {
     showAlert: false,
   };
 
+  unsubsriceRedux = () => {};
+
+  reduxListener = (() => {
+    let previousSettings = store.getState().settings;
+
+    return async () => {
+      const { settings } = store.getState();
+
+      if (settings !== previousSettings) {
+        if (app.currentUser && app.currentUser.providerType !== "anon-user") {
+          await useDB(app.currentUser).updateSettings(settings);
+        }
+      }
+    };
+  })();
+
+  componentWillUnmount() {
+    this.unsubsriceRedux();
+  }
+
   componentDidMount() {
+    this.unsubsriceRedux = store.subscribe(this.reduxListener.bind(this));
+
     getSchoolNames()
       .then((record) => {
         if (record && !isObjectEmpty(record)) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, Button, Input, VStack, Box } from "native-base";
 import {
   useIsFocused,
@@ -55,9 +55,9 @@ export default function SignInSignUpScreen() {
     setConfirmPassword("");
   }, [isSigningIn]);
 
-  const randomizeKey = useCallback(() => {
+  const randomizeKey = () => {
     if (!isSigningIn) setKey(Math.random());
-  }, []);
+  };
 
   return (
     <>

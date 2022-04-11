@@ -1,6 +1,6 @@
 import { extendTheme } from "native-base";
 
-export const inputSelectHeight = 39;
+export const inputSelectHeight = 40;
 
 export const colorStyle = {
   background: {

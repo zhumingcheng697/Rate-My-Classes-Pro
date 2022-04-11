@@ -26,7 +26,6 @@ export default function SearchBar({
       placeholder={placeholder}
       value={value}
       onChangeText={onChangeText}
-      enablesReturnKeyAutomatically={true}
       returnKeyType={"search"}
       leftElement={
         <Icon
@@ -42,7 +41,8 @@ export default function SearchBar({
             variant={"unstyled"}
             _pressed={pressedHoverStyle}
             _hover={pressedHoverStyle}
-            padding={"5px"}
+            padding={"3px"}
+            marginRight={"2px"}
             icon={
               <Icon
                 size={"22px"}

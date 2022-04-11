@@ -33,13 +33,14 @@ const Context = createContext<AuthContext | null>(null);
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState(app.currentUser);
   const [username, setUsername] = useState<string | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
   const settings = useSelector((state) => state.settings);
   const dispatch = useDispatch();
 
   const isAuthenticated = !!user && user.providerType !== "anon-user";
 
   const loadUserDoc = async (user: User) => {
+    if (user.providerType === "anon-user") return;
+
     const userDoc = await useDB(user).loadUserDoc();
 
     if (userDoc) {
@@ -55,12 +56,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  if (!isLoaded) {
-    if (user) {
+  useEffect(() => {
+    if (isAuthenticated) {
       loadUserDoc(user);
     }
-    setIsLoaded(true);
-  }
+  }, []);
 
   const signInAnonymously = async () => {
     if (isAuthenticated) return;

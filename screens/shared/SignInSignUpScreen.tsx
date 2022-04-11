@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Keyboard } from "react-native";
 import { Text, Button, Input, VStack, Box } from "native-base";
 import {
   useIsFocused,
@@ -58,8 +59,8 @@ export default function SignInSignUpScreen() {
   }, [isSigningIn]);
 
   useEffect(() => {
-    if (!isSigningIn) setKey(Math.random());
-  }, [username, email, confirmPassword]);
+    setKey(Math.random());
+  }, [username, email, confirmPassword, isSigningIn]);
 
   return (
     <>
@@ -160,6 +161,7 @@ export default function SignInSignUpScreen() {
             <PlainTextButton
               title={isSigningIn ? "Sign Up" : "Sign In"}
               onPress={() => {
+                Keyboard.dismiss();
                 navigation.setParams({ isSigningIn: !isSigningIn });
               }}
             />

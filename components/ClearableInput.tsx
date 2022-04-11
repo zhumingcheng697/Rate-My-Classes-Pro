@@ -1,4 +1,5 @@
 import React from "react";
+import { type ReturnKeyTypeOptions } from "react-native";
 import { Input, IconButton, Icon, type IInputProps } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -7,6 +8,7 @@ type ClearableInputBaseProps = {
   onChangeText: (text: string) => void;
   placeholder?: string;
   isSearchBar?: boolean;
+  returnKeyType?: ReturnKeyTypeOptions;
   canClear?: boolean;
 };
 
@@ -18,6 +20,7 @@ export default function ClearableInput({
   onChangeText,
   placeholder,
   isSearchBar = false,
+  returnKeyType,
   canClear,
   ...rest
 }: ClearableInputProps) {
@@ -30,7 +33,7 @@ export default function ClearableInput({
       placeholder={placeholder ?? (isSearchBar ? "Search" : undefined)}
       value={value}
       onChangeText={onChangeText}
-      returnKeyType={"search"}
+      returnKeyType={returnKeyType ?? (isSearchBar ? "search" : undefined)}
       leftElement={
         isSearchBar ? (
           <Icon

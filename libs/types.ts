@@ -1,4 +1,6 @@
-import Semester from "./semester";
+import type Semester from "./semester";
+
+import { type Rating } from "./rating";
 
 export type SchoolNameRecord = Record<string, string>;
 
@@ -7,6 +9,8 @@ export type DepartmentNameRecord = Record<string, Record<string, string>>;
 export type StarredClassRecord = Record<string, StarredClassInfo>;
 
 export type ReviewedClassRecord = Record<string, ReviewedClassInfo>;
+
+export type ReviewRecord = Record<string, Review>;
 
 export type SchoolInfo = { schoolCode: string };
 
@@ -24,6 +28,19 @@ export enum ErrorType {
   network = "NETWORK_ERROR",
   noData = "NO_DATA_ERROR",
 }
+
+export type Review = {
+  userId: string;
+  enjoyment: Rating;
+  difficulty: Rating;
+  workload: Rating;
+  value: Rating;
+  upvotes: number;
+  downvotes: number;
+  reviewedDate: number;
+  instructor?: string;
+  comment?: string;
+};
 
 export type Settings = {
   selectedSemester: Semester;

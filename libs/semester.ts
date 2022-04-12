@@ -5,6 +5,8 @@ export enum SemesterCode {
   fall = "fa",
 }
 
+export type SemesterInfo = { semesterCode: SemesterCode; year: number };
+
 export default class Semester {
   private static readonly semesterCodes = [
     SemesterCode.jTerm,
@@ -18,8 +20,8 @@ export default class Semester {
   readonly semesterCode: SemesterCode;
   readonly year: number;
 
-  constructor(semester: SemesterCode, year: number) {
-    this.semesterCode = semester;
+  constructor({ semesterCode, year }: SemesterInfo) {
+    this.semesterCode = semesterCode;
     this.year = Math.floor(year);
   }
 
@@ -34,6 +36,10 @@ export default class Semester {
 
   toString() {
     return `${this.getSemesterName()} ${this.year}`;
+  }
+
+  toJSON() {
+    return { semesterCode: this.semesterCode, year: this.year };
   }
 
   static predictCurrentSemester() {
@@ -52,7 +58,7 @@ export default class Semester {
       semesterCode = SemesterCode.fall;
     }
 
-    return new Semester(semesterCode, today.getFullYear());
+    return new Semester({ semesterCode, year: today.getFullYear() });
   }
 
   static predictFurthestSemester() {
@@ -74,7 +80,7 @@ export default class Semester {
       year += 1;
     }
 
-    return new Semester(semesterCode, year);
+    return new Semester({ semesterCode, year });
   }
 
   static getSemesterOptions(
@@ -120,6 +126,6 @@ export default class Semester {
       ((index % Semester.numOfSemesters) + Semester.numOfSemesters) %
       Semester.numOfSemesters;
 
-    return new Semester(Semester.semesterCodes[index], year);
+    return new Semester({ semesterCode: Semester.semesterCodes[index], year });
   }
 }

@@ -1,4 +1,4 @@
-import { SemesterCode } from "../libs/semester";
+import { type SemesterInfo } from "../libs/semester";
 import type {
   StarredClassRecord,
   ReviewedClassRecord,
@@ -16,10 +16,7 @@ export type UserDoc = {
   starredClasses: StarredClassRecord;
   reviewedClasses: ReviewedClassRecord;
   settings: {
-    selectedSemester: {
-      semester: SemesterCode;
-      year: number;
-    };
+    selectedSemester: SemesterInfo;
     showPreviousSemesters: boolean;
   };
 };

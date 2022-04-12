@@ -30,10 +30,7 @@ export function useDB(user: User) {
       starredClasses: {},
       reviewedClasses: {},
       settings: {
-        selectedSemester: {
-          semester: selectedSemester.semesterCode,
-          year: selectedSemester.year,
-        },
+        selectedSemester: selectedSemester.toJSON(),
         showPreviousSemesters,
       },
     });
@@ -66,10 +63,7 @@ export function useDB(user: User) {
     await updateUserDoc({
       $set: {
         settings: {
-          selectedSemester: {
-            semester: selectedSemester.semesterCode,
-            year: selectedSemester.year,
-          },
+          selectedSemester: selectedSemester.toJSON(),
           showPreviousSemesters,
         },
       },

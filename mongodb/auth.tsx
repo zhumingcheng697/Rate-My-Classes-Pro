@@ -48,11 +48,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     if (userDoc) {
       const { username, starredClasses, settings } = userDoc;
       const { selectedSemester, showPreviousSemesters } = settings;
-      const { semester, year } = selectedSemester;
       setUsername(username);
       loadStarredClasses(dispatch)(starredClasses);
       loadSettings(dispatch)({
-        selectedSemester: new Semester(semester, year),
+        selectedSemester: new Semester(selectedSemester),
         showPreviousSemesters,
       });
     }

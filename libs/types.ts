@@ -29,14 +29,21 @@ export enum ErrorType {
   noData = "NO_DATA_ERROR",
 }
 
+export enum Vote {
+  upvote = "UPVOTE",
+  downvote = "DOWNVOTE",
+}
+
+export type VoteRecord = Record<string, true>;
+
 export type Review = {
   userId: string;
   enjoyment: Rating;
   difficulty: Rating;
   workload: Rating;
   value: Rating;
-  upvotes: number;
-  downvotes: number;
+  upvotes: VoteRecord;
+  downvotes: VoteRecord;
   reviewedDate: number;
   instructor?: string;
   comment?: string;

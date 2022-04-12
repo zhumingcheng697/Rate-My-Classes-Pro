@@ -1,11 +1,12 @@
 import Realm, { type User } from "realm";
 
 import { type UserDoc, type ClassDoc, Collections } from "./types";
-import type {
-  ClassCode,
-  StarredClassInfo,
-  Review,
-  Settings,
+import {
+  type ClassCode,
+  type StarredClassInfo,
+  type Review,
+  Vote,
+  type Settings,
 } from "../libs/types";
 import { getFullClassCode } from "../libs/utils";
 
@@ -94,46 +95,55 @@ export function useDB(user: User) {
   async function updateClassDoc(
     classCode: ClassCode,
     update: Realm.Services.MongoDB.Update,
-    options?: Realm.Services.MongoDB.FindOneAndModifyOptions
+    options?: Realm.Services.MongoDB.UpdateOptions
   ) {
-    return await db
+    if (!isAuthenticated) return;
+
+    await db
       .collection<ClassDoc>(Collections.classes)
-      .findOneAndUpdate({ _id: getFullClassCode(classCode) }, update, options);
+      .updateOne({ _id: getFullClassCode(classCode) }, update, options);
   }
 
   async function upsertReview(classCode: ClassCode, review: Review) {
-    return await updateClassDoc(
+    await updateClassDoc(
       classCode,
       {
         $set: {
           [`reviews.${[user.id]}`]: review,
         },
       },
-      {
-        upsert: true,
-        returnNewDocument: true,
-      }
+      { upsert: true }
     );
   }
 
-  async function upvoteReview(classCode: ClassCode, review: Review) {
-    await updateClassDoc(classCode, {
-      $inc: {
-        [`reviews.${[review.userId]}.upvotes`]: 1,
-      },
-    });
-  }
+  async function voteReview(classCode: ClassCode, review: Review, vote?: Vote) {
+    const update: Realm.Services.MongoDB.Update = {};
 
-  async function downvoteReview(classCode: ClassCode, review: Review) {
-    await updateClassDoc(classCode, {
-      $inc: {
-        [`reviews.${[review.userId]}.downvotes`]: -1,
-      },
-    });
+    if (vote === Vote.upvote) {
+      update["$set"] = {
+        [`reviews.${[review.userId]}.upvotes.${user.id}`]: true,
+      };
+    } else {
+      update["$unset"] = {
+        [`reviews.${[review.userId]}.upvotes.${user.id}`]: null,
+      };
+    }
+
+    if (vote === Vote.downvote) {
+      update["$set"] = {
+        [`reviews.${[review.userId]}.downvotes.${user.id}`]: true,
+      };
+    } else {
+      update["$unset"] = {
+        [`reviews.${[review.userId]}.downvotes.${user.id}`]: null,
+      };
+    }
+
+    await updateClassDoc(classCode, update);
   }
 
   async function deleteReview(classCode: ClassCode) {
-    return await updateClassDoc(classCode, {
+    await updateClassDoc(classCode, {
       $unset: {
         [`reviews.${[user.id]}`]: null,
       },
@@ -148,8 +158,7 @@ export function useDB(user: User) {
     starClass,
     unstarClass,
     upsertReview,
-    upvoteReview,
-    downvoteReview,
+    voteReview,
     deleteReview,
   };
 }

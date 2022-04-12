@@ -87,7 +87,19 @@ export function useDB(user: User) {
       classCode,
       {
         $set: {
-          [`reviews.${[user.id]}`]: review,
+          [`reviews.${[user.id]}.enjoyment`]: review.enjoyment,
+          [`reviews.${[user.id]}.difficulty`]: review.difficulty,
+          [`reviews.${[user.id]}.workload`]: review.workload,
+          [`reviews.${[user.id]}.value`]: review.value,
+          [`reviews.${[user.id]}.comment`]: review.comment,
+        },
+        $setOnInsert: {
+          [`reviews.${[user.id]}.userId`]: review.userId,
+          [`reviews.${[user.id]}.upvotes`]: review.upvotes,
+          [`reviews.${[user.id]}.downvotes`]: review.downvotes,
+          [`reviews.${[user.id]}.reviewedDate`]: review.reviewedDate,
+          [`reviews.${[user.id]}.semester`]: review.semester,
+          [`reviews.${[user.id]}.instructor`]: review.instructor,
         },
       },
       { upsert: true }

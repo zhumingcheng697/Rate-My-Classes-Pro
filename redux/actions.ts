@@ -15,7 +15,7 @@ import {
   type StarClassAction,
   ActionType,
 } from "./types";
-import Semester from "../libs/semester";
+import type Semester from "../libs/semester";
 import { useDB } from "../mongodb/db";
 
 export const setSchoolNameRecord =

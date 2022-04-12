@@ -1,7 +1,7 @@
 import Realm, { type User } from "realm";
 
 import { type UserDoc, Collections } from "./types";
-import { ClassInfo, StarredClassInfo, Settings } from "../libs/types";
+import type { ClassInfo, StarredClassInfo, Settings } from "../libs/types";
 import { getFullClassCode } from "../libs/utils";
 
 const servieName = "mongodb-atlas";

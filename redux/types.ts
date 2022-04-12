@@ -6,7 +6,7 @@ import type {
   StarredClassInfo,
   Settings,
 } from "../libs/types";
-import Semester from "../libs/semester";
+import type Semester from "../libs/semester";
 
 export enum ActionType {
   setSchoolNameRecord = "SET_SCHOOL_NAME_RECORD_ACTION",

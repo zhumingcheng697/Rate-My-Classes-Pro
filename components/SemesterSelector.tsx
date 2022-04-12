@@ -14,7 +14,7 @@ type SemesterSelectorBaseProps = {
 export type SemesterSelectorProps = SemesterSelectorBaseProps &
   Omit<ISelectProps, keyof SemesterSelectorBaseProps>;
 
-export function SemesterSelector({
+export default function SemesterSelector({
   selectedSemester,
   semesterOptions,
   onSelectedSemesterChange,

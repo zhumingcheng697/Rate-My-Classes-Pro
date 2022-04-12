@@ -1,6 +1,6 @@
 import React from "react";
 import { type ReturnKeyTypeOptions } from "react-native";
-import { Input, IconButton, Icon, type IInputProps } from "native-base";
+import { Input, IconButton, Icon, type IInputProps, Box } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 type ClearableInputBaseProps = {
@@ -35,33 +35,39 @@ export default function ClearableInput({
       onChangeText={onChangeText}
       returnKeyType={returnKeyType ?? (isSearchBar ? "search" : undefined)}
       leftElement={
-        isSearchBar ? (
-          <Icon
-            marginLeft={"5px"}
-            size={"22px"}
-            color={"gray.400"}
-            as={<Ionicons name={"search"} />}
-          />
-        ) : undefined
-      }
-      rightElement={
-        <IconButton
-          variant={"unstyled"}
-          _pressed={pressedHoverStyle}
-          _hover={pressedHoverStyle}
-          padding={"3px"}
-          marginRight={canClear ?? value ? "2px" : "-200%"}
-          icon={
+        <Box>
+          {isSearchBar && (
             <Icon
+              marginLeft={"5px"}
               size={"22px"}
               color={"gray.400"}
-              as={<Ionicons name={"close-circle"} />}
+              as={<Ionicons name={"search"} />}
             />
-          }
-          onPress={() => {
-            onChangeText("");
-          }}
-        />
+          )}
+        </Box>
+      }
+      rightElement={
+        <Box>
+          {(canClear ?? value) && (
+            <IconButton
+              variant={"unstyled"}
+              _pressed={pressedHoverStyle}
+              _hover={pressedHoverStyle}
+              padding={"3px"}
+              marginRight={"2px"}
+              icon={
+                <Icon
+                  size={"22px"}
+                  color={"gray.400"}
+                  as={<Ionicons name={"close-circle"} />}
+                />
+              }
+              onPress={() => {
+                onChangeText("");
+              }}
+            />
+          )}
+        </Box>
       }
     />
   );

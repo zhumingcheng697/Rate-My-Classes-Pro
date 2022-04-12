@@ -24,16 +24,12 @@ export default class Semester {
   }
 
   getSemesterName() {
-    switch (this.semesterCode) {
-      case SemesterCode.jTerm:
-        return "J-Term";
-      case SemesterCode.spring:
-        return "Spring";
-      case SemesterCode.summer:
-        return "Summer";
-      case SemesterCode.fall:
-        return "Fall";
-    }
+    return {
+      [SemesterCode.jTerm]: "J-Term",
+      [SemesterCode.spring]: "Spring",
+      [SemesterCode.summer]: "Summer",
+      [SemesterCode.fall]: "Fall",
+    }[this.semesterCode];
   }
 
   toString() {

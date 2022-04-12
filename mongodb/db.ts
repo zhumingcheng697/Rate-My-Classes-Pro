@@ -1,7 +1,12 @@
 import Realm, { type User } from "realm";
 
-import { type UserDoc, Collections } from "./types";
-import type { ClassInfo, StarredClassInfo, Settings } from "../libs/types";
+import { type UserDoc, type ClassDoc, Collections } from "./types";
+import type {
+  ClassCode,
+  StarredClassInfo,
+  Review,
+  Settings,
+} from "../libs/types";
 import { getFullClassCode } from "../libs/utils";
 
 const servieName = "mongodb-atlas";
@@ -78,10 +83,59 @@ export function useDB(user: User) {
     });
   }
 
-  async function unstarClass(classInfo: ClassInfo) {
+  async function unstarClass(classCode: ClassCode) {
     await updateUserDoc({
       $unset: {
-        [`starredClasses.${getFullClassCode(classInfo)}`]: null,
+        [`starredClasses.${getFullClassCode(classCode)}`]: null,
+      },
+    });
+  }
+
+  async function updateClassDoc(
+    classCode: ClassCode,
+    update: Realm.Services.MongoDB.Update,
+    options?: Realm.Services.MongoDB.FindOneAndModifyOptions
+  ) {
+    return await db
+      .collection<ClassDoc>(Collections.classes)
+      .findOneAndUpdate({ _id: getFullClassCode(classCode) }, update, options);
+  }
+
+  async function upsertReview(classCode: ClassCode, review: Review) {
+    return await updateClassDoc(
+      classCode,
+      {
+        $set: {
+          [`reviews.${[user.id]}`]: review,
+        },
+      },
+      {
+        upsert: true,
+        returnNewDocument: true,
+      }
+    );
+  }
+
+  async function upvoteReview(classCode: ClassCode, review: Review) {
+    await updateClassDoc(classCode, {
+      $inc: {
+        [`reviews.${[review.userId]}.upvotes`]: 1,
+      },
+    });
+  }
+
+  async function downvoteReview(classCode: ClassCode, review: Review) {
+    await updateClassDoc(classCode, {
+      $inc: {
+        [`reviews.${[review.userId]}.downvotes`]: -1,
+      },
+    });
+  }
+
+  async function deleteReview(classCode: ClassCode) {
+    return await updateClassDoc(classCode, {
+      $unset: {
+        [`reviews.${[user.id]}`]: null,
       },
     });
   }
@@ -93,5 +147,9 @@ export function useDB(user: User) {
     updateSettings,
     starClass,
     unstarClass,
+    upsertReview,
+    upvoteReview,
+    downvoteReview,
+    deleteReview,
   };
 }

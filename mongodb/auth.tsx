@@ -113,6 +113,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     if (user.providerType === "anon-user") await app.deleteUser(user);
 
     await user.logOut();
+    loadStarredClasses(dispatch)({});
     setUser(null);
   };
 

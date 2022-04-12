@@ -15,9 +15,9 @@ export default function SettingsScreen() {
   const [canClear, setCanClear] = useState(false);
   const [previousUsername, setPreviousUsername] = useState(auth.username);
   const [newUsername, setNewUsername] = useState(auth.username ?? "");
-  const { selectedSemester, showPreviousSemesters } = useSelector(
-    (state) => state.settings
-  );
+  const settings = useSelector((state) => state.settings);
+  const showPreviousSemesters = settings.showPreviousSemesters;
+  const selectedSemester = new Semester(settings.selectedSemester);
   const semesterOptions = useMemo(
     () => Semester.getSemesterOptions(showPreviousSemesters).reverse(),
     [showPreviousSemesters]

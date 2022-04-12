@@ -39,7 +39,7 @@ function departmentNameReducer(
 
 function settingsReducer(
   state: Settings = {
-    selectedSemester: Semester.predictCurrentSemester(),
+    selectedSemester: Semester.predictCurrentSemester().toJSON(),
     showPreviousSemesters: false,
   },
   action: SettingsAction
@@ -47,10 +47,11 @@ function settingsReducer(
   function validateSettings(state: Settings) {
     if (
       !Semester.getSemesterOptions(state.showPreviousSemesters).some(
-        (semester) => Semester.equals(semester, state.selectedSemester)
+        (semester) =>
+          Semester.equals(semester, new Semester(state.selectedSemester))
       )
     ) {
-      state.selectedSemester = Semester.predictCurrentSemester();
+      state.selectedSemester = Semester.predictCurrentSemester().toJSON();
     }
 
     return state;
@@ -63,7 +64,7 @@ function settingsReducer(
   } else if (action.type === ActionType.selectSemester) {
     if (action.payload) {
       const newState = { ...state };
-      newState.selectedSemester = action.payload;
+      newState.selectedSemester = action.payload.toJSON();
       return validateSettings(newState);
     }
   } else if (action.type === ActionType.setShowPreviousSemesters) {

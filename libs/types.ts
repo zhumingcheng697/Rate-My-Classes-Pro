@@ -1,4 +1,4 @@
-import type Semester from "./semester";
+import { type SemesterInfo } from "./semester";
 
 import { type Rating } from "./rating";
 
@@ -50,7 +50,7 @@ export type Review = {
 };
 
 export type Settings = {
-  selectedSemester: Semester;
+  selectedSemester: SemesterInfo;
   showPreviousSemesters: boolean;
 };
 

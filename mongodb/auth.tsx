@@ -10,7 +10,6 @@ import Realm, { type User } from "realm";
 
 import app from "./app";
 import { useDB } from "./db";
-import Semester from "../libs/semester";
 import { loadSettings, loadStarredClasses } from "../redux/actions";
 
 type AuthContext = {
@@ -47,13 +46,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     if (userDoc) {
       const { username, starredClasses, settings } = userDoc;
-      const { selectedSemester, showPreviousSemesters } = settings;
       setUsername(username);
       loadStarredClasses(dispatch)(starredClasses);
-      loadSettings(dispatch)({
-        selectedSemester: new Semester(selectedSemester),
-        showPreviousSemesters,
-      });
+      loadSettings(dispatch)(settings);
     }
   };
 

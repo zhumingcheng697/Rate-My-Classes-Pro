@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
+import Semester from "../../libs/semester";
 import type { ExploreNavigationParamList, SchoolInfo } from "../../libs/types";
 import { isSchoolGrad, isObjectEmpty, getSchoolName } from "../../libs/utils";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
@@ -19,7 +20,8 @@ export default function UniversityScreen() {
   const navigation = useNavigation<UniversityScreenNavigationProp>();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-  const { selectedSemester } = useSelector((state) => state.settings);
+  const settings = useSelector((state) => state.settings);
+  const selectedSemester = new Semester(settings.selectedSemester);
   const isSchoolNameLoaded = !!schoolNames && !isObjectEmpty(schoolNames);
   const isDepartmentNameLoaded =
     !!departmentNames && !isObjectEmpty(departmentNames);

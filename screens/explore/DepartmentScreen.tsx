@@ -39,7 +39,8 @@ export default function DepartmentScreen() {
   const route = useRoute<DepartmentScreenRouteProp>();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-  const { selectedSemester } = useSelector((state) => state.settings);
+  const settings = useSelector((state) => state.settings);
+  const selectedSemester = new Semester(settings.selectedSemester);
   const isFocused = useIsFocused();
 
   const [classes, setClasses] = useState<ClassInfo[]>([]);
@@ -76,7 +77,7 @@ export default function DepartmentScreen() {
         setShowAlert(true);
         setError(ErrorType.network);
       });
-  }, [route.params, selectedSemester]);
+  }, [route.params, settings.selectedSemester]);
 
   return (
     <>

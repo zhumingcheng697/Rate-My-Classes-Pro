@@ -18,10 +18,7 @@ export function useDB(user: User) {
 
   const isAuthenticated = user.providerType !== "anon-user";
 
-  async function createUserDoc(
-    username: string,
-    { selectedSemester, showPreviousSemesters }: Settings
-  ) {
+  async function createUserDoc(username: string, settings: Settings) {
     if (!isAuthenticated) return;
 
     await db.collection<UserDoc>(Collections.users).insertOne({
@@ -29,10 +26,7 @@ export function useDB(user: User) {
       username,
       starredClasses: {},
       reviewedClasses: {},
-      settings: {
-        selectedSemester: selectedSemester.toJSON(),
-        showPreviousSemesters,
-      },
+      settings,
     });
   }
 
@@ -56,18 +50,8 @@ export function useDB(user: User) {
     await updateUserDoc({ $set: { username } });
   }
 
-  async function updateSettings({
-    selectedSemester,
-    showPreviousSemesters,
-  }: Settings) {
-    await updateUserDoc({
-      $set: {
-        settings: {
-          selectedSemester: selectedSemester.toJSON(),
-          showPreviousSemesters,
-        },
-      },
-    });
+  async function updateSettings(settings: Settings) {
+    await updateUserDoc({ $set: { settings } });
   }
 
   async function starClass(starredClass: StarredClassInfo) {

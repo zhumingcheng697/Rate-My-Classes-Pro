@@ -35,7 +35,8 @@ export default function SearchScreen() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [searchFailed, setSearchFailed] = useState(false);
   const [matchedClasses, setMatchedClass] = useState<ClassInfo[]>([]);
-  const { selectedSemester } = useSelector((state) => state.settings);
+  const settings = useSelector((state) => state.settings);
+  const selectedSemester = new Semester(settings.selectedSemester);
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const innerHeight =
@@ -100,7 +101,7 @@ export default function SearchScreen() {
 
   useEffect(() => {
     search(query, selectedSemester, schoolCodes, departmentNames);
-  }, [query, selectedSemester, schoolCodes, departmentNames]);
+  }, [query, settings.selectedSemester, schoolCodes, departmentNames]);
 
   return (
     <>

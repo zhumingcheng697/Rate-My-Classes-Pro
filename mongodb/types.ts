@@ -1,8 +1,8 @@
-import { type SemesterInfo } from "../libs/semester";
 import type {
   StarredClassRecord,
   ReviewedClassRecord,
   ReviewRecord,
+  Settings,
 } from "../libs/types";
 
 export enum Collections {
@@ -15,10 +15,7 @@ export type UserDoc = {
   username: string;
   starredClasses: StarredClassRecord;
   reviewedClasses: ReviewedClassRecord;
-  settings: {
-    selectedSemester: SemesterInfo;
-    showPreviousSemesters: boolean;
-  };
+  settings: Settings;
 };
 
 export type ClassDoc = {

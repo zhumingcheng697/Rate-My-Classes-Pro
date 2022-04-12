@@ -1,15 +1,13 @@
 import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Select, Icon, Box, Text, HStack, Switch, VStack } from "native-base";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { Box, Text, HStack, Switch, VStack } from "native-base";
 
 import Semester from "../../libs/semester";
 import ClearableInput from "../../components/ClearableInput";
+import SemesterSelector from "../../components/SemesterSelector";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";
-
-type SemesterOptionRecord = Record<string, Semester>;
 
 export default function SettingsScreen() {
   const auth = useAuth();
@@ -20,15 +18,10 @@ export default function SettingsScreen() {
   const { selectedSemester, showPreviousSemesters } = useSelector(
     (state) => state.settings
   );
-  const semesterOptions = useMemo(() => {
-    const record: SemesterOptionRecord = {};
-    for (let semester of Semester.getSemesterOptions(
-      showPreviousSemesters
-    ).reverse()) {
-      record[semester.toString()] = semester;
-    }
-    return record;
-  }, [showPreviousSemesters]);
+  const semesterOptions = useMemo(
+    () => Semester.getSemesterOptions(showPreviousSemesters).reverse(),
+    [showPreviousSemesters]
+  );
 
   return (
     <KeyboardAwareSafeAreaScrollView>
@@ -66,25 +59,11 @@ export default function SettingsScreen() {
           <Text variant={"label"} fontWeight={"semibold"} color={"nyu"}>
             Semester
           </Text>
-          <Select
-            selectedValue={selectedSemester.toString()}
-            onValueChange={(semesterName) => {
-              selectSemester(dispatch)(semesterOptions[semesterName]);
-            }}
-            _selectedItem={{
-              endIcon: (
-                <Icon color={"nyu"} as={<Ionicons name={"checkmark"} />} />
-              ),
-            }}
-          >
-            {Object.keys(semesterOptions).map((semesterName) => (
-              <Select.Item
-                key={semesterName}
-                label={semesterName}
-                value={semesterName}
-              />
-            ))}
-          </Select>
+          <SemesterSelector
+            selectedSemester={selectedSemester}
+            semesterOptions={semesterOptions}
+            onSelectedSemesterChange={selectSemester(dispatch)}
+          />
         </Box>
         <HStack
           justifyContent={"space-between"}

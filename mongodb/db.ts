@@ -22,6 +22,7 @@ export function useDB(user: User) {
       _id: user.id,
       username,
       starredClasses: {},
+      reviewedClasses: {},
       settings: {
         selectedSemester: {
           semester: selectedSemester.semesterCode,

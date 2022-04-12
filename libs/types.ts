@@ -6,6 +6,8 @@ export type DepartmentNameRecord = Record<string, Record<string, string>>;
 
 export type StarredClassRecord = Record<string, StarredClassInfo>;
 
+export type ReviewedClassRecord = Record<string, ReviewedClassInfo>;
+
 export type SchoolInfo = { schoolCode: string };
 
 export type DepartmentInfo = SchoolInfo & { departmentCode: string };
@@ -15,6 +17,8 @@ export type ClassCode = DepartmentInfo & { classNumber: string };
 export type ClassInfo = ClassCode & { name: string; description?: string };
 
 export type StarredClassInfo = ClassInfo & { starredDate: number };
+
+export type ReviewedClassInfo = ClassInfo & { reviewedDate: number };
 
 export enum ErrorType {
   network = "NETWORK_ERROR",

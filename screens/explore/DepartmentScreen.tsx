@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Text, Box } from "native-base";
 import {
   useIsFocused,
@@ -40,12 +40,16 @@ export default function DepartmentScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const settings = useSelector((state) => state.settings);
-  const selectedSemester = new Semester(settings.selectedSemester);
   const isFocused = useIsFocused();
 
   const [classes, setClasses] = useState<ClassInfo[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   const [error, setError] = useState<ErrorType | null>(null);
+
+  const selectedSemester = useMemo(
+    () => new Semester(settings.selectedSemester),
+    [settings.selectedSemester]
+  );
 
   const noDataErrorMessage = () => {
     const diff = Semester.between(
@@ -77,7 +81,7 @@ export default function DepartmentScreen() {
         setShowAlert(true);
         setError(ErrorType.network);
       });
-  }, [route.params, settings.selectedSemester]);
+  }, [route.params, selectedSemester]);
 
   return (
     <>

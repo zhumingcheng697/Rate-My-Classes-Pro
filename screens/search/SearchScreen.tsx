@@ -36,11 +36,15 @@ export default function SearchScreen() {
   const [searchFailed, setSearchFailed] = useState(false);
   const [matchedClasses, setMatchedClass] = useState<ClassInfo[]>([]);
   const settings = useSelector((state) => state.settings);
-  const selectedSemester = new Semester(settings.selectedSemester);
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const innerHeight =
     useWindowDimensions().height - useHeaderHeight() - useBottomTabBarHeight();
+
+  const selectedSemester = useMemo(
+    () => new Semester(settings.selectedSemester),
+    [settings.selectedSemester]
+  );
 
   const schoolCodes = useMemo(
     () => Object.keys(schoolNames ?? {}),
@@ -101,7 +105,7 @@ export default function SearchScreen() {
 
   useEffect(() => {
     search(query, selectedSemester, schoolCodes, departmentNames);
-  }, [query, settings.selectedSemester, schoolCodes, departmentNames]);
+  }, [query, selectedSemester, schoolCodes, departmentNames]);
 
   return (
     <>

@@ -21,10 +21,15 @@ export default function UniversityScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const settings = useSelector((state) => state.settings);
-  const selectedSemester = new Semester(settings.selectedSemester);
+
   const isSchoolNameLoaded = !!schoolNames && !isObjectEmpty(schoolNames);
   const isDepartmentNameLoaded =
     !!departmentNames && !isObjectEmpty(departmentNames);
+
+  const selectedSemester = useMemo(
+    () => new Semester(settings.selectedSemester),
+    [settings.selectedSemester]
+  );
 
   const [undergradCodes, gradCodes] = useMemo(() => {
     if (!isSchoolNameLoaded || !isDepartmentNameLoaded) return [[], []];

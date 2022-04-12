@@ -16,7 +16,7 @@ const dbName = "RateMyClassesPro";
 export function useDB(user: User) {
   const db = user.mongoClient(servieName).db(dbName);
 
-  const isAuthenticated = user.providerType !== "anon-user";
+  const isAuthenticated = user.id && user.providerType !== "anon-user";
 
   async function createUserDoc(username: string, settings: Settings) {
     if (!isAuthenticated) return;
@@ -95,25 +95,32 @@ export function useDB(user: User) {
   }
 
   async function voteReview(classCode: ClassCode, review: Review, vote?: Vote) {
-    const update: Realm.Services.MongoDB.Update = {};
+    let update: Realm.Services.MongoDB.Update;
 
     if (vote === Vote.upvote) {
-      update["$set"] = {
-        [`reviews.${[review.userId]}.upvotes.${user.id}`]: true,
+      update = {
+        $set: {
+          [`reviews.${[review.userId]}.upvotes.${user.id}`]: true,
+        },
+        $unset: {
+          [`reviews.${[review.userId]}.downvotes.${user.id}`]: null,
+        },
+      };
+    } else if (vote === Vote.downvote) {
+      update = {
+        $set: {
+          [`reviews.${[review.userId]}.downvotes.${user.id}`]: true,
+        },
+        $unset: {
+          [`reviews.${[review.userId]}.upvotes.${user.id}`]: null,
+        },
       };
     } else {
-      update["$unset"] = {
-        [`reviews.${[review.userId]}.upvotes.${user.id}`]: null,
-      };
-    }
-
-    if (vote === Vote.downvote) {
-      update["$set"] = {
-        [`reviews.${[review.userId]}.downvotes.${user.id}`]: true,
-      };
-    } else {
-      update["$unset"] = {
-        [`reviews.${[review.userId]}.downvotes.${user.id}`]: null,
+      update = {
+        $unset: {
+          [`reviews.${[review.userId]}.upvotes.${user.id}`]: null,
+          [`reviews.${[review.userId]}.downvotes.${user.id}`]: null,
+        },
       };
     }
 

@@ -45,7 +45,8 @@ export type Review = {
   upvotes: VoteRecord;
   downvotes: VoteRecord;
   reviewedDate: number;
-  instructor?: string;
+  semester: SemesterInfo;
+  instructor: string;
   comment?: string;
 };
 

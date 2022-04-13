@@ -106,46 +106,58 @@ export default function ReviewScreen() {
         <Text variant={"h1"}>{classInfo.name}</Text>
         <Text variant={"h2"}>{getFullClassCode(classInfo)}</Text>
         <VStack marginX={"10px"} marginY={"5px"} space={"8px"}>
-          <LabeledInput label={"Enjoyment"} showRequiredIcon>
+          <LabeledInput
+            label={"Instructor"}
+            isDisabled={!!previousReview}
+            showRequiredIcon={!previousReview}
+          >
+            <Input
+              value={instructor}
+              onChangeText={setInstructor}
+              autoCapitalize={"words"}
+              isReadOnly={!!previousReview}
+              showRequiredIcon={!previousReview}
+              opacity={previousReview ? 0.5 : undefined}
+            />
+          </LabeledInput>
+          <LabeledInput
+            label={"Semester"}
+            isDisabled={!!previousReview}
+            showRequiredIcon={!previousReview}
+          >
+            <SemesterSelector
+              selectedSemester={semester}
+              semesterOptions={semesterOptions}
+              onSelectedSemesterChange={setSemester}
+              isDisabled={!!previousReview}
+            />
+          </LabeledInput>
+          <LabeledInput label={"Enjoyment"} showRequiredIcon={!previousReview}>
             <RatingSelector
               selectedRating={enjoyment}
               ratingType={RatingType.enjoyment}
               onSelectedRatingChange={setEnjoyment}
             />
           </LabeledInput>
-          <LabeledInput label={"Difficulty"} showRequiredIcon>
+          <LabeledInput label={"Difficulty"} showRequiredIcon={!previousReview}>
             <RatingSelector
               selectedRating={difficulty}
               ratingType={RatingType.difficulty}
               onSelectedRatingChange={setDifficulty}
             />
           </LabeledInput>
-          <LabeledInput label={"Workload"} showRequiredIcon>
+          <LabeledInput label={"Workload"} showRequiredIcon={!previousReview}>
             <RatingSelector
               selectedRating={workload}
               ratingType={RatingType.workload}
               onSelectedRatingChange={setWorkload}
             />
           </LabeledInput>
-          <LabeledInput label={"Value"} showRequiredIcon>
+          <LabeledInput label={"Value"} showRequiredIcon={!previousReview}>
             <RatingSelector
               selectedRating={value}
               ratingType={RatingType.value}
               onSelectedRatingChange={setValue}
-            />
-          </LabeledInput>
-          <LabeledInput label={"Semester"} showRequiredIcon>
-            <SemesterSelector
-              selectedSemester={semester}
-              semesterOptions={semesterOptions}
-              onSelectedSemesterChange={setSemester}
-            />
-          </LabeledInput>
-          <LabeledInput label={"Instructor"} showRequiredIcon>
-            <Input
-              value={instructor}
-              onChangeText={setInstructor}
-              autoCapitalize={"words"}
             />
           </LabeledInput>
           <LabeledInput label={"Comment"}>

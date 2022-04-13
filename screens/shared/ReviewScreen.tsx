@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
-import { Box, HStack, Input, Select, Text, VStack } from "native-base";
+import { Box, Input, Select, Text, VStack } from "native-base";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
+import LabeledInput from "../../components/LabeledInput";
 import SemesterSelector from "../../components/SemesterSelector";
 import Semester from "../../libs/semester";
 
@@ -16,61 +17,30 @@ export default function ReviewScreen() {
         <Text variant={"h1"}>{"Mobile App Development"}</Text>
         <Text variant={"h2"}>{"DM-UY 4193"}</Text>
         <VStack marginX={"10px"} marginY={"5px"} space={"8px"}>
-          <Box>
-            <Text variant={"label"} fontWeight={"semibold"} color={"nyu"}>
-              Enjoyment
-            </Text>
+          <LabeledInput label={"Enjoyment"} useBoldLabel showRequiredIcon>
             <Select />
-          </Box>
-          <Box>
-            <Text variant={"label"} fontWeight={"semibold"} color={"nyu"}>
-              Difficulty
-            </Text>
+          </LabeledInput>
+          <LabeledInput label={"Difficulty"} useBoldLabel showRequiredIcon>
             <Select />
-          </Box>
-          <Box>
-            <Text variant={"label"} fontWeight={"semibold"} color={"nyu"}>
-              Workload
-            </Text>
+          </LabeledInput>
+          <LabeledInput label={"Workload"} useBoldLabel showRequiredIcon>
             <Select />
-          </Box>
-          <Box>
-            <Text variant={"label"} fontWeight={"semibold"} color={"nyu"}>
-              Value
-            </Text>
+          </LabeledInput>
+          <LabeledInput label={"Value"} useBoldLabel showRequiredIcon>
             <Select />
-          </Box>
-          <Box>
-            <Text variant={"label"} fontWeight={"semibold"} color={"nyu"}>
-              Semester
-            </Text>
+          </LabeledInput>
+          <LabeledInput label={"Semester"} useBoldLabel showRequiredIcon>
             <SemesterSelector
               semesterOptions={semesterOptions}
               onSelectedSemesterChange={() => {}}
             />
-          </Box>
-          <Box>
-            <Text variant={"label"} fontWeight={"semibold"} color={"nyu"}>
-              Instructor
-            </Text>
+          </LabeledInput>
+          <LabeledInput label={"Instructor"} useBoldLabel showRequiredIcon>
             <Input />
-          </Box>
-          <Box>
-            <HStack>
-              <Text variant={"label"} fontWeight={"semibold"} color={"nyu"}>
-                Comment
-              </Text>
-              <Text
-                variant={"label"}
-                marginLeft={"1px"}
-                fontWeight={"bold"}
-                color={"red.500"}
-              >
-                *
-              </Text>
-            </HStack>
+          </LabeledInput>
+          <LabeledInput label={"Comment"} useBoldLabel>
             <Input placeholder={"Optional"} multiline height={"130px"} />
-          </Box>
+          </LabeledInput>
         </VStack>
       </Box>
     </KeyboardAwareSafeAreaScrollView>

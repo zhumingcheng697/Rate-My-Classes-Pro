@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Keyboard } from "react-native";
-import { Text, Button, Input, VStack, Box } from "native-base";
+import { Text, Button, Input, VStack, Box, HStack } from "native-base";
 import {
   useIsFocused,
   useNavigation,
@@ -155,13 +155,16 @@ export default function SignInSignUpScreen() {
                 ? "Don’t have an account yet?"
                 : "Already have an account?"}
             </Text>
-            <PlainTextButton
-              title={isSigningIn ? "Sign Up" : "Sign In"}
-              onPress={() => {
-                Keyboard.dismiss();
-                navigation.setParams({ isSigningIn: !isSigningIn });
-              }}
-            />
+            <HStack justifyContent={"center"}>
+              <PlainTextButton
+                paddingX={"3px"}
+                title={isSigningIn ? "Sign Up" : "Sign In"}
+                onPress={() => {
+                  Keyboard.dismiss();
+                  navigation.setParams({ isSigningIn: !isSigningIn });
+                }}
+              />
+            </HStack>
           </Box>
         </VStack>
       </KeyboardAwareSafeAreaScrollView>

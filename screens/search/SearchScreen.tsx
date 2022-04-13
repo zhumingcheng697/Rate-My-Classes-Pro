@@ -110,7 +110,6 @@ export default function SearchScreen() {
   return (
     <>
       <AlertPopup
-        avoidKeyboard={true}
         isOpen={searchFailed}
         onClose={() => {
           setSearchFailed(false);
@@ -118,7 +117,7 @@ export default function SearchScreen() {
         }}
       />
       <KeyboardAwareSafeAreaScrollView
-        wrapChildrenInIndividualSafeAreaViews={true}
+        wrapChildrenInIndividualSafeAreaViews
         keyboardAwareScrollViewProps={{
           keyboardDismissMode: "on-drag",
           scrollEnabled: !!query,
@@ -129,7 +128,7 @@ export default function SearchScreen() {
       >
         <Box background={"background.primary"}>
           <ClearableInput
-            isSearchBar={true}
+            isSearchBar
             margin={`${searchBarMargin}px`}
             value={query}
             onChangeText={setQuery}

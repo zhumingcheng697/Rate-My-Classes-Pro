@@ -69,7 +69,7 @@ export default function ReviewScreen() {
                 *
               </Text>
             </HStack>
-            <Input placeholder={"Optional"} multiline={true} height={"130px"} />
+            <Input placeholder={"Optional"} multiline height={"130px"} />
           </Box>
         </VStack>
       </Box>

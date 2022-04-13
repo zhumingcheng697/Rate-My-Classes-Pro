@@ -43,6 +43,50 @@ export default function ReviewScreen() {
     []
   );
 
+  useEffect(() => {
+    if (!auth.isAuthenticated) {
+      navigation.goBack();
+      return;
+    }
+
+    if (
+      auth.user &&
+      enjoyment &&
+      difficulty &&
+      workload &&
+      value &&
+      semester &&
+      instructor
+    ) {
+      navigation.setParams({
+        newReview: {
+          userId: auth.user.id,
+          enjoyment,
+          difficulty,
+          workload,
+          value,
+          upvotes: {},
+          downvotes: {},
+          reviewedDate: Date.now(),
+          semester,
+          instructor,
+          comment,
+        },
+      });
+    } else if (route.params.newReview) {
+      navigation.setParams({ newReview: undefined });
+    }
+  }, [
+    enjoyment,
+    difficulty,
+    workload,
+    value,
+    semester,
+    instructor,
+    comment,
+    auth.isAuthenticated,
+  ]);
+
   return (
     <KeyboardAwareSafeAreaScrollView>
       <Box marginY={"10px"}>

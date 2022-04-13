@@ -1,7 +1,9 @@
 import React, { useMemo } from "react";
-import { Box, Input, Select, Text, VStack } from "native-base";
+import { Box, Input, Text, VStack } from "native-base";
+
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LabeledInput from "../../components/LabeledInput";
+import RatingSelector, { RatingType } from "../../components/RatingSelector";
 import SemesterSelector from "../../components/SemesterSelector";
 import Semester from "../../libs/semester";
 
@@ -18,16 +20,28 @@ export default function ReviewScreen() {
         <Text variant={"h2"}>{"DM-UY 4193"}</Text>
         <VStack marginX={"10px"} marginY={"5px"} space={"8px"}>
           <LabeledInput label={"Enjoyment"} showRequiredIcon>
-            <Select />
+            <RatingSelector
+              ratingType={RatingType.enjoyment}
+              onSelectedRatingChange={() => {}}
+            />
           </LabeledInput>
           <LabeledInput label={"Difficulty"} showRequiredIcon>
-            <Select />
+            <RatingSelector
+              ratingType={RatingType.difficulty}
+              onSelectedRatingChange={() => {}}
+            />
           </LabeledInput>
           <LabeledInput label={"Workload"} showRequiredIcon>
-            <Select />
+            <RatingSelector
+              ratingType={RatingType.workload}
+              onSelectedRatingChange={() => {}}
+            />
           </LabeledInput>
           <LabeledInput label={"Value"} showRequiredIcon>
-            <Select />
+            <RatingSelector
+              ratingType={RatingType.value}
+              onSelectedRatingChange={() => {}}
+            />
           </LabeledInput>
           <LabeledInput label={"Semester"} showRequiredIcon>
             <SemesterSelector

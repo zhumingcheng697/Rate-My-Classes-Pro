@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Text, HStack, Switch, VStack } from "native-base";
+import { Text, HStack, Switch, VStack } from "native-base";
 
 import Semester from "../../libs/semester";
+import LabeledInput from "../../components/LabeledInput";
 import ClearableInput from "../../components/ClearableInput";
 import SemesterSelector from "../../components/SemesterSelector";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
@@ -32,10 +33,7 @@ export default function SettingsScreen() {
     <KeyboardAwareSafeAreaScrollView>
       <VStack margin={"10px"} space={"8px"}>
         {auth.isAuthenticated && (
-          <Box>
-            <Text variant={"label"} fontWeight={"semibold"} color={"nyu"}>
-              Username
-            </Text>
+          <LabeledInput label={"Username"} useBoldLabel>
             <ClearableInput
               canClear={canClear && !!newUsername}
               placeholder={previousUsername ?? "McCoy Appleseed"}
@@ -58,18 +56,15 @@ export default function SettingsScreen() {
                 }
               }}
             />
-          </Box>
+          </LabeledInput>
         )}
-        <Box>
-          <Text variant={"label"} fontWeight={"semibold"} color={"nyu"}>
-            Semester
-          </Text>
+        <LabeledInput label={"Semester"} useBoldLabel>
           <SemesterSelector
             selectedSemester={selectedSemester}
             semesterOptions={semesterOptions}
             onSelectedSemesterChange={selectSemester(dispatch)}
           />
-        </Box>
+        </LabeledInput>
         <HStack
           justifyContent={"space-between"}
           alignContent={"center"}

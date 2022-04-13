@@ -30,8 +30,9 @@ export default ({
   navigation,
   route,
 }: DetailScreenOptionsProp): StackNavigationOptions => ({
-  title: getFullClassCode(route.params),
+  title: getFullClassCode(route.params.classInfo),
   headerRight: (props) => {
+    const { classInfo } = route.params;
     const starredClasses = useSelector((state) => state.starredClassRecord);
     const dispatch = useDispatch();
     const auth = useAuth();
@@ -40,7 +41,7 @@ export default ({
     const isStarred =
       auth.isAuthenticated &&
       starredClasses &&
-      !!starredClasses[getFullClassCode(route.params)];
+      !!starredClasses[getFullClassCode(classInfo)];
     const pressedHoverStyle = { _icon: { opacity: 0.5 } };
 
     return (
@@ -92,9 +93,9 @@ export default ({
           onPress={() => {
             if (auth.user && auth.isAuthenticated) {
               if (isStarred) {
-                unstarClass(dispatch, auth.user)(route.params);
+                unstarClass(dispatch, auth.user)(classInfo);
               } else {
-                starClass(dispatch, auth.user)(route.params);
+                starClass(dispatch, auth.user)(classInfo);
               }
             } else {
               setShowAlert(true);

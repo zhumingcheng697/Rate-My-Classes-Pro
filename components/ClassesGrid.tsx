@@ -32,7 +32,7 @@ export default function ClassesGrid({
               primaryText={classInfo.name}
               secondaryText={getFullClassCode(classInfo)}
               onPress={() => {
-                navigation.navigate("Detail", classInfo);
+                navigation.navigate("Detail", { classInfo });
               }}
             />
           );

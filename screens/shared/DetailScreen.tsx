@@ -23,7 +23,7 @@ type DetailScreenRouteProp = RouteProp<SharedNavigationParamList, "Detail">;
 export default function DetailScreen() {
   const navigation = useNavigation<DetailScreenNavigationProp>();
   const route = useRoute<DetailScreenRouteProp>();
-  const classInfo = route.params;
+  const { classInfo } = route.params;
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const auth = useAuth();
@@ -49,7 +49,7 @@ export default function DetailScreen() {
           margin={"10px"}
           onPress={() => {
             if (auth.isAuthenticated) {
-              navigation.navigate("Review", classInfo);
+              navigation.navigate("Review", { classInfo });
             } else {
               navigation.navigate("SignInSignUp");
             }

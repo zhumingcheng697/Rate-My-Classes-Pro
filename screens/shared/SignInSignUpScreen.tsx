@@ -82,7 +82,7 @@ export default function SignInSignUpScreen() {
       <KeyboardAwareSafeAreaScrollView>
         <VStack margin={"10px"} space={"8px"}>
           {!isSigningIn && (
-            <LabeledInput label={"Username"} useBoldLabel={false}>
+            <LabeledInput label={"Username"} usePlainLabel>
               <Input
                 value={username}
                 onChangeText={setUsername}
@@ -90,7 +90,7 @@ export default function SignInSignUpScreen() {
               />
             </LabeledInput>
           )}
-          <LabeledInput label={"Email"} useBoldLabel={false}>
+          <LabeledInput label={"Email"} usePlainLabel>
             <Input
               value={email}
               onChangeText={setEmail}
@@ -100,7 +100,7 @@ export default function SignInSignUpScreen() {
               keyboardType={"email-address"}
             />
           </LabeledInput>
-          <LabeledInput label={"Password"} useBoldLabel={false}>
+          <LabeledInput label={"Password"} usePlainLabel>
             <Input
               key={`${key}`}
               value={password}
@@ -110,7 +110,7 @@ export default function SignInSignUpScreen() {
             />
           </LabeledInput>
           {!isSigningIn && (
-            <LabeledInput label={"Confirm Password"} useBoldLabel={false}>
+            <LabeledInput label={"Confirm Password"} usePlainLabel>
               <Input
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}

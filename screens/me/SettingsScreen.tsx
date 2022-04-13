@@ -33,7 +33,7 @@ export default function SettingsScreen() {
     <KeyboardAwareSafeAreaScrollView>
       <VStack margin={"10px"} space={"8px"}>
         {auth.isAuthenticated && (
-          <LabeledInput label={"Username"} useBoldLabel>
+          <LabeledInput label={"Username"}>
             <ClearableInput
               canClear={canClear && !!newUsername}
               placeholder={previousUsername ?? "McCoy Appleseed"}
@@ -58,7 +58,7 @@ export default function SettingsScreen() {
             />
           </LabeledInput>
         )}
-        <LabeledInput label={"Semester"} useBoldLabel>
+        <LabeledInput label={"Semester"}>
           <SemesterSelector
             selectedSemester={selectedSemester}
             semesterOptions={semesterOptions}

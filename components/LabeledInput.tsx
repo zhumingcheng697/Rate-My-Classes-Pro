@@ -3,7 +3,7 @@ import { Box, type IBoxProps, HStack, Text } from "native-base";
 
 type LabeledInputBaseProps = {
   label: string;
-  useBoldLabel: boolean;
+  usePlainLabel?: boolean;
   showRequiredIcon?: boolean;
   input?: ReactNode;
   children?: ReactNode;
@@ -14,7 +14,7 @@ export type LabeledInputProps = LabeledInputBaseProps &
 
 export default function LabeledInput({
   label,
-  useBoldLabel,
+  usePlainLabel = false,
   showRequiredIcon = false,
   input,
   children,
@@ -25,8 +25,8 @@ export default function LabeledInput({
       <HStack>
         <Text
           variant={"label"}
-          fontWeight={useBoldLabel ? "semibold" : undefined}
-          color={useBoldLabel ? "nyu" : undefined}
+          fontWeight={usePlainLabel ? undefined : "semibold"}
+          color={usePlainLabel ? undefined : "nyu"}
         >
           {label ?? "Label"}
         </Text>

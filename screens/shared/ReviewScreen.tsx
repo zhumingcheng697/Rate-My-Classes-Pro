@@ -17,28 +17,28 @@ export default function ReviewScreen() {
         <Text variant={"h1"}>{"Mobile App Development"}</Text>
         <Text variant={"h2"}>{"DM-UY 4193"}</Text>
         <VStack marginX={"10px"} marginY={"5px"} space={"8px"}>
-          <LabeledInput label={"Enjoyment"} useBoldLabel showRequiredIcon>
+          <LabeledInput label={"Enjoyment"} showRequiredIcon>
             <Select />
           </LabeledInput>
-          <LabeledInput label={"Difficulty"} useBoldLabel showRequiredIcon>
+          <LabeledInput label={"Difficulty"} showRequiredIcon>
             <Select />
           </LabeledInput>
-          <LabeledInput label={"Workload"} useBoldLabel showRequiredIcon>
+          <LabeledInput label={"Workload"} showRequiredIcon>
             <Select />
           </LabeledInput>
-          <LabeledInput label={"Value"} useBoldLabel showRequiredIcon>
+          <LabeledInput label={"Value"} showRequiredIcon>
             <Select />
           </LabeledInput>
-          <LabeledInput label={"Semester"} useBoldLabel showRequiredIcon>
+          <LabeledInput label={"Semester"} showRequiredIcon>
             <SemesterSelector
               semesterOptions={semesterOptions}
               onSelectedSemesterChange={() => {}}
             />
           </LabeledInput>
-          <LabeledInput label={"Instructor"} useBoldLabel showRequiredIcon>
+          <LabeledInput label={"Instructor"} showRequiredIcon>
             <Input />
           </LabeledInput>
-          <LabeledInput label={"Comment"} useBoldLabel>
+          <LabeledInput label={"Comment"}>
             <Input placeholder={"Optional"} multiline height={"130px"} />
           </LabeledInput>
         </VStack>

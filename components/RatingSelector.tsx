@@ -1,5 +1,7 @@
 import React, { useMemo } from "react";
+import { useWindowDimensions } from "react-native";
 import { Select, type ISelectProps, Icon } from "native-base";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import {
@@ -35,6 +37,8 @@ export default function RatingSelector({
   onSelectedRatingChange,
   ...rest
 }: RatingSelectorProps) {
+  const inset = useSafeAreaInsets();
+  const dimension = useWindowDimensions();
   const { descriptor, ratingOptionsRecord } = useMemo(() => {
     const descriptor = {
       [RatingType.enjoyment]: getEnjoymentDescription,
@@ -56,6 +60,11 @@ export default function RatingSelector({
       selectedValue={selectedRating ? descriptor(selectedRating) : undefined}
       onValueChange={(rating) => {
         onSelectedRatingChange(ratingOptionsRecord[rating]);
+      }}
+      _actionSheetContent={{
+        marginLeft: `${inset.left}px`,
+        marginRight: `${inset.right}px`,
+        width: `${dimension.width - inset.left - inset.right}px`,
       }}
       _selectedItem={{
         endIcon: <Icon color={"nyu"} as={<Ionicons name={"checkmark"} />} />,

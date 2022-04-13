@@ -24,7 +24,9 @@ export type ReviewScreenOptionsProp = {
 
 export default ({
   navigation,
+  route,
 }: ReviewScreenOptionsProp): StackNavigationOptions => ({
+  title: route.params.previousReview ? "Edit Review" : "New Review",
   presentation: "modal",
   gestureEnabled: false,
   headerLeft: (props) => {
@@ -41,8 +43,9 @@ export default ({
   headerRight: (props) => {
     return (
       <PlainTextButton
+        isDisabled={route.params.newReview ? false : true}
         marginRight={"10px"}
-        title={"Save"}
+        title={route.params.previousReview ? "Update" : "Submit"}
         _text={{ fontSize: "md", fontWeight: "semibold" }}
         onPress={navigation.goBack}
         {...props}

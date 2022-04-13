@@ -63,7 +63,7 @@ export type RootNavigationParamList = {
 
 export type SharedNavigationParamList = {
   Detail: { classInfo: ClassInfo };
-  Review: { classInfo: ClassInfo };
+  Review: { classInfo: ClassInfo; previousReview?: Review; newReview?: Review };
   SignInSignUp: { isSigningIn: boolean } | undefined;
 };
 

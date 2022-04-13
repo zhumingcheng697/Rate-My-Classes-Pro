@@ -1,13 +1,20 @@
 import React, { useMemo } from "react";
 import { Box, Input, Text, VStack } from "native-base";
+import { useRoute, type RouteProp } from "@react-navigation/native";
 
+import { type SharedNavigationParamList } from "../../libs/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LabeledInput from "../../components/LabeledInput";
 import RatingSelector, { RatingType } from "../../components/RatingSelector";
 import SemesterSelector from "../../components/SemesterSelector";
 import Semester from "../../libs/semester";
+import { getFullClassCode } from "../../libs/utils";
+
+type ReviewScreenRouteProp = RouteProp<SharedNavigationParamList, "Review">;
 
 export default function ReviewScreen() {
+  const route = useRoute<ReviewScreenRouteProp>();
+  const { classInfo } = route.params;
   const semesterOptions = useMemo(
     () => Semester.getSemesterOptions(true, false).reverse(),
     []
@@ -16,8 +23,8 @@ export default function ReviewScreen() {
   return (
     <KeyboardAwareSafeAreaScrollView>
       <Box marginY={"10px"}>
-        <Text variant={"h1"}>{"Mobile App Development"}</Text>
-        <Text variant={"h2"}>{"DM-UY 4193"}</Text>
+        <Text variant={"h1"}>{classInfo.name}</Text>
+        <Text variant={"h2"}>{getFullClassCode(classInfo)}</Text>
         <VStack marginX={"10px"} marginY={"5px"} space={"8px"}>
           <LabeledInput label={"Enjoyment"} showRequiredIcon>
             <RatingSelector

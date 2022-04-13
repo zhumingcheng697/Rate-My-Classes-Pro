@@ -2,6 +2,13 @@ export type Rating = 1 | 2 | 3 | 4 | 5;
 
 export const ratings: Rating[] = [5, 4, 3, 2, 1];
 
+export enum RatingType {
+  enjoyment = "Enjoyment",
+  difficulty = "Difficulty",
+  workload = "Workload",
+  value = "Value",
+}
+
 export function getEnjoymentDescription(rating: Rating) {
   return {
     [5]: "Really Enjoyed",

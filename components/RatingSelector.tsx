@@ -10,15 +10,9 @@ import {
   getValueDescription,
   getWorkloadDescription,
   Rating,
+  RatingType,
   ratings,
 } from "../libs/rating";
-
-export enum RatingType {
-  enjoyment = "ENJOYMENT",
-  difficulty = "DIFFICULTY",
-  workload = "WORKLOAD",
-  value = "VALUE",
-}
 
 type RatingOptionRecord = Record<string, Rating>;
 

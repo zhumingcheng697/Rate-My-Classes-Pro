@@ -4,12 +4,8 @@ import { Select, type ISelectProps, Icon } from "native-base";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import {
-  getRatingDescription,
-  type Rating,
-  type RatingType,
-  ratings,
-} from "../libs/rating";
+import { type Rating, type RatingType } from "../libs/types";
+import { ratings, ratingDescriptionMap } from "../libs/utils";
 
 type RatingOptionRecord = Record<string, Rating>;
 
@@ -33,7 +29,7 @@ export default function RatingSelector({
   const ratingOptionsRecord = useMemo(() => {
     const ratingOptionsRecord: RatingOptionRecord = {};
     for (let rating of ratings) {
-      ratingOptionsRecord[getRatingDescription(ratingType, rating)] = rating;
+      ratingOptionsRecord[ratingDescriptionMap[ratingType][rating]] = rating;
     }
     return ratingOptionsRecord;
   }, [ratingType]);
@@ -43,7 +39,7 @@ export default function RatingSelector({
       {...rest}
       selectedValue={
         selectedRating
-          ? getRatingDescription(ratingType, selectedRating)
+          ? ratingDescriptionMap[ratingType][selectedRating]
           : undefined
       }
       onValueChange={(rating) => {

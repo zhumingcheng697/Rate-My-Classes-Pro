@@ -8,8 +8,8 @@ import UniversityScreen from "../screens/explore/UniversityScreen";
 import SchoolScreen from "../screens/explore/SchoolScreen";
 import DepartmentScreen from "../screens/explore/DepartmentScreen";
 import DetailScreen from "../screens/shared/DetailScreen";
+import ReviewScreen from "../screens/shared/ReviewScreen";
 import SignInSignUpScreen from "../screens/shared/SignInSignUpScreen";
-import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import detailScreenOptions from "./options/detailScreenOptions";
 import reviewScreenOptions from "./options/reviewScreenOptions";
 import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
@@ -47,7 +47,7 @@ export default function ExploreNavigation() {
       />
       <Stack.Screen
         name={"Review"}
-        component={PlaceHolderScreen}
+        component={ReviewScreen}
         options={reviewScreenOptions}
       />
       <Stack.Screen

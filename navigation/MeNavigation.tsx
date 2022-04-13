@@ -8,8 +8,8 @@ import AccountScreen from "../screens/me/AccountScreen";
 import StarredReviewedScreen from "../screens/me/StarredReviewedScreen";
 import SettingsScreen from "../screens/me/SettingsScreen";
 import DetailScreen from "../screens/shared/DetailScreen";
+import ReviewScreen from "../screens/shared/ReviewScreen";
 import SignInSignUpScreen from "../screens/shared/SignInSignUpScreen";
-import PlaceHolderScreen from "../screens/PlaceHolderScreen";
 import detailScreenOptions from "./options/detailScreenOptions";
 import reviewScreenOptions from "./options/reviewScreenOptions";
 import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
@@ -35,7 +35,7 @@ export default function MeNavigation() {
       />
       <Stack.Screen
         name={"Review"}
-        component={PlaceHolderScreen}
+        component={ReviewScreen}
         options={reviewScreenOptions}
       />
       <Stack.Screen

@@ -12,6 +12,7 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 import { isObjectEmpty, formSentence } from "../../libs/utils";
 import { type SharedNavigationParamList } from "../../libs/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
+import LabeledInput from "../../components/LabeledInput";
 import PlainTextButton from "../../components/PlainTextButton";
 import AlertPopup from "../../components/AlertPopup";
 import { useAuth } from "../../mongodb/auth";
@@ -81,17 +82,15 @@ export default function SignInSignUpScreen() {
       <KeyboardAwareSafeAreaScrollView>
         <VStack margin={"10px"} space={"8px"}>
           {!isSigningIn && (
-            <Box>
-              <Text variant={"label"}>Username</Text>
+            <LabeledInput label={"Username"} useBoldLabel={false}>
               <Input
                 value={username}
                 onChangeText={setUsername}
                 autoCompleteType={"username"}
               />
-            </Box>
+            </LabeledInput>
           )}
-          <Box>
-            <Text variant={"label"}>Email</Text>
+          <LabeledInput label={"Email"} useBoldLabel={false}>
             <Input
               value={email}
               onChangeText={setEmail}
@@ -100,9 +99,8 @@ export default function SignInSignUpScreen() {
               autoCapitalize={"none"}
               keyboardType={"email-address"}
             />
-          </Box>
-          <Box>
-            <Text variant={"label"}>Password</Text>
+          </LabeledInput>
+          <LabeledInput label={"Password"} useBoldLabel={false}>
             <Input
               key={`${key}`}
               value={password}
@@ -110,17 +108,16 @@ export default function SignInSignUpScreen() {
               textContentType={"oneTimeCode"}
               variant={"password"}
             />
-          </Box>
+          </LabeledInput>
           {!isSigningIn && (
-            <Box>
-              <Text variant={"label"}>Confirm Password</Text>
+            <LabeledInput label={"Confirm Password"} useBoldLabel={false}>
               <Input
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 textContentType={"oneTimeCode"}
                 variant={"password"}
               />
-            </Box>
+            </LabeledInput>
           )}
           <Button
             marginY={"15px"}

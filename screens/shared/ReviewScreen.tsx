@@ -52,7 +52,7 @@ export default function ReviewScreen() {
     () =>
       previousReview
         ? [new Semester(previousReview.semester)]
-        : Semester.getSemesterOptions(true, false).reverse(),
+        : Semester.getSemesterOptions(true, false, 12).reverse(),
     []
   );
 

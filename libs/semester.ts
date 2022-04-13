@@ -85,11 +85,12 @@ export default class Semester {
 
   static getSemesterOptions(
     showPrev: boolean = false,
-    showNext: boolean = true
+    showNext: boolean = true,
+    prevCount: number = 4
   ) {
     const semesterOptions = [];
     const current = Semester.predictCurrentSemester();
-    let start = showPrev ? current.prev(4) : current;
+    let start = showPrev ? current.prev(Math.max(0, prevCount)) : current;
     const end = (
       showNext ? Semester.predictFurthestSemester() : current
     ).next();

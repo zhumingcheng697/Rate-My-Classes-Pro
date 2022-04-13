@@ -28,18 +28,31 @@ export default function ReviewScreen() {
   const auth = useAuth();
   const navigation = useNavigation<ReviewScreenNavigationProp>();
   const route = useRoute<ReviewScreenRouteProp>();
-  const { classInfo } = route.params;
+  const { classInfo, previousReview } = route.params;
 
-  const [enjoyment, setEnjoyment] = useState<Rating | undefined>(undefined);
-  const [difficulty, setDifficulty] = useState<Rating | undefined>(undefined);
-  const [workload, setWorkload] = useState<Rating | undefined>(undefined);
-  const [value, setValue] = useState<Rating | undefined>(undefined);
-  const [semester, setSemester] = useState<Semester | undefined>(undefined);
-  const [instructor, setInstructor] = useState("");
-  const [comment, setComment] = useState("");
+  const [enjoyment, setEnjoyment] = useState<Rating | undefined>(
+    previousReview?.enjoyment
+  );
+  const [difficulty, setDifficulty] = useState<Rating | undefined>(
+    previousReview?.difficulty
+  );
+  const [workload, setWorkload] = useState<Rating | undefined>(
+    previousReview?.workload
+  );
+  const [value, setValue] = useState<Rating | undefined>(previousReview?.value);
+  const [semester, setSemester] = useState<Semester | undefined>(
+    previousReview ? new Semester(previousReview.semester) : undefined
+  );
+  const [instructor, setInstructor] = useState(
+    previousReview?.instructor ?? ""
+  );
+  const [comment, setComment] = useState(previousReview?.comment ?? "");
 
   const semesterOptions = useMemo(
-    () => Semester.getSemesterOptions(true, false).reverse(),
+    () =>
+      previousReview
+        ? [new Semester(previousReview.semester)]
+        : Semester.getSemesterOptions(true, false).reverse(),
     []
   );
 
@@ -65,10 +78,10 @@ export default function ReviewScreen() {
           difficulty,
           workload,
           value,
-          upvotes: {},
-          downvotes: {},
-          reviewedDate: Date.now(),
-          semester,
+          upvotes: {}, // `upsertReview` takes care of it with $set vs $setOnInsert
+          downvotes: {}, // `upsertReview` takes care of it with $set vs $setOnInsert
+          reviewedDate: Date.now(), // `upsertReview` takes care of it with $set vs $setOnInsert
+          semester: semester.toJSON(),
           instructor,
           comment,
         },

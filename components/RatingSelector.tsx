@@ -5,12 +5,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import {
-  getDifficultyDescription,
-  getEnjoymentDescription,
-  getValueDescription,
-  getWorkloadDescription,
-  Rating,
-  RatingType,
+  getRatingDescription,
+  type Rating,
+  type RatingType,
   ratings,
 } from "../libs/rating";
 
@@ -33,25 +30,22 @@ export default function RatingSelector({
 }: RatingSelectorProps) {
   const inset = useSafeAreaInsets();
   const dimension = useWindowDimensions();
-  const { descriptor, ratingOptionsRecord } = useMemo(() => {
-    const descriptor = {
-      [RatingType.enjoyment]: getEnjoymentDescription,
-      [RatingType.difficulty]: getDifficultyDescription,
-      [RatingType.workload]: getWorkloadDescription,
-      [RatingType.value]: getValueDescription,
-    }[ratingType];
-
+  const ratingOptionsRecord = useMemo(() => {
     const ratingOptionsRecord: RatingOptionRecord = {};
-    for (let semester of ratings) {
-      ratingOptionsRecord[descriptor(semester)] = semester;
+    for (let rating of ratings) {
+      ratingOptionsRecord[getRatingDescription(ratingType, rating)] = rating;
     }
-    return { descriptor, ratingOptionsRecord };
+    return ratingOptionsRecord;
   }, [ratingType]);
 
   return (
     <Select
       {...rest}
-      selectedValue={selectedRating ? descriptor(selectedRating) : undefined}
+      selectedValue={
+        selectedRating
+          ? getRatingDescription(ratingType, selectedRating)
+          : undefined
+      }
       onValueChange={(rating) => {
         onSelectedRatingChange(ratingOptionsRecord[rating]);
       }}

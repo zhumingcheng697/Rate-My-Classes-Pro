@@ -48,3 +48,12 @@ export function getValueDescription(rating: Rating) {
     [1]: "Really Useless",
   }[rating];
 }
+
+export function getRatingDescription(ratingType: RatingType, rating: Rating) {
+  return {
+    [RatingType.enjoyment]: getEnjoymentDescription,
+    [RatingType.difficulty]: getDifficultyDescription,
+    [RatingType.workload]: getWorkloadDescription,
+    [RatingType.value]: getValueDescription,
+  }[ratingType](rating);
+}

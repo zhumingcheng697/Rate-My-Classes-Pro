@@ -1,3 +1,5 @@
+import Semester from "./semester";
+
 import type {
   SchoolNameRecord,
   DepartmentNameRecord,
@@ -5,6 +7,7 @@ import type {
   DepartmentInfo,
   ClassCode,
   ClassInfo,
+  Review,
 } from "./types";
 
 export function getFullDepartmentCode({
@@ -98,6 +101,21 @@ export function compareClasses(
     return 0;
   }
 }
+
+export const placeholderReview: Review = {
+  userId: "???",
+  enjoyment: 5,
+  difficulty: 2,
+  workload: 2,
+  value: 4,
+  instructor: "John Sterling",
+  semester: Semester.predictCurrentSemester().toJSON(),
+  upvotes: {},
+  downvotes: {},
+  reviewedDate: Date.now(),
+  comment:
+    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque ullam quas, eaque hic vitae error sit, dolorem id ab natus velit tempora non quasi dolores sed, corporis facere magnam ratione!",
+};
 
 export const placeholderClassNumbers = [
   "1001",

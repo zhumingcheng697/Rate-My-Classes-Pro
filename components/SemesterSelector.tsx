@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Select, type ISelectProps, Icon } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
+
 import Semester from "../libs/semester";
 
 type SemesterOptionRecord = Record<string, Semester>;

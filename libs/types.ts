@@ -1,7 +1,5 @@
 import { type SemesterInfo } from "./semester";
 
-import { type Rating } from "./rating";
-
 export type SchoolNameRecord = Record<string, string>;
 
 export type DepartmentNameRecord = Record<string, Record<string, string>>;
@@ -27,6 +25,15 @@ export type ReviewedClassInfo = ClassInfo & { reviewedDate: number };
 export enum ErrorType {
   network = "NETWORK_ERROR",
   noData = "NO_DATA_ERROR",
+}
+
+export type Rating = 1 | 2 | 3 | 4 | 5;
+
+export enum RatingType {
+  enjoyment = "Enjoyment",
+  difficulty = "Difficulty",
+  workload = "Workload",
+  value = "Value",
 }
 
 export enum Vote {

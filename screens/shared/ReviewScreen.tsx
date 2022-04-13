@@ -7,10 +7,13 @@ import {
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
-import { type SharedNavigationParamList } from "../../libs/types";
+import {
+  type SharedNavigationParamList,
+  type Rating,
+  RatingType,
+} from "../../libs/types";
 import { getFullClassCode } from "../../libs/utils";
 import Semester from "../../libs/semester";
-import { type Rating, RatingType } from "../../libs/rating";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LabeledInput from "../../components/LabeledInput";
 import RatingSelector from "../../components/RatingSelector";

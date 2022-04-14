@@ -70,6 +70,12 @@ export function useDB(user: User) {
     });
   }
 
+  async function loadClassDoc(classCode: ClassCode) {
+    return await db
+      .collection<ClassDoc>(Collections.classes)
+      .findOne({ _id: getFullClassCode(classCode) });
+  }
+
   async function updateClassDoc(
     classCode: ClassCode,
     update: Realm.Services.MongoDB.Update,
@@ -154,6 +160,7 @@ export function useDB(user: User) {
     updateSettings,
     starClass,
     unstarClass,
+    loadClassDoc,
     upsertReview,
     voteReview,
     deleteReview,

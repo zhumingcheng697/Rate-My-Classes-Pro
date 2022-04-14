@@ -38,7 +38,6 @@ export default function ClearableInput({
             <Icon
               marginLeft={"5px"}
               size={"22px"}
-              color={"gray.400"}
               as={<Ionicons name={"search"} />}
             />
           )}
@@ -52,11 +51,7 @@ export default function ClearableInput({
               padding={"3px"}
               marginRight={"2px"}
               icon={
-                <Icon
-                  size={"22px"}
-                  color={"gray.400"}
-                  as={<Ionicons name={"close-circle"} />}
-                />
+                <Icon size={"22px"} as={<Ionicons name={"close-circle"} />} />
               }
               onPress={() => {
                 onChangeText("");

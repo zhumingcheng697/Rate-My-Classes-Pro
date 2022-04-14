@@ -32,6 +32,103 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
   );
 }
 
+type VoteBlockProps = {
+  upvotes: VoteRecord;
+  downvotes: VoteRecord;
+  setVotes: (upVotes?: VoteRecord, downvotes?: VoteRecord) => void;
+};
+
+function VoteBlock({ upvotes, downvotes, setVotes }: VoteBlockProps) {
+  const auth = useAuth();
+  const isAuthenticated = auth.isAuthenticated;
+  const voteCount = useMemo(
+    () => Object.keys(upvotes).length - Object.keys(downvotes).length,
+    [upvotes, downvotes]
+  );
+  const vote = useMemo(() => {
+    if (!auth.user || !isAuthenticated) {
+      return undefined;
+    }
+    if (upvotes[auth.user.id]) {
+      return Vote.upvote;
+    } else if (downvotes[auth.user.id]) {
+      return Vote.downvote;
+    }
+  }, [upvotes, downvotes, isAuthenticated]);
+
+  return (
+    <>
+      <HStack>
+        <IconButton
+          variant={"unstyled"}
+          padding={"3px"}
+          icon={
+            <Icon
+              size={"22px"}
+              color={vote === Vote.upvote ? "nyu" : undefined}
+              as={<Ionicons name={"caret-up"} />}
+            />
+          }
+          onPress={() => {
+            if (auth.user && isAuthenticated) {
+              if (vote === Vote.upvote) {
+                const newUpvotes = { ...upvotes };
+                delete newUpvotes[auth.user.id];
+                setVotes(newUpvotes);
+              } else {
+                const newUpvotes = { ...upvotes };
+                newUpvotes[auth.user.id] = true;
+
+                if (vote === Vote.downvote) {
+                  const newDownvotes = { ...upvotes };
+                  delete newDownvotes[auth.user.id];
+                  setVotes(newUpvotes, newDownvotes);
+                  return;
+                }
+
+                setVotes(newUpvotes);
+              }
+            }
+          }}
+        />
+        <Text fontWeight={"semibold"}>{voteCount}</Text>
+        <IconButton
+          variant={"unstyled"}
+          padding={"3px"}
+          icon={
+            <Icon
+              size={"22px"}
+              color={vote === Vote.downvote ? "nyu" : undefined}
+              as={<Ionicons name={"caret-down"} />}
+            />
+          }
+          onPress={() => {
+            if (auth.user && isAuthenticated) {
+              if (vote === Vote.downvote) {
+                const newDownvotes = { ...upvotes };
+                delete newDownvotes[auth.user.id];
+                setVotes(undefined, newDownvotes);
+              } else {
+                const newDownvotes = { ...upvotes };
+                newDownvotes[auth.user.id] = true;
+
+                if (vote === Vote.upvote) {
+                  const newUpvotes = { ...upvotes };
+                  delete newUpvotes[auth.user.id];
+                  setVotes(newUpvotes, newDownvotes);
+                  return;
+                }
+
+                setVotes(undefined, newDownvotes);
+              }
+            }
+          }}
+        />
+      </HStack>
+    </>
+  );
+}
+
 type ReviewCardBaseProps = {
   review: Review;
   setReview: (review: Review) => void;
@@ -40,7 +137,11 @@ type ReviewCardBaseProps = {
 export type ReviewCardProps = ReviewCardBaseProps &
   Omit<IStackProps, keyof ReviewCardBaseProps>;
 
-export default function ReviewCard({ review, ...rest }: ReviewCardProps) {
+export default function ReviewCard({
+  review,
+  setReview,
+  ...rest
+}: ReviewCardProps) {
   const {
     instructor,
     semester,
@@ -53,6 +154,17 @@ export default function ReviewCard({ review, ...rest }: ReviewCardProps) {
     reviewedDate,
     comment,
   } = review;
+
+  const setVotes = (newUpvotes?: VoteRecord, newDownvotes?: VoteRecord) => {
+    const newReview = { ...review };
+    if (newUpvotes) {
+      newReview.upvotes = newUpvotes;
+    }
+    if (newDownvotes) {
+      newReview.downvotes = newDownvotes;
+    }
+    setReview(newReview);
+  };
 
   return (
     <VStack
@@ -80,33 +192,11 @@ export default function ReviewCard({ review, ...rest }: ReviewCardProps) {
           title={"Edit My Review"}
           _text={{ fontWeight: "semibold" }}
         />
-        <HStack>
-          <IconButton
-            variant={"unstyled"}
-            padding={"3px"}
-            icon={
-              <Icon
-                size={"22px"}
-                color={"gray.400"}
-                as={<Ionicons name={"caret-up"} />}
-              />
-            }
-            // onPress={}
-          />
-          <Text fontWeight={"semibold"}>51</Text>
-          <IconButton
-            variant={"unstyled"}
-            padding={"3px"}
-            icon={
-              <Icon
-                size={"22px"}
-                color={"gray.400"}
-                as={<Ionicons name={"caret-down"} />}
-              />
-            }
-            // onPress={}
-          />
-        </HStack>
+        <VoteBlock
+          upvotes={upvotes}
+          downvotes={downvotes}
+          setVotes={setVotes}
+        />
         <Text>
           {new Date(reviewedDate).toLocaleDateString(undefined, {
             year: "numeric",

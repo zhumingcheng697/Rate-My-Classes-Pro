@@ -24,12 +24,18 @@ import Semester from "../libs/semester";
 import PlainTextButton from "./PlainTextButton";
 import AlertPopup from "./AlertPopup";
 import { useAuth } from "../mongodb/auth";
-import { useNavigation } from "@react-navigation/native";
+import {
+  useNavigation,
+  useRoute,
+  type RouteProp,
+} from "@react-navigation/native";
 
-type DetailScreenNavigationProp = StackNavigationProp<
+type ReviewCardNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
   "Detail"
 >;
+
+type ReviewCardRouteProp = RouteProp<SharedNavigationParamList, "Detail">;
 
 type RatingBlockProps = { ratingType: RatingType; rating: Rating };
 
@@ -42,15 +48,24 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
   );
 }
 
-type VoteBlockProps = {
+type VoteBlockBaseProps = {
   userId: string;
   upvotes: VoteRecord;
   downvotes: VoteRecord;
   setVotes: (upVotes?: VoteRecord, downvotes?: VoteRecord) => void;
 };
 
-function VoteBlock({ userId, upvotes, downvotes, setVotes }: VoteBlockProps) {
-  const navigation = useNavigation<DetailScreenNavigationProp>();
+type VoteBlockProps = VoteBlockBaseProps &
+  Omit<IStackProps, keyof VoteBlockBaseProps>;
+
+function VoteBlock({
+  userId,
+  upvotes,
+  downvotes,
+  setVotes,
+  ...rest
+}: VoteBlockProps) {
+  const navigation = useNavigation<ReviewCardNavigationProp>();
   const [showAlert, setShowAlert] = useState(false);
   const auth = useAuth();
   const isAuthenticated = auth.isAuthenticated;
@@ -93,7 +108,7 @@ function VoteBlock({ userId, upvotes, downvotes, setVotes }: VoteBlockProps) {
           ) : undefined
         }
       />
-      <HStack>
+      <HStack alignItems={"center"} {...rest}>
         <IconButton
           variant={"unstyled"}
           padding={"3px"}
@@ -203,6 +218,11 @@ export default function ReviewCard({
     comment,
   } = review;
 
+  const navigation = useNavigation<ReviewCardNavigationProp>();
+  const route = useRoute<ReviewCardRouteProp>();
+  const { classInfo } = route.params;
+  const auth = useAuth();
+
   const setVotes = (newUpvotes?: VoteRecord, newDownvotes?: VoteRecord) => {
     const newReview = { ...review };
     if (newUpvotes) {
@@ -236,16 +256,25 @@ export default function ReviewCard({
       </HStack>
       {comment && <Text fontSize={"md"}>{comment}</Text>}
       <HStack justifyContent={"space-between"} flexWrap={"wrap"}>
-        <PlainTextButton
-          title={"Edit My Review"}
-          _text={{ fontWeight: "semibold" }}
-        />
         <VoteBlock
+          margin={"-3px"}
           userId={userId}
           upvotes={upvotes}
           downvotes={downvotes}
           setVotes={setVotes}
         />
+        {auth.isAuthenticated && auth.user?.id === userId && (
+          <PlainTextButton
+            title={"Edit"}
+            _text={{ fontWeight: "semibold" }}
+            onPress={() => {
+              navigation.navigate("Review", {
+                classInfo,
+                previousReview: review,
+              });
+            }}
+          />
+        )}
         <Text>
           {new Date(reviewedDate).toLocaleDateString(undefined, {
             year: "numeric",

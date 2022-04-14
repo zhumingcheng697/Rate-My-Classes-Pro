@@ -24,8 +24,6 @@ export default function ClearableInput({
   canClear,
   ...rest
 }: ClearableInputProps) {
-  const pressedHoverStyle = { _icon: { color: "gray.300" } };
-
   return (
     <Input
       {...rest}
@@ -51,8 +49,6 @@ export default function ClearableInput({
           {(canClear ?? value) && (
             <IconButton
               variant={"unstyled"}
-              _pressed={pressedHoverStyle}
-              _hover={pressedHoverStyle}
               padding={"3px"}
               marginRight={"2px"}
               icon={

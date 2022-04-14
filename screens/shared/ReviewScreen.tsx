@@ -124,7 +124,7 @@ export default function ReviewScreen() {
             background={"red.600"}
             onPress={() => {
               setShowAlert(false);
-              // navigation.navigate("Detail")
+              navigation.navigate("Detail", { classInfo, deleteReview: true });
             }}
           >
             Delete

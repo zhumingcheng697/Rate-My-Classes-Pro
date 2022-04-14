@@ -41,13 +41,16 @@ export default ({
     );
   },
   headerRight: (props) => {
+    const { classInfo, previousReview, newReview } = route.params;
     return (
       <PlainTextButton
-        isDisabled={route.params.newReview ? false : true}
+        isDisabled={newReview ? false : true}
         marginRight={"10px"}
-        title={route.params.previousReview ? "Update" : "Submit"}
+        title={previousReview ? "Update" : "Submit"}
         _text={{ fontSize: "md", fontWeight: "semibold" }}
-        onPress={navigation.goBack}
+        onPress={() => {
+          navigation.navigate("Detail", { classInfo, newReview });
+        }}
         {...props}
       />
     );

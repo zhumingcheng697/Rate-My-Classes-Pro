@@ -7,7 +7,9 @@ import {
   type IStackProps,
   IconButton,
   Icon,
+  Button,
 } from "native-base";
+import { StackNavigationProp } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import {
@@ -16,10 +18,18 @@ import {
   type Review,
   VoteRecord,
   Vote,
+  SharedNavigationParamList,
 } from "../libs/types";
-import PlainTextButton from "./PlainTextButton";
 import Semester from "../libs/semester";
+import PlainTextButton from "./PlainTextButton";
+import AlertPopup from "./AlertPopup";
 import { useAuth } from "../mongodb/auth";
+import { useNavigation } from "@react-navigation/native";
+
+type DetailScreenNavigationProp = StackNavigationProp<
+  SharedNavigationParamList,
+  "Detail"
+>;
 
 type RatingBlockProps = { ratingType: RatingType; rating: Rating };
 
@@ -33,12 +43,15 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
 }
 
 type VoteBlockProps = {
+  userId: string;
   upvotes: VoteRecord;
   downvotes: VoteRecord;
   setVotes: (upVotes?: VoteRecord, downvotes?: VoteRecord) => void;
 };
 
-function VoteBlock({ upvotes, downvotes, setVotes }: VoteBlockProps) {
+function VoteBlock({ userId, upvotes, downvotes, setVotes }: VoteBlockProps) {
+  const navigation = useNavigation<DetailScreenNavigationProp>();
+  const [showAlert, setShowAlert] = useState(false);
   const auth = useAuth();
   const isAuthenticated = auth.isAuthenticated;
   const voteCount = useMemo(
@@ -58,6 +71,28 @@ function VoteBlock({ upvotes, downvotes, setVotes }: VoteBlockProps) {
 
   return (
     <>
+      <AlertPopup
+        isOpen={showAlert}
+        onClose={() => setShowAlert(false)}
+        header={isAuthenticated ? "???" : "Sign Up to Vote"}
+        body={
+          isAuthenticated
+            ? "???"
+            : "You need an account to vote others’ reviews."
+        }
+        footerPrimaryButton={
+          !isAuthenticated ? (
+            <Button
+              onPress={() => {
+                setShowAlert(false);
+                navigation.navigate("SignInSignUp");
+              }}
+            >
+              Sign Up
+            </Button>
+          ) : undefined
+        }
+      />
       <HStack>
         <IconButton
           variant={"unstyled"}
@@ -72,10 +107,14 @@ function VoteBlock({ upvotes, downvotes, setVotes }: VoteBlockProps) {
           onPress={() => {
             if (auth.user && isAuthenticated) {
               if (vote === Vote.upvote) {
+                console.log(`unvote ${userId}`);
+
                 const newUpvotes = { ...upvotes };
                 delete newUpvotes[auth.user.id];
                 setVotes(newUpvotes);
               } else {
+                console.log(`upvote ${userId}`);
+
                 const newUpvotes = { ...upvotes };
                 newUpvotes[auth.user.id] = true;
 
@@ -88,6 +127,8 @@ function VoteBlock({ upvotes, downvotes, setVotes }: VoteBlockProps) {
 
                 setVotes(newUpvotes);
               }
+            } else {
+              setShowAlert(true);
             }
           }}
         />
@@ -105,10 +146,14 @@ function VoteBlock({ upvotes, downvotes, setVotes }: VoteBlockProps) {
           onPress={() => {
             if (auth.user && isAuthenticated) {
               if (vote === Vote.downvote) {
+                console.log(`unvote ${userId}`);
+
                 const newDownvotes = { ...upvotes };
                 delete newDownvotes[auth.user.id];
                 setVotes(undefined, newDownvotes);
               } else {
+                console.log(`downvote ${userId}`);
+
                 const newDownvotes = { ...upvotes };
                 newDownvotes[auth.user.id] = true;
 
@@ -121,6 +166,8 @@ function VoteBlock({ upvotes, downvotes, setVotes }: VoteBlockProps) {
 
                 setVotes(undefined, newDownvotes);
               }
+            } else {
+              setShowAlert(true);
             }
           }}
         />
@@ -143,6 +190,7 @@ export default function ReviewCard({
   ...rest
 }: ReviewCardProps) {
   const {
+    userId,
     instructor,
     semester,
     enjoyment,
@@ -193,6 +241,7 @@ export default function ReviewCard({
           _text={{ fontWeight: "semibold" }}
         />
         <VoteBlock
+          userId={userId}
           upvotes={upvotes}
           downvotes={downvotes}
           setVotes={setVotes}

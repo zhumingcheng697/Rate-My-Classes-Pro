@@ -53,29 +53,16 @@ export default ({
           }}
           header={"Sign Up to Star"}
           body={"You need an account to keep track of your starred classes."}
-          footer={(ref) => (
-            <Button.Group space={2}>
-              <Button
-                variant="unstyled"
-                _pressed={{ opacity: 0.5 }}
-                _hover={{ opacity: 0.5 }}
-                onPress={() => {
-                  setShowAlert(false);
-                }}
-                ref={ref}
-              >
-                Cancel
-              </Button>
-              <Button
-                onPress={() => {
-                  setShowAlert(false);
-                  navigation.navigate("SignInSignUp");
-                }}
-              >
-                Sign Up
-              </Button>
-            </Button.Group>
-          )}
+          footerPrimaryButton={
+            <Button
+              onPress={() => {
+                setShowAlert(false);
+                navigation.navigate("SignInSignUp");
+              }}
+            >
+              Sign Up
+            </Button>
+          }
         />
         <IconButton
           variant={"unstyled"}

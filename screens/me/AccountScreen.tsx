@@ -66,37 +66,24 @@ export default function AccountScreen() {
           body={
             "You are about to sign out. After you signed out, you will have to sign in again with your email and password."
           }
-          footer={(ref) => (
-            <Button.Group space={2}>
-              <Button
-                variant="unstyled"
-                _pressed={{ opacity: 0.5 }}
-                _hover={{ opacity: 0.5 }}
-                onPress={() => {
-                  setShowAlert(false);
-                }}
-                ref={ref}
-              >
-                Cancel
-              </Button>
-              <Button
-                background={"red.600"}
-                onPress={async () => {
-                  setIsSigningOut(true);
-                  setShowAlert(false);
-                  try {
-                    await auth.signOut();
-                  } catch (e) {
-                    console.error(e);
-                  } finally {
-                    setIsSigningOut(false);
-                  }
-                }}
-              >
-                Sign Out
-              </Button>
-            </Button.Group>
-          )}
+          footerPrimaryButton={
+            <Button
+              background={"red.600"}
+              onPress={async () => {
+                setIsSigningOut(true);
+                setShowAlert(false);
+                try {
+                  await auth.signOut();
+                } catch (e) {
+                  console.error(e);
+                } finally {
+                  setIsSigningOut(false);
+                }
+              }}
+            >
+              Sign Out
+            </Button>
+          }
         />
       )}
       <KeyboardAwareSafeAreaScrollView>

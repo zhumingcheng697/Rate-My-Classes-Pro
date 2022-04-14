@@ -278,8 +278,7 @@ export default function ReviewCard({
         <Text>
           {new Date(reviewedDate).toLocaleDateString(undefined, {
             year: "numeric",
-            month: "long",
-            day: "numeric",
+            month: "short",
           })}
         </Text>
       </HStack>

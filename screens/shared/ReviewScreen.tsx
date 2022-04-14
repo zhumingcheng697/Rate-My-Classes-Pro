@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Box, Input, Text, VStack } from "native-base";
+import { Box, Button, Input, Text, VStack } from "native-base";
 import {
+  useIsFocused,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -19,6 +20,8 @@ import LabeledInput from "../../components/LabeledInput";
 import RatingSelector from "../../components/RatingSelector";
 import SemesterSelector from "../../components/SemesterSelector";
 import { useAuth } from "../../mongodb/auth";
+import LeftAlignedButton from "../../components/LeftAlignedButton";
+import AlertPopup from "../../components/AlertPopup";
 
 type ReviewScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -32,6 +35,8 @@ export default function ReviewScreen() {
   const navigation = useNavigation<ReviewScreenNavigationProp>();
   const route = useRoute<ReviewScreenRouteProp>();
   const { classInfo, previousReview } = route.params;
+  const isFocused = useIsFocused();
+  const [showAlert, setShowAlert] = useState(false);
 
   const [enjoyment, setEnjoyment] = useState<Rating | undefined>(
     previousReview?.enjoyment
@@ -104,76 +109,116 @@ export default function ReviewScreen() {
   ]);
 
   return (
-    <KeyboardAwareSafeAreaScrollView>
-      <Box marginY={"10px"}>
-        <Text variant={"h1"}>{classInfo.name}</Text>
-        <Text variant={"h2"}>{getFullClassCode(classInfo)}</Text>
-        <VStack marginX={"10px"} marginY={"5px"} space={"8px"}>
-          <LabeledInput
-            label={"Instructor"}
-            isDisabled={!!previousReview}
-            showRequiredIcon={!previousReview}
+    <>
+      <AlertPopup
+        isOpen={showAlert && isFocused}
+        onClose={() => {
+          setShowAlert(false);
+        }}
+        header={"Delete Review"}
+        body={
+          "You are about to delete your review. This action is not reversable."
+        }
+        footerPrimaryButton={
+          <Button
+            background={"red.600"}
+            onPress={() => {
+              setShowAlert(false);
+              // navigation.navigate("Detail")
+            }}
           >
-            <Input
-              value={instructor}
-              onChangeText={setInstructor}
-              autoCapitalize={"words"}
-              isReadOnly={!!previousReview}
-              showRequiredIcon={!previousReview}
-              opacity={previousReview ? 0.5 : undefined}
-            />
-          </LabeledInput>
-          <LabeledInput
-            label={"Semester"}
-            isDisabled={!!previousReview}
-            showRequiredIcon={!previousReview}
-          >
-            <SemesterSelector
-              selectedSemester={semester}
-              semesterOptions={semesterOptions}
-              onSelectedSemesterChange={setSemester}
+            Delete
+          </Button>
+        }
+      />
+      <KeyboardAwareSafeAreaScrollView>
+        <Box marginY={"10px"}>
+          <Text variant={"h1"}>{classInfo.name}</Text>
+          <Text variant={"h2"}>{getFullClassCode(classInfo)}</Text>
+          <VStack marginX={"10px"} marginY={"5px"} space={"8px"}>
+            <LabeledInput
+              label={"Instructor"}
               isDisabled={!!previousReview}
-            />
-          </LabeledInput>
-          <LabeledInput label={"Enjoyment"} showRequiredIcon={!previousReview}>
-            <RatingSelector
-              selectedRating={enjoyment}
-              ratingType={RatingType.enjoyment}
-              onSelectedRatingChange={setEnjoyment}
-            />
-          </LabeledInput>
-          <LabeledInput label={"Difficulty"} showRequiredIcon={!previousReview}>
-            <RatingSelector
-              selectedRating={difficulty}
-              ratingType={RatingType.difficulty}
-              onSelectedRatingChange={setDifficulty}
-            />
-          </LabeledInput>
-          <LabeledInput label={"Workload"} showRequiredIcon={!previousReview}>
-            <RatingSelector
-              selectedRating={workload}
-              ratingType={RatingType.workload}
-              onSelectedRatingChange={setWorkload}
-            />
-          </LabeledInput>
-          <LabeledInput label={"Value"} showRequiredIcon={!previousReview}>
-            <RatingSelector
-              selectedRating={value}
-              ratingType={RatingType.value}
-              onSelectedRatingChange={setValue}
-            />
-          </LabeledInput>
-          <LabeledInput label={"Comment"}>
-            <Input
-              placeholder={"Optional"}
-              value={comment}
-              onChangeText={setComment}
-              multiline
-              height={"130px"}
-            />
-          </LabeledInput>
-        </VStack>
-      </Box>
-    </KeyboardAwareSafeAreaScrollView>
+              showRequiredIcon={!previousReview}
+            >
+              <Input
+                value={instructor}
+                onChangeText={setInstructor}
+                autoCapitalize={"words"}
+                isReadOnly={!!previousReview}
+                showRequiredIcon={!previousReview}
+                opacity={previousReview ? 0.5 : undefined}
+              />
+            </LabeledInput>
+            <LabeledInput
+              label={"Semester"}
+              isDisabled={!!previousReview}
+              showRequiredIcon={!previousReview}
+            >
+              <SemesterSelector
+                selectedSemester={semester}
+                semesterOptions={semesterOptions}
+                onSelectedSemesterChange={setSemester}
+                isDisabled={!!previousReview}
+              />
+            </LabeledInput>
+            <LabeledInput
+              label={"Enjoyment"}
+              showRequiredIcon={!previousReview}
+            >
+              <RatingSelector
+                selectedRating={enjoyment}
+                ratingType={RatingType.enjoyment}
+                onSelectedRatingChange={setEnjoyment}
+              />
+            </LabeledInput>
+            <LabeledInput
+              label={"Difficulty"}
+              showRequiredIcon={!previousReview}
+            >
+              <RatingSelector
+                selectedRating={difficulty}
+                ratingType={RatingType.difficulty}
+                onSelectedRatingChange={setDifficulty}
+              />
+            </LabeledInput>
+            <LabeledInput label={"Workload"} showRequiredIcon={!previousReview}>
+              <RatingSelector
+                selectedRating={workload}
+                ratingType={RatingType.workload}
+                onSelectedRatingChange={setWorkload}
+              />
+            </LabeledInput>
+            <LabeledInput label={"Value"} showRequiredIcon={!previousReview}>
+              <RatingSelector
+                selectedRating={value}
+                ratingType={RatingType.value}
+                onSelectedRatingChange={setValue}
+              />
+            </LabeledInput>
+            <LabeledInput label={"Comment"}>
+              <Input
+                placeholder={"Optional"}
+                value={comment}
+                onChangeText={setComment}
+                multiline
+                height={"130px"}
+              />
+            </LabeledInput>
+            {previousReview && (
+              <LeftAlignedButton
+                title={"Delete"}
+                _text={{ color: "red.600" }}
+                showChevron={false}
+                marginTop={"15px"}
+                onPress={() => {
+                  setShowAlert(true);
+                }}
+              />
+            )}
+          </VStack>
+        </Box>
+      </KeyboardAwareSafeAreaScrollView>
+    </>
   );
 }

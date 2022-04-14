@@ -5,14 +5,16 @@ import type {
   SchoolNameRecord,
   DepartmentNameRecord,
   StarredClassRecord,
+  ReviewedClassRecord,
   Settings,
   ClassInfo,
 } from "../libs/types";
 import {
   type SchoolNameAction,
   type DepartmentNameAction,
-  type SettingsAction,
   type StarClassAction,
+  type ReviewClassAction,
+  type SettingsAction,
   ActionType,
 } from "./types";
 import type Semester from "../libs/semester";
@@ -94,5 +96,48 @@ export const unstarClass = (dispath: Dispatch<StarClassAction>, user: User) => {
     });
 
     await db.unstarClass(classInfo);
+  };
+};
+
+export const loadReviewedClasses =
+  (dispath: Dispatch<ReviewClassAction>) =>
+  (reviewedClasses: ReviewedClassRecord) => {
+    dispath({
+      type: ActionType.loadReviewedClasses,
+      payload: reviewedClasses,
+    });
+  };
+
+export const reviewClass = (
+  dispath: Dispatch<ReviewClassAction>,
+  user: User
+) => {
+  const db = useDB(user);
+
+  return async (classInfo: ClassInfo) => {
+    const reviewedClass = { ...classInfo, reviewedDate: Date.now() };
+
+    dispath({
+      type: ActionType.reviewClass,
+      payload: reviewedClass,
+    });
+
+    await db.reviewClass(reviewedClass);
+  };
+};
+
+export const unreviewClass = (
+  dispath: Dispatch<ReviewClassAction>,
+  user: User
+) => {
+  const db = useDB(user);
+
+  return async (classInfo: ClassInfo) => {
+    dispath({
+      type: ActionType.unreviewClass,
+      payload: classInfo,
+    });
+
+    await db.unreviewClass(classInfo);
   };
 };

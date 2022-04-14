@@ -4,6 +4,7 @@ import { type UserDoc, type ClassDoc, Collections } from "./types";
 import {
   type ClassCode,
   type StarredClassInfo,
+  type ReviewedClassInfo,
   type Review,
   Vote,
   type Settings,
@@ -70,10 +71,10 @@ export function useDB(user: User) {
     });
   }
 
-  async function reviewClass(starredClass: StarredClassInfo) {
+  async function reviewClass(reviewedClass: ReviewedClassInfo) {
     await updateUserDoc({
       $set: {
-        [`reviewedClasses.${getFullClassCode(starredClass)}`]: starredClass,
+        [`reviewedClasses.${getFullClassCode(reviewedClass)}`]: reviewedClass,
       },
     });
   }

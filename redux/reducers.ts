@@ -3,13 +3,15 @@ import type {
   SchoolNameRecord,
   DepartmentNameRecord,
   StarredClassRecord,
+  ReviewedClassRecord,
   Settings,
 } from "../libs/types";
 import {
   type SchoolNameAction,
   type DepartmentNameAction,
-  type SettingsAction,
   type StarClassAction,
+  type ReviewClassAction,
+  type SettingsAction,
   ActionType,
 } from "./types";
 import { getFullClassCode } from "../libs/utils";
@@ -78,21 +80,69 @@ function settingsReducer(
   return state;
 }
 
-function starredClassReducer(
-  state: StarredClassRecord | null = null,
-  action: StarClassAction
+// function starredClassReducer(
+//   state: StarredClassRecord | null = null,
+//   action: StarClassAction
+// ) {
+//   if (!!action.payload) {
+//     if (action.type === ActionType.loadStarredClasses) {
+//       return action.payload;
+//     } else if (action.type === ActionType.starClass) {
+//       const newState = { ...state };
+//       newState[getFullClassCode(action.payload)] = action.payload;
+//       return newState;
+//     } else if (action.type === ActionType.unstarClass) {
+//       const newState = { ...state };
+//       delete newState[getFullClassCode(action.payload)];
+//       return newState;
+//     }
+//   }
+
+//   return state;
+// }
+
+// function reviewedClassReducer(
+//   state: ReviewedClassRecord | null = null,
+//   action: ReviewClassAction
+// ) {
+//   if (!!action.payload) {
+//     if (action.type === ActionType.loadReviewedClasses) {
+//       return action.payload;
+//     } else if (action.type === ActionType.reviewClass) {
+//       const newState = { ...state };
+//       newState[getFullClassCode(action.payload)] = action.payload;
+//       return newState;
+//     } else if (action.type === ActionType.unreviewClass) {
+//       const newState = { ...state };
+//       delete newState[getFullClassCode(action.payload)];
+//       return newState;
+//     }
+//   }
+
+//   return state;
+// }
+
+function starredReviewedClassReducer(
+  state: StarredClassRecord | ReviewedClassRecord | null = null,
+  action: StarClassAction | ReviewClassAction
 ) {
   if (!!action.payload) {
-    if (action.type === ActionType.loadStarredClasses) {
-      return action.payload;
-    } else if (action.type === ActionType.starClass) {
-      const newState = { ...state };
-      newState[getFullClassCode(action.payload)] = action.payload;
-      return newState;
-    } else if (action.type === ActionType.unstarClass) {
-      const newState = { ...state };
-      delete newState[getFullClassCode(action.payload)];
-      return newState;
+    switch (action.type) {
+      case ActionType.loadStarredClasses:
+      case ActionType.loadReviewedClasses:
+        return action.payload;
+      case ActionType.starClass:
+      case ActionType.reviewClass: {
+        const newState: StarredClassRecord | ReviewedClassRecord = { ...state };
+        newState[getFullClassCode(action.payload)] = action.payload;
+        return newState;
+      }
+      case ActionType.unstarClass:
+      case ActionType.unreviewClass: {
+        const newState: StarredClassRecord | ReviewedClassRecord = { ...state };
+        delete newState[getFullClassCode(action.payload)];
+        return newState;
+      }
     }
   }
 
@@ -103,5 +153,6 @@ export default combineReducers({
   schoolNameRecord: schoolNameReducer,
   departmentNameRecord: departmentNameReducer,
   settings: settingsReducer,
-  starredClassRecord: starredClassReducer,
+  starredClassRecord: starredReviewedClassReducer,
+  reviewedClassRecord: starredReviewedClassReducer,
 });

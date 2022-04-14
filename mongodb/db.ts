@@ -70,6 +70,22 @@ export function useDB(user: User) {
     });
   }
 
+  async function reviewClass(starredClass: StarredClassInfo) {
+    await updateUserDoc({
+      $set: {
+        [`reviewedClasses.${getFullClassCode(starredClass)}`]: starredClass,
+      },
+    });
+  }
+
+  async function unreviewClass(classCode: ClassCode) {
+    await updateUserDoc({
+      $unset: {
+        [`reviewedClasses.${getFullClassCode(classCode)}`]: null,
+      },
+    });
+  }
+
   async function loadClassDoc(classCode: ClassCode) {
     return await db
       .collection<ClassDoc>(Collections.classes)
@@ -160,6 +176,8 @@ export function useDB(user: User) {
     updateSettings,
     starClass,
     unstarClass,
+    reviewClass,
+    unreviewClass,
     loadClassDoc,
     upsertReview,
     voteReview,

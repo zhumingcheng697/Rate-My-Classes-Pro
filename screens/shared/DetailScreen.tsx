@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Text, Button, Box, VStack, HStack, Spacer } from "native-base";
 import {
   useNavigation,
@@ -31,6 +31,12 @@ export default function DetailScreen() {
   const { classInfo } = route.params;
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
+  const description = useMemo(() => {
+    return (
+      classInfo.description &&
+      classInfo.description.replace(/([a-z0-9])[\s\n]+([^\s\n])/gi, "$1 $2")
+    );
+  }, [classInfo.description]);
   const auth = useAuth();
   const [review1, setReview1] = useState({ ...placeholderReview });
   const [review2, setReview2] = useState({ ...placeholderReview });
@@ -45,12 +51,9 @@ export default function DetailScreen() {
           {": "}
           {getDepartmentName(classInfo, departmentNames)}
         </Text>
-        {!!classInfo.description && (
+        {description && (
           <Text fontSize={"md"} margin={"10px"}>
-            {classInfo.description.replace(
-              /([a-z0-9])[\s\n]+([^\s\n])/gi,
-              "$1 $2"
-            )}
+            {description}
           </Text>
         )}
         <Button

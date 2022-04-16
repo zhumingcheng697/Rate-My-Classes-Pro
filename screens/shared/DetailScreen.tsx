@@ -7,19 +7,16 @@ import {
   type RouteProp,
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import type { ReviewRecord, SharedNavigationParamList } from "../../libs/types";
-import {
-  getDepartmentName,
-  getSchoolName,
-  placeholderReview,
-} from "../../libs/utils";
+import { getDepartmentName, getSchoolName } from "../../libs/utils";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import ReviewCard from "../../components/ReviewCard";
 import { useAuth } from "../../mongodb/auth";
 import { useDB } from "../../mongodb/db";
 import AlertPopup from "../../components/AlertPopup";
+import { reviewClass, unreviewClass } from "../../redux/actions";
 
 type DetailScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -32,6 +29,7 @@ export default function DetailScreen() {
   const navigation = useNavigation<DetailScreenNavigationProp>();
   const route = useRoute<DetailScreenRouteProp>();
   const { classInfo, deleteReview, newReview } = route.params;
+  const dispatch = useDispatch();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const auth = useAuth();
@@ -47,28 +45,34 @@ export default function DetailScreen() {
 
   const [reviewRecord, setReviewRecord] = useState<ReviewRecord | null>(null);
 
-  const [review1, setReview1] = useState({ ...placeholderReview });
-  const [review2, setReview2] = useState({ ...placeholderReview });
-  const [review3, setReview3] = useState({ ...placeholderReview });
+  const myReview = useMemo(() => {
+    return (
+      (!!auth.user &&
+        auth.isAuthenticated &&
+        !!reviewRecord &&
+        reviewRecord[auth.user.id]) ||
+      undefined
+    );
+  }, [auth, reviewRecord]);
 
   const db = useMemo(() => {
-    if (auth.user && auth.isAuthenticated) return useDB(auth.user);
+    if (auth.user) return useDB(auth.user);
   }, [auth.user]);
 
   useEffect(() => {
-    // if (!reviewRecord && db) {
-    //   const loadReviewDoc = async () => {
-    //     try {
-    //       const reviewRecord: ReviewRecord =
-    //         (await db.loadReviewDoc(classInfo)) ?? {};
-    //       delete reviewRecord["_id"];
-    //       setReviewRecord(reviewRecord);
-    //     } catch (e) {
-    //       setShowAlert(true);
-    //     }
-    //   };
-    //   loadReviewDoc();
-    // }
+    if (!reviewRecord && db) {
+      const loadReviewDoc = async () => {
+        try {
+          const reviewRecord: ReviewRecord =
+            (await db.loadReviewDoc(classInfo)) ?? {};
+          delete reviewRecord["_id"];
+          setReviewRecord(reviewRecord);
+        } catch (e) {
+          setShowAlert(true);
+        }
+      };
+      loadReviewDoc();
+    }
   }, [db]);
 
   const reviewerIds = useMemo(() => {
@@ -82,24 +86,47 @@ export default function DetailScreen() {
   }, [reviewRecord]);
 
   useEffect(() => {
-    if (isFocused && auth.user && auth.isAuthenticated) {
-      if (deleteReview) {
-        console.log("delete");
+    (async () => {
+      if (isFocused && auth.user && auth.isAuthenticated) {
+        try {
+          if (deleteReview) {
+            await db?.deleteReview(classInfo);
+            await unreviewClass(dispatch, auth.user)(classInfo);
 
-        // db?.deleteReview(classInfo);
-        navigation.setParams({ deleteReview: undefined });
-      } else if (newReview) {
-        console.log("new");
+            if (reviewRecord) {
+              const newReviewRecord = { ...reviewRecord };
+              delete newReviewRecord[auth.user.id];
+              setReviewRecord(newReviewRecord);
+            }
 
-        // db?.upsertReview(classInfo, newReview);
-        navigation.setParams({ newReview: undefined });
+            navigation.setParams({ deleteReview: undefined });
+          } else if (newReview) {
+            if (myReview) {
+              await db?.updateReview(classInfo, newReview);
+            } else {
+              await db?.submitReview(classInfo, newReview);
+              await reviewClass(dispatch, auth.user)(classInfo);
+            }
+
+            if (reviewRecord) {
+              const newReviewRecord = { ...reviewRecord };
+              newReviewRecord[auth.user.id] = newReview;
+              setReviewRecord(newReviewRecord);
+            }
+
+            navigation.setParams({ newReview: undefined });
+          }
+        } catch (e) {
+          setShowAlert(true);
+        }
       }
-    }
+    })();
   }, [isFocused, auth.user]);
 
   return (
     <>
       <AlertPopup
+        header={reviewRecord ? "Unable to Review" : "Unable to Load Reviews"}
         isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);
@@ -113,7 +140,7 @@ export default function DetailScreen() {
             {": "}
             {getDepartmentName(classInfo, departmentNames)}
           </Text>
-          {description && (
+          {!!description && (
             <Text fontSize={"md"} margin={"10px"}>
               {description}
             </Text>
@@ -122,15 +149,10 @@ export default function DetailScreen() {
             margin={"10px"}
             onPress={() => {
               if (auth.user && auth.isAuthenticated) {
-                if (reviewRecord) {
-                  const review = reviewRecord[auth.user.id];
-                  navigation.navigate("Review", {
-                    classInfo,
-                    previousReview: review,
-                  });
-                } else {
-                  navigation.navigate("Review", { classInfo });
-                }
+                navigation.navigate("Review", {
+                  classInfo,
+                  previousReview: myReview,
+                });
               } else {
                 navigation.navigate("SignInSignUp");
               }
@@ -138,7 +160,7 @@ export default function DetailScreen() {
           >
             <Text variant={"button"}>
               {auth.user && auth.isAuthenticated
-                ? reviewRecord && reviewRecord[auth.user.id]
+                ? myReview
                   ? "Edit My Review"
                   : "Review"
                 : "Sign Up to Review"}
@@ -148,6 +170,7 @@ export default function DetailScreen() {
             {reviewRecord
               ? reviewerIds.map((id) => (
                   <ReviewCard
+                    key={id}
                     classCode={classInfo}
                     review={reviewRecord[id]}
                     setReview={(newReview) => {
@@ -160,21 +183,6 @@ export default function DetailScreen() {
               : [...Array(3)].map((_, index) => (
                   <Skeleton borderRadius={10} height={"120px"} key={index} />
                 ))}
-            <ReviewCard
-              classCode={classInfo}
-              review={review1}
-              setReview={setReview1}
-            />
-            <ReviewCard
-              classCode={classInfo}
-              review={review2}
-              setReview={setReview2}
-            />
-            <ReviewCard
-              classCode={classInfo}
-              review={review3}
-              setReview={setReview3}
-            />
           </VStack>
         </Box>
       </KeyboardAwareSafeAreaScrollView>

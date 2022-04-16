@@ -109,10 +109,10 @@ function VoteBlock({
       <AlertPopup
         isOpen={showAlert}
         onClose={() => setShowAlert(false)}
-        header={isAuthenticated ? "???" : "Sign Up to Vote"}
+        header={isAuthenticated ? "Unable to Vote" : "Sign Up to Vote"}
         body={
           isAuthenticated
-            ? "???"
+            ? undefined
             : "You need an account to vote others’ reviews."
         }
         footerPrimaryButton={
@@ -139,30 +139,36 @@ function VoteBlock({
               as={<Ionicons name={"caret-up"} />}
             />
           }
-          onPress={() => {
+          onPress={async () => {
             if (auth.user && isAuthenticated) {
               if (vote === Vote.upvote) {
-                console.log(`unvote ${userId}`);
-                unvote();
+                try {
+                  await unvote();
 
-                const newUpvotes = { ...upvotes };
-                delete newUpvotes[auth.user.id];
-                setVotes(newUpvotes);
-              } else {
-                console.log(`upvote ${userId}`);
-                upvote();
-
-                const newUpvotes = { ...upvotes };
-                newUpvotes[auth.user.id] = true;
-
-                if (vote === Vote.downvote) {
-                  const newDownvotes = { ...upvotes };
-                  delete newDownvotes[auth.user.id];
-                  setVotes(newUpvotes, newDownvotes);
-                  return;
+                  const newUpvotes = { ...upvotes };
+                  delete newUpvotes[auth.user.id];
+                  setVotes(newUpvotes);
+                } catch (e) {
+                  setShowAlert(true);
                 }
+              } else {
+                try {
+                  await upvote();
 
-                setVotes(newUpvotes);
+                  const newUpvotes = { ...upvotes };
+                  newUpvotes[auth.user.id] = true;
+
+                  if (vote === Vote.downvote) {
+                    const newDownvotes = { ...downvotes };
+                    delete newDownvotes[auth.user.id];
+                    setVotes(newUpvotes, newDownvotes);
+                    return;
+                  }
+
+                  setVotes(newUpvotes);
+                } catch (e) {
+                  setShowAlert(true);
+                }
               }
             } else {
               setShowAlert(true);
@@ -180,30 +186,36 @@ function VoteBlock({
               as={<Ionicons name={"caret-down"} />}
             />
           }
-          onPress={() => {
+          onPress={async () => {
             if (auth.user && isAuthenticated) {
               if (vote === Vote.downvote) {
-                unvote();
-                console.log(`unvote ${userId}`);
+                try {
+                  await unvote();
 
-                const newDownvotes = { ...upvotes };
-                delete newDownvotes[auth.user.id];
-                setVotes(undefined, newDownvotes);
-              } else {
-                downvote();
-                console.log(`downvote ${userId}`);
-
-                const newDownvotes = { ...upvotes };
-                newDownvotes[auth.user.id] = true;
-
-                if (vote === Vote.upvote) {
-                  const newUpvotes = { ...upvotes };
-                  delete newUpvotes[auth.user.id];
-                  setVotes(newUpvotes, newDownvotes);
-                  return;
+                  const newDownvotes = { ...downvotes };
+                  delete newDownvotes[auth.user.id];
+                  setVotes(undefined, newDownvotes);
+                } catch (e) {
+                  setShowAlert(true);
                 }
+              } else {
+                try {
+                  await downvote();
 
-                setVotes(undefined, newDownvotes);
+                  const newDownvotes = { ...downvotes };
+                  newDownvotes[auth.user.id] = true;
+
+                  if (vote === Vote.upvote) {
+                    const newUpvotes = { ...upvotes };
+                    delete newUpvotes[auth.user.id];
+                    setVotes(newUpvotes, newDownvotes);
+                    return;
+                  }
+
+                  setVotes(undefined, newDownvotes);
+                } catch (e) {
+                  setShowAlert(true);
+                }
               }
             } else {
               setShowAlert(true);
@@ -280,7 +292,7 @@ export default function ReviewCard({
         <Box minWidth={"25px"} />
         <RatingBlock ratingType={RatingType.value} rating={value} />
       </HStack>
-      {comment && <Text fontSize={"md"}>{comment}</Text>}
+      {!!comment && <Text fontSize={"md"}>{comment}</Text>}
       <HStack justifyContent={"space-between"} flexWrap={"wrap"}>
         <VoteBlock
           classCode={classCode}

@@ -105,7 +105,7 @@ export function useDB(user: User) {
       .updateOne({ _id: getFullClassCode(classCode) }, update, options);
   }
 
-  async function upsertReview(classCode: ClassCode, review: Review) {
+  async function submitReview(classCode: ClassCode, review: Review) {
     await updateReviewDoc(
       classCode,
       {
@@ -115,8 +115,6 @@ export function useDB(user: User) {
           [`${[user.id]}.workload`]: review.workload,
           [`${[user.id]}.value`]: review.value,
           [`${[user.id]}.comment`]: review.comment,
-        },
-        $setOnInsert: {
           [`${[user.id]}.userId`]: review.userId,
           [`${[user.id]}.upvotes`]: review.upvotes,
           [`${[user.id]}.downvotes`]: review.downvotes,
@@ -127,6 +125,18 @@ export function useDB(user: User) {
       },
       { upsert: true }
     );
+  }
+
+  async function updateReview(classCode: ClassCode, review: Review) {
+    await updateReviewDoc(classCode, {
+      $set: {
+        [`${[user.id]}.enjoyment`]: review.enjoyment,
+        [`${[user.id]}.difficulty`]: review.difficulty,
+        [`${[user.id]}.workload`]: review.workload,
+        [`${[user.id]}.value`]: review.value,
+        [`${[user.id]}.comment`]: review.comment,
+      },
+    });
   }
 
   async function voteReview(classCode: ClassCode, userId: string, vote?: Vote) {
@@ -180,7 +190,8 @@ export function useDB(user: User) {
     reviewClass,
     unreviewClass,
     loadReviewDoc,
-    upsertReview,
+    submitReview,
+    updateReview,
     voteReview,
     deleteReview,
   };

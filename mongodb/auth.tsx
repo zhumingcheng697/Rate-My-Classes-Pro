@@ -12,7 +12,11 @@ import Realm, { type User } from "realm";
 
 import app from "./app";
 import { useDB } from "./db";
-import { loadSettings, loadStarredClasses } from "../redux/actions";
+import {
+  loadReviewedClasses,
+  loadSettings,
+  loadStarredClasses,
+} from "../redux/actions";
 
 type AuthContext = {
   user: User | null;
@@ -26,7 +30,7 @@ type AuthContext = {
     email: string,
     password: string
   ) => Promise<void>;
-  signOut: () => Promise<void>;
+  signOut: (signInAnonymouslyAgain: boolean) => Promise<void>;
 };
 
 type AuthProviderProps = { children: ReactNode };
@@ -47,9 +51,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const userDoc = await useDB(user).loadUserDoc();
 
     if (userDoc) {
-      const { username, starredClasses, settings } = userDoc;
+      const { username, starredClasses, reviewedClasses, settings } = userDoc;
       setUsername(username);
       loadStarredClasses(dispatch)(starredClasses);
+      loadReviewedClasses(dispatch)(reviewedClasses);
       loadSettings(dispatch)(settings);
     }
   };
@@ -57,6 +62,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     if (isAuthenticated) {
       loadUserDoc(user);
+    } else {
+      signInAnonymously();
     }
   }, []);
 
@@ -79,7 +86,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // The signIn function takes an email and password and uses the
   // emailPassword authentication provider to log in.
   const signInWithEmailPassword = async (email: string, password: string) => {
-    if (user && user.providerType === "anon-user") await signOut();
+    if (user && user.providerType === "anon-user") await signOut(false);
 
     const credentials = Realm.Credentials.emailPassword(email, password);
     const newUser = await app.logIn(credentials);
@@ -94,7 +101,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     email: string,
     password: string
   ) => {
-    if (user && user.providerType === "anon-user") await signOut();
+    if (user && user.providerType === "anon-user") await signOut(false);
 
     await app.emailPasswordAuth.registerUser({ email, password });
     setUsername(username);
@@ -106,7 +113,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // The signOut function calls the logOut function on the currently
   // logged in user
-  const signOut = async () => {
+  const signOut = async (signInAnonymouslyAgain: boolean = true) => {
     if (user === null) {
       console.warn("Not logged in, can't log out!");
       return;
@@ -116,7 +123,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     await user.logOut();
     loadStarredClasses(dispatch)({});
+    loadReviewedClasses(dispatch)({});
     setUser(null);
+
+    if (signInAnonymouslyAgain) {
+      await signInAnonymously();
+    }
   };
 
   return (

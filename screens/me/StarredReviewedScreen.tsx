@@ -10,12 +10,10 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
 import type {
-  ClassInfo,
   SharedNavigationParamList,
   MeNavigationParamList,
 } from "../../libs/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
-import { placeholderClassNumbers } from "../../libs/utils";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
 
@@ -29,6 +27,7 @@ type StarredReviewedScreenRouteProp = RouteProp<
 
 export default function StarredReviewedScreen() {
   const starredClasses = useSelector((state) => state.starredClassRecord);
+  const reviewedClasses = useSelector((state) => state.reviewedClassRecord);
   const navigation = useNavigation<StarredReviewedScreenNavigationProp>();
   const route = useRoute<StarredReviewedScreenRouteProp>();
   const [alertDismissed, setAlertDismissed] = useState(false);
@@ -39,14 +38,9 @@ export default function StarredReviewedScreen() {
       ? Object.values(starredClasses ?? {}).sort(
           (a, b) => b.starredDate - a.starredDate
         )
-      : (placeholderClassNumbers.map((classNumber) => ({
-          schoolCode: "UY",
-          departmentCode: "DM",
-          classNumber,
-          name: "Lorem ipsum dolor sit amet.",
-          description:
-            "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas officiis quis voluptatum enim officia eos aliquid, quae cum aliquam vero aperiam beatae similique cupiditate, at ea laboriosam itaque? Quas, expedita.",
-        })) as ClassInfo[]);
+      : Object.values(reviewedClasses ?? {}).sort(
+          (a, b) => b.reviewedDate - a.reviewedDate
+        );
 
   return (
     <KeyboardAwareSafeAreaScrollView>

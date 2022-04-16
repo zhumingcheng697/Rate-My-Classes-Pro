@@ -7,7 +7,7 @@ import type {
 
 export enum Collections {
   users = "users",
-  classes = "classes",
+  reviews = "reviews",
 }
 
 export type UserDoc = {
@@ -18,7 +18,4 @@ export type UserDoc = {
   settings: Settings;
 };
 
-export type ClassDoc = {
-  _id: string;
-  reviews: ReviewRecord;
-};
+export type ReviewDoc = { _id: string } & ReviewRecord;

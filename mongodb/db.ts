@@ -1,6 +1,6 @@
 import Realm, { type User } from "realm";
 
-import { type UserDoc, type ClassDoc, Collections } from "./types";
+import { type UserDoc, type ReviewDoc, Collections } from "./types";
 import {
   type ClassCode,
   type StarredClassInfo,
@@ -87,13 +87,13 @@ export function useDB(user: User) {
     });
   }
 
-  async function loadClassDoc(classCode: ClassCode) {
+  async function loadReviewDoc(classCode: ClassCode) {
     return await db
-      .collection<ClassDoc>(Collections.classes)
+      .collection<ReviewDoc>(Collections.reviews)
       .findOne({ _id: getFullClassCode(classCode) });
   }
 
-  async function updateClassDoc(
+  async function updateReviewDoc(
     classCode: ClassCode,
     update: Realm.Services.MongoDB.Update,
     options?: Realm.Services.MongoDB.UpdateOptions
@@ -101,28 +101,28 @@ export function useDB(user: User) {
     if (!isAuthenticated) return;
 
     await db
-      .collection<ClassDoc>(Collections.classes)
+      .collection<ReviewDoc>(Collections.reviews)
       .updateOne({ _id: getFullClassCode(classCode) }, update, options);
   }
 
   async function upsertReview(classCode: ClassCode, review: Review) {
-    await updateClassDoc(
+    await updateReviewDoc(
       classCode,
       {
         $set: {
-          [`reviews.${[user.id]}.enjoyment`]: review.enjoyment,
-          [`reviews.${[user.id]}.difficulty`]: review.difficulty,
-          [`reviews.${[user.id]}.workload`]: review.workload,
-          [`reviews.${[user.id]}.value`]: review.value,
-          [`reviews.${[user.id]}.comment`]: review.comment,
+          [`${[user.id]}.enjoyment`]: review.enjoyment,
+          [`${[user.id]}.difficulty`]: review.difficulty,
+          [`${[user.id]}.workload`]: review.workload,
+          [`${[user.id]}.value`]: review.value,
+          [`${[user.id]}.comment`]: review.comment,
         },
         $setOnInsert: {
-          [`reviews.${[user.id]}.userId`]: review.userId,
-          [`reviews.${[user.id]}.upvotes`]: review.upvotes,
-          [`reviews.${[user.id]}.downvotes`]: review.downvotes,
-          [`reviews.${[user.id]}.reviewedDate`]: review.reviewedDate,
-          [`reviews.${[user.id]}.semester`]: review.semester,
-          [`reviews.${[user.id]}.instructor`]: review.instructor,
+          [`${[user.id]}.userId`]: review.userId,
+          [`${[user.id]}.upvotes`]: review.upvotes,
+          [`${[user.id]}.downvotes`]: review.downvotes,
+          [`${[user.id]}.reviewedDate`]: review.reviewedDate,
+          [`${[user.id]}.semester`]: review.semester,
+          [`${[user.id]}.instructor`]: review.instructor,
         },
       },
       { upsert: true }
@@ -135,37 +135,37 @@ export function useDB(user: User) {
     if (vote === Vote.upvote) {
       update = {
         $set: {
-          [`reviews.${[review.userId]}.upvotes.${user.id}`]: true,
+          [`${[review.userId]}.upvotes.${user.id}`]: true,
         },
         $unset: {
-          [`reviews.${[review.userId]}.downvotes.${user.id}`]: null,
+          [`${[review.userId]}.downvotes.${user.id}`]: null,
         },
       };
     } else if (vote === Vote.downvote) {
       update = {
         $set: {
-          [`reviews.${[review.userId]}.downvotes.${user.id}`]: true,
+          [`${[review.userId]}.downvotes.${user.id}`]: true,
         },
         $unset: {
-          [`reviews.${[review.userId]}.upvotes.${user.id}`]: null,
+          [`${[review.userId]}.upvotes.${user.id}`]: null,
         },
       };
     } else {
       update = {
         $unset: {
-          [`reviews.${[review.userId]}.upvotes.${user.id}`]: null,
-          [`reviews.${[review.userId]}.downvotes.${user.id}`]: null,
+          [`${[review.userId]}.upvotes.${user.id}`]: null,
+          [`${[review.userId]}.downvotes.${user.id}`]: null,
         },
       };
     }
 
-    await updateClassDoc(classCode, update);
+    await updateReviewDoc(classCode, update);
   }
 
   async function deleteReview(classCode: ClassCode) {
-    await updateClassDoc(classCode, {
+    await updateReviewDoc(classCode, {
       $unset: {
-        [`reviews.${[user.id]}`]: null,
+        [`${[user.id]}`]: null,
       },
     });
   }
@@ -179,7 +179,7 @@ export function useDB(user: User) {
     unstarClass,
     reviewClass,
     unreviewClass,
-    loadClassDoc,
+    loadReviewDoc,
     upsertReview,
     voteReview,
     deleteReview,

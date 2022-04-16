@@ -87,25 +87,27 @@ export default function DetailScreen() {
 
   useEffect(() => {
     (async () => {
-      if (isFocused && auth.user && auth.isAuthenticated) {
+      if (isFocused && auth.user && auth.isAuthenticated && db) {
         try {
           if (deleteReview) {
-            await db?.deleteReview(classInfo);
-            await unreviewClass(dispatch, auth.user)(classInfo);
+            await db.deleteReview(classInfo);
+            await db.unreviewClass(classInfo);
+            unreviewClass(dispatch)(classInfo);
 
             if (reviewRecord) {
               const newReviewRecord = { ...reviewRecord };
               delete newReviewRecord[auth.user.id];
               setReviewRecord(newReviewRecord);
             }
-
-            navigation.setParams({ deleteReview: undefined });
           } else if (newReview) {
             if (myReview) {
-              await db?.updateReview(classInfo, newReview);
+              await db.updateReview(classInfo, newReview);
             } else {
-              await db?.submitReview(classInfo, newReview);
-              await reviewClass(dispatch, auth.user)(classInfo);
+              const reviewedClass = { ...classInfo, reviewedDate: Date.now() };
+
+              await db.submitReview(classInfo, newReview);
+              await db.reviewClass(reviewedClass);
+              reviewClass(dispatch)(reviewedClass);
             }
 
             if (reviewRecord) {
@@ -113,11 +115,14 @@ export default function DetailScreen() {
               newReviewRecord[auth.user.id] = newReview;
               setReviewRecord(newReviewRecord);
             }
-
-            navigation.setParams({ newReview: undefined });
           }
         } catch (e) {
           setShowAlert(true);
+        } finally {
+          navigation.setParams({
+            deleteReview: undefined,
+            newReview: undefined,
+          });
         }
       }
     })();

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { IconButton, Icon, Button } from "native-base";
 import { useIsFocused, type RouteProp } from "@react-navigation/native";
 import type {
@@ -13,6 +13,7 @@ import { type SharedNavigationParamList } from "../../libs/types";
 import { getFullClassCode } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
 import AlertPopup from "../../components/AlertPopup";
+import { useDB } from "../../mongodb/db";
 
 type DetailScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -44,6 +45,10 @@ export default ({
       !!starredClasses[getFullClassCode(classInfo)];
     const pressedHoverStyle = { _icon: { opacity: 0.5 } };
 
+    const db = useMemo(() => {
+      if (auth.user) return useDB(auth.user);
+    }, [auth.user]);
+
     return (
       <>
         <AlertPopup
@@ -51,17 +56,23 @@ export default ({
           onClose={() => {
             setShowAlert(false);
           }}
-          header={"Sign Up to Star"}
-          body={"You need an account to keep track of your starred classes."}
+          header={auth.isAuthenticated ? "Unable to Star" : "Sign Up to Star"}
+          body={
+            auth.isAuthenticated
+              ? undefined
+              : "You need an account to keep track of your starred classes."
+          }
           footerPrimaryButton={
-            <Button
-              onPress={() => {
-                setShowAlert(false);
-                navigation.navigate("SignInSignUp");
-              }}
-            >
-              Sign Up
-            </Button>
+            auth.isAuthenticated ? undefined : (
+              <Button
+                onPress={() => {
+                  setShowAlert(false);
+                  navigation.navigate("SignInSignUp");
+                }}
+              >
+                Sign Up
+              </Button>
+            )
           }
         />
         <IconButton
@@ -77,12 +88,22 @@ export default ({
               as={<Ionicons name={"star" + (isStarred ? "" : "-outline")} />}
             />
           }
-          onPress={() => {
-            if (auth.user && auth.isAuthenticated) {
-              if (isStarred) {
-                unstarClass(dispatch, auth.user)(classInfo);
-              } else {
-                starClass(dispatch, auth.user)(classInfo);
+          onPress={async () => {
+            if (auth.user && auth.isAuthenticated && db) {
+              try {
+                if (isStarred) {
+                  await db.unstarClass(classInfo);
+                  unstarClass(dispatch)(classInfo);
+                } else {
+                  const starredClass = {
+                    ...classInfo,
+                    starredDate: Date.now(),
+                  };
+                  await db.starClass(starredClass);
+                  starClass(dispatch)(starredClass);
+                }
+              } catch (e) {
+                setShowAlert(true);
               }
             } else {
               setShowAlert(true);

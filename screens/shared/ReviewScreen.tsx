@@ -86,7 +86,7 @@ export default function ReviewScreen() {
           difficulty,
           workload,
           value,
-          upvotes: {}, // `upsertReview` takes care of it with $set vs $setOnInsert
+          upvotes: { [auth.user.id]: true }, // `upsertReview` takes care of it with $set vs $setOnInsert
           downvotes: {}, // `upsertReview` takes care of it with $set vs $setOnInsert
           reviewedDate: Date.now(), // `upsertReview` takes care of it with $set vs $setOnInsert
           semester: semester.toJSON(),

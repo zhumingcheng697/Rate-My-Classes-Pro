@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Text, Button, Box, VStack, HStack, Spacer } from "native-base";
 import {
+  useIsFocused,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -17,6 +18,7 @@ import {
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import ReviewCard from "../../components/ReviewCard";
 import { useAuth } from "../../mongodb/auth";
+import { useDB } from "../../mongodb/db";
 
 type DetailScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -28,9 +30,10 @@ type DetailScreenRouteProp = RouteProp<SharedNavigationParamList, "Detail">;
 export default function DetailScreen() {
   const navigation = useNavigation<DetailScreenNavigationProp>();
   const route = useRoute<DetailScreenRouteProp>();
-  const { classInfo } = route.params;
+  const { classInfo, deleteReview, newReview } = route.params;
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
+  const isFocused = useIsFocused();
   const description = useMemo(() => {
     return (
       classInfo.description &&
@@ -41,6 +44,22 @@ export default function DetailScreen() {
   const [review1, setReview1] = useState({ ...placeholderReview });
   const [review2, setReview2] = useState({ ...placeholderReview });
   const [review3, setReview3] = useState({ ...placeholderReview });
+
+  useEffect(() => {}, []);
+
+  useEffect(() => {
+    if (isFocused && auth.user && auth.isAuthenticated) {
+      const db = useDB(auth.user);
+
+      if (deleteReview) {
+        // db.deleteReview(classInfo);
+        navigation.setParams({ deleteReview: undefined });
+      } else if (newReview) {
+        // db.upsertReview(classInfo, newReview);
+        navigation.setParams({ newReview: undefined });
+      }
+    }
+  }, [isFocused, auth.user]);
 
   return (
     <KeyboardAwareSafeAreaScrollView>
@@ -71,9 +90,21 @@ export default function DetailScreen() {
           </Text>
         </Button>
         <VStack margin={"10px"} space={"10px"}>
-          <ReviewCard review={review1} setReview={setReview1} />
-          <ReviewCard review={review2} setReview={setReview2} />
-          <ReviewCard review={review3} setReview={setReview3} />
+          <ReviewCard
+            classCode={classInfo}
+            review={review1}
+            setReview={setReview1}
+          />
+          <ReviewCard
+            classCode={classInfo}
+            review={review2}
+            setReview={setReview2}
+          />
+          <ReviewCard
+            classCode={classInfo}
+            review={review3}
+            setReview={setReview3}
+          />
         </VStack>
       </Box>
     </KeyboardAwareSafeAreaScrollView>

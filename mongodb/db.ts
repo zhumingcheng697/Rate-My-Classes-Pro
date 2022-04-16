@@ -129,32 +129,32 @@ export function useDB(user: User) {
     );
   }
 
-  async function voteReview(classCode: ClassCode, review: Review, vote?: Vote) {
+  async function voteReview(classCode: ClassCode, userId: string, vote?: Vote) {
     let update: Realm.Services.MongoDB.Update;
 
     if (vote === Vote.upvote) {
       update = {
         $set: {
-          [`${[review.userId]}.upvotes.${user.id}`]: true,
+          [`${[userId]}.upvotes.${user.id}`]: true,
         },
         $unset: {
-          [`${[review.userId]}.downvotes.${user.id}`]: null,
+          [`${[userId]}.downvotes.${user.id}`]: null,
         },
       };
     } else if (vote === Vote.downvote) {
       update = {
         $set: {
-          [`${[review.userId]}.downvotes.${user.id}`]: true,
+          [`${[userId]}.downvotes.${user.id}`]: true,
         },
         $unset: {
-          [`${[review.userId]}.upvotes.${user.id}`]: null,
+          [`${[userId]}.upvotes.${user.id}`]: null,
         },
       };
     } else {
       update = {
         $unset: {
-          [`${[review.userId]}.upvotes.${user.id}`]: null,
-          [`${[review.userId]}.downvotes.${user.id}`]: null,
+          [`${[userId]}.upvotes.${user.id}`]: null,
+          [`${[userId]}.downvotes.${user.id}`]: null,
         },
       };
     }

@@ -19,6 +19,7 @@ import {
   VoteRecord,
   Vote,
   SharedNavigationParamList,
+  ClassCode,
 } from "../libs/types";
 import Semester from "../libs/semester";
 import PlainTextButton from "./PlainTextButton";
@@ -29,6 +30,7 @@ import {
   useRoute,
   type RouteProp,
 } from "@react-navigation/native";
+import { useDB } from "../mongodb/db";
 
 type ReviewCardNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -50,6 +52,7 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
 
 type VoteBlockBaseProps = {
   userId: string;
+  classCode: ClassCode;
   upvotes: VoteRecord;
   downvotes: VoteRecord;
   setVotes: (upVotes?: VoteRecord, downvotes?: VoteRecord) => void;
@@ -60,6 +63,7 @@ type VoteBlockProps = VoteBlockBaseProps &
 
 function VoteBlock({
   userId,
+  classCode,
   upvotes,
   downvotes,
   setVotes,
@@ -73,6 +77,10 @@ function VoteBlock({
     () => Object.keys(upvotes).length - Object.keys(downvotes).length,
     [upvotes, downvotes]
   );
+  const db = useMemo(() => {
+    if (auth.user && auth.isAuthenticated) return useDB(auth.user);
+  }, [auth.user]);
+
   const vote = useMemo(() => {
     if (!auth.user || !isAuthenticated) {
       return undefined;
@@ -83,6 +91,18 @@ function VoteBlock({
       return Vote.downvote;
     }
   }, [upvotes, downvotes, isAuthenticated]);
+
+  const upvote = () => {
+    db?.voteReview(classCode, userId, Vote.upvote);
+  };
+
+  const downvote = () => {
+    db?.voteReview(classCode, userId, Vote.downvote);
+  };
+
+  const unvote = () => {
+    db?.voteReview(classCode, userId);
+  };
 
   return (
     <>
@@ -123,12 +143,14 @@ function VoteBlock({
             if (auth.user && isAuthenticated) {
               if (vote === Vote.upvote) {
                 console.log(`unvote ${userId}`);
+                unvote();
 
                 const newUpvotes = { ...upvotes };
                 delete newUpvotes[auth.user.id];
                 setVotes(newUpvotes);
               } else {
                 console.log(`upvote ${userId}`);
+                upvote();
 
                 const newUpvotes = { ...upvotes };
                 newUpvotes[auth.user.id] = true;
@@ -161,12 +183,14 @@ function VoteBlock({
           onPress={() => {
             if (auth.user && isAuthenticated) {
               if (vote === Vote.downvote) {
+                unvote();
                 console.log(`unvote ${userId}`);
 
                 const newDownvotes = { ...upvotes };
                 delete newDownvotes[auth.user.id];
                 setVotes(undefined, newDownvotes);
               } else {
+                downvote();
                 console.log(`downvote ${userId}`);
 
                 const newDownvotes = { ...upvotes };
@@ -192,6 +216,7 @@ function VoteBlock({
 }
 
 type ReviewCardBaseProps = {
+  classCode: ClassCode;
   review: Review;
   setReview: (review: Review) => void;
 };
@@ -200,6 +225,7 @@ export type ReviewCardProps = ReviewCardBaseProps &
   Omit<IStackProps, keyof ReviewCardBaseProps>;
 
 export default function ReviewCard({
+  classCode,
   review,
   setReview,
   ...rest
@@ -257,6 +283,7 @@ export default function ReviewCard({
       {comment && <Text fontSize={"md"}>{comment}</Text>}
       <HStack justifyContent={"space-between"} flexWrap={"wrap"}>
         <VoteBlock
+          classCode={classCode}
           margin={"-3px"}
           userId={userId}
           upvotes={upvotes}

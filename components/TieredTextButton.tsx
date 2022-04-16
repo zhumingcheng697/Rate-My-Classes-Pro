@@ -28,7 +28,7 @@ export default function TieredTextButton({
       >
         {primaryText}
       </Text>
-      {secondaryText && (
+      {!!secondaryText && (
         <Text
           width={width}
           paddingX={"8px"}

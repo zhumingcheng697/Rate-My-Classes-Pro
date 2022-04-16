@@ -45,7 +45,7 @@ export default function ClearableInput({
       }
       rightElement={
         <Box>
-          {(canClear ?? value) && (
+          {(canClear ?? !!value) && (
             <IconButton
               variant={"unstyled"}
               padding={"3px"}

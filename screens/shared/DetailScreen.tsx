@@ -12,10 +12,11 @@ import { useDispatch, useSelector } from "react-redux";
 import type { ReviewRecord, SharedNavigationParamList } from "../../libs/types";
 import { getDepartmentName, getSchoolName } from "../../libs/utils";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
+import AlertPopup from "../../components/AlertPopup";
 import ReviewCard from "../../components/ReviewCard";
+import RatingDashboard from "../../components/RatingDashboard";
 import { useAuth } from "../../mongodb/auth";
 import { useDB } from "../../mongodb/db";
-import AlertPopup from "../../components/AlertPopup";
 import { reviewClass, unreviewClass } from "../../redux/actions";
 
 type DetailScreenNavigationProp = StackNavigationProp<
@@ -150,6 +151,13 @@ export default function DetailScreen() {
               {description}
             </Text>
           )}
+          <RatingDashboard
+            margin={"5px"}
+            enjoyment={5}
+            difficulty={5}
+            workload={5}
+            value={5}
+          />
           <Button
             margin={"10px"}
             onPress={() => {

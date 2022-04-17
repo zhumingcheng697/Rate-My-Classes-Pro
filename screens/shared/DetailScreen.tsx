@@ -252,6 +252,7 @@ export default function DetailScreen() {
                   navigation.navigate("Schedule", {
                     semester: selectedSemester,
                     sections: sections ?? [],
+                    classInfo,
                   });
                 }}
               >

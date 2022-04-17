@@ -30,7 +30,7 @@ type AuthContext = {
     email: string,
     password: string
   ) => Promise<void>;
-  signOut: (signInAnonymouslyAgain: boolean) => Promise<void>;
+  signOut: (signInAnonymouslyAgain?: boolean) => Promise<void>;
 };
 
 type AuthProviderProps = { children: ReactNode };

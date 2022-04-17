@@ -84,7 +84,11 @@ export type RootNavigationParamList = {
 export type SharedNavigationParamList = {
   Detail: { classInfo: ClassInfo; deleteReview?: true; newReview?: Review };
   Review: { classInfo: ClassInfo; previousReview?: Review; newReview?: Review };
-  Schedule: { semester: SemesterInfo; sections: SectionInfo[] };
+  Schedule: {
+    classInfo: ClassInfo;
+    semester: SemesterInfo;
+    sections: SectionInfo[];
+  };
   SignInSignUp: { isSigningIn: boolean } | undefined;
 };
 

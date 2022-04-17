@@ -12,7 +12,12 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import Semester from "../../libs/semester";
 import { SectionInfo, type SharedNavigationParamList } from "../../libs/types";
 import { getSections } from "../../libs/schedge";
-import { getFullClassCode, prepend, stripLineBreaks } from "../../libs/utils";
+import {
+  getFullClassCode,
+  getMeetingScheduleString,
+  prepend,
+  stripLineBreaks,
+} from "../../libs/utils";
 import AlertPopup from "../../components/AlertPopup";
 import IconHStack from "../../components/IconHStack";
 
@@ -114,17 +119,17 @@ export default function ScheduleScreen() {
                       lineHeight={"1.15em"}
                       fontWeight={"semibold"}
                     >
-                      {name} ({code})
+                      {name} ({getFullClassCode(classInfo)} {code})
                     </Text>
                     {!!instructors && !!instructors.length && (
                       <IconHStack
-                        iconName={"person"}
+                        iconName={"school"}
                         text={instructors.join(", ")}
                       />
                     )}
                     {typeof maxUnits !== "undefined" && (
                       <IconHStack
-                        iconName={"school"}
+                        iconName={"ribbon"}
                         text={
                           (!!maxUnits && !minUnits) || minUnits === maxUnits
                             ? `${maxUnits} Credit${maxUnits === 1 ? "" : "s"}`
@@ -139,44 +144,27 @@ export default function ScheduleScreen() {
                       />
                     )}
                     {!!meetings && !!meetings.length && (
-                      <IconHStack iconName={"time"}>
-                        <VStack>
-                          {meetings.map((meeting, index) => {
+                      <IconHStack
+                        iconName={"time"}
+                        text={getMeetingScheduleString(
+                          meetings.map(({ beginDate, minutesDuration }) => {
                             const begin = new Date(
-                              meeting.beginDate.replace(
+                              beginDate.replace(
                                 /^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{1,2})/i,
                                 "$1T$2"
                               )
                             );
 
-                            return (
-                              <Text
-                                lineHeight={"sm"}
-                                fontSize={"md"}
-                                key={"meeting" + index}
-                              >
-                                {begin.toLocaleString(undefined, {
-                                  weekday: "long",
-                                })}{" "}
-                                {begin.toLocaleString(undefined, {
-                                  hour12: true,
-                                  hour: "numeric",
-                                  minute: "2-digit",
-                                })}
-                                –
-                                {new Date(
-                                  begin.valueOf() +
-                                    meeting.minutesDuration * 60 * 1000
-                                ).toLocaleString(undefined, {
-                                  hour12: true,
-                                  hour: "numeric",
-                                  minute: "2-digit",
-                                })}
-                              </Text>
+                            const end = new Date(
+                              begin.valueOf() + minutesDuration * 60 * 1000
                             );
-                          })}
-                        </VStack>
-                      </IconHStack>
+
+                            return [begin, end];
+                          })
+                        )
+                          .map(([day, time]) => `${day}: ${time}`)
+                          .join("\n")}
+                      />
                     )}
                     {!!prerequisites &&
                       stripLineBreaks(

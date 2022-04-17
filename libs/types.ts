@@ -89,7 +89,7 @@ export type SharedNavigationParamList = {
     semester: SemesterInfo;
     sections: SectionInfo[];
   };
-  SignInSignUp: { isSigningIn: boolean } | undefined;
+  SignInSignUp: { isSigningUp: boolean } | undefined;
 };
 
 export type ExploreNavigationParamList = {

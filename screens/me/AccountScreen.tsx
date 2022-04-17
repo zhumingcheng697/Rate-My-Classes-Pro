@@ -120,7 +120,7 @@ export default function AccountScreen() {
                     title={"Sign In"}
                     onPress={() => {
                       navigation.navigate("SignInSignUp", {
-                        isSigningIn: true,
+                        isSigningUp: false,
                       });
                     }}
                   />
@@ -130,7 +130,7 @@ export default function AccountScreen() {
                     title={"Sign Up"}
                     onPress={() => {
                       navigation.navigate("SignInSignUp", {
-                        isSigningIn: false,
+                        isSigningUp: true,
                       });
                     }}
                   />

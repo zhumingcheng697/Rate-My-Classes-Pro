@@ -56,11 +56,11 @@ export default ({
           onClose={() => {
             setShowAlert(false);
           }}
-          header={auth.isAuthenticated ? "Unable to Star" : "Sign Up to Star"}
+          header={auth.isAuthenticated ? "Unable to Star" : "Sign In to Star"}
           body={
             auth.isAuthenticated
               ? undefined
-              : "You need an account to keep track of your starred classes."
+              : "You need to sign in to keep track of your starred classes."
           }
           footerPrimaryButton={
             auth.isAuthenticated ? undefined : (
@@ -70,7 +70,7 @@ export default ({
                   navigation.navigate("SignInSignUp");
                 }}
               >
-                Sign Up
+                Sign In
               </Button>
             )
           }

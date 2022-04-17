@@ -299,7 +299,7 @@ export default function DetailScreen() {
                   ? myReview
                     ? "Edit My Review"
                     : "Review"
-                  : "Sign Up to Review"}
+                  : "Sign In to Review"}
               </Text>
             </Button>
           </VStack>

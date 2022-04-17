@@ -43,7 +43,7 @@ export default function SignInSignUpScreen() {
   const [showAlert, setShowAlert] = useState(false);
   const [error, setError] = useState<any>(null);
 
-  const isSigningIn = route.params?.isSigningIn ?? false;
+  const isSigningUp = route.params?.isSigningUp ?? false;
 
   const isAuthenticated = auth.isAuthenticated;
 
@@ -57,16 +57,16 @@ export default function SignInSignUpScreen() {
     setIsLoading(false);
     setPassword("");
     setConfirmPassword("");
-  }, [isSigningIn]);
+  }, [isSigningUp]);
 
   useEffect(() => {
     setKey(Math.random());
-  }, [username, email, confirmPassword, isSigningIn]);
+  }, [username, email, confirmPassword, isSigningUp]);
 
   return (
     <>
       <AlertPopup
-        header={`Unable to ${isSigningIn ? "Sign In" : "Sign Up"}`}
+        header={`Unable to ${isSigningUp ? "Sign Up" : "Sign In"}`}
         body={
           error && !isObjectEmpty(error)
             ? error.message
@@ -81,7 +81,7 @@ export default function SignInSignUpScreen() {
       />
       <KeyboardAwareSafeAreaScrollView>
         <VStack margin={"10px"} space={"8px"}>
-          {!isSigningIn && (
+          {isSigningUp && (
             <LabeledInput label={"Username"} usePlainLabel>
               <Input
                 value={username}
@@ -109,7 +109,7 @@ export default function SignInSignUpScreen() {
               variant={"password"}
             />
           </LabeledInput>
-          {!isSigningIn && (
+          {isSigningUp && (
             <LabeledInput label={"Confirm Password"} usePlainLabel>
               <Input
                 value={confirmPassword}
@@ -125,16 +125,16 @@ export default function SignInSignUpScreen() {
               isLoading ||
               !email ||
               !password ||
-              (!isSigningIn &&
+              (isSigningUp &&
                 (!username || !confirmPassword || password !== confirmPassword))
             }
             onPress={async () => {
               try {
                 setIsLoading(true);
-                if (isSigningIn) {
-                  await auth.signInWithEmailPassword(email, password);
-                } else {
+                if (isSigningUp) {
                   await auth.signUpWithEmailPassword(username, email, password);
+                } else {
+                  await auth.signInWithEmailPassword(email, password);
                 }
                 setError(null);
               } catch (e) {
@@ -146,21 +146,21 @@ export default function SignInSignUpScreen() {
             }}
           >
             <Text variant={"button"}>
-              {isSigningIn ? "Sign In" : "Sign Up"}
+              {isSigningUp ? "Sign Up" : "Sign In"}
             </Text>
           </Button>
           <Box>
             <Text textAlign={"center"}>
-              {isSigningIn
-                ? "Don’t have an account yet?"
-                : "Already have an account?"}
+              {isSigningUp
+                ? "Already have an account?"
+                : "Don’t have an account yet?"}
             </Text>
             <HStack justifyContent={"center"}>
               <PlainTextButton
-                title={isSigningIn ? "Sign Up" : "Sign In"}
+                title={isSigningUp ? "Sign In" : "Sign Up"}
                 onPress={() => {
                   Keyboard.dismiss();
-                  navigation.setParams({ isSigningIn: !isSigningIn });
+                  navigation.setParams({ isSigningUp: !isSigningUp });
                 }}
               />
             </HStack>

@@ -109,11 +109,11 @@ function VoteBlock({
       <AlertPopup
         isOpen={showAlert}
         onClose={() => setShowAlert(false)}
-        header={isAuthenticated ? "Unable to Vote" : "Sign Up to Vote"}
+        header={isAuthenticated ? "Unable to Vote" : "Sign In to Vote"}
         body={
           isAuthenticated
             ? undefined
-            : "You need an account to vote others’ reviews."
+            : "You need to sign in to vote others’ reviews."
         }
         footerPrimaryButton={
           !isAuthenticated ? (
@@ -123,7 +123,7 @@ function VoteBlock({
                 navigation.navigate("SignInSignUp");
               }}
             >
-              Sign Up
+              Sign In
             </Button>
           ) : undefined
         }

@@ -22,13 +22,20 @@ export function useDB(user: User) {
   async function createUserDoc(username: string, settings: Settings) {
     if (!isAuthenticated) return;
 
-    await db.collection<UserDoc>(Collections.users).insertOne({
-      _id: user.id,
-      username,
-      starredClasses: {},
-      reviewedClasses: {},
-      settings,
-    });
+    const result = await db.collection<UserDoc>(Collections.users).updateOne(
+      { _id: user.id },
+      {
+        $setOnInsert: {
+          username,
+          starredClasses: {},
+          reviewedClasses: {},
+          settings,
+        },
+      },
+      { upsert: true }
+    );
+
+    return !!result.upsertedId;
   }
 
   async function loadUserDoc() {

@@ -10,7 +10,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { starClass, unstarClass } from "../../redux/actions";
 import { type SharedNavigationParamList } from "../../libs/types";
-import { getFullClassCode } from "../../libs/utils";
+import { getBasicClassInfo, getFullClassCode } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
 import AlertPopup from "../../components/AlertPopup";
 import { useDB } from "../../mongodb/db";
@@ -95,10 +95,12 @@ export default ({
                   await db.unstarClass(classInfo);
                   unstarClass(dispatch)(classInfo);
                 } else {
-                  const starredClass = {
-                    ...classInfo,
-                    starredDate: Date.now(),
-                  };
+                  const starredClass = Object.assign(
+                    getBasicClassInfo(classInfo),
+                    {
+                      starredDate: Date.now(),
+                    }
+                  );
                   await db.starClass(starredClass);
                   starClass(dispatch)(starredClass);
                 }

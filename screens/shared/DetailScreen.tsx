@@ -10,7 +10,11 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 import { useDispatch, useSelector } from "react-redux";
 
 import type { ReviewRecord, SharedNavigationParamList } from "../../libs/types";
-import { getDepartmentName, getSchoolName } from "../../libs/utils";
+import {
+  getBasicClassInfo,
+  getDepartmentName,
+  getSchoolName,
+} from "../../libs/utils";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import AlertPopup from "../../components/AlertPopup";
 import ReviewCard from "../../components/ReviewCard";
@@ -134,7 +138,10 @@ export default function DetailScreen() {
             if (myReview) {
               await db.updateReview(classInfo, newReview);
             } else {
-              const reviewedClass = { ...classInfo, reviewedDate: Date.now() };
+              const reviewedClass = Object.assign(
+                getBasicClassInfo(classInfo),
+                { reviewedDate: Date.now() }
+              );
 
               await db.submitReview(classInfo, newReview);
               await db.reviewClass(reviewedClass);

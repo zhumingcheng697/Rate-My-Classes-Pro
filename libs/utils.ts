@@ -33,6 +33,16 @@ export function getFullClassCode({
   })} ${classNumber.toUpperCase().replace(/\./g, "")}`;
 }
 
+export function getBasicClassInfo({
+  schoolCode,
+  departmentCode,
+  classNumber,
+  name,
+  description,
+}: ClassInfo) {
+  return { schoolCode, departmentCode, classNumber, name, description };
+}
+
 export function getSchoolName(
   { schoolCode }: SchoolInfo,
   schoolNameRecord: SchoolNameRecord | null

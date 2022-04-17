@@ -9,6 +9,8 @@ import React, {
 } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Realm, { type User } from "realm";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import config from "react-native-config";
 
 import app from "./app";
 import { useDB } from "./db";
@@ -18,11 +20,17 @@ import {
   loadStarredClasses,
 } from "../redux/actions";
 
+GoogleSignin.configure({
+  webClientId: config.GOOGLE_WEB_CLIENT_ID,
+  iosClientId: config.GOOGLE_IOS_CLIENT_ID,
+});
+
 type AuthContext = {
   user: User | null;
   username: string | null;
   isAuthenticated: boolean;
   updateUsername: (username: string) => Promise<void>;
+  continueWithGoogle: () => Promise<void>;
   signInAnonymously: (override?: boolean) => Promise<void>;
   signInWithEmailPassword: (email: string, password: string) => Promise<void>;
   signUpWithEmailPassword: (
@@ -77,7 +85,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const signInAnonymously = async (override: boolean = false) => {
     if (isAuthenticated && !override) return;
 
-    setUsername(null);
     const credentials = Realm.Credentials.anonymous();
     const newUser = await app.logIn(credentials);
     setUser(newUser);
@@ -111,6 +118,29 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(newUser);
   };
 
+  const continueWithGoogle = async () => {
+    if (user && user.providerType === "anon-user") await signOut(false);
+
+    await GoogleSignin.hasPlayServices();
+
+    const googleUser = await GoogleSignin.signIn();
+    const newUsername =
+      googleUser.user.name || googleUser.user.givenName || "New User";
+
+    // use Google ID token to sign into Realm
+    const credential = Realm.Credentials.google(googleUser.idToken!);
+    const newUser = await app.logIn(credential);
+    const upserted = await useDB(newUser).createUserDoc(newUsername, settings);
+
+    if (upserted) {
+      setUsername(newUsername);
+    } else {
+      await loadUserDoc(newUser);
+    }
+
+    setUser(newUser);
+  };
+
   // The signOut function calls the logOut function on the currently
   // logged in user
   const signOut = async (signInAnonymouslyAgain: boolean = true) => {
@@ -138,6 +168,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         username,
         isAuthenticated,
         updateUsername,
+        continueWithGoogle,
         signInAnonymously,
         signInWithEmailPassword,
         signUpWithEmailPassword,

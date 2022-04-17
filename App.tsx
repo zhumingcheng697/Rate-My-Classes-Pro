@@ -34,7 +34,11 @@ declare module "react-redux" {
   interface DefaultRootState extends RootState {}
 }
 
-type Config = { REALM_APP_ID: string };
+type Config = {
+  REALM_APP_ID: string;
+  GOOGLE_WEB_CLIENT_ID: string;
+  GOOGLE_IOS_CLIENT_ID: string;
+};
 
 declare module "react-native-config" {
   interface NativeConfig extends Config {}

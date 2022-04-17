@@ -14,8 +14,12 @@ export default function SettingsScreen() {
   const auth = useAuth();
   const dispatch = useDispatch();
   const [canClear, setCanClear] = useState(false);
-  const [previousUsername, setPreviousUsername] = useState(auth.username);
-  const [newUsername, setNewUsername] = useState(auth.username ?? "");
+  const [previousUsername, setPreviousUsername] = useState(
+    auth.isAuthenticated ? auth.username : ""
+  );
+  const [newUsername, setNewUsername] = useState(
+    (auth.isAuthenticated && auth.username) || ""
+  );
   const settings = useSelector((state) => state.settings);
   const showPreviousSemesters = settings.showPreviousSemesters;
 

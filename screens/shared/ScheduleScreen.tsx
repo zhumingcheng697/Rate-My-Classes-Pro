@@ -159,27 +159,34 @@ export default function ScheduleScreen() {
                       />
                     )}
                     {!!meetings && !!meetings.length && (
-                      <IconHStack
-                        iconName={"time"}
-                        text={getMeetingScheduleString(
-                          meetings.map(({ beginDate, minutesDuration }) => {
-                            const begin = new Date(
-                              beginDate.replace(
-                                /^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{1,2})/i,
-                                "$1T$2"
-                              )
-                            );
+                      <IconHStack iconName={"time"}>
+                        <VStack space={"2px"} flexShrink={1} flexGrow={1}>
+                          {getMeetingScheduleString(
+                            meetings.map(({ beginDate, minutesDuration }) => {
+                              const begin = new Date(
+                                beginDate.replace(
+                                  /^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{1,2})/i,
+                                  "$1T$2"
+                                )
+                              );
 
-                            const end = new Date(
-                              begin.valueOf() + minutesDuration * 60 * 1000
-                            );
+                              const end = new Date(
+                                begin.valueOf() + minutesDuration * 60 * 1000
+                              );
 
-                            return [begin, end];
-                          })
-                        )
-                          .map(([day, time]) => `${day}: ${time}`)
-                          .join("\n")}
-                      />
+                              return [begin, end];
+                            })
+                          ).map(([day, time], index) => (
+                            <Text
+                              fontSize={"md"}
+                              lineHeight={"sm"}
+                              key={day + time + index}
+                            >
+                              {day}: {time}
+                            </Text>
+                          ))}
+                        </VStack>
+                      </IconHStack>
                     )}
                     {!!prerequisites &&
                       stripLineBreaks(

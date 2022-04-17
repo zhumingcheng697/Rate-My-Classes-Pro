@@ -23,7 +23,7 @@ type AuthContext = {
   username: string | null;
   isAuthenticated: boolean;
   updateUsername: (username: string) => Promise<void>;
-  signInAnonymously: () => Promise<void>;
+  signInAnonymously: (override?: boolean) => Promise<void>;
   signInWithEmailPassword: (email: string, password: string) => Promise<void>;
   signUpWithEmailPassword: (
     username: string,
@@ -74,8 +74,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     await useDB(user).updateUsername(username);
   };
 
-  const signInAnonymously = async () => {
-    if (isAuthenticated) return;
+  const signInAnonymously = async (override: boolean = false) => {
+    if (isAuthenticated && !override) return;
 
     setUsername(null);
     const credentials = Realm.Credentials.anonymous();
@@ -127,7 +127,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(null);
 
     if (signInAnonymouslyAgain) {
-      await signInAnonymously();
+      await signInAnonymously(true);
     }
   };
 

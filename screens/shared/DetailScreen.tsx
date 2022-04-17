@@ -18,6 +18,7 @@ import {
   getBasicClassInfo,
   getDepartmentName,
   getSchoolName,
+  stripLineBreaks,
 } from "../../libs/utils";
 import Semester from "../../libs/semester";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
@@ -63,10 +64,7 @@ export default function DetailScreen() {
   const [reviewRecord, setReviewRecord] = useState<ReviewRecord | null>(null);
 
   const description = useMemo(() => {
-    return (
-      classInfo.description &&
-      classInfo.description.replace(/([a-z0-9])[\s\n]+([^\s\n])/gi, "$1 $2")
-    );
+    return classInfo.description && stripLineBreaks(classInfo.description);
   }, [classInfo.description]);
 
   const myReview = useMemo(() => {

@@ -69,6 +69,19 @@ export function isObjectEmpty(obj: object) {
   return Object.keys(obj).length === 0;
 }
 
+export function prepend(str: string, prefix: string, separator: string) {
+  if (str.toUpperCase().startsWith(prefix.toUpperCase())) {
+    return str;
+  }
+  return prefix + separator + str;
+}
+
+export function stripLineBreaks(str: string) {
+  return str
+    .replace(/([a-z0-9])[\s\n]+([^\s\n])/gi, "$1 $2")
+    .replace(/^[\s\n]+|[\s\n]+$/gi, "");
+}
+
 export function formSentence(str: string) {
   return (
     str.charAt(0).toUpperCase() +

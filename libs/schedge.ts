@@ -5,7 +5,7 @@ import type {
   ClassInfo,
   SectionInfo,
 } from "./types";
-import Semester from "./semester";
+import { SemesterInfo } from "./semester";
 import { isSchoolGrad } from "./utils";
 
 type URLParams = Record<string, string | number | boolean>;
@@ -90,7 +90,7 @@ export async function getDepartmentNames(): Promise<DepartmentNameRecord> {
 
 export async function getClasses(
   { schoolCode, departmentCode }: DepartmentInfo,
-  semester: Semester
+  semester: SemesterInfo
 ): Promise<ClassInfo[]> {
   const res = await fetch(
     composeUrl(
@@ -113,7 +113,7 @@ export async function getClasses(
 
 export async function searchClasses(
   query: string,
-  semester: Semester
+  semester: SemesterInfo
 ): Promise<ClassInfo[]> {
   const res = await fetch(
     composeUrl(`/${semester.year}/${semester.semesterCode}/search`, {
@@ -140,7 +140,7 @@ export async function searchClasses(
 
 export async function getSections(
   { name, schoolCode, departmentCode, classNumber }: ClassInfo,
-  semester: Semester
+  semester: SemesterInfo
 ): Promise<SectionInfo[] | null> {
   const res = await fetch(
     composeUrl(`/${semester.year}/${semester.semesterCode}/search`, {

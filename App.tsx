@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
 import { createStore } from "redux";
@@ -44,8 +44,6 @@ declare module "react-native-config" {
   interface NativeConfig extends Config {}
 }
 
-type AppState = { error: ErrorType | null; showAlert: boolean };
-
 const navigationTheme = {
   ...DefaultTheme,
   colors: {
@@ -55,46 +53,38 @@ const navigationTheme = {
   },
 };
 
-export default class App extends Component<{}, AppState> {
-  state: AppState = {
-    error: null,
-    showAlert: false,
-  };
+export default function App() {
+  const [error, setError] = useState<ErrorType | null>(null);
+  const [showAlert, setShowAlert] = useState(false);
 
-  unsubsriceRedux = () => {};
+  useEffect(() => {
+    const reduxListener = (() => {
+      let previousSettings = store.getState().settings;
 
-  reduxListener = (() => {
-    let previousSettings = store.getState().settings;
+      return async () => {
+        const { settings } = store.getState();
 
-    return async () => {
-      const { settings } = store.getState();
-
-      if (settings !== previousSettings) {
-        if (app.currentUser && app.currentUser.providerType !== "anon-user") {
-          await useDB(app.currentUser).updateSettings(settings);
+        if (settings !== previousSettings) {
+          if (app.currentUser && app.currentUser.providerType !== "anon-user") {
+            await useDB(app.currentUser).updateSettings(settings);
+          }
         }
-      }
-    };
-  })();
-
-  componentWillUnmount() {
-    this.unsubsriceRedux();
-  }
-
-  componentDidMount() {
-    this.unsubsriceRedux = store.subscribe(this.reduxListener.bind(this));
+      };
+    })();
 
     getSchoolNames()
       .then((record) => {
         if (record && !isObjectEmpty(record)) {
           setSchoolNameRecord(store.dispatch)(record);
         } else {
-          this.setState({ error: ErrorType.noData, showAlert: true });
+          setError(ErrorType.noData);
+          setShowAlert(true);
         }
       })
       .catch((e) => {
         console.error(e);
-        this.setState({ error: ErrorType.network, showAlert: true });
+        setError(ErrorType.network);
+        setShowAlert(true);
       });
 
     getDepartmentNames()
@@ -102,40 +92,40 @@ export default class App extends Component<{}, AppState> {
         if (record && !isObjectEmpty(record)) {
           setDepartmentNameRecord(store.dispatch)(record);
         } else {
-          this.setState({ error: ErrorType.noData, showAlert: true });
+          setError(ErrorType.noData);
+          setShowAlert(true);
         }
       })
       .catch((e) => {
         console.error(e);
-        this.setState({ error: ErrorType.network, showAlert: true });
+        setError(ErrorType.network);
+        setShowAlert(true);
       });
-  }
 
-  clearLoadError() {
-    this.setState({ showAlert: false });
-  }
+    return store.subscribe(reduxListener);
+  }, []);
 
-  render() {
-    return (
-      <Provider store={store}>
-        <AuthProvider>
-          <NativeBaseProvider theme={nativeBaseTheme}>
-            <NavigationContainer theme={navigationTheme}>
-              <AlertPopup
-                body={
-                  this.state.error === ErrorType.noData
-                    ? "This might be an issue with Schedge, our API provider for classes."
-                    : undefined
-                }
-                isOpen={this.state.showAlert}
-                onClose={this.clearLoadError.bind(this)}
-                onlyShowWhenFocused={false}
-              />
-              <RootNavigation />
-            </NavigationContainer>
-          </NativeBaseProvider>
-        </AuthProvider>
-      </Provider>
-    );
-  }
+  return (
+    <Provider store={store}>
+      <AuthProvider>
+        <NativeBaseProvider theme={nativeBaseTheme}>
+          <NavigationContainer theme={navigationTheme}>
+            <AlertPopup
+              body={
+                error === ErrorType.noData
+                  ? "This might be an issue with Schedge, our API provider for classes."
+                  : undefined
+              }
+              isOpen={showAlert}
+              onClose={() => {
+                setShowAlert(false);
+              }}
+              onlyShowWhenFocused={false}
+            />
+            <RootNavigation />
+          </NavigationContainer>
+        </NativeBaseProvider>
+      </AuthProvider>
+    </Provider>
+  );
 }

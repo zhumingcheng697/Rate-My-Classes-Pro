@@ -200,7 +200,15 @@ export default function DetailScreen() {
             />
           )}
           <VStack margin={"10px"} space={"10px"}>
-            <Button variant={"subtle"}>
+            <Button
+              variant={"subtle"}
+              onPress={() => {
+                navigation.navigate("Schedule", {
+                  semester: selectedSemester,
+                  sections: [],
+                });
+              }}
+            >
               <Text variant={"subtleButton"}>
                 View {new Semester(selectedSemester).toString()} Schedule
               </Text>

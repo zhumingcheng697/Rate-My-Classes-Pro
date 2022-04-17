@@ -56,6 +56,36 @@ export default function DetailScreen() {
     );
   }, [auth, reviewRecord]);
 
+  const rating = useMemo(() => {
+    if (!reviewRecord) return;
+
+    let enjoyment = 0;
+    let difficulty = 0;
+    let workload = 0;
+    let value = 0;
+
+    let count = 0;
+
+    for (let review of Object.values(reviewRecord)) {
+      enjoyment += review.enjoyment;
+      difficulty += review.difficulty;
+      workload += review.workload;
+      value += review.value;
+      ++count;
+    }
+
+    if (count == 0) {
+      return;
+    }
+
+    enjoyment /= count;
+    difficulty /= count;
+    workload /= count;
+    value /= count;
+
+    return { enjoyment, difficulty, workload, value };
+  }, [reviewRecord]);
+
   const db = useMemo(() => {
     if (auth.user) return useDB(auth.user);
   }, [auth.user]);
@@ -151,13 +181,15 @@ export default function DetailScreen() {
               {description}
             </Text>
           )}
-          <RatingDashboard
-            margin={"5px"}
-            enjoyment={5}
-            difficulty={5}
-            workload={5}
-            value={5}
-          />
+          {!!rating && (
+            <RatingDashboard
+              margin={"5px"}
+              enjoyment={rating.enjoyment}
+              difficulty={rating.difficulty}
+              workload={rating.workload}
+              value={rating.value}
+            />
+          )}
           <Button
             margin={"10px"}
             onPress={() => {

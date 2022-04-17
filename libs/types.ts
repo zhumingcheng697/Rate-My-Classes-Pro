@@ -16,11 +16,7 @@ export type DepartmentInfo = SchoolInfo & { departmentCode: string };
 
 export type ClassCode = DepartmentInfo & { classNumber: string };
 
-export type ClassInfo = ClassCode & {
-  name: string;
-  description?: string;
-  sections?: SectionInfo[];
-};
+export type ClassInfo = ClassCode & { name: string; description?: string };
 
 export type StarredClassInfo = ClassInfo & { starredDate: number };
 
@@ -62,14 +58,16 @@ export type Review = {
 };
 
 export type SectionInfo = {
-  sectionCode: string;
+  code: string;
   instructors: string[];
-  sectionName: string;
+  meetings?: { beginDate: string; minutesDuration: number; endDate: string }[];
+  name: string;
   campus: string;
-  minUnits: string;
-  maxUnits: string;
+  minUnits: number;
+  maxUnits: number;
   location: string;
   notes?: string;
+  prerequisites?: string;
 };
 
 export type Settings = {

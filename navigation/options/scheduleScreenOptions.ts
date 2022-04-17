@@ -1,5 +1,5 @@
 import { type RouteProp } from "@react-navigation/native";
-import type { StackNavigationOptions } from "@react-navigation/stack";
+import { type StackNavigationOptions } from "@react-navigation/stack";
 
 import Semester from "../../libs/semester";
 import { type SharedNavigationParamList } from "../../libs/types";

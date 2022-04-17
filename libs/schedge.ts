@@ -16,6 +16,8 @@ type SchedgeSchoolNameRecord = Record<string, NameRecord>;
 
 type SchedgeDepartmentNameRecord = Record<string, Record<string, NameRecord>>;
 
+type SchedgeSectionInfo = SectionInfo & { recitations?: any[] };
+
 type SchedgeClassRecord = {
   name: string;
   deptCourseId: string;
@@ -24,7 +26,7 @@ type SchedgeClassRecord = {
     code: string;
     school: string;
   };
-  sections?: SectionInfo[];
+  sections?: SchedgeSectionInfo[];
 }[];
 
 const baseUrl = "https://schedge.a1liu.com";
@@ -154,8 +156,13 @@ export async function getSections(
 
   const json: SchedgeClassRecord = await res.json();
 
-  return (
+  const sections =
     json.find((e) => e.name === name && e.deptCourseId === classNumber)
-      ?.sections ?? []
-  );
+      ?.sections ?? [];
+
+  sections.forEach((section) => {
+    delete section.recitations;
+  });
+
+  return sections;
 }

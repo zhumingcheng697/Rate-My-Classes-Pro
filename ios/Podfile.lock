@@ -1,4 +1,10 @@
 PODS:
+  - AppAuth (1.5.0):
+    - AppAuth/Core (= 1.5.0)
+    - AppAuth/ExternalUserAgent (= 1.5.0)
+  - AppAuth/Core (1.5.0)
+  - AppAuth/ExternalUserAgent (1.5.0):
+    - AppAuth/Core
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
@@ -76,6 +82,14 @@ PODS:
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
   - glog (0.3.5)
+  - GoogleSignIn (6.1.0):
+    - AppAuth (~> 1.4)
+    - GTMAppAuth (~> 1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - GTMAppAuth (1.2.3):
+    - AppAuth/Core (~> 1.4)
+    - GTMSessionFetcher/Core (~> 1.5)
+  - GTMSessionFetcher/Core (1.7.1)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
   - RCT-Folly (2021.06.28.00-v2):
@@ -365,6 +379,9 @@ PODS:
     - React
   - RNGestureHandler (2.1.3):
     - React-Core
+  - RNGoogleSignin (7.2.2):
+    - GoogleSignIn (~> 6.1.0)
+    - React-Core
   - RNScreens (3.13.1):
     - React-Core
     - React-RCTImage
@@ -404,6 +421,7 @@ DEPENDENCIES:
   - FlipperKit/FlipperKitUserDefaultsPlugin (= 0.125.0)
   - FlipperKit/SKIOSNetworkPlugin (= 0.125.0)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - GoogleSignIn (~> 6.1.0)
   - OpenSSL-Universal (= 1.1.1100)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -436,6 +454,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RealmJS (from `../node_modules/realm`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -443,6 +462,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AppAuth
     - CocoaAsyncSocket
     - Flipper
     - Flipper-Boost-iOSX
@@ -455,6 +475,9 @@ SPEC REPOS:
     - FlipperKit
     - fmt
     - GCDWebServer
+    - GoogleSignIn
+    - GTMAppAuth
+    - GTMSessionFetcher
     - libevent
     - OpenSSL-Universal
     - SocketRocket
@@ -529,6 +552,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/realm"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNGoogleSignin:
+    :path: "../node_modules/@react-native-google-signin/google-signin"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
@@ -539,6 +564,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  AppAuth: 80317d99ac7ff2801a2f18ff86b48cd315ed465d
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
@@ -556,6 +582,9 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   glog: 476ee3e89abb49e07f822b48323c51c57124b572
+  GoogleSignIn: c90b5bec45e780f54c6a8e1e3c182a86e3dda69d
+  GTMAppAuth: 987526d41b07efb1bedda5e936fe0cb718a03113
+  GTMSessionFetcher: 4577a4cc914a5a07c40a8a0ad0acc22080418c2d
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
@@ -587,6 +616,7 @@ SPEC CHECKSUMS:
   ReactCommon: fab89a13b52f1ac42b59a0e4b4f76f21aea9eebe
   RealmJS: 5a939376f3bdd94708abe2326d33d8f935b9fb37
   RNGestureHandler: e1099204721a17a89c81fcd1cc2e92143dc040fb
+  RNGoogleSignin: d7f8368b82d94f1dec964785d496387ca7f19092
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
@@ -594,6 +624,6 @@ SPEC CHECKSUMS:
   Yoga: 6671cf077f614314c22fd09ddf87d7abeee64e96
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: e11fd66d644acd641db69187dd55faf6b0401981
+PODFILE CHECKSUM: 6e43bd71bab73d36ea56a4a7d074e925bd193025
 
 COCOAPODS: 1.11.3

@@ -16,7 +16,11 @@ export type DepartmentInfo = SchoolInfo & { departmentCode: string };
 
 export type ClassCode = DepartmentInfo & { classNumber: string };
 
-export type ClassInfo = ClassCode & { name: string; description?: string };
+export type ClassInfo = ClassCode & {
+  name: string;
+  description?: string;
+  sections?: SectionInfo[];
+};
 
 export type StarredClassInfo = ClassInfo & { starredDate: number };
 
@@ -57,6 +61,17 @@ export type Review = {
   comment?: string;
 };
 
+export type SectionInfo = {
+  sectionCode: string;
+  instructors: string[];
+  sectionName: string;
+  campus: string;
+  minUnits: string;
+  maxUnits: string;
+  location: string;
+  notes?: string;
+};
+
 export type Settings = {
   selectedSemester: SemesterInfo;
   showPreviousSemesters: boolean;
@@ -71,6 +86,7 @@ export type RootNavigationParamList = {
 export type SharedNavigationParamList = {
   Detail: { classInfo: ClassInfo; deleteReview?: true; newReview?: Review };
   Review: { classInfo: ClassInfo; previousReview?: Review; newReview?: Review };
+  Schedule: SectionInfo[];
   SignInSignUp: { isSigningIn: boolean } | undefined;
 };
 

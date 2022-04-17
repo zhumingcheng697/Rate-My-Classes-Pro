@@ -9,9 +9,11 @@ import SchoolScreen from "../screens/explore/SchoolScreen";
 import DepartmentScreen from "../screens/explore/DepartmentScreen";
 import DetailScreen from "../screens/shared/DetailScreen";
 import ReviewScreen from "../screens/shared/ReviewScreen";
+import ScheduleScreen from "../screens/shared/ScheduleScreen";
 import SignInSignUpScreen from "../screens/shared/SignInSignUpScreen";
 import detailScreenOptions from "./options/detailScreenOptions";
 import reviewScreenOptions from "./options/reviewScreenOptions";
+import scheduleScreenOptions from "./options/scheduleScreenOptions";
 import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
 import { type ExploreNavigationParamList } from "../libs/types";
 import { getFullDepartmentCode } from "../libs/utils";
@@ -49,6 +51,11 @@ export default function ExploreNavigation() {
         name={"Review"}
         component={ReviewScreen}
         options={reviewScreenOptions}
+      />
+      <Stack.Screen
+        name={"Schedule"}
+        component={ScheduleScreen}
+        options={scheduleScreenOptions}
       />
       <Stack.Screen
         name={"SignInSignUp"}

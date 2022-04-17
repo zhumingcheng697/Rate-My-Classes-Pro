@@ -7,9 +7,11 @@ import {
 import SearchScreen from "../screens/search/SearchScreen";
 import DetailScreen from "../screens/shared/DetailScreen";
 import ReviewScreen from "../screens/shared/ReviewScreen";
+import ScheduleScreen from "../screens/shared/ScheduleScreen";
 import SignInSignUpScreen from "../screens/shared/SignInSignUpScreen";
 import detailScreenOptions from "./options/detailScreenOptions";
 import reviewScreenOptions from "./options/reviewScreenOptions";
+import scheduleScreenOptions from "./options/scheduleScreenOptions";
 import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
 import { type SearchNavigationParamList } from "../libs/types";
 
@@ -28,6 +30,11 @@ export default function SearchNavigation() {
         name={"Review"}
         component={ReviewScreen}
         options={reviewScreenOptions}
+      />
+      <Stack.Screen
+        name={"Schedule"}
+        component={ScheduleScreen}
+        options={scheduleScreenOptions}
       />
       <Stack.Screen
         name={"SignInSignUp"}

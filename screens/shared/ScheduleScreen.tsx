@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Skeleton, Text, VStack } from "native-base";
+import { HStack, Skeleton, Text, VStack } from "native-base";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import {
   useNavigation,
@@ -114,13 +114,28 @@ export default function ScheduleScreen() {
                     borderRadius={10}
                     background={"background.secondary"}
                   >
-                    <Text
-                      fontSize={"xl"}
-                      lineHeight={"1.15em"}
-                      fontWeight={"semibold"}
+                    <HStack
+                      flexWrap={"wrap"}
+                      space={"5px"}
+                      alignItems={"baseline"}
+                      marginY={"-2px"}
                     >
-                      {name} ({getFullClassCode(classInfo)} {code})
-                    </Text>
+                      <Text
+                        fontSize={"xl"}
+                        lineHeight={"1.15em"}
+                        fontWeight={"semibold"}
+                        marginY={"2px"}
+                      >
+                        {name}
+                      </Text>
+                      <Text
+                        fontSize={"xl"}
+                        lineHeight={"1.15em"}
+                        marginY={"2px"}
+                      >
+                        ({getFullClassCode(classInfo)} {code})
+                      </Text>
+                    </HStack>
                     {!!instructors && !!instructors.length && (
                       <IconHStack
                         iconName={"school"}
@@ -170,7 +185,7 @@ export default function ScheduleScreen() {
                       stripLineBreaks(
                         prepend(prerequisites, "Prerequisite", ": ")
                       )
-                        .split(/\s*\n\s*/)
+                        .split(/\n/)
                         .map((prerequisite, index) => (
                           <Text
                             color={"gray.600"}
@@ -182,7 +197,7 @@ export default function ScheduleScreen() {
                         ))}
                     {!!notes &&
                       stripLineBreaks(prepend(notes, "Notes", ": "))
-                        .split(/\s*\n\s*/)
+                        .split(/\n/)
                         .map((note, index) => (
                           <Text
                             color={"gray.600"}

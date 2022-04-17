@@ -15,6 +15,7 @@ import {
   getDepartmentName,
   getSchoolName,
 } from "../../libs/utils";
+import Semester from "../../libs/semester";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import AlertPopup from "../../components/AlertPopup";
 import ReviewCard from "../../components/ReviewCard";
@@ -37,6 +38,7 @@ export default function DetailScreen() {
   const dispatch = useDispatch();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
+  const { selectedSemester } = useSelector((state) => state.settings);
   const auth = useAuth();
   const isFocused = useIsFocused();
   const description = useMemo(() => {
@@ -197,27 +199,33 @@ export default function DetailScreen() {
               value={rating.value}
             />
           )}
-          <Button
-            margin={"10px"}
-            onPress={() => {
-              if (auth.user && auth.isAuthenticated) {
-                navigation.navigate("Review", {
-                  classInfo,
-                  previousReview: myReview,
-                });
-              } else {
-                navigation.navigate("SignInSignUp");
-              }
-            }}
-          >
-            <Text variant={"button"}>
-              {auth.user && auth.isAuthenticated
-                ? myReview
-                  ? "Edit My Review"
-                  : "Review"
-                : "Sign Up to Review"}
-            </Text>
-          </Button>
+          <VStack margin={"10px"} space={"10px"}>
+            <Button variant={"subtle"}>
+              <Text variant={"subtleButton"}>
+                View {new Semester(selectedSemester).toString()} Schedule
+              </Text>
+            </Button>
+            <Button
+              onPress={() => {
+                if (auth.user && auth.isAuthenticated) {
+                  navigation.navigate("Review", {
+                    classInfo,
+                    previousReview: myReview,
+                  });
+                } else {
+                  navigation.navigate("SignInSignUp");
+                }
+              }}
+            >
+              <Text variant={"button"}>
+                {auth.user && auth.isAuthenticated
+                  ? myReview
+                    ? "Edit My Review"
+                    : "Review"
+                  : "Sign Up to Review"}
+              </Text>
+            </Button>
+          </VStack>
           <VStack margin={"10px"} space={"10px"}>
             {reviewRecord
               ? reviewerIds.map((id) => (

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Box, Skeleton, Text, VStack } from "native-base";
+import { Skeleton, Text, VStack } from "native-base";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import {
   useNavigation,
@@ -14,6 +14,7 @@ import { SectionInfo, type SharedNavigationParamList } from "../../libs/types";
 import { getSections } from "../../libs/schedge";
 import { getFullClassCode, prepend, stripLineBreaks } from "../../libs/utils";
 import AlertPopup from "../../components/AlertPopup";
+import IconHStack from "../../components/IconHStack";
 
 type ScheduleScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -108,57 +109,75 @@ export default function ScheduleScreen() {
                     borderRadius={10}
                     background={"background.secondary"}
                   >
-                    <Box>
-                      <Text fontSize={"xl"} fontWeight={"semibold"}>
-                        {name} ({code})
-                      </Text>
-                      {!!instructors && !!instructors.length && (
-                        <Text fontSize={"md"}>{instructors.join(", ")}</Text>
-                      )}
-                      {(!!campus || !!location) && (
-                        <Text fontSize={"md"}>
-                          {[campus, location].join(": ")}
-                        </Text>
-                      )}
+                    <Text
+                      fontSize={"xl"}
+                      lineHeight={"1.15em"}
+                      fontWeight={"semibold"}
+                    >
+                      {name} ({code})
+                    </Text>
+                    {!!instructors && !!instructors.length && (
+                      <IconHStack
+                        iconName={"person"}
+                        text={instructors.join(", ")}
+                      />
+                    )}
+                    {typeof maxUnits !== "undefined" && (
+                      <IconHStack
+                        iconName={"school"}
+                        text={
+                          (!!maxUnits && !minUnits) || minUnits === maxUnits
+                            ? `${maxUnits} Credit${maxUnits === 1 ? "" : "s"}`
+                            : `${minUnits}–${maxUnits} Credits`
+                        }
+                      />
+                    )}
+                    {(!!campus || !!location) && (
+                      <IconHStack
+                        iconName={"location"}
+                        text={[campus, location].join(": ")}
+                      />
+                    )}
+                    {!!meetings && !!meetings.length && (
+                      <IconHStack iconName={"time"}>
+                        <VStack>
+                          {meetings.map((meeting, index) => {
+                            const begin = new Date(
+                              meeting.beginDate.replace(
+                                /^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{1,2})/i,
+                                "$1T$2"
+                              )
+                            );
 
-                      {!!meetings &&
-                        !!meetings.length &&
-                        meetings.map((meeting, index) => {
-                          const begin = new Date(
-                            meeting.beginDate.replace(
-                              /^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{1,2})/i,
-                              "$1T$2"
-                            )
-                          );
-
-                          return (
-                            <Text fontSize={"md"} key={"meeting" + index}>
-                              {begin.toLocaleString(undefined, {
-                                weekday: "long",
-                              })}{" "}
-                              {begin.toLocaleString(undefined, {
-                                hour12: true,
-                                hour: "numeric",
-                                minute: "2-digit",
-                              })}
-                              –
-                              {new Date(
-                                begin.valueOf() +
-                                  meeting.minutesDuration * 60 * 1000
-                              ).toLocaleString(undefined, {
-                                hour12: true,
-                                hour: "numeric",
-                                minute: "2-digit",
-                              })}
-                            </Text>
-                          );
-                        })}
-                      <Text fontSize={"md"}>
-                        {!!maxUnits && (!minUnits || minUnits === maxUnits)
-                          ? `${maxUnits} Credit${maxUnits === 1 ? "" : "s"}`
-                          : `${minUnits}–${maxUnits} Credits`}
-                      </Text>
-                    </Box>
+                            return (
+                              <Text
+                                lineHeight={"sm"}
+                                fontSize={"md"}
+                                key={"meeting" + index}
+                              >
+                                {begin.toLocaleString(undefined, {
+                                  weekday: "long",
+                                })}{" "}
+                                {begin.toLocaleString(undefined, {
+                                  hour12: true,
+                                  hour: "numeric",
+                                  minute: "2-digit",
+                                })}
+                                –
+                                {new Date(
+                                  begin.valueOf() +
+                                    meeting.minutesDuration * 60 * 1000
+                                ).toLocaleString(undefined, {
+                                  hour12: true,
+                                  hour: "numeric",
+                                  minute: "2-digit",
+                                })}
+                              </Text>
+                            );
+                          })}
+                        </VStack>
+                      </IconHStack>
+                    )}
                     {!!prerequisites &&
                       stripLineBreaks(
                         prepend(prerequisites, "Prerequisite", ": ")
@@ -188,8 +207,8 @@ export default function ScheduleScreen() {
                   </VStack>
                 )
               )
-            : [...Array(3)].map((_, index) => (
-                <Skeleton borderRadius={10} height={"120px"} key={index} />
+            : [...Array(5)].map((_, index) => (
+                <Skeleton borderRadius={10} height={"150px"} key={index} />
               ))}
         </VStack>
       </KeyboardAwareSafeAreaScrollView>

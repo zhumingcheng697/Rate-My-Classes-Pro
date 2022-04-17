@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Text, VStack } from "native-base";
+import { Box, Skeleton, Text, VStack } from "native-base";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import {
-  useIsFocused,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -13,7 +12,7 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import Semester from "../../libs/semester";
 import { SectionInfo, type SharedNavigationParamList } from "../../libs/types";
 import { getSections } from "../../libs/schedge";
-import { getFullClassCode, getFullDepartmentCode } from "../../libs/utils";
+import { getFullClassCode, prepend, stripLineBreaks } from "../../libs/utils";
 import AlertPopup from "../../components/AlertPopup";
 
 type ScheduleScreenNavigationProp = StackNavigationProp<
@@ -85,7 +84,113 @@ export default function ScheduleScreen() {
       />
       <KeyboardAwareSafeAreaScrollView>
         <VStack margin={"10px"} space={"10px"}>
-          <Text>{JSON.stringify(sections, undefined, 4)}</Text>
+          {sections && sections.length
+            ? sections.map(
+                (
+                  {
+                    code,
+                    instructors,
+                    meetings,
+                    name,
+                    campus,
+                    minUnits,
+                    maxUnits,
+                    location,
+                    notes,
+                    prerequisites,
+                  },
+                  index
+                ) => (
+                  <VStack
+                    space={"5px"}
+                    key={index}
+                    padding={"10px"}
+                    borderRadius={10}
+                    background={"background.secondary"}
+                  >
+                    <Box>
+                      <Text fontSize={"xl"} fontWeight={"semibold"}>
+                        {name} ({code})
+                      </Text>
+                      {!!instructors && !!instructors.length && (
+                        <Text fontSize={"md"}>{instructors.join(", ")}</Text>
+                      )}
+                      {(!!campus || !!location) && (
+                        <Text fontSize={"md"}>
+                          {[campus, location].join(": ")}
+                        </Text>
+                      )}
+
+                      {!!meetings &&
+                        !!meetings.length &&
+                        meetings.map((meeting, index) => {
+                          const begin = new Date(
+                            meeting.beginDate.replace(
+                              /^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{1,2})/i,
+                              "$1T$2"
+                            )
+                          );
+
+                          return (
+                            <Text fontSize={"md"} key={"meeting" + index}>
+                              {begin.toLocaleString(undefined, {
+                                weekday: "long",
+                              })}{" "}
+                              {begin.toLocaleString(undefined, {
+                                hour12: true,
+                                hour: "numeric",
+                                minute: "2-digit",
+                              })}
+                              –
+                              {new Date(
+                                begin.valueOf() +
+                                  meeting.minutesDuration * 60 * 1000
+                              ).toLocaleString(undefined, {
+                                hour12: true,
+                                hour: "numeric",
+                                minute: "2-digit",
+                              })}
+                            </Text>
+                          );
+                        })}
+                      <Text fontSize={"md"}>
+                        {!!maxUnits && (!minUnits || minUnits === maxUnits)
+                          ? `${maxUnits} Credit${maxUnits === 1 ? "" : "s"}`
+                          : `${minUnits}–${maxUnits} Credits`}
+                      </Text>
+                    </Box>
+                    {!!prerequisites &&
+                      stripLineBreaks(
+                        prepend(prerequisites, "Prerequisite", ": ")
+                      )
+                        .split(/\s*\n\s*/)
+                        .map((prerequisite, index) => (
+                          <Text
+                            color={"gray.600"}
+                            key={"prerequisites" + index}
+                            lineHeight={"md"}
+                          >
+                            {prerequisite}
+                          </Text>
+                        ))}
+                    {!!notes &&
+                      stripLineBreaks(prepend(notes, "Notes", ": "))
+                        .split(/\s*\n\s*/)
+                        .map((note, index) => (
+                          <Text
+                            color={"gray.600"}
+                            key={"notes" + index}
+                            lineHeight={"md"}
+                          >
+                            {note}
+                          </Text>
+                        ))}
+                  </VStack>
+                )
+              )
+            : [...Array(3)].map((_, index) => (
+                <Skeleton borderRadius={10} height={"120px"} key={index} />
+              ))}
         </VStack>
       </KeyboardAwareSafeAreaScrollView>
     </>

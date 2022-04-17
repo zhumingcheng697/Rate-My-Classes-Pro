@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Keyboard } from "react-native";
-import { Text, Button, Input, VStack, Box, HStack } from "native-base";
+import { Text, Button, Input, VStack, Box, HStack, Icon } from "native-base";
 import {
   useIsFocused,
   useNavigation,
@@ -8,6 +8,8 @@ import {
   type RouteProp,
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
+import { statusCodes } from "@react-native-google-signin/google-signin";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { isObjectEmpty, formSentence } from "../../libs/utils";
 import { type SharedNavigationParamList } from "../../libs/types";
@@ -43,6 +45,9 @@ export default function SignInSignUpScreen() {
   const [showAlert, setShowAlert] = useState(false);
   const [error, setError] = useState<any>(null);
 
+  const [showGoogleAlert, setShowGoogleAlert] = useState(false);
+  const [googleError, setGoogleError] = useState<any>(null);
+
   const isSigningUp = route.params?.isSigningUp ?? false;
 
   const isAuthenticated = auth.isAuthenticated;
@@ -77,6 +82,22 @@ export default function SignInSignUpScreen() {
         isOpen={showAlert && isFocused}
         onClose={() => {
           setShowAlert(false);
+        }}
+      />
+      <AlertPopup
+        header={`Unable to ${isSigningUp ? "Sign Up" : "Sign In"} with Google`}
+        body={
+          googleError
+            ? typeof googleError === "string"
+              ? googleError
+              : !isObjectEmpty(googleError) && googleError.message
+              ? formSentence(googleError.message)
+              : JSON.stringify(googleError)
+            : "Unknown Error"
+        }
+        isOpen={showGoogleAlert && isFocused}
+        onClose={() => {
+          setShowGoogleAlert(false);
         }}
       />
       <KeyboardAwareSafeAreaScrollView>
@@ -119,36 +140,87 @@ export default function SignInSignUpScreen() {
               />
             </LabeledInput>
           )}
-          <Button
-            marginY={"15px"}
-            isDisabled={
-              isLoading ||
-              !email ||
-              !password ||
-              (isSigningUp &&
-                (!username || !confirmPassword || password !== confirmPassword))
-            }
-            onPress={async () => {
-              try {
-                setIsLoading(true);
-                if (isSigningUp) {
-                  await auth.signUpWithEmailPassword(username, email, password);
-                } else {
-                  await auth.signInWithEmailPassword(email, password);
-                }
-                setError(null);
-              } catch (e) {
-                setError(e);
-                setShowAlert(true);
-              } finally {
-                setIsLoading(false);
+          <VStack marginY={"15px"} space={"10px"}>
+            <Button
+              isDisabled={
+                isLoading ||
+                !email ||
+                !password ||
+                (isSigningUp &&
+                  (!username ||
+                    !confirmPassword ||
+                    password !== confirmPassword))
               }
-            }}
-          >
-            <Text variant={"button"}>
-              {isSigningUp ? "Sign Up" : "Sign In"}
+              onPress={async () => {
+                try {
+                  setIsLoading(true);
+                  if (isSigningUp) {
+                    await auth.signUpWithEmailPassword(
+                      username,
+                      email,
+                      password
+                    );
+                  } else {
+                    await auth.signInWithEmailPassword(email, password);
+                  }
+                  setError(null);
+                } catch (e) {
+                  setError(e);
+                  setShowAlert(true);
+                } finally {
+                  setIsLoading(false);
+                }
+              }}
+            >
+              <Text variant={"button"}>
+                {isSigningUp ? "Sign Up" : "Sign In"}
+              </Text>
+            </Button>
+            <Text textAlign={"center"} fontSize={"md"} fontWeight={"medium"}>
+              - or -
             </Text>
-          </Button>
+            <Button
+              background={"white"}
+              shadow={"2"}
+              borderWidth={"1px"}
+              borderColor={"gray.200"}
+              startIcon={
+                <Icon color={"black"} as={<Ionicons name={"logo-google"} />} />
+              }
+              isDisabled={isLoading}
+              onPress={async () => {
+                try {
+                  setIsLoading(true);
+                  await auth.continueWithGoogle();
+                } catch (error: any) {
+                  console.log(error);
+
+                  // handle errors
+                  if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                    return;
+                  } else if (error.code === statusCodes.IN_PROGRESS) {
+                    return;
+                  } else if (
+                    error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE
+                  ) {
+                    setGoogleError(
+                      "Google Play services not available or outdated"
+                    );
+                    setShowGoogleAlert(true);
+                  } else {
+                    setGoogleError(error);
+                    setShowGoogleAlert(true);
+                  }
+                } finally {
+                  setIsLoading(false);
+                }
+              }}
+            >
+              <Text variant={"button"} color={"black"}>
+                Continue with Google
+              </Text>
+            </Button>
+          </VStack>
           <Box>
             <Text textAlign={"center"}>
               {isSigningUp

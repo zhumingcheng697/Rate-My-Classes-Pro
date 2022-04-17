@@ -14,10 +14,10 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
       margin={"5px"}
       borderRadius={10}
     >
-      <Text fontSize={"md"} fontWeight={"medium"} textAlign={"center"}>
+      <Text fontSize={"md"} textAlign={"center"}>
         {ratingType}
       </Text>
-      <Text fontSize={"2xl"} textAlign={"center"}>
+      <Text fontSize={"2xl"} fontWeight={"medium"} textAlign={"center"}>
         {rating.toFixed(1)} / {(5).toFixed(1)}
       </Text>
     </VStack>

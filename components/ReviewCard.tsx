@@ -304,7 +304,7 @@ export default function ReviewCard({
         />
         {auth.isAuthenticated && auth.user?.id === userId && (
           <PlainTextButton
-            title={"Edit"}
+            title={"Edit My Review"}
             _text={{ fontWeight: "semibold" }}
             onPress={() => {
               navigation.navigate("Review", {

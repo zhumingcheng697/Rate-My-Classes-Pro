@@ -125,6 +125,7 @@ export default class App extends Component<{}, AppState> {
                 }
                 isOpen={this.state.showAlert}
                 onClose={this.clearLoadError.bind(this)}
+                onlyShowWhenFocused={false}
               />
               <RootNavigation />
             </NavigationContainer>

@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { Keyboard } from "react-native";
 import { Button, AlertDialog } from "native-base";
+import { useIsFocused } from "@react-navigation/native";
 
 export type AlertPopupProps = {
   isOpen: boolean;
@@ -15,6 +16,7 @@ export type AlertPopupProps = {
   footer?: (ref: MutableRefObject<any>) => ReactNode;
   footerPrimaryButton?: ReactElement;
   onClose: () => any;
+  onlyShowWhenFocused?: boolean;
 };
 
 export default function AlertPopup({
@@ -24,17 +26,23 @@ export default function AlertPopup({
   footer,
   footerPrimaryButton,
   onClose,
+  onlyShowWhenFocused = true,
 }: AlertPopupProps) {
   const ref = useRef();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && isFocused) {
       Keyboard.dismiss();
     }
-  }, [isOpen]);
+  }, [isOpen, isFocused]);
 
   return (
-    <AlertDialog leastDestructiveRef={ref} isOpen={isOpen} onClose={onClose}>
+    <AlertDialog
+      leastDestructiveRef={ref}
+      isOpen={isOpen && (!onlyShowWhenFocused || isFocused)}
+      onClose={onClose}
+    >
       <AlertDialog.Content>
         <AlertDialog.Header>{header}</AlertDialog.Header>
         <AlertDialog.Body>{body}</AlertDialog.Body>

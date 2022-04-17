@@ -10,7 +10,7 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
       justifyContent={"center"}
       background={"background.secondary"}
       paddingX={"20px"}
-      paddingY={"10px"}
+      paddingY={"5px"}
       margin={"5px"}
       borderRadius={10}
     >

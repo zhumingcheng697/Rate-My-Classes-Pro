@@ -90,6 +90,81 @@ export function formSentence(str: string) {
   );
 }
 
+export function smartJoin(tokens: string[]) {
+  if (tokens.length === 0) return "";
+  if (tokens.length === 1) return tokens[0];
+  if (tokens.length === 2) return tokens[0] + " and " + tokens[1];
+
+  const result = [];
+
+  for (let i = 0; i < tokens.length - 1; ++i) {
+    result.push(tokens[i], ", ");
+  }
+
+  result.push("and ", tokens[tokens.length - 1]);
+
+  return result.join("");
+}
+
+export function getMeetingScheduleString(meetings: [Date, Date][]) {
+  const getTimeString = (date: Date) =>
+    date.toLocaleString(undefined, {
+      hour12: true,
+      hour: "numeric",
+      minute: "2-digit",
+    });
+
+  const getWeekDayString = (date: Date) =>
+    date.toLocaleString(undefined, { weekday: "long" });
+
+  const schedule: Record<number, [Date, Date][]> = {};
+
+  for (let [begin, end] of meetings) {
+    if (!schedule[begin.getDay()]) {
+      schedule[begin.getDay()] = [];
+    }
+    schedule[begin.getDay()].push([begin, end]);
+  }
+
+  const stringnifiedSchedule: Record<number, string> = {};
+
+  for (let day in schedule) {
+    schedule[day].sort(([a], [b]) => a.valueOf() - b.valueOf());
+    stringnifiedSchedule[day] = schedule[day]
+      .map(([begin, end]) => `${getTimeString(begin)}–${getTimeString(end)}`)
+      .join(", ");
+  }
+
+  const finalSchedule: [string, string][] = [];
+
+  const daysOfWeek = [1, 2, 3, 4, 5, 6, 0];
+
+  for (let i = 0; i < 7; ++i) {
+    const day = daysOfWeek[i];
+    if (day in schedule) {
+      const currDay = [getWeekDayString(schedule[day][0][0])];
+      const currMeeting = stringnifiedSchedule[day];
+      delete schedule[day];
+
+      for (let j = i + 1; j < 7; ++j) {
+        const otherDay = daysOfWeek[j];
+
+        if (
+          otherDay in schedule &&
+          stringnifiedSchedule[otherDay] === currMeeting
+        ) {
+          currDay.push(getWeekDayString(schedule[otherDay][0][0]));
+          delete schedule[otherDay];
+        }
+      }
+
+      finalSchedule.push([smartJoin(currDay), currMeeting]);
+    }
+  }
+
+  return finalSchedule;
+}
+
 export function compareClasses(
   schoolCodes: string[],
   departmentNames: DepartmentNameRecord,

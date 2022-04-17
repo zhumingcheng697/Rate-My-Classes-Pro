@@ -12,7 +12,7 @@ import Realm, { type User } from "realm";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import config from "react-native-config";
 
-import app from "./app";
+import realmApp from "./realmApp";
 import { useDB } from "./db";
 import {
   loadReviewedClasses,
@@ -46,7 +46,7 @@ type AuthProviderProps = { children: ReactNode };
 const Context = createContext<AuthContext | null>(null);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState(app.currentUser);
+  const [user, setUser] = useState(realmApp.currentUser);
   const [username, setUsername] = useState<string | null>(null);
   const settings = useSelector((state) => state.settings);
   const dispatch = useDispatch();
@@ -86,7 +86,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     if (isAuthenticated && !override) return;
 
     const credentials = Realm.Credentials.anonymous();
-    const newUser = await app.logIn(credentials);
+    const newUser = await realmApp.logIn(credentials);
     setUser(newUser);
   };
 
@@ -96,7 +96,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     if (user && user.providerType === "anon-user") await signOut(false);
 
     const credentials = Realm.Credentials.emailPassword(email, password);
-    const newUser = await app.logIn(credentials);
+    const newUser = await realmApp.logIn(credentials);
     await loadUserDoc(newUser);
     setUser(newUser);
   };
@@ -110,10 +110,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   ) => {
     if (user && user.providerType === "anon-user") await signOut(false);
 
-    await app.emailPasswordAuth.registerUser({ email, password });
+    await realmApp.emailPasswordAuth.registerUser({ email, password });
     setUsername(username);
     const credentials = Realm.Credentials.emailPassword(email, password);
-    const newUser = await app.logIn(credentials);
+    const newUser = await realmApp.logIn(credentials);
     await useDB(newUser).createUserDoc(username, settings);
     setUser(newUser);
   };
@@ -129,7 +129,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     // use Google ID token to sign into Realm
     const credential = Realm.Credentials.google(googleUser.idToken!);
-    const newUser = await app.logIn(credential);
+    const newUser = await realmApp.logIn(credential);
     const upserted = await useDB(newUser).createUserDoc(newUsername, settings);
 
     if (upserted) {
@@ -149,7 +149,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    if (user.providerType === "anon-user") await app.deleteUser(user);
+    if (user.providerType === "anon-user") await realmApp.deleteUser(user);
 
     await user.logOut();
     loadStarredClasses(dispatch)({});

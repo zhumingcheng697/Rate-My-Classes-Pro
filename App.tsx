@@ -16,7 +16,7 @@ import reducer from "./redux/reducers";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "./redux/actions";
 import { AuthProvider } from "./mongodb/auth";
 import { useDB } from "./mongodb/db";
-import app from "./mongodb/app";
+import realmApp from "./mongodb/realmApp";
 
 Ionicons.loadFont();
 
@@ -65,8 +65,11 @@ export default function App() {
         const { settings } = store.getState();
 
         if (settings !== previousSettings) {
-          if (app.currentUser && app.currentUser.providerType !== "anon-user") {
-            await useDB(app.currentUser).updateSettings(settings);
+          if (
+            realmApp.currentUser &&
+            realmApp.currentUser.providerType !== "anon-user"
+          ) {
+            await useDB(realmApp.currentUser).updateSettings(settings);
           }
         }
       };

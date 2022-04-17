@@ -37,7 +37,7 @@ const composeQuery = (params: URLParams) =>
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
 
-export async function getSchoolNames(): Promise<SchoolNameRecord> {
+export async function getSchoolNames() {
   const res = await fetch(composeUrl("/schools"));
   const json: SchedgeSchoolNameRecord = await res.json();
   const record: SchoolNameRecord = {};
@@ -69,7 +69,7 @@ export async function getSchoolNames(): Promise<SchoolNameRecord> {
   return record;
 }
 
-export async function getDepartmentNames(): Promise<DepartmentNameRecord> {
+export async function getDepartmentNames() {
   const res = await fetch(composeUrl("/subjects"));
   const json: SchedgeDepartmentNameRecord = await res.json();
   const record: DepartmentNameRecord = {};
@@ -91,7 +91,7 @@ export async function getDepartmentNames(): Promise<DepartmentNameRecord> {
 export async function getClasses(
   { schoolCode, departmentCode }: DepartmentInfo,
   semester: SemesterInfo
-): Promise<ClassInfo[]> {
+) {
   const res = await fetch(
     composeUrl(
       `/${semester.year}/${semester.semesterCode}/${schoolCode}/${departmentCode}`
@@ -111,10 +111,7 @@ export async function getClasses(
     .sort((a, b) => parseInt(a.classNumber) - parseInt(b.classNumber));
 }
 
-export async function searchClasses(
-  query: string,
-  semester: SemesterInfo
-): Promise<ClassInfo[]> {
+export async function searchClasses(query: string, semester: SemesterInfo) {
   const res = await fetch(
     composeUrl(`/${semester.year}/${semester.semesterCode}/search`, {
       full: true,
@@ -141,7 +138,7 @@ export async function searchClasses(
 export async function getSections(
   { name, schoolCode, departmentCode, classNumber }: ClassInfo,
   semester: SemesterInfo
-): Promise<SectionInfo[] | null> {
+) {
   const res = await fetch(
     composeUrl(`/${semester.year}/${semester.semesterCode}/search`, {
       full: true,
@@ -159,6 +156,6 @@ export async function getSections(
 
   return (
     json.find((e) => e.name === name && e.deptCourseId === classNumber)
-      ?.sections ?? null
+      ?.sections ?? []
   );
 }

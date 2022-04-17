@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Text, Button, Box, VStack, Skeleton } from "native-base";
+import { Text, Button, Box, VStack, Skeleton, ZStack } from "native-base";
 import {
   useIsFocused,
   useNavigation,
@@ -9,7 +9,11 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useDispatch, useSelector } from "react-redux";
 
-import type { ReviewRecord, SharedNavigationParamList } from "../../libs/types";
+import type {
+  ReviewRecord,
+  SectionInfo,
+  SharedNavigationParamList,
+} from "../../libs/types";
 import {
   getBasicClassInfo,
   getDepartmentName,
@@ -23,11 +27,18 @@ import RatingDashboard from "../../components/RatingDashboard";
 import { useAuth } from "../../mongodb/auth";
 import { useDB } from "../../mongodb/db";
 import { reviewClass, unreviewClass } from "../../redux/actions";
+import { getSections } from "../../libs/schedge";
 
 type DetailScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
   "Detail"
 >;
+
+enum DetailScreenErrorType {
+  loadReviews = "LOAD_REVIEWS",
+  loadSchedule = "LOAD_SCHEDULE",
+  upsertReview = "UPSERT_REVIEW",
+}
 
 type DetailScreenRouteProp = RouteProp<SharedNavigationParamList, "Detail">;
 
@@ -38,19 +49,25 @@ export default function DetailScreen() {
   const dispatch = useDispatch();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-  const { selectedSemester } = useSelector((state) => state.settings);
   const auth = useAuth();
   const isFocused = useIsFocused();
+  const { selectedSemester } = useSelector((state) => state.settings);
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [error, setError] = useState<DetailScreenErrorType | null>(null);
+
+  const [sections, setSections] = useState<SectionInfo[] | null>(null);
+  const [previousSemester, setPreviousSemester] = useState(
+    new Semester(selectedSemester)
+  );
+  const [reviewRecord, setReviewRecord] = useState<ReviewRecord | null>(null);
+
   const description = useMemo(() => {
     return (
       classInfo.description &&
       classInfo.description.replace(/([a-z0-9])[\s\n]+([^\s\n])/gi, "$1 $2")
     );
   }, [classInfo.description]);
-
-  const [showAlert, setShowAlert] = useState(false);
-
-  const [reviewRecord, setReviewRecord] = useState<ReviewRecord | null>(null);
 
   const myReview = useMemo(() => {
     return (
@@ -105,12 +122,32 @@ export default function DetailScreen() {
           delete reviewRecord["_id"];
           setReviewRecord(reviewRecord);
         } catch (e) {
+          setError(DetailScreenErrorType.loadReviews);
           setShowAlert(true);
         }
       };
       loadReviewDoc();
     }
   }, [db]);
+
+  useEffect(() => {
+    let semester = new Semester(selectedSemester);
+    if (!Semester.equals(semester, previousSemester)) {
+      setPreviousSemester(semester);
+    } else if (sections) {
+      return;
+    }
+
+    getSections(classInfo, selectedSemester)
+      .then((sections) => {
+        setSections(sections);
+      })
+      .catch(() => {
+        setSections(null);
+        setError(DetailScreenErrorType.loadSchedule);
+        setShowAlert(true);
+      });
+  }, [selectedSemester]);
 
   const reviewerIds = useMemo(() => {
     if (!reviewRecord) return [];
@@ -157,6 +194,7 @@ export default function DetailScreen() {
             }
           }
         } catch (e) {
+          setError(DetailScreenErrorType.upsertReview);
           setShowAlert(true);
         } finally {
           navigation.setParams({
@@ -171,7 +209,13 @@ export default function DetailScreen() {
   return (
     <>
       <AlertPopup
-        header={reviewRecord ? "Unable to Review" : "Unable to Load Reviews"}
+        header={
+          error === DetailScreenErrorType.loadReviews
+            ? "Unable to Load Reviews"
+            : error === DetailScreenErrorType.loadSchedule
+            ? "Unable to Load Schedule"
+            : "Unable to Review"
+        }
         isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);
@@ -200,19 +244,39 @@ export default function DetailScreen() {
             />
           )}
           <VStack margin={"10px"} space={"10px"}>
-            <Button
-              variant={"subtle"}
-              onPress={() => {
-                navigation.navigate("Schedule", {
-                  semester: selectedSemester,
-                  sections: [],
-                });
-              }}
-            >
-              <Text variant={"subtleButton"}>
-                View {new Semester(selectedSemester).toString()} Schedule
-              </Text>
-            </Button>
+            {sections ? (
+              <Button
+                variant={"subtle"}
+                isDisabled={!sections || !sections.length}
+                onPress={() => {
+                  navigation.navigate("Schedule", {
+                    semester: selectedSemester,
+                    sections: sections ?? [],
+                  });
+                }}
+              >
+                <Text variant={"subtleButton"}>
+                  {!sections || sections.length
+                    ? `View ${new Semester(
+                        selectedSemester
+                      ).toString()} Schedule`
+                    : `Not Offered in ${new Semester(
+                        selectedSemester
+                      ).toString()}`}
+                </Text>
+              </Button>
+            ) : (
+              <ZStack
+                height={"40px"}
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
+                <Skeleton borderRadius={10}></Skeleton>
+                <Text variant={"subtleButton"} opacity={0.5}>
+                  Loading {new Semester(selectedSemester).toString()} Schedule
+                </Text>
+              </ZStack>
+            )}
             <Button
               onPress={() => {
                 if (auth.user && auth.isAuthenticated) {

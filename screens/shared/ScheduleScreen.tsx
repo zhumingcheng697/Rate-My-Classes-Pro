@@ -118,20 +118,20 @@ export default function ScheduleScreen() {
                       flexWrap={"wrap"}
                       space={"5px"}
                       alignItems={"baseline"}
-                      marginY={"-2px"}
+                      marginY={"-1px"}
                     >
                       <Text
                         fontSize={"xl"}
                         lineHeight={"1.15em"}
                         fontWeight={"semibold"}
-                        marginY={"2px"}
+                        marginY={"1px"}
                       >
                         {name}
                       </Text>
                       <Text
                         fontSize={"xl"}
                         lineHeight={"1.15em"}
-                        marginY={"2px"}
+                        marginY={"1px"}
                       >
                         ({getFullClassCode(classInfo)} {code})
                       </Text>

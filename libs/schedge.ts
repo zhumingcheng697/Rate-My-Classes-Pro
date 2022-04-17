@@ -3,6 +3,7 @@ import type {
   DepartmentNameRecord,
   DepartmentInfo,
   ClassInfo,
+  SectionInfo,
 } from "./types";
 import Semester from "./semester";
 import { isSchoolGrad } from "./utils";
@@ -23,6 +24,7 @@ type SchedgeClassRecord = {
     code: string;
     school: string;
   };
+  sections?: SectionInfo[];
 }[];
 
 const baseUrl = "https://schedge.a1liu.com";
@@ -136,10 +138,10 @@ export async function searchClasses(
   }));
 }
 
-export async function searchClass(
+export async function getSections(
   { name, schoolCode, departmentCode, classNumber }: ClassInfo,
   semester: Semester
-): Promise<ClassInfo | null> {
+): Promise<SectionInfo[] | null> {
   const res = await fetch(
     composeUrl(`/${semester.year}/${semester.semesterCode}/search`, {
       full: true,
@@ -155,21 +157,8 @@ export async function searchClass(
 
   const json: SchedgeClassRecord = await res.json();
 
-  const match = json.find(
-    (e) => e.name === name && e.deptCourseId === classNumber
+  return (
+    json.find((e) => e.name === name && e.deptCourseId === classNumber)
+      ?.sections ?? null
   );
-
-  if (match) {
-    const { name, deptCourseId, description, subjectCode } = match;
-
-    return {
-      schoolCode: subjectCode.school,
-      departmentCode: subjectCode.code,
-      classNumber: deptCourseId,
-      name,
-      description: description ?? "",
-    };
-  }
-
-  return null;
 }

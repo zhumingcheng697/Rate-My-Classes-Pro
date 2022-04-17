@@ -79,7 +79,8 @@ export function prepend(str: string, prefix: string, separator: string) {
 export function stripLineBreaks(str: string) {
   return str
     .replace(/([a-z0-9])[\s\n]+([^\s\n])/gi, "$1 $2")
-    .replace(/^[\s\n]+|[\s\n]+$/gi, "");
+    .replace(/^[\s\n]+|[\s\n]+$/gi, "")
+    .replace(/(\s*\n\s*)+/g, "\n");
 }
 
 export function formSentence(str: string) {

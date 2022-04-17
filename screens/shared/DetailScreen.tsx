@@ -64,7 +64,9 @@ export default function DetailScreen() {
   const [reviewRecord, setReviewRecord] = useState<ReviewRecord | null>(null);
 
   const description = useMemo(() => {
-    return classInfo.description && stripLineBreaks(classInfo.description);
+    return classInfo.description
+      ? stripLineBreaks(classInfo.description).split(/\n/)
+      : undefined;
   }, [classInfo.description]);
 
   const myReview = useMemo(() => {
@@ -228,9 +230,13 @@ export default function DetailScreen() {
             {getDepartmentName(classInfo, departmentNames)}
           </Text>
           {!!description && (
-            <Text fontSize={"md"} margin={"10px"}>
-              {description}
-            </Text>
+            <VStack margin={"10px"} space={"5px"}>
+              {description.map((text, index) => (
+                <Text fontSize={"md"} key={"description" + index}>
+                  {text}
+                </Text>
+              ))}
+            </VStack>
           )}
           {!!rating && (
             <RatingDashboard

@@ -28,7 +28,6 @@ export default function ScheduleScreen() {
   const route = useRoute<ScheduleScreenRouteProp>();
   const { semester, classInfo } = route.params;
   const settings = useSelector((state) => state.settings);
-  const isFocused = useIsFocused();
   const [sections, setSections] = useState<SectionInfo[] | null>(
     route.params.sections
   );
@@ -56,7 +55,7 @@ export default function ScheduleScreen() {
           navigation.setParams({ semester: selectedSemester });
         });
     }
-  }, [selectedSemester, isFocused]);
+  }, [selectedSemester]);
 
   const noDataErrorMessage = () => {
     const diff = Semester.between(

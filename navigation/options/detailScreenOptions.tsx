@@ -43,7 +43,6 @@ export default ({
       auth.isAuthenticated &&
       starredClasses &&
       !!starredClasses[getFullClassCode(classInfo)];
-    const pressedHoverStyle = { _icon: { opacity: 0.5 } };
 
     const db = useMemo(() => {
       if (auth.user) return useDB(auth.user);
@@ -79,8 +78,8 @@ export default ({
           variant={"unstyled"}
           marginRight={"5px"}
           padding={"5px"}
-          _pressed={pressedHoverStyle}
-          _hover={pressedHoverStyle}
+          _pressed={{ _icon: { opacity: 0.5 } }}
+          _hover={{ _icon: { opacity: 0.7 } }}
           icon={
             <Icon
               color={isStarred ? "yellow.400" : "gray.300"}

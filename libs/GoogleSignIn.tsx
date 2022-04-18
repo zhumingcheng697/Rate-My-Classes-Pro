@@ -3,7 +3,7 @@ import {
   GoogleSignin,
   statusCodes,
 } from "@react-native-google-signin/google-signin";
-import { IButtonProps } from "native-base";
+import { type IButtonProps } from "native-base";
 import config from "react-native-config";
 
 import Button from "../components/GoogleSignInButton";
@@ -13,17 +13,6 @@ GoogleSignin.configure({
   webClientId: config.GOOGLE_WEB_CLIENT_ID,
   iosClientId: config.GOOGLE_IOS_CLIENT_ID,
 });
-
-namespace GoogleSignIn {
-  export const signIn = async () => {
-    await GoogleSignin.hasPlayServices();
-
-    const user = await GoogleSignin.signIn();
-    const username = user.user.name || user.user.givenName || "New User";
-
-    return { idToken: user.idToken!, username };
-  };
-}
 
 type GoogleSignInButtonBaseProps = {
   isLoading: boolean;
@@ -46,16 +35,19 @@ export function GoogleSignInButton({
   return (
     <Button
       {...rest}
-      isDisabled={isLoading && isDisabled}
+      isDisabled={isLoading || isDisabled}
       onPress={async () => {
         try {
           setIsLoading(true);
 
-          const { idToken, username } = await GoogleSignIn.signIn();
+          await GoogleSignin.hasPlayServices();
 
-          await auth.continueWithGoogle(idToken, username);
+          const user = await GoogleSignin.signIn();
+          const username = user.user.name || user.user.givenName || "New User";
+
+          await auth.continueWithGoogle(user.idToken!, username);
         } catch (error: any) {
-          console.log(error);
+          console.error(error);
 
           // handle errors
           if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -74,5 +66,3 @@ export function GoogleSignInButton({
     />
   );
 }
-
-export default GoogleSignIn;

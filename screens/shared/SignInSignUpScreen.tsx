@@ -8,8 +8,6 @@ import {
   type RouteProp,
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
-import { statusCodes } from "@react-native-google-signin/google-signin";
-import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { isObjectEmpty, formSentence } from "../../libs/utils";
 import { type SharedNavigationParamList } from "../../libs/types";
@@ -18,7 +16,7 @@ import LabeledInput from "../../components/LabeledInput";
 import PlainTextButton from "../../components/PlainTextButton";
 import AlertPopup from "../../components/AlertPopup";
 import { useAuth } from "../../mongodb/auth";
-import GoogleSignIn, { GoogleSignInButton } from "../../libs/GoogleSignIn";
+import { GoogleSignInButton } from "../../libs/GoogleSignIn";
 
 type SignInSignUpScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,

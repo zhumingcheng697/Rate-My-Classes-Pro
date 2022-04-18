@@ -1,5 +1,5 @@
 import React from "react";
-import { type ReturnKeyTypeOptions } from "react-native";
+import { Platform, type ReturnKeyTypeOptions } from "react-native";
 import { Input, IconButton, Icon, type IInputProps, Box } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -47,6 +47,10 @@ export default function ClearableInput({
         <Box>
           {(canClear ?? !!value) && (
             <IconButton
+              _pressed={
+                Platform.OS === "web" ? undefined : { _icon: { opacity: 0.5 } }
+              }
+              _hover={{ _icon: { opacity: 0.75 } }}
               variant={"unstyled"}
               padding={"3px"}
               marginRight={"2px"}

@@ -94,12 +94,6 @@ const componentsStyle = {
       },
     },
   },
-  IconButton: {
-    defaultProps: {
-      _pressed: { _icon: { opacity: 0.5 } },
-      _hover: { _icon: { opacity: 0.75 } },
-    },
-  },
   Button: {
     variants: {
       solid: {

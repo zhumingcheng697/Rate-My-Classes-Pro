@@ -1,4 +1,5 @@
 import React from "react";
+import { useTheme } from "@react-navigation/native";
 import {
   createStackNavigator,
   TransitionPresets,
@@ -20,8 +21,18 @@ import { type MeNavigationParamList } from "../libs/types";
 const Stack = createStackNavigator<MeNavigationParamList>();
 
 export default function MeNavigation() {
+  const navigationTheme = useTheme();
+
   return (
-    <Stack.Navigator screenOptions={{ ...TransitionPresets.DefaultTransition }}>
+    <Stack.Navigator
+      screenOptions={{
+        ...TransitionPresets.DefaultTransition,
+        headerTitleStyle: {
+          color: navigationTheme.colors.text,
+        },
+        headerTintColor: navigationTheme.colors.primary,
+      }}
+    >
       <Stack.Screen
         name={"Account"}
         component={AccountScreen}

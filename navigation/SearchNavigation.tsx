@@ -1,4 +1,5 @@
 import React from "react";
+import { useTheme } from "@react-navigation/native";
 import {
   createStackNavigator,
   TransitionPresets,
@@ -18,8 +19,18 @@ import { type SearchNavigationParamList } from "../libs/types";
 const Stack = createStackNavigator<SearchNavigationParamList>();
 
 export default function SearchNavigation() {
+  const navigationTheme = useTheme();
+
   return (
-    <Stack.Navigator screenOptions={{ ...TransitionPresets.DefaultTransition }}>
+    <Stack.Navigator
+      screenOptions={{
+        ...TransitionPresets.DefaultTransition,
+        headerTitleStyle: {
+          color: navigationTheme.colors.text,
+        },
+        headerTintColor: navigationTheme.colors.primary,
+      }}
+    >
       <Stack.Screen name={"Search"} component={SearchScreen} />
       <Stack.Screen
         name={"Detail"}

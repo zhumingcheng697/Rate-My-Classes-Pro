@@ -1,4 +1,5 @@
 import React from "react";
+import { useTheme } from "@react-navigation/native";
 import {
   createStackNavigator,
   TransitionPresets,
@@ -21,8 +22,18 @@ import { getFullDepartmentCode } from "../libs/utils";
 const Stack = createStackNavigator<ExploreNavigationParamList>();
 
 export default function ExploreNavigation() {
+  const navigationTheme = useTheme();
+
   return (
-    <Stack.Navigator screenOptions={{ ...TransitionPresets.DefaultTransition }}>
+    <Stack.Navigator
+      screenOptions={{
+        ...TransitionPresets.DefaultTransition,
+        headerTitleStyle: {
+          color: navigationTheme.colors.text,
+        },
+        headerTintColor: navigationTheme.colors.primary,
+      }}
+    >
       <Stack.Screen
         name={"University"}
         component={UniversityScreen}

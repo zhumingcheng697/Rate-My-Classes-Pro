@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { HStack, Skeleton, Text, VStack } from "native-base";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import {
@@ -39,6 +39,14 @@ export default function ScheduleScreen() {
   );
   const [showAlert, setShowAlert] = useState(false);
   const colorScheme = useColorScheme();
+
+  const cleanText = useCallback(
+    (text: string) =>
+      text
+        .replace(new RegExp(`^\s*${getFullClassCode(classInfo)}\s*`, "gi"), "")
+        .replace(/^\s+/gi, ""),
+    [classInfo]
+  );
 
   const selectedSemester = useMemo(
     () => new Semester(settings.selectedSemester),
@@ -196,7 +204,7 @@ export default function ScheduleScreen() {
                     )}
                     {!!prerequisites &&
                       stripLineBreaks(
-                        prepend(prerequisites, "Prerequisite", ": ")
+                        prepend(cleanText(prerequisites), "Prerequisite", ": ")
                       )
                         .split(/\n/)
                         .map((prerequisite, index) => (
@@ -211,7 +219,7 @@ export default function ScheduleScreen() {
                           </Text>
                         ))}
                     {!!notes &&
-                      stripLineBreaks(prepend(notes, "Notes", ": "))
+                      stripLineBreaks(prepend(cleanText(notes), "Notes", ": "))
                         .split(/\n/)
                         .map((note, index) => (
                           <Text

@@ -20,7 +20,12 @@ export default class Semester {
   readonly semesterCode: SemesterCode;
   readonly year: number;
 
-  constructor({ semesterCode, year }: SemesterInfo) {
+  constructor(
+    {
+      semesterCode,
+      year,
+    }: SemesterInfo = Semester.predictCurrentSemester().toJSON()
+  ) {
     this.semesterCode = semesterCode;
     this.year = Math.floor(year);
   }

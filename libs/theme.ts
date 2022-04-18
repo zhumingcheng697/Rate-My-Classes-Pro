@@ -29,6 +29,12 @@ export const darkColorStyle = {
   nyu: "#c05eff",
 };
 
+const colorStyleHelper = (
+  style: (
+    colorStyle: typeof lightColorStyle | typeof darkColorStyle
+  ) => Record<string, any>
+) => ({ ...style(lightColorStyle), _dark: style(darkColorStyle) });
+
 const headerBaseStyle = {
   lineHeight: "1.05em",
   marginX: "10px",
@@ -95,10 +101,7 @@ const componentsStyle = {
     variants: {
       solid: {
         ...buttonBaseStyle,
-        background: lightColorStyle.nyu,
-        _dark: {
-          background: darkColorStyle.nyu,
-        },
+        ...colorStyleHelper((colorStyle) => ({ background: colorStyle.nyu })),
         _text: {
           color: "white",
           ...buttonTextBaseStyle,
@@ -115,56 +118,33 @@ const componentsStyle = {
       },
       subtle: {
         ...buttonBaseStyle,
-        background: lightColorStyle.background.secondary,
-        _text: {
-          color: lightColorStyle.nyu,
-          ...buttonTextBaseStyle,
-        },
-        _disabled: {
-          background: lightColorStyle.background.tertiary,
-        },
-        _pressed: {
-          background: lightColorStyle.background.tertiary,
-        },
-        _hover: {
-          background: lightColorStyle.background.tertiary,
-        },
-        _dark: {
-          background: darkColorStyle.background.secondary,
+        ...colorStyleHelper((colorStyle) => ({
+          background: colorStyle.background.secondary,
           _text: {
-            color: darkColorStyle.nyu,
+            color: colorStyle.nyu,
             ...buttonTextBaseStyle,
           },
-          _disabled: {
-            background: darkColorStyle.background.tertiary,
-          },
-          _pressed: {
-            background: darkColorStyle.background.tertiary,
-          },
-          _hover: {
-            background: darkColorStyle.background.tertiary,
-          },
-        },
+          _disabled: { background: colorStyle.background.tertiary },
+          _pressed: { background: colorStyle.background.tertiary },
+          _hover: { background: colorStyle.background.tertiary },
+        })),
       },
     },
   },
   Skeleton: {
     defaultProps: {
-      startColor: lightColorStyle.background.secondary,
-      endColor: lightColorStyle.background.secondary + "77",
-      _dark: {
-        startColor: darkColorStyle.background.secondary,
-        endColor: darkColorStyle.background.secondary + "77",
-      },
+      ...colorStyleHelper((colorStyle) => ({
+        startColor: colorStyle.background.secondary,
+        endColor: colorStyle.background.secondary + "77",
+      })),
     },
   },
   ScrollView: {
     defaultProps: {
       keyboardShouldPersistTaps: "handled",
-      background: lightColorStyle.background.primary,
-      _dark: {
-        background: darkColorStyle.background.primary,
-      },
+      ...colorStyleHelper((colorStyle) => ({
+        background: colorStyle.background.primary,
+      })),
     },
     baseStyle: {
       minHeight: "100%",
@@ -198,28 +178,15 @@ const componentsStyle = {
         marginY: "2px",
         padding: "10px",
         borderRadius: 10,
-        _pressed: {
-          background: lightColorStyle.background.tertiary,
-        },
-        _hover: {
-          background: lightColorStyle.background.tertiary,
-        },
-        _dark: {
-          _pressed: {
-            background: darkColorStyle.background.tertiary,
-          },
-          _hover: {
-            background: darkColorStyle.background.tertiary,
-          },
-        },
+        ...colorStyleHelper((colorStyle) => ({
+          _pressed: { background: colorStyle.background.tertiary },
+          _hover: { background: colorStyle.background.tertiary },
+        })),
       },
       _selectedItem: {
         _text: {
           fontWeight: "semibold",
-          color: lightColorStyle.nyu,
-          _dark: {
-            color: darkColorStyle.nyu,
-          },
+          ...colorStyleHelper((colorStyle) => ({ color: colorStyle.nyu })),
         },
       },
     },
@@ -250,10 +217,7 @@ const componentsStyle = {
         ...buttonTextBaseStyle,
       },
       subtleButton: {
-        color: lightColorStyle.nyu,
-        _dark: {
-          color: darkColorStyle.nyu,
-        },
+        ...colorStyleHelper((colorStyle) => ({ color: colorStyle.nyu })),
         ...buttonTextBaseStyle,
       },
     },

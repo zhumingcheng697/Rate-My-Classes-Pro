@@ -1,4 +1,4 @@
-import { type User } from "realm";
+import type Realm from "./Realm";
 
 import { type UserDoc, type ReviewDoc, Collections } from "./types";
 import {
@@ -14,7 +14,7 @@ import { getFullClassCode } from "../libs/utils";
 const servieName = "mongodb-atlas";
 const dbName = "RateMyClassesPro";
 
-export function useDB(user: User) {
+export function useDB(user: Realm.User) {
   const db = user.mongoClient(servieName).db(dbName);
 
   const isAuthenticated = user.id && user.providerType !== "anon-user";

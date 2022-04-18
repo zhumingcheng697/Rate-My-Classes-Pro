@@ -8,7 +8,7 @@ import React, {
   createContext,
 } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Realm, { type User } from "realm";
+import Realm from "./Realm";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import config from "react-native-config";
 
@@ -26,9 +26,9 @@ GoogleSignin.configure({
 });
 
 type AuthProviderComponentProps = {
-  user: User | null;
+  user: Realm.User | null;
   isAuthenticated: boolean;
-  loadUserDoc: (user: User) => Promise<void>;
+  loadUserDoc: (user: Realm.User) => Promise<void>;
   signInAnonymously: (override?: boolean) => Promise<void>;
   children: ReactNode;
 };
@@ -51,7 +51,7 @@ class AuthProviderComponent extends Component<AuthProviderComponentProps> {
 }
 
 type AuthContext = {
-  user: User | null;
+  user: Realm.User | null;
   username: string | null;
   isAuthenticated: boolean;
   updateUsername: (username: string) => Promise<void>;
@@ -78,7 +78,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const isAuthenticated = !!user && user.providerType !== "anon-user";
 
-  const loadUserDoc = async (user: User) => {
+  const loadUserDoc = async (user: Realm.User) => {
     if (user.providerType === "anon-user") return;
 
     const userDoc = await useDB(user).loadUserDoc();

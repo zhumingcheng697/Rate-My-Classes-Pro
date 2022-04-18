@@ -51,6 +51,9 @@ export const buttonBaseStyle = {
   paddingX: "12px",
   paddingY: "8px",
   borderRadius: 10,
+  _disabled: { opacity: 0.5 },
+  _pressed: { opacity: 0.5 },
+  _hover: { opacity: 0.5 },
 };
 
 const inputSelectBaseStyle = {
@@ -106,15 +109,6 @@ const componentsStyle = {
           color: "white",
           ...buttonTextBaseStyle,
         },
-        _disabled: {
-          opacity: 0.5,
-        },
-        _pressed: {
-          opacity: 0.5,
-        },
-        _hover: {
-          opacity: 0.5,
-        },
       },
       subtle: {
         ...buttonBaseStyle,
@@ -124,9 +118,6 @@ const componentsStyle = {
             color: colorStyle.nyu,
             ...buttonTextBaseStyle,
           },
-          _disabled: { background: colorStyle.background.tertiary },
-          _pressed: { background: colorStyle.background.tertiary },
-          _hover: { background: colorStyle.background.tertiary },
         })),
       },
     },

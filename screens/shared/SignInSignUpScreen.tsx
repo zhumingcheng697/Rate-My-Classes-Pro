@@ -184,19 +184,9 @@ export default function SignInSignUpScreen() {
               shadow={"0"}
               borderColor={"gray.200"}
               _dark={{
-                background: "background.secondary.dark",
                 shadow: "none",
+                background: "background.secondary.dark",
                 borderColor: "background.secondary.dark",
-                _pressed: {
-                  opacity: 1,
-                  background: "background.tertiary.dark",
-                  borderColor: "background.tertiary.dark",
-                },
-                _hover: {
-                  opacity: 1,
-                  background: "background.tertiary.dark",
-                  borderColor: "background.tertiary.dark",
-                },
               }}
               borderWidth={"1px"}
               startIcon={

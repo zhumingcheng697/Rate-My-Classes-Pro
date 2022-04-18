@@ -15,7 +15,6 @@ import type {
   SharedNavigationParamList,
 } from "../../libs/types";
 import {
-  getBasicClassInfo,
   getDepartmentName,
   getSchoolName,
   stripLineBreaks,
@@ -177,11 +176,7 @@ export default function DetailScreen() {
             if (myReview) {
               await db.updateReview(classInfo, newReview);
             } else {
-              const reviewedClass = Object.assign(
-                getBasicClassInfo(classInfo),
-                { reviewedDate: Date.now() }
-              );
-
+              const reviewedClass = { ...classInfo, reviewedDate: Date.now() };
               await db.submitReview(classInfo, newReview);
               await db.reviewClass(reviewedClass);
               reviewClass(dispatch)(reviewedClass);

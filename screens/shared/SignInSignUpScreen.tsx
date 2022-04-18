@@ -21,6 +21,7 @@ import LabeledInput from "../../components/LabeledInput";
 import PlainTextButton from "../../components/PlainTextButton";
 import AlertPopup from "../../components/AlertPopup";
 import { useAuth } from "../../mongodb/auth";
+import GoogleSignIn from "../../libs/GoogleSignIn";
 
 type SignInSignUpScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -204,18 +205,9 @@ export default function SignInSignUpScreen() {
                 try {
                   setIsLoading(true);
 
-                  await GoogleSignin.hasPlayServices();
+                  const { idToken, username } = await GoogleSignIn.signIn();
 
-                  const googleUser = await GoogleSignin.signIn();
-                  const newUsername =
-                    googleUser.user.name ||
-                    googleUser.user.givenName ||
-                    "New User";
-
-                  await auth.continueWithGoogle(
-                    googleUser.idToken!,
-                    newUsername
-                  );
+                  await auth.continueWithGoogle(idToken, username);
                 } catch (error: any) {
                   console.log(error);
 

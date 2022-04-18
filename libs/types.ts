@@ -43,6 +43,15 @@ export enum Vote {
 
 export type VoteRecord = Record<string, true>;
 
+export enum ReviewOrder {
+  mostRecentSemester = "Most Recent Semester",
+  mostRecentReview = "Most Recent Review",
+  mostHelpful = "Most Helpful",
+  mostRecentSemesterWithComment = "Most Recent Semester (with Comment)",
+  mostRecentReviewWithComment = "Most Recent Review (with Comment)",
+  mostHelpfulWithComment = "Most Helpful (with Comment)",
+}
+
 export type Review = {
   userId: string;
   enjoyment: Rating;

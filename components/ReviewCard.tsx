@@ -133,7 +133,7 @@ function VoteBlock({
           variant={"unstyled"}
           padding={"3px"}
           _pressed={{ _icon: { opacity: 0.5 } }}
-          _hover={{ _icon: { opacity: 0.75 } }}
+          _hover={{ _icon: { opacity: 0.72 } }}
           icon={
             <Icon
               size={"22px"}
@@ -183,7 +183,7 @@ function VoteBlock({
           variant={"unstyled"}
           padding={"3px"}
           _pressed={{ _icon: { opacity: 0.5 } }}
-          _hover={{ _icon: { opacity: 0.75 } }}
+          _hover={{ _icon: { opacity: 0.72 } }}
           icon={
             <Icon
               size={"22px"}

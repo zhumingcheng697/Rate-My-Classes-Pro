@@ -53,7 +53,7 @@ export const buttonBaseStyle = {
   borderRadius: 10,
   _disabled: { opacity: 0.5 },
   _pressed: { opacity: 0.5 },
-  _hover: { opacity: 0.75 },
+  _hover: { opacity: 0.72 },
 };
 
 const inputSelectBaseStyle = {

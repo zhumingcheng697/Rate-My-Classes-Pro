@@ -79,7 +79,7 @@ export default ({
           marginRight={"5px"}
           padding={"5px"}
           _pressed={{ _icon: { opacity: 0.5 } }}
-          _hover={{ _icon: { opacity: 0.75 } }}
+          _hover={{ _icon: { opacity: 0.72 } }}
           icon={
             <Icon
               color={isStarred ? "yellow.400" : "gray.300"}

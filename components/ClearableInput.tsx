@@ -50,7 +50,7 @@ export default function ClearableInput({
               _pressed={
                 Platform.OS === "web" ? undefined : { _icon: { opacity: 0.5 } }
               }
-              _hover={{ _icon: { opacity: 0.75 } }}
+              _hover={{ _icon: { opacity: 0.72 } }}
               variant={"unstyled"}
               padding={"3px"}
               marginRight={"2px"}

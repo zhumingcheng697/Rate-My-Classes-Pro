@@ -322,6 +322,7 @@ export default function ReviewCard({
           {new Date(reviewedDate).toLocaleDateString(undefined, {
             year: "numeric",
             month: "short",
+            day: "numeric",
           })}
         </Text>
       </HStack>

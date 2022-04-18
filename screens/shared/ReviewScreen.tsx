@@ -121,7 +121,7 @@ export default function ReviewScreen() {
         }
         footerPrimaryButton={
           <Button
-            _light={{ background: "red.600" }}
+            background={"red.600"}
             _dark={{ background: "red.500" }}
             onPress={() => {
               setShowAlert(false);
@@ -210,7 +210,7 @@ export default function ReviewScreen() {
               <LeftAlignedButton
                 title={"Delete"}
                 _text={{
-                  _light: { color: "red.600" },
+                  color: "red.600",
                   _dark: { color: "red.500" },
                 }}
                 showChevron={false}

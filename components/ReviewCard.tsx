@@ -136,9 +136,7 @@ function VoteBlock({
           icon={
             <Icon
               size={"22px"}
-              _light={{
-                color: vote === Vote.upvote ? "nyu.light" : undefined,
-              }}
+              color={vote === Vote.upvote ? "nyu.light" : undefined}
               _dark={{ color: vote === Vote.upvote ? "nyu.dark" : "gray.700" }}
               as={<Ionicons name={"caret-up"} />}
             />
@@ -186,9 +184,7 @@ function VoteBlock({
           icon={
             <Icon
               size={"22px"}
-              _light={{
-                color: vote === Vote.downvote ? "nyu.light" : undefined,
-              }}
+              color={vote === Vote.downvote ? "nyu.light" : undefined}
               _dark={{
                 color: vote === Vote.downvote ? "nyu.dark" : "gray.700",
               }}

@@ -70,7 +70,7 @@ export default function AccountScreen() {
           }
           footerPrimaryButton={
             <Button
-              _light={{ background: "red.600" }}
+              background={"red.600"}
               _dark={{ background: "red.500" }}
               onPress={async () => {
                 setIsSigningOut(true);
@@ -149,7 +149,7 @@ export default function AccountScreen() {
                 <LeftAlignedButton
                   title={"Sign Out"}
                   _text={{
-                    _light: { color: "red.600" },
+                    color: "red.600",
                     _dark: { color: "red.500" },
                   }}
                   showChevron={false}

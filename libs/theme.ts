@@ -56,11 +56,9 @@ const inputSelectDefaultProps = {
   backgroundColor: "transparent",
   size: "lg",
   borderWidth: 1,
-  _light: {
+  borderColor: "gray.400",
+  _focus: {
     borderColor: "gray.400",
-    _focus: {
-      borderColor: "gray.400",
-    },
   },
   _dark: {
     borderColor: "gray.600",
@@ -74,9 +72,7 @@ const componentsStyle = {
   Icon: {
     defaultProps: {
       size: "sm",
-      _light: {
-        color: "gray.400",
-      },
+      color: "gray.400",
       _dark: {
         color: "gray.500",
       },
@@ -99,9 +95,7 @@ const componentsStyle = {
     variants: {
       solid: {
         ...buttonBaseStyle,
-        _light: {
-          background: lightColorStyle.nyu,
-        },
+        background: lightColorStyle.nyu,
         _dark: {
           background: darkColorStyle.nyu,
         },
@@ -121,21 +115,19 @@ const componentsStyle = {
       },
       subtle: {
         ...buttonBaseStyle,
-        _light: {
-          background: lightColorStyle.background.secondary,
-          _text: {
-            color: lightColorStyle.nyu,
-            ...buttonTextBaseStyle,
-          },
-          _disabled: {
-            background: lightColorStyle.background.tertiary,
-          },
-          _pressed: {
-            background: lightColorStyle.background.tertiary,
-          },
-          _hover: {
-            background: lightColorStyle.background.tertiary,
-          },
+        background: lightColorStyle.background.secondary,
+        _text: {
+          color: lightColorStyle.nyu,
+          ...buttonTextBaseStyle,
+        },
+        _disabled: {
+          background: lightColorStyle.background.tertiary,
+        },
+        _pressed: {
+          background: lightColorStyle.background.tertiary,
+        },
+        _hover: {
+          background: lightColorStyle.background.tertiary,
         },
         _dark: {
           background: darkColorStyle.background.secondary,
@@ -158,10 +150,8 @@ const componentsStyle = {
   },
   Skeleton: {
     defaultProps: {
-      _light: {
-        startColor: lightColorStyle.background.secondary,
-        endColor: lightColorStyle.background.secondary + "77",
-      },
+      startColor: lightColorStyle.background.secondary,
+      endColor: lightColorStyle.background.secondary + "77",
       _dark: {
         startColor: darkColorStyle.background.secondary,
         endColor: darkColorStyle.background.secondary + "77",
@@ -171,9 +161,7 @@ const componentsStyle = {
   ScrollView: {
     defaultProps: {
       keyboardShouldPersistTaps: "handled",
-      _light: {
-        background: lightColorStyle.background.primary,
-      },
+      background: lightColorStyle.background.primary,
       _dark: {
         background: darkColorStyle.background.primary,
       },
@@ -210,13 +198,11 @@ const componentsStyle = {
         marginY: "2px",
         padding: "10px",
         borderRadius: 10,
-        _light: {
-          _pressed: {
-            background: lightColorStyle.background.tertiary,
-          },
-          _hover: {
-            background: lightColorStyle.background.tertiary,
-          },
+        _pressed: {
+          background: lightColorStyle.background.tertiary,
+        },
+        _hover: {
+          background: lightColorStyle.background.tertiary,
         },
         _dark: {
           _pressed: {
@@ -230,9 +216,7 @@ const componentsStyle = {
       _selectedItem: {
         _text: {
           fontWeight: "semibold",
-          _light: {
-            color: lightColorStyle.nyu,
-          },
+          color: lightColorStyle.nyu,
           _dark: {
             color: darkColorStyle.nyu,
           },
@@ -266,9 +250,7 @@ const componentsStyle = {
         ...buttonTextBaseStyle,
       },
       subtleButton: {
-        _light: {
-          color: lightColorStyle.nyu,
-        },
+        color: lightColorStyle.nyu,
         _dark: {
           color: darkColorStyle.nyu,
         },

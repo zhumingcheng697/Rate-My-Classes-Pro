@@ -23,7 +23,7 @@ export default function IconHStack({
       <Icon
         marginTop={"3px"}
         size={"xs"}
-        _light={{ color: "nyu.light" }}
+        color={"nyu.light"}
         _dark={{ color: "nyu.dark" }}
         as={<Ionicons name={iconName} />}
       />

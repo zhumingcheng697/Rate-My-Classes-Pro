@@ -153,7 +153,7 @@ export default function SearchScreen() {
             }}
           />
           <Divider
-            _light={{ background: "gray.200" }}
+            background={"gray.200"}
             _dark={{ background: "gray.800" }}
             height={`${dividerHeight}px`}
           />

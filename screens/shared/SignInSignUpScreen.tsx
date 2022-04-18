@@ -242,6 +242,7 @@ export default function SignInSignUpScreen() {
             </Text>
             <HStack justifyContent={"center"}>
               <PlainTextButton
+                isDisabled={isLoading}
                 title={isSigningUp ? "Sign In" : "Sign Up"}
                 onPress={() => {
                   Keyboard.dismiss();

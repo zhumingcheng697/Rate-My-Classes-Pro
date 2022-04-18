@@ -53,7 +53,7 @@ export const buttonBaseStyle = {
   borderRadius: 10,
   _disabled: { opacity: 0.5 },
   _pressed: { opacity: 0.5 },
-  _hover: { opacity: 0.7 },
+  _hover: { opacity: 0.75 },
 };
 
 const inputSelectBaseStyle = {
@@ -97,7 +97,7 @@ const componentsStyle = {
   IconButton: {
     defaultProps: {
       _pressed: { _icon: { opacity: 0.5 } },
-      _hover: { _icon: { opacity: 0.7 } },
+      _hover: { _icon: { opacity: 0.75 } },
     },
   },
   Button: {

@@ -54,7 +54,7 @@ export default function AlertPopup({
               <Button
                 variant="unstyled"
                 _pressed={{ opacity: 0.5 }}
-                _hover={{ opacity: 0.7 }}
+                _hover={{ opacity: 0.75 }}
                 onPress={onClose}
                 ref={ref}
               >

@@ -36,7 +36,7 @@ export default function LeftAlignedButton({
           flexDirection={"row"}
           alignItems={"center"}
           alignContent={"center"}
-          opacity={isPressed ? 0.5 : isHovered ? 0.7 : 1}
+          opacity={isPressed ? 0.5 : isHovered ? 0.75 : 1}
           background={"background.secondary.light"}
           _dark={{ background: "background.secondary.dark" }}
         >

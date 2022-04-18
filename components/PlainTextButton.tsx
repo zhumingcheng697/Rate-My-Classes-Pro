@@ -34,7 +34,7 @@ export default function PlainTextButton({
   return (
     <Pressable {...rest}>
       {({ isPressed, isHovered }) => (
-        <Text {..._text} opacity={isPressed ? 0.5 : isHovered ? 0.7 : 1}>
+        <Text {..._text} opacity={isPressed ? 0.5 : isHovered ? 0.75 : 1}>
           {title ?? children ?? "Button"}
         </Text>
       )}

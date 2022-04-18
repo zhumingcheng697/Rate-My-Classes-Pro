@@ -1,6 +1,6 @@
 import React from "react";
 import GoogleLogin, { type GoogleLoginResponse } from "react-google-login";
-import { type IButtonProps } from "native-base";
+import { IButtonProps } from "native-base";
 
 import Button from "../components/GoogleSignInButton";
 import { useAuth } from "../mongodb/auth";
@@ -14,6 +14,8 @@ type GoogleSignInButtonBaseProps = {
 export type GoogleSignInButtonProps = GoogleSignInButtonBaseProps &
   Omit<IButtonProps, keyof GoogleSignInButtonBaseProps | "onPress">;
 
+const clientId = process.env.GOOGLE_WEB_CLIENT_ID;
+
 export function GoogleSignInButton({
   isLoading,
   setIsLoading,
@@ -25,7 +27,7 @@ export function GoogleSignInButton({
 
   return (
     <GoogleLogin
-      clientId={process.env.GOOGLE_WEB_CLIENT_ID!}
+      clientId={clientId!}
       onSuccess={async (res) => {
         const user = res as GoogleLoginResponse;
         const username =
@@ -36,7 +38,15 @@ export function GoogleSignInButton({
       }}
       onFailure={(error) => {
         console.error(error);
-        setError(error);
+
+        // handle errors
+        if (error?.error === "popup_closed_by_user") {
+          return;
+        } else if (error?.error === "access_denied") {
+          return;
+        } else {
+          setError(error?.details ?? error);
+        }
         setIsLoading(false);
       }}
       render={(props) => (

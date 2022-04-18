@@ -183,7 +183,7 @@ export default function SignInSignUpScreen() {
               setIsLoading={setIsLoading}
               setError={(error) => {
                 setGoogleError(error);
-                setShowAlert(true);
+                setShowGoogleAlert(true);
               }}
             />
           </VStack>

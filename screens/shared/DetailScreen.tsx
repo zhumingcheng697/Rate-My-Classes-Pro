@@ -17,6 +17,7 @@ import {
   type SharedNavigationParamList,
 } from "../../libs/types";
 import {
+  compareReviews,
   getDepartmentName,
   getSchoolName,
   stripLineBreaks,
@@ -158,48 +159,8 @@ export default function DetailScreen() {
   const reviewerIds = useMemo(() => {
     if (!reviewRecord) return [];
 
-    const sortByMostRecentSemester = (a?: Review, b?: Review) =>
-      Semester.between(new Semester(b?.semester), new Semester(a?.semester)) ||
-      sortByMostRecentReview(a, b);
-
-    const sortByMostRecentReview = (a?: Review, b?: Review) =>
-      (b?.reviewedDate ?? 0) - (a?.reviewedDate ?? 0);
-
-    const sortByMostHelpful = (a?: Review, b?: Review) =>
-      Object.keys(b?.upvotes ?? {}).length -
-        Object.keys(b?.downvotes ?? {}).length -
-        Object.keys(a?.upvotes ?? {}).length +
-        Object.keys(a?.downvotes ?? {}).length ||
-      sortByMostRecentSemester(a, b);
-
-    const sortByMostRecentSemesterWithComment = (a?: Review, b?: Review) =>
-      !!a?.comment === !!b?.comment
-        ? sortByMostRecentSemester(a, b)
-        : (!!b?.comment ? 1 : 0) - (!!a?.comment ? 1 : 0);
-
-    const sortByMostRecentReviewWithComment = (a?: Review, b?: Review) =>
-      !!a?.comment === !!b?.comment
-        ? sortByMostRecentReview(a, b)
-        : (!!b?.comment ? 1 : 0) - (!!a?.comment ? 1 : 0);
-
-    const sortByMostHelpfulWithComment = (a?: Review, b?: Review) =>
-      !!a?.comment === !!b?.comment
-        ? sortByMostHelpful(a, b)
-        : (!!b?.comment ? 1 : 0) - (!!a?.comment ? 1 : 0);
-
-    const sortFunc = {
-      [ReviewOrder.mostRecentSemester]: sortByMostRecentSemester,
-      [ReviewOrder.mostRecentReview]: sortByMostRecentReview,
-      [ReviewOrder.mostHelpful]: sortByMostHelpful,
-      [ReviewOrder.mostRecentSemesterWithComment]:
-        sortByMostRecentSemesterWithComment,
-      [ReviewOrder.mostRecentReviewWithComment]:
-        sortByMostRecentReviewWithComment,
-      [ReviewOrder.mostHelpfulWithComment]: sortByMostHelpfulWithComment,
-    };
-
     return Object.keys(reviewRecord).sort((a, b) =>
-      sortFunc[reviewOrder](reviewRecord[a], reviewRecord[b])
+      compareReviews(reviewOrder)(reviewRecord[a], reviewRecord[b])
     );
   }, [reviewRecord, reviewOrder]);
 

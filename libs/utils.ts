@@ -194,6 +194,58 @@ export function compareClasses(
   }
 }
 
+export const reviewOrders = [
+  ReviewOrder.mostRecentSemester,
+  ReviewOrder.mostRecentReview,
+  ReviewOrder.mostHelpful,
+  ReviewOrder.mostRecentSemesterWithComment,
+  ReviewOrder.mostRecentReviewWithComment,
+  ReviewOrder.mostHelpfulWithComment,
+];
+
+export const compareReviews = (() => {
+  const sortByMostRecentSemester = (a?: Review, b?: Review) =>
+    Semester.between(new Semester(b?.semester), new Semester(a?.semester)) ||
+    sortByMostRecentReview(a, b);
+
+  const sortByMostRecentReview = (a?: Review, b?: Review) =>
+    (b?.reviewedDate ?? 0) - (a?.reviewedDate ?? 0);
+
+  const sortByMostHelpful = (a?: Review, b?: Review) =>
+    Object.keys(b?.upvotes ?? {}).length -
+      Object.keys(b?.downvotes ?? {}).length -
+      Object.keys(a?.upvotes ?? {}).length +
+      Object.keys(a?.downvotes ?? {}).length || sortByMostRecentSemester(a, b);
+
+  const sortByMostRecentSemesterWithComment = (a?: Review, b?: Review) =>
+    !!a?.comment === !!b?.comment
+      ? sortByMostRecentSemester(a, b)
+      : (!!b?.comment ? 1 : 0) - (!!a?.comment ? 1 : 0);
+
+  const sortByMostRecentReviewWithComment = (a?: Review, b?: Review) =>
+    !!a?.comment === !!b?.comment
+      ? sortByMostRecentReview(a, b)
+      : (!!b?.comment ? 1 : 0) - (!!a?.comment ? 1 : 0);
+
+  const sortByMostHelpfulWithComment = (a?: Review, b?: Review) =>
+    !!a?.comment === !!b?.comment
+      ? sortByMostHelpful(a, b)
+      : (!!b?.comment ? 1 : 0) - (!!a?.comment ? 1 : 0);
+
+  const sortFunc = {
+    [ReviewOrder.mostRecentSemester]: sortByMostRecentSemester,
+    [ReviewOrder.mostRecentReview]: sortByMostRecentReview,
+    [ReviewOrder.mostHelpful]: sortByMostHelpful,
+    [ReviewOrder.mostRecentSemesterWithComment]:
+      sortByMostRecentSemesterWithComment,
+    [ReviewOrder.mostRecentReviewWithComment]:
+      sortByMostRecentReviewWithComment,
+    [ReviewOrder.mostHelpfulWithComment]: sortByMostHelpfulWithComment,
+  };
+
+  return (reviewOrder: ReviewOrder) => sortFunc[reviewOrder];
+})();
+
 export const ratings: Rating[] = [5, 4, 3, 2, 1];
 
 export const ratingDescriptionMap = {
@@ -226,15 +278,6 @@ export const ratingDescriptionMap = {
     [1]: "Really Useless",
   },
 };
-
-export const reviewOrders = [
-  ReviewOrder.mostRecentSemester,
-  ReviewOrder.mostRecentReview,
-  ReviewOrder.mostHelpful,
-  ReviewOrder.mostRecentSemesterWithComment,
-  ReviewOrder.mostRecentReviewWithComment,
-  ReviewOrder.mostHelpfulWithComment,
-];
 
 export const placeholderReview: Review = {
   userId: "???",

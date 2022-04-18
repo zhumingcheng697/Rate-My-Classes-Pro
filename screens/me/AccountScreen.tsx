@@ -16,7 +16,6 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import LeftAlignedButton from "../../components/LeftAlignedButton";
 import AlertPopup from "../../components/AlertPopup";
 import { useAuth } from "../../mongodb/auth";
-import { useColorScheme } from "react-native";
 
 type AccountScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
@@ -34,7 +33,6 @@ export default function AccountScreen() {
   const innerHeight =
     useWindowDimensions().height - useHeaderHeight() - useBottomTabBarHeight();
   const auth = useAuth();
-  const colorScheme = useColorScheme();
 
   const isAuthenticated = auth.isAuthenticated;
 
@@ -166,7 +164,8 @@ export default function AccountScreen() {
           <Box>
             <Text
               textAlign={"center"}
-              color={colorScheme === "dark" ? "gray.400" : "gray.500"}
+              color={"gray.500"}
+              _dark={{ color: "gray.400" }}
               fontSize={"md"}
               fontWeight={"medium"}
             >
@@ -174,7 +173,8 @@ export default function AccountScreen() {
             </Text>
             <Text
               textAlign={"center"}
-              color={colorScheme === "dark" ? "gray.400" : "gray.500"}
+              color={"gray.500"}
+              _dark={{ color: "gray.400" }}
               fontSize={"sm"}
             >
               © 2022 Mingcheng (McCoy) Zhu

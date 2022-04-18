@@ -1,6 +1,5 @@
 import React, { type ReactNode } from "react";
 import { Box, type IBoxProps, HStack, Text } from "native-base";
-import { useColorScheme } from "react-native";
 
 type LabeledInputBaseProps = {
   label: string;
@@ -23,21 +22,14 @@ export default function LabeledInput({
   children,
   ...rest
 }: LabeledInputProps) {
-  const colorScheme = useColorScheme();
-
   return (
     <Box {...rest}>
       <HStack opacity={isDisabled ? 0.5 : undefined}>
         <Text
           variant={"label"}
           fontWeight={usePlainLabel ? undefined : "semibold"}
-          color={
-            usePlainLabel
-              ? undefined
-              : colorScheme === "dark"
-              ? "nyu.dark"
-              : "nyu.light"
-          }
+          color={usePlainLabel ? undefined : "nyu.light"}
+          _dark={{ color: usePlainLabel ? undefined : "nyu.dark" }}
         >
           {label ?? "Label"}
         </Text>

@@ -20,7 +20,6 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import ClearableInput from "../../components/ClearableInput";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
-import { useColorScheme } from "react-native";
 
 type SearchScreenNavigationProp =
   StackNavigationProp<SharedNavigationParamList>;
@@ -41,8 +40,6 @@ export default function SearchScreen() {
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const innerHeight =
     useWindowDimensions().height - useHeaderHeight() - useBottomTabBarHeight();
-
-  const colorScheme = useColorScheme();
 
   const selectedSemester = useMemo(
     () => new Semester(settings.selectedSemester),
@@ -130,11 +127,8 @@ export default function SearchScreen() {
         }}
       >
         <Box
-          background={
-            colorScheme === "dark"
-              ? "background.primary.dark"
-              : "background.primary.light"
-          }
+          background={"background.primary.light"}
+          _dark={{ background: "background.primary.dark" }}
         >
           <ClearableInput
             isSearchBar
@@ -177,7 +171,8 @@ export default function SearchScreen() {
           >
             <Text
               textAlign={"center"}
-              color={colorScheme === "dark" ? "gray.400" : "gray.500"}
+              color={"gray.500"}
+              _dark={{ color: "gray.400" }}
               fontWeight={"medium"}
               fontSize={"17px"}
             >

@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { useColorScheme } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Text, HStack, Switch, VStack } from "native-base";
 
@@ -9,7 +10,6 @@ import SemesterSelector from "../../components/SemesterSelector";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";
-import { useColorScheme } from "react-native";
 
 export default function SettingsScreen() {
   const colorScheme = useColorScheme();
@@ -80,7 +80,8 @@ export default function SettingsScreen() {
           <Text
             fontSize={"17px"}
             fontWeight={"semibold"}
-            color={colorScheme === "dark" ? "nyu.dark" : "nyu.light"}
+            color={"nyu.light"}
+            _dark={{ color: "nyu.dark" }}
           >
             Show Previous Semesters
           </Text>

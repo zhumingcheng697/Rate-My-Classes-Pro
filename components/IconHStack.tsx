@@ -1,7 +1,6 @@
 import React, { type ReactNode } from "react";
 import { HStack, Icon, type IStackProps, Text } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useColorScheme } from "react-native";
 
 type IconHStackBaseProps = {
   iconName: string;

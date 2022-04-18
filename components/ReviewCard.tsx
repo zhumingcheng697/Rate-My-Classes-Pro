@@ -31,7 +31,6 @@ import {
   type RouteProp,
 } from "@react-navigation/native";
 import { useDB } from "../mongodb/db";
-import { useColorScheme } from "react-native";
 
 type ReviewCardNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -265,7 +264,6 @@ export default function ReviewCard({
   const route = useRoute<ReviewCardRouteProp>();
   const { classInfo } = route.params;
   const auth = useAuth();
-  const colorScheme = useColorScheme();
 
   const setVotes = (newUpvotes?: VoteRecord, newDownvotes?: VoteRecord) => {
     const newReview = { ...review };
@@ -281,11 +279,8 @@ export default function ReviewCard({
   return (
     <VStack
       {...rest}
-      background={
-        colorScheme === "dark"
-          ? "background.secondary.dark"
-          : "background.secondary.light"
-      }
+      background={"background.secondary.light"}
+      _dark={{ background: "background.secondary.dark" }}
       borderRadius={10}
       space={"5px"}
       padding={"10px"}

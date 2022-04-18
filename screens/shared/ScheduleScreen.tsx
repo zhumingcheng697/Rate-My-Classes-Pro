@@ -20,7 +20,6 @@ import {
 } from "../../libs/utils";
 import AlertPopup from "../../components/AlertPopup";
 import IconHStack from "../../components/IconHStack";
-import { useColorScheme } from "react-native";
 
 type ScheduleScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -38,7 +37,6 @@ export default function ScheduleScreen() {
     route.params.sections
   );
   const [showAlert, setShowAlert] = useState(false);
-  const colorScheme = useColorScheme();
 
   const cleanText = useCallback(
     (text: string) =>
@@ -122,11 +120,8 @@ export default function ScheduleScreen() {
                     key={index}
                     padding={"10px"}
                     borderRadius={10}
-                    background={
-                      colorScheme === "dark"
-                        ? "background.secondary.dark"
-                        : "background.secondary.light"
-                    }
+                    background={"background.secondary.light"}
+                    _dark={{ background: "background.secondary.dark" }}
                   >
                     <HStack
                       flexWrap={"wrap"}
@@ -209,9 +204,8 @@ export default function ScheduleScreen() {
                         .split(/\n/)
                         .map((prerequisite, index) => (
                           <Text
-                            color={
-                              colorScheme === "dark" ? "gray.400" : "gray.600"
-                            }
+                            color={"gray.600"}
+                            _dark={{ color: "gray.400" }}
                             key={"prerequisites" + index}
                             lineHeight={"md"}
                           >
@@ -223,9 +217,8 @@ export default function ScheduleScreen() {
                         .split(/\n/)
                         .map((note, index) => (
                           <Text
-                            color={
-                              colorScheme === "dark" ? "gray.400" : "gray.600"
-                            }
+                            color={"gray.600"}
+                            _dark={{ color: "gray.400" }}
                             key={"notes" + index}
                             lineHeight={"md"}
                           >

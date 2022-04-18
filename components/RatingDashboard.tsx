@@ -1,14 +1,21 @@
 import React from "react";
 import { HStack, type IStackProps, Text, VStack } from "native-base";
 import { RatingType } from "../libs/types";
+import { useColorScheme } from "react-native";
 
 type RatingBlockProps = { ratingType: RatingType; rating: number };
 
 function RatingBlock({ ratingType, rating }: RatingBlockProps) {
+  const colorScheme = useColorScheme();
+
   return (
     <VStack
       justifyContent={"center"}
-      background={"background.secondary"}
+      background={
+        colorScheme === "dark"
+          ? "background.secondary.dark"
+          : "background.secondary.light"
+      }
       paddingX={"20px"}
       paddingY={"5px"}
       margin={"5px"}

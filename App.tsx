@@ -1,5 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import React, { useMemo, Component } from "react";
+import { useColorScheme } from "react-native";
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+} from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
@@ -7,7 +12,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import "react-native-config";
 
 import RootNavigation from "./navigation/RootNavigation";
-import nativeBaseTheme, { colorStyle } from "./libs/theme";
+import nativeBaseTheme, { lightColorStyle, darkColorStyle } from "./libs/theme";
 import { getSchoolNames, getDepartmentNames } from "./libs/schedge";
 import { ErrorType } from "./libs/types";
 import { isObjectEmpty } from "./libs/utils";
@@ -44,69 +49,28 @@ declare module "react-native-config" {
   interface NativeConfig extends Config {}
 }
 
-const navigationTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: colorStyle.nyu,
-    background: colorStyle.background.primary,
-  },
+type AppComponentProps = {
+  error: ErrorType | null;
+  showAlert: boolean;
+  hideAlert: () => void;
 };
 
-export default function App() {
-  const [error, setError] = useState<ErrorType | null>(null);
-  const [showAlert, setShowAlert] = useState(false);
+function AppComponent({ error, showAlert, hideAlert }: AppComponentProps) {
+  const colorScheme = useColorScheme();
 
-  useEffect(() => {
-    const reduxListener = (() => {
-      let previousSettings = store.getState().settings;
-
-      return async () => {
-        const { settings } = store.getState();
-
-        if (settings !== previousSettings) {
-          if (
-            realmApp.currentUser &&
-            realmApp.currentUser.providerType !== "anon-user"
-          ) {
-            await useDB(realmApp.currentUser).updateSettings(settings);
-          }
-        }
-      };
-    })();
-
-    getSchoolNames()
-      .then((record) => {
-        if (record && !isObjectEmpty(record)) {
-          setSchoolNameRecord(store.dispatch)(record);
-        } else {
-          setError(ErrorType.noData);
-          setShowAlert(true);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-        setError(ErrorType.network);
-        setShowAlert(true);
-      });
-
-    getDepartmentNames()
-      .then((record) => {
-        if (record && !isObjectEmpty(record)) {
-          setDepartmentNameRecord(store.dispatch)(record);
-        } else {
-          setError(ErrorType.noData);
-          setShowAlert(true);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-        setError(ErrorType.network);
-        setShowAlert(true);
-      });
-
-    return store.subscribe(reduxListener);
-  }, []);
+  const navigationTheme = useMemo(
+    () => ({
+      ...(colorScheme === "dark" ? DarkTheme : DefaultTheme),
+      colors: {
+        ...(colorScheme === "dark" ? DarkTheme.colors : DefaultTheme.colors),
+        primary: (colorScheme === "dark" ? darkColorStyle : lightColorStyle)
+          .nyu,
+        background: (colorScheme === "dark" ? darkColorStyle : lightColorStyle)
+          .background.primary,
+      },
+    }),
+    [colorScheme]
+  );
 
   return (
     <Provider store={store}>
@@ -120,9 +84,7 @@ export default function App() {
                   : undefined
               }
               isOpen={showAlert}
-              onClose={() => {
-                setShowAlert(false);
-              }}
+              onClose={hideAlert}
               onlyShowWhenFocused={false}
             />
             <RootNavigation />
@@ -131,4 +93,79 @@ export default function App() {
       </AuthProvider>
     </Provider>
   );
+}
+
+type AppState = { error: ErrorType | null; showAlert: boolean };
+
+export default class App extends Component<{}, AppState> {
+  state: AppState = {
+    error: null,
+    showAlert: false,
+  };
+
+  unsubsriceRedux = () => {};
+
+  reduxListener = (() => {
+    let previousSettings = store.getState().settings;
+
+    return async () => {
+      const { settings } = store.getState();
+
+      if (settings !== previousSettings) {
+        if (
+          realmApp.currentUser &&
+          realmApp.currentUser.providerType !== "anon-user"
+        ) {
+          await useDB(realmApp.currentUser).updateSettings(settings);
+        }
+      }
+    };
+  })();
+
+  componentWillUnmount() {
+    this.unsubsriceRedux();
+  }
+
+  componentDidMount() {
+    this.unsubsriceRedux = store.subscribe(this.reduxListener.bind(this));
+
+    getSchoolNames()
+      .then((record) => {
+        if (record && !isObjectEmpty(record)) {
+          setSchoolNameRecord(store.dispatch)(record);
+        } else {
+          this.setState({ error: ErrorType.noData, showAlert: true });
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        this.setState({ error: ErrorType.network, showAlert: true });
+      });
+
+    getDepartmentNames()
+      .then((record) => {
+        if (record && !isObjectEmpty(record)) {
+          setDepartmentNameRecord(store.dispatch)(record);
+        } else {
+          this.setState({ error: ErrorType.noData, showAlert: true });
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        this.setState({ error: ErrorType.network, showAlert: true });
+      });
+  }
+
+  render() {
+    const { error, showAlert } = this.state;
+    return (
+      <AppComponent
+        error={error}
+        showAlert={showAlert}
+        hideAlert={() => {
+          this.setState({ showAlert: false });
+        }}
+      />
+    );
+  }
 }

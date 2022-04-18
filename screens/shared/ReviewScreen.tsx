@@ -121,7 +121,8 @@ export default function ReviewScreen() {
         }
         footerPrimaryButton={
           <Button
-            background={"red.600"}
+            _light={{ background: "red.600" }}
+            _dark={{ background: "red.500" }}
             onPress={() => {
               setShowAlert(false);
               navigation.navigate("Detail", { classInfo, deleteReview: true });
@@ -208,7 +209,10 @@ export default function ReviewScreen() {
             {previousReview && (
               <LeftAlignedButton
                 title={"Delete"}
-                _text={{ color: "red.600" }}
+                _text={{
+                  _light: { color: "red.600" },
+                  _dark: { color: "red.500" },
+                }}
                 showChevron={false}
                 marginTop={"15px"}
                 onPress={() => {

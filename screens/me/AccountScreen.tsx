@@ -16,6 +16,7 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import LeftAlignedButton from "../../components/LeftAlignedButton";
 import AlertPopup from "../../components/AlertPopup";
 import { useAuth } from "../../mongodb/auth";
+import { useColorScheme } from "react-native";
 
 type AccountScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
@@ -33,6 +34,7 @@ export default function AccountScreen() {
   const innerHeight =
     useWindowDimensions().height - useHeaderHeight() - useBottomTabBarHeight();
   const auth = useAuth();
+  const colorScheme = useColorScheme();
 
   const isAuthenticated = auth.isAuthenticated;
 
@@ -68,7 +70,8 @@ export default function AccountScreen() {
           }
           footerPrimaryButton={
             <Button
-              background={"red.600"}
+              _light={{ background: "red.600" }}
+              _dark={{ background: "red.500" }}
               onPress={async () => {
                 setIsSigningOut(true);
                 setShowAlert(false);
@@ -145,7 +148,10 @@ export default function AccountScreen() {
               {wasAuthenticated && (
                 <LeftAlignedButton
                   title={"Sign Out"}
-                  _text={{ color: "red.600" }}
+                  _text={{
+                    _light: { color: "red.600" },
+                    _dark: { color: "red.500" },
+                  }}
                   showChevron={false}
                   marginTop={"15px"}
                   isDisabled={isSigningOut}
@@ -160,13 +166,17 @@ export default function AccountScreen() {
           <Box>
             <Text
               textAlign={"center"}
-              color={"gray.500"}
+              color={colorScheme === "dark" ? "gray.400" : "gray.500"}
               fontSize={"md"}
               fontWeight={"medium"}
             >
               Rate My Classes Pro
             </Text>
-            <Text textAlign={"center"} color={"gray.500"} fontSize={"sm"}>
+            <Text
+              textAlign={"center"}
+              color={colorScheme === "dark" ? "gray.400" : "gray.500"}
+              fontSize={"sm"}
+            >
               © 2022 Mingcheng (McCoy) Zhu
             </Text>
           </Box>

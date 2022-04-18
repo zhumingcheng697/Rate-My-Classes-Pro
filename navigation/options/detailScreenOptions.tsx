@@ -83,7 +83,8 @@ export default ({
           _hover={pressedHoverStyle}
           icon={
             <Icon
-              color={isStarred ? "yellow.400" : "gray.300"}
+              _light={{ color: isStarred ? "yellow.400" : "gray.300" }}
+              _dark={{ color: isStarred ? "yellow.500" : "gray.600" }}
               size={"22px"}
               as={<Ionicons name={"star" + (isStarred ? "" : "-outline")} />}
             />

@@ -9,8 +9,10 @@ import SemesterSelector from "../../components/SemesterSelector";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";
+import { useColorScheme } from "react-native";
 
 export default function SettingsScreen() {
+  const colorScheme = useColorScheme();
   const auth = useAuth();
   const dispatch = useDispatch();
   const [canClear, setCanClear] = useState(false);
@@ -75,13 +77,17 @@ export default function SettingsScreen() {
           alignItems={"center"}
           marginY={"10px"}
         >
-          <Text fontSize={"17px"} fontWeight={"semibold"} color={"nyu"}>
+          <Text
+            fontSize={"17px"}
+            fontWeight={"semibold"}
+            color={colorScheme === "dark" ? "nyu.dark" : "nyu.light"}
+          >
             Show Previous Semesters
           </Text>
           <Switch
             isChecked={showPreviousSemesters}
             onValueChange={setShowPreviousSemesters(dispatch)}
-            onTrackColor={"nyu"}
+            onTrackColor={colorScheme === "dark" ? "nyu.dark" : "nyu.light"}
           />
         </HStack>
       </VStack>

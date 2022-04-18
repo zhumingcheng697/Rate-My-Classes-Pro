@@ -31,6 +31,7 @@ import {
   type RouteProp,
 } from "@react-navigation/native";
 import { useDB } from "../mongodb/db";
+import { useColorScheme } from "react-native";
 
 type ReviewCardNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -135,7 +136,10 @@ function VoteBlock({
           icon={
             <Icon
               size={"22px"}
-              color={vote === Vote.upvote ? "nyu" : undefined}
+              _light={{
+                color: vote === Vote.upvote ? "nyu.light" : undefined,
+              }}
+              _dark={{ color: vote === Vote.upvote ? "nyu.dark" : "gray.700" }}
               as={<Ionicons name={"caret-up"} />}
             />
           }
@@ -182,7 +186,12 @@ function VoteBlock({
           icon={
             <Icon
               size={"22px"}
-              color={vote === Vote.downvote ? "nyu" : undefined}
+              _light={{
+                color: vote === Vote.downvote ? "nyu.light" : undefined,
+              }}
+              _dark={{
+                color: vote === Vote.downvote ? "nyu.dark" : "gray.700",
+              }}
               as={<Ionicons name={"caret-down"} />}
             />
           }
@@ -260,6 +269,7 @@ export default function ReviewCard({
   const route = useRoute<ReviewCardRouteProp>();
   const { classInfo } = route.params;
   const auth = useAuth();
+  const colorScheme = useColorScheme();
 
   const setVotes = (newUpvotes?: VoteRecord, newDownvotes?: VoteRecord) => {
     const newReview = { ...review };
@@ -275,7 +285,11 @@ export default function ReviewCard({
   return (
     <VStack
       {...rest}
-      background={"background.secondary"}
+      background={
+        colorScheme === "dark"
+          ? "background.secondary.dark"
+          : "background.secondary.light"
+      }
       borderRadius={10}
       space={"5px"}
       padding={"10px"}

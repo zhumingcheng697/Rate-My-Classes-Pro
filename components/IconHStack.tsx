@@ -1,6 +1,7 @@
 import React, { type ReactNode } from "react";
 import { HStack, Icon, type IStackProps, Text } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useColorScheme } from "react-native";
 
 type IconHStackBaseProps = {
   iconName: string;
@@ -22,7 +23,8 @@ export default function IconHStack({
       <Icon
         marginTop={"3px"}
         size={"xs"}
-        color={"nyu"}
+        _light={{ color: "nyu.light" }}
+        _dark={{ color: "nyu.dark" }}
         as={<Ionicons name={iconName} />}
       />
       {children ? (

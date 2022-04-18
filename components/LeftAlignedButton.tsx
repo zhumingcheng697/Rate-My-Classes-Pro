@@ -9,6 +9,7 @@ import {
 } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { buttonBaseStyle } from "../libs/theme";
+import { useColorScheme } from "react-native";
 
 type LeftAlignedButtonBaseProps = {
   title?: string;
@@ -27,6 +28,7 @@ export default function LeftAlignedButton({
   children,
   ...rest
 }: LeftAlignedButtonProps) {
+  const colorScheme = useColorScheme();
   return (
     <Pressable {...rest}>
       {({ isPressed, isHovered }) => (
@@ -38,8 +40,12 @@ export default function LeftAlignedButton({
           alignContent={"center"}
           background={
             isPressed || isHovered
-              ? "background.tertiary"
-              : "background.secondary"
+              ? colorScheme === "dark"
+                ? "background.tertiary.dark"
+                : "background.tertiary.light"
+              : colorScheme === "dark"
+              ? "background.secondary.dark"
+              : "background.secondary.light"
           }
         >
           <Text {..._text} variant={"subtleButton"}>

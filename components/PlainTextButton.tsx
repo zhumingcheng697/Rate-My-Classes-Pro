@@ -5,6 +5,7 @@ import {
   Text,
   type ITextProps,
 } from "native-base";
+import { useColorScheme } from "react-native";
 
 type PlainTextButtonBaseProps = {
   title?: string;
@@ -21,9 +22,11 @@ export default function PlainTextButton({
   children,
   ...rest
 }: PlainTextButtonProps) {
+  const colorScheme = useColorScheme();
+
   _text = Object.assign(
     {
-      color: "nyu",
+      color: colorScheme === "dark" ? "nyu.dark" : "nyu.light",
       fontWeight: "medium",
       textAlign: "center",
     },

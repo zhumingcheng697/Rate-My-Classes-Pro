@@ -20,6 +20,7 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import ClearableInput from "../../components/ClearableInput";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
+import { useColorScheme } from "react-native";
 
 type SearchScreenNavigationProp =
   StackNavigationProp<SharedNavigationParamList>;
@@ -40,6 +41,8 @@ export default function SearchScreen() {
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const innerHeight =
     useWindowDimensions().height - useHeaderHeight() - useBottomTabBarHeight();
+
+  const colorScheme = useColorScheme();
 
   const selectedSemester = useMemo(
     () => new Semester(settings.selectedSemester),
@@ -126,7 +129,13 @@ export default function SearchScreen() {
           enableResetScrollToCoords: false,
         }}
       >
-        <Box background={"background.primary"}>
+        <Box
+          background={
+            colorScheme === "dark"
+              ? "background.primary.dark"
+              : "background.primary.light"
+          }
+        >
           <ClearableInput
             isSearchBar
             margin={`${searchBarMargin}px`}
@@ -143,7 +152,11 @@ export default function SearchScreen() {
                 search(query, selectedSemester, schoolCodes, departmentNames);
             }}
           />
-          <Divider height={`${dividerHeight}px`} />
+          <Divider
+            _light={{ background: "gray.200" }}
+            _dark={{ background: "gray.800" }}
+            height={`${dividerHeight}px`}
+          />
         </Box>
         {focused || matchedClasses.length || (query && !isLoaded) ? (
           <ClassesGrid
@@ -164,7 +177,7 @@ export default function SearchScreen() {
           >
             <Text
               textAlign={"center"}
-              color={"gray.500"}
+              color={colorScheme === "dark" ? "gray.400" : "gray.500"}
               fontWeight={"medium"}
               fontSize={"17px"}
             >

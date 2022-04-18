@@ -180,12 +180,19 @@ export default function SignInSignUpScreen() {
               - or -
             </Text>
             <Button
-              background={"white"}
-              shadow={"2"}
+              _light={{
+                background: "white",
+                shadow: "0",
+                borderColor: "gray.200",
+              }}
+              _dark={{ background: "gray.800", borderColor: "gray.800" }}
               borderWidth={"1px"}
-              borderColor={"gray.200"}
               startIcon={
-                <Icon color={"black"} as={<Ionicons name={"logo-google"} />} />
+                <Icon
+                  _light={{ color: "black" }}
+                  _dark={{ color: "white" }}
+                  as={<Ionicons name={"logo-google"} />}
+                />
               }
               isDisabled={isLoading}
               onPress={async () => {
@@ -216,7 +223,11 @@ export default function SignInSignUpScreen() {
                 }
               }}
             >
-              <Text variant={"button"} color={"black"}>
+              <Text
+                variant={"button"}
+                _light={{ color: "black" }}
+                _dark={{ color: "white" }}
+              >
                 Continue with Google
               </Text>
             </Button>

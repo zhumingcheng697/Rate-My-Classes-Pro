@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useWindowDimensions } from "react-native";
+import { useColorScheme, useWindowDimensions } from "react-native";
 import { Select, type ISelectProps, Icon } from "native-base";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -23,6 +23,7 @@ export default function SemesterSelector({
   onSelectedSemesterChange,
   ...rest
 }: SemesterSelectorProps) {
+  const colorScheme = useColorScheme();
   const inset = useSafeAreaInsets();
   const dimension = useWindowDimensions();
   const semesterOptionsRecord = useMemo(() => {
@@ -46,7 +47,12 @@ export default function SemesterSelector({
         width: `${dimension.width - inset.left - inset.right}px`,
       }}
       _selectedItem={{
-        endIcon: <Icon color={"nyu"} as={<Ionicons name={"checkmark"} />} />,
+        endIcon: (
+          <Icon
+            color={colorScheme === "dark" ? "nyu.dark" : "nyu.light"}
+            as={<Ionicons name={"checkmark"} />}
+          />
+        ),
       }}
     >
       {Object.keys(semesterOptionsRecord).map((semesterName) => (

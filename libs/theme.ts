@@ -4,11 +4,29 @@ export const inputSelectHeight = 40;
 
 export const colorStyle = {
   background: {
+    primary: { light: "#ffffff", dark: "#000000" },
+    secondary: { light: "#f2f2f7", dark: "#1c1c1e" },
+    tertiary: { light: "#e5e5ea", dark: "#2c2c2e" },
+  },
+  nyu: { light: "#57068c", dark: "#c05eff" },
+};
+
+export const lightColorStyle = {
+  background: {
     primary: "#ffffff",
     secondary: "#f2f2f7",
     tertiary: "#e5e5ea",
   },
   nyu: "#57068c",
+};
+
+export const darkColorStyle = {
+  background: {
+    primary: "#000000",
+    secondary: "#1c1c1e",
+    tertiary: "#2c2c2e",
+  },
+  nyu: "#c05eff",
 };
 
 const headerBaseStyle = {
@@ -31,7 +49,6 @@ export const buttonBaseStyle = {
 
 const inputSelectBaseStyle = {
   borderRadius: 10,
-  borderColor: "gray.400",
   height: `${inputSelectHeight}px`,
 };
 
@@ -39,8 +56,17 @@ const inputSelectDefaultProps = {
   backgroundColor: "transparent",
   size: "lg",
   borderWidth: 1,
-  _focus: {
+  _light: {
     borderColor: "gray.400",
+    _focus: {
+      borderColor: "gray.400",
+    },
+  },
+  _dark: {
+    borderColor: "gray.600",
+    _focus: {
+      borderColor: "gray.600",
+    },
   },
 };
 
@@ -48,7 +74,12 @@ const componentsStyle = {
   Icon: {
     defaultProps: {
       size: "sm",
-      color: "gray.400",
+      _light: {
+        color: "gray.400",
+      },
+      _dark: {
+        color: "gray.500",
+      },
     },
   },
   Pressable: {
@@ -68,7 +99,12 @@ const componentsStyle = {
     variants: {
       solid: {
         ...buttonBaseStyle,
-        background: colorStyle.nyu,
+        _light: {
+          background: lightColorStyle.nyu,
+        },
+        _dark: {
+          background: darkColorStyle.nyu,
+        },
         _text: {
           color: "white",
           ...buttonTextBaseStyle,
@@ -85,35 +121,64 @@ const componentsStyle = {
       },
       subtle: {
         ...buttonBaseStyle,
-        background: colorStyle.background.secondary,
-        _text: {
-          color: colorStyle.nyu,
-          ...buttonTextBaseStyle,
+        _light: {
+          background: lightColorStyle.background.secondary,
+          _text: {
+            color: lightColorStyle.nyu,
+            ...buttonTextBaseStyle,
+          },
+          _disabled: {
+            background: lightColorStyle.background.tertiary,
+          },
+          _pressed: {
+            background: lightColorStyle.background.tertiary,
+          },
+          _hover: {
+            background: lightColorStyle.background.tertiary,
+          },
         },
-        _disabled: {
-          background: colorStyle.background.tertiary,
-        },
-        _pressed: {
-          background: colorStyle.background.tertiary,
-        },
-        _hover: {
-          background: colorStyle.background.tertiary,
+        _dark: {
+          background: darkColorStyle.background.secondary,
+          _text: {
+            color: darkColorStyle.nyu,
+            ...buttonTextBaseStyle,
+          },
+          _disabled: {
+            background: darkColorStyle.background.tertiary,
+          },
+          _pressed: {
+            background: darkColorStyle.background.tertiary,
+          },
+          _hover: {
+            background: darkColorStyle.background.tertiary,
+          },
         },
       },
     },
   },
   Skeleton: {
-    baseStyle: {
-      startColor: colorStyle.background.secondary,
-      endColor: colorStyle.background.secondary + "77",
+    defaultProps: {
+      _light: {
+        startColor: lightColorStyle.background.secondary,
+        endColor: lightColorStyle.background.secondary + "77",
+      },
+      _dark: {
+        startColor: darkColorStyle.background.secondary,
+        endColor: darkColorStyle.background.secondary + "77",
+      },
     },
   },
   ScrollView: {
     defaultProps: {
       keyboardShouldPersistTaps: "handled",
+      _light: {
+        background: lightColorStyle.background.primary,
+      },
+      _dark: {
+        background: darkColorStyle.background.primary,
+      },
     },
     baseStyle: {
-      background: colorStyle.background.primary,
       minHeight: "100%",
     },
   },
@@ -145,15 +210,33 @@ const componentsStyle = {
         marginY: "2px",
         padding: "10px",
         borderRadius: 10,
-        _pressed: {
-          background: colorStyle.background.tertiary,
+        _light: {
+          _pressed: {
+            background: lightColorStyle.background.tertiary,
+          },
+          _hover: {
+            background: lightColorStyle.background.tertiary,
+          },
         },
-        _hover: {
-          background: colorStyle.background.tertiary,
+        _dark: {
+          _pressed: {
+            background: darkColorStyle.background.tertiary,
+          },
+          _hover: {
+            background: darkColorStyle.background.tertiary,
+          },
         },
       },
       _selectedItem: {
-        _text: { fontWeight: "semibold", color: colorStyle.nyu },
+        _text: {
+          fontWeight: "semibold",
+          _light: {
+            color: lightColorStyle.nyu,
+          },
+          _dark: {
+            color: darkColorStyle.nyu,
+          },
+        },
       },
     },
     baseStyle: {
@@ -179,11 +262,16 @@ const componentsStyle = {
         marginBottom: "2px",
       },
       button: {
-        color: "white",
+        color: "#ffffff",
         ...buttonTextBaseStyle,
       },
       subtleButton: {
-        color: colorStyle.nyu,
+        _light: {
+          color: lightColorStyle.nyu,
+        },
+        _dark: {
+          color: darkColorStyle.nyu,
+        },
         ...buttonTextBaseStyle,
       },
     },
@@ -191,6 +279,7 @@ const componentsStyle = {
 };
 
 export default extendTheme({
+  config: { useSystemColorMode: true },
   colors: colorStyle,
   components: componentsStyle,
 });

@@ -8,10 +8,7 @@ import {
   type RouteProp,
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
-import {
-  GoogleSignin,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
+import { statusCodes } from "@react-native-google-signin/google-signin";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { isObjectEmpty, formSentence } from "../../libs/utils";
@@ -21,7 +18,7 @@ import LabeledInput from "../../components/LabeledInput";
 import PlainTextButton from "../../components/PlainTextButton";
 import AlertPopup from "../../components/AlertPopup";
 import { useAuth } from "../../mongodb/auth";
-import GoogleSignIn from "../../libs/GoogleSignIn";
+import GoogleSignIn, { GoogleSignInButton } from "../../libs/GoogleSignIn";
 
 type SignInSignUpScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -183,63 +180,14 @@ export default function SignInSignUpScreen() {
             <Text textAlign={"center"} fontSize={"md"} fontWeight={"medium"}>
               - or -
             </Text>
-            <Button
-              background={"white"}
-              shadow={"0"}
-              borderColor={"gray.200"}
-              _dark={{
-                shadow: "none",
-                background: "background.secondary.dark",
-                borderColor: "background.secondary.dark",
+            <GoogleSignInButton
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              setError={(error) => {
+                setGoogleError(error);
+                setShowAlert(true);
               }}
-              borderWidth={"1px"}
-              startIcon={
-                <Icon
-                  color={"black"}
-                  _dark={{ color: "white" }}
-                  as={<Ionicons name={"logo-google"} />}
-                />
-              }
-              isDisabled={isLoading}
-              onPress={async () => {
-                try {
-                  setIsLoading(true);
-
-                  const { idToken, username } = await GoogleSignIn.signIn();
-
-                  await auth.continueWithGoogle(idToken, username);
-                } catch (error: any) {
-                  console.log(error);
-
-                  // handle errors
-                  if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-                    return;
-                  } else if (error.code === statusCodes.IN_PROGRESS) {
-                    return;
-                  } else if (
-                    error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE
-                  ) {
-                    setGoogleError(
-                      "Google Play services not available or outdated"
-                    );
-                    setShowGoogleAlert(true);
-                  } else {
-                    setGoogleError(error);
-                    setShowGoogleAlert(true);
-                  }
-                } finally {
-                  setIsLoading(false);
-                }
-              }}
-            >
-              <Text
-                variant={"button"}
-                color={"black"}
-                _dark={{ color: "white" }}
-              >
-                Continue with Google
-              </Text>
-            </Button>
+            />
           </VStack>
           <Box>
             <Text textAlign={"center"}>

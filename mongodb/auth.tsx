@@ -1,11 +1,11 @@
 // https://github.com/mongodb-university/realm-tutorial-react-native/blob/final/providers/AuthProvider.js
 
 import React, {
+  Component,
   useContext,
   useState,
   type ReactNode,
   createContext,
-  useEffect,
 } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Realm, { type User } from "realm";
@@ -24,6 +24,31 @@ GoogleSignin.configure({
   webClientId: config.GOOGLE_WEB_CLIENT_ID,
   iosClientId: config.GOOGLE_IOS_CLIENT_ID,
 });
+
+type AuthProviderComponentProps = {
+  user: User | null;
+  isAuthenticated: boolean;
+  loadUserDoc: (user: User) => Promise<void>;
+  signInAnonymously: (override?: boolean) => Promise<void>;
+  children: ReactNode;
+};
+
+class AuthProviderComponent extends Component<AuthProviderComponentProps> {
+  componentDidMount() {
+    const { user, isAuthenticated, loadUserDoc, signInAnonymously } =
+      this.props;
+
+    if (user && isAuthenticated) {
+      loadUserDoc(user);
+    } else {
+      signInAnonymously();
+    }
+  }
+
+  render() {
+    return this.props.children;
+  }
+}
 
 type AuthContext = {
   user: User | null;
@@ -66,14 +91,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       loadSettings(dispatch)(settings);
     }
   };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadUserDoc(user);
-    } else {
-      signInAnonymously();
-    }
-  }, []);
 
   const updateUsername = async (username: string) => {
     if (!isAuthenticated) return;
@@ -175,7 +192,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         signOut,
       }}
     >
-      {children}
+      <AuthProviderComponent
+        user={user}
+        isAuthenticated={isAuthenticated}
+        loadUserDoc={loadUserDoc}
+        signInAnonymously={signInAnonymously}
+      >
+        {children}
+      </AuthProviderComponent>
     </Context.Provider>
   );
 };

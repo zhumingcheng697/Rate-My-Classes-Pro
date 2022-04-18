@@ -1,9 +1,5 @@
 import React from "react";
-import { useTheme } from "@react-navigation/native";
-import {
-  createStackNavigator,
-  TransitionPresets,
-} from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 
 import SearchScreen from "../screens/search/SearchScreen";
 import DetailScreen from "../screens/shared/DetailScreen";
@@ -15,22 +11,13 @@ import reviewScreenOptions from "./options/reviewScreenOptions";
 import scheduleScreenOptions from "./options/scheduleScreenOptions";
 import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
 import { type SearchNavigationParamList } from "../libs/types";
+import defaultScreenOptions from "./options/defaultScreenOptions";
 
 const Stack = createStackNavigator<SearchNavigationParamList>();
 
 export default function SearchNavigation() {
-  const navigationTheme = useTheme();
-
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...TransitionPresets.DefaultTransition,
-        headerTitleStyle: {
-          color: navigationTheme.colors.text,
-        },
-        headerTintColor: navigationTheme.colors.primary,
-      }}
-    >
+    <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen name={"Search"} component={SearchScreen} />
       <Stack.Screen
         name={"Detail"}

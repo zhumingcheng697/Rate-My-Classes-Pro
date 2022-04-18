@@ -1,4 +1,4 @@
-import Realm, { type User } from "realm";
+import { type User } from "realm";
 
 import { type UserDoc, type ReviewDoc, Collections } from "./types";
 import {
@@ -18,6 +18,10 @@ export function useDB(user: User) {
   const db = user.mongoClient(servieName).db(dbName);
 
   const isAuthenticated = user.id && user.providerType !== "anon-user";
+
+  const updateOneFunc = db.collection("").updateOne;
+  type Update = Parameters<typeof updateOneFunc>[1];
+  type UpdateOptions = Parameters<typeof updateOneFunc>[2];
 
   async function createUserDoc(username: string, settings: Settings) {
     if (!isAuthenticated) return;
@@ -46,7 +50,7 @@ export function useDB(user: User) {
       .findOne({ _id: user.id });
   }
 
-  async function updateUserDoc(update: Realm.Services.MongoDB.Update) {
+  async function updateUserDoc(update: Update) {
     if (!isAuthenticated) return;
 
     await db
@@ -102,8 +106,8 @@ export function useDB(user: User) {
 
   async function updateReviewDoc(
     classCode: ClassCode,
-    update: Realm.Services.MongoDB.Update,
-    options?: Realm.Services.MongoDB.UpdateOptions
+    update: Update,
+    options?: UpdateOptions
   ) {
     if (!isAuthenticated) return;
 
@@ -147,7 +151,7 @@ export function useDB(user: User) {
   }
 
   async function voteReview(classCode: ClassCode, userId: string, vote?: Vote) {
-    let update: Realm.Services.MongoDB.Update;
+    let update: Update;
 
     if (vote === Vote.upvote) {
       update = {

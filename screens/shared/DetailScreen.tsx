@@ -9,10 +9,12 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useDispatch, useSelector } from "react-redux";
 
-import type {
-  ReviewRecord,
-  SectionInfo,
-  SharedNavigationParamList,
+import {
+  ReviewOrder,
+  type Review,
+  type ReviewRecord,
+  type SectionInfo,
+  type SharedNavigationParamList,
 } from "../../libs/types";
 import {
   getDepartmentName,
@@ -20,14 +22,15 @@ import {
   stripLineBreaks,
 } from "../../libs/utils";
 import Semester from "../../libs/semester";
+import { getSections } from "../../libs/schedge";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import AlertPopup from "../../components/AlertPopup";
 import ReviewCard from "../../components/ReviewCard";
 import RatingDashboard from "../../components/RatingDashboard";
+import ReviewOrderSelector from "../../components/ReviewOrderSelector";
 import { useAuth } from "../../mongodb/auth";
 import { useDB } from "../../mongodb/db";
 import { reviewClass, unreviewClass } from "../../redux/actions";
-import { getSections } from "../../libs/schedge";
 
 type DetailScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -61,6 +64,10 @@ export default function DetailScreen() {
     new Semester(selectedSemester)
   );
   const [reviewRecord, setReviewRecord] = useState<ReviewRecord | null>(null);
+
+  const [reviewOrder, setReviewOrder] = useState(
+    ReviewOrder.mostRecentSemester
+  );
 
   const description = useMemo(() => {
     return classInfo.description
@@ -151,12 +158,50 @@ export default function DetailScreen() {
   const reviewerIds = useMemo(() => {
     if (!reviewRecord) return [];
 
-    return Object.keys(reviewRecord).sort(
-      (a, b) =>
-        (reviewRecord[b]?.reviewedDate ?? 0) -
-        (reviewRecord[a]?.reviewedDate ?? 0)
+    const sortByMostRecentSemester = (a?: Review, b?: Review) =>
+      Semester.between(new Semester(b?.semester), new Semester(a?.semester)) ||
+      sortByMostRecentReview(a, b);
+
+    const sortByMostRecentReview = (a?: Review, b?: Review) =>
+      (b?.reviewedDate ?? 0) - (a?.reviewedDate ?? 0);
+
+    const sortByMostHelpful = (a?: Review, b?: Review) =>
+      Object.keys(b?.upvotes ?? {}).length -
+        Object.keys(b?.downvotes ?? {}).length -
+        Object.keys(a?.upvotes ?? {}).length +
+        Object.keys(a?.downvotes ?? {}).length ||
+      sortByMostRecentSemester(a, b);
+
+    const sortByMostRecentSemesterWithComment = (a?: Review, b?: Review) =>
+      !!a?.comment === !!b?.comment
+        ? sortByMostRecentSemester(a, b)
+        : (!!b?.comment ? 1 : 0) - (!!a?.comment ? 1 : 0);
+
+    const sortByMostRecentReviewWithComment = (a?: Review, b?: Review) =>
+      !!a?.comment === !!b?.comment
+        ? sortByMostRecentReview(a, b)
+        : (!!b?.comment ? 1 : 0) - (!!a?.comment ? 1 : 0);
+
+    const sortByMostHelpfulWithComment = (a?: Review, b?: Review) =>
+      !!a?.comment === !!b?.comment
+        ? sortByMostHelpful(a, b)
+        : (!!b?.comment ? 1 : 0) - (!!a?.comment ? 1 : 0);
+
+    const sortFunc = {
+      [ReviewOrder.mostRecentSemester]: sortByMostRecentSemester,
+      [ReviewOrder.mostRecentReview]: sortByMostRecentReview,
+      [ReviewOrder.mostHelpful]: sortByMostHelpful,
+      [ReviewOrder.mostRecentSemesterWithComment]:
+        sortByMostRecentSemesterWithComment,
+      [ReviewOrder.mostRecentReviewWithComment]:
+        sortByMostRecentReviewWithComment,
+      [ReviewOrder.mostHelpfulWithComment]: sortByMostHelpfulWithComment,
+    };
+
+    return Object.keys(reviewRecord).sort((a, b) =>
+      sortFunc[reviewOrder](reviewRecord[a], reviewRecord[b])
     );
-  }, [reviewRecord]);
+  }, [reviewRecord, reviewOrder]);
 
   useEffect(() => {
     (async () => {
@@ -299,6 +344,12 @@ export default function DetailScreen() {
             </Button>
           </VStack>
           <VStack margin={"10px"} space={"10px"}>
+            {!!reviewRecord && reviewerIds.length > 1 && (
+              <ReviewOrderSelector
+                selectedReviewOrder={reviewOrder}
+                onSelectedReviewOrderChange={setReviewOrder}
+              />
+            )}
             {reviewRecord
               ? reviewerIds.map((id) => (
                   <ReviewCard

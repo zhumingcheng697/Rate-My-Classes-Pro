@@ -10,6 +10,7 @@ import {
   type Review,
   type Rating,
   RatingType,
+  ReviewOrder,
 } from "./types";
 
 export function getFullDepartmentCode({
@@ -225,6 +226,15 @@ export const ratingDescriptionMap = {
     [1]: "Really Useless",
   },
 };
+
+export const reviewOrders = [
+  ReviewOrder.mostRecentSemester,
+  ReviewOrder.mostRecentReview,
+  ReviewOrder.mostHelpful,
+  ReviewOrder.mostRecentSemesterWithComment,
+  ReviewOrder.mostRecentReviewWithComment,
+  ReviewOrder.mostHelpfulWithComment,
+];
 
 export const placeholderReview: Review = {
   userId: "???",

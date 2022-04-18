@@ -22,6 +22,7 @@ import { setDepartmentNameRecord, setSchoolNameRecord } from "./redux/actions";
 import { AuthProvider } from "./mongodb/auth";
 import { useDB } from "./mongodb/db";
 import realmApp from "./mongodb/realmApp";
+import "./libs/GoogleSignIn";
 
 Ionicons.loadFont();
 

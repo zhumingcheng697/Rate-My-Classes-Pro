@@ -9,8 +9,6 @@ import React, {
 } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Realm from "./Realm";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import config from "react-native-config";
 
 import realmApp from "./realmApp";
 import { useDB } from "./db";
@@ -19,11 +17,6 @@ import {
   loadSettings,
   loadStarredClasses,
 } from "../redux/actions";
-
-GoogleSignin.configure({
-  webClientId: config.GOOGLE_WEB_CLIENT_ID,
-  iosClientId: config.GOOGLE_IOS_CLIENT_ID,
-});
 
 type AuthProviderComponentProps = {
   user: Realm.User | null;
@@ -55,7 +48,7 @@ type AuthContext = {
   username: string | null;
   isAuthenticated: boolean;
   updateUsername: (username: string) => Promise<void>;
-  continueWithGoogle: () => Promise<void>;
+  continueWithGoogle: (idToken: string, username: string) => Promise<void>;
   signInAnonymously: (override?: boolean) => Promise<void>;
   signInWithEmailPassword: (email: string, password: string) => Promise<void>;
   signUpWithEmailPassword: (
@@ -135,22 +128,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(newUser);
   };
 
-  const continueWithGoogle = async () => {
+  const continueWithGoogle = async (idToken: string, username: string) => {
     if (user && user.providerType === "anon-user") await signOut(false);
 
-    await GoogleSignin.hasPlayServices();
-
-    const googleUser = await GoogleSignin.signIn();
-    const newUsername =
-      googleUser.user.name || googleUser.user.givenName || "New User";
-
     // use Google ID token to sign into Realm
-    const credential = Realm.Credentials.google(googleUser.idToken!);
+    const credential = Realm.Credentials.google(idToken);
     const newUser = await realmApp.logIn(credential);
-    const upserted = await useDB(newUser).createUserDoc(newUsername, settings);
+    const upserted = await useDB(newUser).createUserDoc(username, settings);
 
     if (upserted) {
-      setUsername(newUsername);
+      setUsername(username);
     } else {
       await loadUserDoc(newUser);
     }

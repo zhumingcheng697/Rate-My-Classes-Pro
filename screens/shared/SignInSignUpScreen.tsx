@@ -8,7 +8,10 @@ import {
   type RouteProp,
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
-import { statusCodes } from "@react-native-google-signin/google-signin";
+import {
+  GoogleSignin,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { isObjectEmpty, formSentence } from "../../libs/utils";
@@ -200,7 +203,19 @@ export default function SignInSignUpScreen() {
               onPress={async () => {
                 try {
                   setIsLoading(true);
-                  await auth.continueWithGoogle();
+
+                  await GoogleSignin.hasPlayServices();
+
+                  const googleUser = await GoogleSignin.signIn();
+                  const newUsername =
+                    googleUser.user.name ||
+                    googleUser.user.givenName ||
+                    "New User";
+
+                  await auth.continueWithGoogle(
+                    googleUser.idToken!,
+                    newUsername
+                  );
                 } catch (error: any) {
                   console.log(error);
 

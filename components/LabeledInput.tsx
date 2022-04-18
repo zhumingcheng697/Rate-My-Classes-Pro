@@ -29,7 +29,7 @@ export default function LabeledInput({
           variant={"label"}
           fontWeight={usePlainLabel ? undefined : "semibold"}
           color={usePlainLabel ? undefined : "nyu.light"}
-          _dark={{ color: usePlainLabel ? undefined : "nyu.dark" }}
+          _dark={usePlainLabel ? undefined : { color: "nyu.dark" }}
         >
           {label ?? "Label"}
         </Text>

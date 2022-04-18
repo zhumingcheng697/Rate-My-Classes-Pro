@@ -27,7 +27,7 @@ export default function PlainTextButton({
   _text = Object.assign(
     {
       color: colorScheme === "dark" ? "nyu.dark" : "nyu.light",
-      fontWeight: "medium",
+      fontWeight: "semibold",
       textAlign: "center",
     },
     _text

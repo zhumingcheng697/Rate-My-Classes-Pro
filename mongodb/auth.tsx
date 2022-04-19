@@ -22,19 +22,15 @@ type AuthProviderComponentProps = {
   user: Realm.User | null;
   isAuthenticated: boolean;
   loadUserDoc: (user: Realm.User) => Promise<void>;
-  signInAnonymously: (override?: boolean) => Promise<void>;
   children: ReactNode;
 };
 
 class AuthProviderComponent extends Component<AuthProviderComponentProps> {
   componentDidMount() {
-    const { user, isAuthenticated, loadUserDoc, signInAnonymously } =
-      this.props;
+    const { user, isAuthenticated, loadUserDoc } = this.props;
 
     if (user && isAuthenticated) {
       loadUserDoc(user);
-    } else {
-      signInAnonymously();
     }
   }
 
@@ -56,7 +52,7 @@ type AuthContext = {
     email: string,
     password: string
   ) => Promise<void>;
-  signOut: (signInAnonymouslyAgain?: boolean) => Promise<void>;
+  signOut: () => Promise<void>;
 };
 
 type AuthProviderProps = { children: ReactNode };
@@ -103,7 +99,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // The signIn function takes an email and password and uses the
   // emailPassword authentication provider to log in.
   const signInWithEmailPassword = async (email: string, password: string) => {
-    if (user && user.providerType === "anon-user") await signOut(false);
+    if (user) await signOut();
 
     const credentials = Realm.Credentials.emailPassword(email, password);
     const newUser = await realmApp.logIn(credentials);
@@ -118,7 +114,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     email: string,
     password: string
   ) => {
-    if (user && user.providerType === "anon-user") await signOut(false);
+    if (user) await signOut();
 
     await realmApp.emailPasswordAuth.registerUser({ email, password });
     setUsername(username);
@@ -129,7 +125,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const continueWithGoogle = async (idToken: string, username: string) => {
-    if (user && user.providerType === "anon-user") await signOut(false);
+    if (user) await signOut();
 
     // use Google ID token to sign into Realm
     const credential = Realm.Credentials.google(idToken);
@@ -147,7 +143,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // The signOut function calls the logOut function on the currently
   // logged in user
-  const signOut = async (signInAnonymouslyAgain: boolean = true) => {
+  const signOut = async () => {
     if (user === null) {
       console.warn("Not logged in, can't log out!");
       return;
@@ -159,10 +155,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     loadStarredClasses(dispatch)({});
     loadReviewedClasses(dispatch)({});
     setUser(null);
-
-    if (signInAnonymouslyAgain) {
-      await signInAnonymously(true);
-    }
   };
 
   return (
@@ -183,7 +175,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         user={user}
         isAuthenticated={isAuthenticated}
         loadUserDoc={loadUserDoc}
-        signInAnonymously={signInAnonymously}
       >
         {children}
       </AuthProviderComponent>

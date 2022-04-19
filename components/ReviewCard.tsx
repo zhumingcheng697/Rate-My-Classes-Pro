@@ -80,6 +80,7 @@ function VoteBlock({
   );
   const db = useMemo(() => {
     if (auth.user && auth.isAuthenticated) return useDB(auth.user);
+    auth.signInAnonymously();
   }, [auth.user]);
 
   const vote = useMemo(() => {

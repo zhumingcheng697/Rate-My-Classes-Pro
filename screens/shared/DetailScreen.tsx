@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   ReviewOrder,
-  type Review,
   type ReviewRecord,
   type SectionInfo,
   type SharedNavigationParamList,
@@ -118,6 +117,7 @@ export default function DetailScreen() {
 
   const db = useMemo(() => {
     if (auth.user) return useDB(auth.user);
+    auth.signInAnonymously();
   }, [auth.user]);
 
   useEffect(() => {

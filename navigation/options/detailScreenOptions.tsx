@@ -47,6 +47,7 @@ export default ({
 
     const db = useMemo(() => {
       if (auth.user) return useDB(auth.user);
+      auth.signInAnonymously();
     }, [auth.user]);
 
     return (

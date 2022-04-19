@@ -1,3 +1,6 @@
+const reactNativePreset = "module:metro-react-native-babel-preset";
+const expoPreset = "babel-preset-expo";
+
 const isUsingExpoWithNPM =
   process.env &&
   process.env._ &&
@@ -8,10 +11,12 @@ const isUsingExpoWithCLI =
   process.argv[1] &&
   (process.argv[1].endsWith("/expo") || process.argv[1].endsWith("/expo-cli"));
 
-const reactNativeConfig = function (api) {
+module.exports = function (api) {
   api.cache(true);
   return {
-    presets: ["module:metro-react-native-babel-preset"],
+    presets: [
+      isUsingExpoWithNPM || isUsingExpoWithCLI ? expoPreset : reactNativePreset,
+    ],
     plugins: [
       [
         "module:react-native-dotenv",
@@ -22,21 +27,3 @@ const reactNativeConfig = function (api) {
     ],
   };
 };
-
-const expoConfig = function (api) {
-  api.cache(true);
-  return {
-    presets: ["babel-preset-expo"],
-    plugins: [
-      [
-        "module:react-native-dotenv",
-        {
-          moduleName: "react-native-dotenv",
-        },
-      ],
-    ],
-  };
-};
-
-module.exports =
-  isUsingExpoWithNPM || isUsingExpoWithCLI ? expoConfig : reactNativeConfig;

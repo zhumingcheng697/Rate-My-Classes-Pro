@@ -24,7 +24,7 @@ type SearchScreenNavigationProp =
 
 const dividerHeight = 1;
 const searchBarMargin = 10;
-const delay = 500; // only make API call if idle for at least this amount of time
+const delay = 250; // only make API call if idle for at least this amount of time
 
 export default function SearchScreen() {
   const navigation = useNavigation<SearchScreenNavigationProp>();

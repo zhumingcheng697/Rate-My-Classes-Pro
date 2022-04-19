@@ -93,7 +93,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const signInAnonymously = async (override: boolean = false) => {
-    if (isAuthenticated && !override) return;
+    if (user && !override) return;
 
     const credentials = Realm.Credentials.anonymous();
     const newUser = await realmApp.logIn(credentials);

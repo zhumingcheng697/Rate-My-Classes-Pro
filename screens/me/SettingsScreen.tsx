@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useColorScheme } from "react-native";
+import { useColorScheme, Switch as NativeSwitch, Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Text, HStack, Switch, VStack } from "native-base";
+import { Text, HStack, Switch, VStack, Box } from "native-base";
 
 import Semester from "../../libs/semester";
 import LabeledInput from "../../components/LabeledInput";
@@ -12,6 +12,14 @@ import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";
 
 export default function SettingsScreen() {
+  const isCatalyst = useMemo(
+    () =>
+      Platform.OS === "ios" &&
+      (!/^(?:phone|pad)$/i.test(Platform.constants.interfaceIdiom) ||
+        (!Platform.isPad && /pad/i.test(Platform.constants.systemName))),
+    [Platform]
+  );
+
   const colorScheme = useColorScheme();
   const auth = useAuth();
   const dispatch = useDispatch();
@@ -92,13 +100,22 @@ export default function SettingsScreen() {
           >
             Show Previous Semesters
           </Text>
-          <Switch
-            isChecked={showPreviousSemesters}
-            onValueChange={setShowPreviousSemesters(dispatch)}
-            onThumbColor={"white"}
-            offThumbColor={"white"}
-            onTrackColor={colorScheme === "dark" ? "nyu.dark" : "nyu.light"}
-          />
+          {Platform.OS === "macos" || isCatalyst ? (
+            <Box marginRight={"-35px"}>
+              <NativeSwitch
+                value={showPreviousSemesters}
+                onValueChange={setShowPreviousSemesters(dispatch)}
+              />
+            </Box>
+          ) : (
+            <Switch
+              isChecked={showPreviousSemesters}
+              onValueChange={setShowPreviousSemesters(dispatch)}
+              onThumbColor={"white"}
+              offThumbColor={"white"}
+              onTrackColor={colorScheme === "dark" ? "nyu.dark" : "nyu.light"}
+            />
+          )}
         </HStack>
       </VStack>
     </KeyboardAwareSafeAreaScrollView>

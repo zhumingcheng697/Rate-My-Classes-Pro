@@ -83,7 +83,9 @@ export default function Grid({
     >
       {(isLoaded ? children : skeletonChildren)({
         width:
-          (windowWidth - acutalMargin * (columns + 1) * 2) / columns + "px",
+          Math.floor(
+            (windowWidth - acutalMargin * (columns + 1) * 2) / columns
+          ) + "px",
         margin: acutalMargin + "px",
         ...heightProps,
       })}

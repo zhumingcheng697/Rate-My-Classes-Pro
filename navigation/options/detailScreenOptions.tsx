@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { Platform } from "react-native";
 import { IconButton, Icon, Button } from "native-base";
 import { useIsFocused, type RouteProp } from "@react-navigation/native";
 import type {
@@ -78,7 +79,9 @@ export default ({
           variant={"unstyled"}
           marginRight={"5px"}
           padding={"5px"}
-          _pressed={{ _icon: { opacity: 0.5 } }}
+          _pressed={
+            Platform.OS === "web" ? undefined : { _icon: { opacity: 0.5 } }
+          }
           _hover={{ _icon: { opacity: 0.72 } }}
           icon={
             <Icon

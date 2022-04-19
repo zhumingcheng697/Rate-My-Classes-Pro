@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Platform } from "react-native";
 import {
   Box,
   HStack,
@@ -132,7 +133,9 @@ function VoteBlock({
         <IconButton
           variant={"unstyled"}
           padding={"3px"}
-          _pressed={{ _icon: { opacity: 0.5 } }}
+          _pressed={
+            Platform.OS === "web" ? undefined : { _icon: { opacity: 0.5 } }
+          }
           _hover={{ _icon: { opacity: 0.72 } }}
           icon={
             <Icon
@@ -182,7 +185,9 @@ function VoteBlock({
         <IconButton
           variant={"unstyled"}
           padding={"3px"}
-          _pressed={{ _icon: { opacity: 0.5 } }}
+          _pressed={
+            Platform.OS === "web" ? undefined : { _icon: { opacity: 0.5 } }
+          }
           _hover={{ _icon: { opacity: 0.72 } }}
           icon={
             <Icon

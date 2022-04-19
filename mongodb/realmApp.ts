@@ -1,6 +1,4 @@
 import Realm from "./Realm";
-import config from "react-native-config";
+import { REALM_APP_ID } from "react-native-dotenv";
 
-const realmId = config.REALM_APP_ID || process.env.REALM_APP_ID!;
-
-export default new Realm.App({ id: realmId });
+export default new Realm.App({ id: REALM_APP_ID });

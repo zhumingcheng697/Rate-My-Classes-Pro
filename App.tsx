@@ -9,7 +9,6 @@ import { NativeBaseProvider } from "native-base";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import "react-native-config";
 
 import RootNavigation from "./navigation/RootNavigation";
 import nativeBaseTheme, { lightColorStyle, darkColorStyle } from "./libs/theme";
@@ -38,16 +37,6 @@ type RootState = ReturnType<typeof store.getState>;
 
 declare module "react-redux" {
   interface DefaultRootState extends RootState {}
-}
-
-type Config = {
-  REALM_APP_ID: string;
-  GOOGLE_WEB_CLIENT_ID: string;
-  GOOGLE_IOS_CLIENT_ID: string;
-};
-
-declare module "react-native-config" {
-  interface NativeConfig extends Config {}
 }
 
 type AppComponentProps = {

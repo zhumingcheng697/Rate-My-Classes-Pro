@@ -12,7 +12,14 @@ const reactNativeConfig = function (api) {
   api.cache(true);
   return {
     presets: ["module:metro-react-native-babel-preset"],
-    plugins: [["transform-inline-environment-variables"]],
+    plugins: [
+      [
+        "module:react-native-dotenv",
+        {
+          moduleName: "react-native-dotenv",
+        },
+      ],
+    ],
   };
 };
 
@@ -20,7 +27,14 @@ const expoConfig = function (api) {
   api.cache(true);
   return {
     presets: ["babel-preset-expo"],
-    plugins: [["transform-inline-environment-variables"]],
+    plugins: [
+      [
+        "module:react-native-dotenv",
+        {
+          moduleName: "react-native-dotenv",
+        },
+      ],
+    ],
   };
 };
 

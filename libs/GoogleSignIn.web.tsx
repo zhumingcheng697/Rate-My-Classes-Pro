@@ -1,6 +1,7 @@
 import React from "react";
 import GoogleLogin, { type GoogleLoginResponse } from "react-google-login";
 import { IButtonProps } from "native-base";
+import { GOOGLE_WEB_CLIENT_ID } from "react-native-dotenv";
 
 import Button from "../components/GoogleSignInButton";
 import { useAuth } from "../mongodb/auth";
@@ -14,8 +15,6 @@ type GoogleSignInButtonBaseProps = {
 export type GoogleSignInButtonProps = GoogleSignInButtonBaseProps &
   Omit<IButtonProps, keyof GoogleSignInButtonBaseProps | "onPress">;
 
-const clientId = process.env.GOOGLE_WEB_CLIENT_ID;
-
 export function GoogleSignInButton({
   isLoading,
   setIsLoading,
@@ -27,7 +26,7 @@ export function GoogleSignInButton({
 
   return (
     <GoogleLogin
-      clientId={clientId!}
+      clientId={GOOGLE_WEB_CLIENT_ID}
       cookiePolicy={"single_host_origin"}
       onSuccess={async (res) => {
         const user = res as GoogleLoginResponse;

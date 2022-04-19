@@ -4,14 +4,17 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 import { type IButtonProps } from "native-base";
-import config from "react-native-config";
+import {
+  GOOGLE_WEB_CLIENT_ID,
+  GOOGLE_IOS_CLIENT_ID,
+} from "react-native-dotenv";
 
 import Button from "../components/GoogleSignInButton";
 import { useAuth } from "../mongodb/auth";
 
 GoogleSignin.configure({
-  webClientId: config.GOOGLE_WEB_CLIENT_ID,
-  iosClientId: config.GOOGLE_IOS_CLIENT_ID,
+  webClientId: GOOGLE_WEB_CLIENT_ID,
+  iosClientId: GOOGLE_IOS_CLIENT_ID,
 });
 
 type GoogleSignInButtonBaseProps = {

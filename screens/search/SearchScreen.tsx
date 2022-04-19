@@ -1,9 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
-import { useWindowDimensions } from "react-native";
 import { useSelector } from "react-redux";
 import { Text, Center, Divider, Box } from "native-base";
-import { useHeaderHeight } from "@react-navigation/elements";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
@@ -20,6 +17,7 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import ClearableInput from "../../components/ClearableInput";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
+import useInnerHeight from "../../libs/useInnerHeight";
 
 type SearchScreenNavigationProp =
   StackNavigationProp<SharedNavigationParamList>;
@@ -38,8 +36,7 @@ export default function SearchScreen() {
   const settings = useSelector((state) => state.settings);
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-  const innerHeight =
-    useWindowDimensions().height - useHeaderHeight() - useBottomTabBarHeight();
+  const innerHeight = useInnerHeight();
 
   const selectedSemester = useMemo(
     () => new Semester(settings.selectedSemester),

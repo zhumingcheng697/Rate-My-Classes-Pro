@@ -28,6 +28,7 @@ export function GoogleSignInButton({
   return (
     <GoogleLogin
       clientId={clientId!}
+      cookiePolicy={"single_host_origin"}
       onSuccess={async (res) => {
         const user = res as GoogleLoginResponse;
         const username =

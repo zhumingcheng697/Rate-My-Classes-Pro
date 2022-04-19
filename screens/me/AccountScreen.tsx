@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useWindowDimensions } from "react-native";
 import { Text, VStack, Button, Box } from "native-base";
-import { useHeaderHeight } from "@react-navigation/elements";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import {
   useNavigation,
   useRoute,
@@ -16,6 +13,7 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import LeftAlignedButton from "../../components/LeftAlignedButton";
 import AlertPopup from "../../components/AlertPopup";
 import { useAuth } from "../../mongodb/auth";
+import useInnerHeight from "../../libs/useInnerHeight";
 
 type AccountScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,
@@ -30,8 +28,7 @@ export default function AccountScreen() {
   const isFocused = useIsFocused();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const innerHeight =
-    useWindowDimensions().height - useHeaderHeight() - useBottomTabBarHeight();
+  const innerHeight = useInnerHeight();
   const auth = useAuth();
 
   const isAuthenticated = auth.isAuthenticated;

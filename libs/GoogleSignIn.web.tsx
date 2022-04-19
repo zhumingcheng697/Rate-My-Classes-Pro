@@ -41,8 +41,10 @@ export function GoogleSignInButton({
 
         // handle errors
         if (error?.error === "popup_closed_by_user") {
+          setIsLoading(false);
           return;
         } else if (error?.error === "access_denied") {
+          setIsLoading(false);
           return;
         } else {
           setError(error?.details ?? error);

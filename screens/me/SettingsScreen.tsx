@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useColorScheme } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Text, HStack, Switch, VStack } from "native-base";
@@ -34,6 +34,13 @@ export default function SettingsScreen() {
     () => Semester.getSemesterOptions(showPreviousSemesters).reverse(),
     [showPreviousSemesters]
   );
+
+  useEffect(() => {
+    if (auth.isAuthenticated && auth.username) {
+      setPreviousUsername(auth.username);
+      setNewUsername(auth.username);
+    }
+  }, [auth.user, auth.isAuthenticated, auth.username]);
 
   return (
     <KeyboardAwareSafeAreaScrollView>

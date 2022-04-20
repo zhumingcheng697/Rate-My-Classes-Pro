@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import Semester from "../libs/semester";
-import useDimensions from "../libs/useDimensions";
+import { useDimensions } from "../libs/hooks";
 
 type SemesterOptionRecord = Record<string, Semester>;
 

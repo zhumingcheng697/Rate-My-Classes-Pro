@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Text, HStack, Switch, VStack, Box } from "native-base";
 
 import Semester from "../../libs/semester";
-import useIsCatalyst from "../../libs/useIsCatalyst";
+import { useIsCatalyst } from "../../libs/hooks";
 import LabeledInput from "../../components/LabeledInput";
 import ClearableInput from "../../components/ClearableInput";
 import SemesterSelector from "../../components/SemesterSelector";

@@ -17,7 +17,7 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import ClearableInput from "../../components/ClearableInput";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
-import useInnerHeight from "../../libs/useInnerHeight";
+import { useInnerHeight } from "../../libs/hooks";
 
 type SearchScreenNavigationProp =
   StackNavigationProp<SharedNavigationParamList>;

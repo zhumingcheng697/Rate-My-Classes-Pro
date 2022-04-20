@@ -5,7 +5,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { type Rating, type RatingType } from "../libs/types";
 import { ratings, ratingDescriptionMap } from "../libs/utils";
-import useDimensions from "../libs/useDimensions";
+import { useDimensions } from "../libs/hooks";
 
 type RatingOptionRecord = Record<string, Rating>;
 

@@ -9,11 +9,11 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { type MeNavigationParamList } from "../../libs/types";
-import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
+import { useInnerHeight } from "../../libs/hooks";
 import LeftAlignedButton from "../../components/LeftAlignedButton";
 import AlertPopup from "../../components/AlertPopup";
+import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { useAuth } from "../../mongodb/auth";
-import useInnerHeight from "../../libs/useInnerHeight";
 
 type AccountScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,

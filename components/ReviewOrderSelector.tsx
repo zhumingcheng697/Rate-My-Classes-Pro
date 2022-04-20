@@ -5,7 +5,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { ReviewOrder } from "../libs/types";
 import { reviewOrders } from "../libs/utils";
-import useDimensions from "../libs/useDimensions";
+import { useDimensions } from "../libs/hooks";
 
 type ReviewOrderOptionRecord = Record<string, ReviewOrder>;
 

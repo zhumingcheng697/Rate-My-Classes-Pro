@@ -6,7 +6,8 @@ import {
   Skeleton,
   type ISkeletonProps,
 } from "native-base";
-import useDimensions from "../libs/useDimensions";
+
+import { useDimensions } from "../libs/hooks";
 
 export type GridRenderItemInfo = {
   width: string;

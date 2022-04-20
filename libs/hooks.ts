@@ -1,9 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useWindowDimensions, Platform } from "react-native";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import useDimensions from "./useDimensions";
 
-export default function useInnerHeight() {
+export function useIsCatalyst() {
+  const isCatalyst = useMemo(
+    () =>
+      Platform.OS === "ios" &&
+      (!/^(?:phone|pad)$/i.test(Platform.constants.interfaceIdiom) ||
+        (!Platform.isPad && /pad/i.test(Platform.constants.systemName))),
+    []
+  );
+
+  return isCatalyst;
+}
+
+export function useDimensions() {
+  const isCatalyst = useIsCatalyst();
+
+  if (isCatalyst) {
+    return useSafeAreaFrame();
+  } else {
+    return useWindowDimensions();
+  }
+}
+
+export function useInnerHeight() {
   const { height } = useDimensions();
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();

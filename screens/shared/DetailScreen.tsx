@@ -304,7 +304,7 @@ export default function DetailScreen() {
               </Text>
             </Button>
           </VStack>
-          <VStack margin={"10px"} space={"10px"}>
+          <VStack margin={"10px"} marginBottom={"5px"} space={"10px"}>
             {!!reviewRecord && reviewerIds.length > 1 && (
               <ReviewOrderSelector
                 selectedReviewOrder={reviewOrder}

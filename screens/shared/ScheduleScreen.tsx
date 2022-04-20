@@ -97,7 +97,7 @@ export default function ScheduleScreen() {
         }}
       />
       <KeyboardAwareSafeAreaScrollView>
-        <VStack margin={"10px"} space={"10px"}>
+        <VStack marginX={"10px"} marginY={"15px"} space={"10px"}>
           {sections && sections.length
             ? sections.map(
                 (

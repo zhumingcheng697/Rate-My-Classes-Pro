@@ -52,7 +52,13 @@ export default function Selector<T>({
         width: `${dimension.width - inset.left - inset.right}px`,
       }}
       _selectedItem={{
-        endIcon: <Icon color={"nyu"} as={<Ionicons name={"checkmark"} />} />,
+        endIcon: (
+          <Icon
+            color={"nyu.light"}
+            _dark={{ color: "nyu.dark" }}
+            as={<Ionicons name={"checkmark"} />}
+          />
+        ),
       }}
     >
       {Object.keys(optionRecord).map((option) => (

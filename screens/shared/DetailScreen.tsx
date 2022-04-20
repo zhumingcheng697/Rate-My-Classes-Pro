@@ -27,7 +27,7 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import AlertPopup from "../../components/AlertPopup";
 import ReviewCard from "../../components/ReviewCard";
 import RatingDashboard from "../../components/RatingDashboard";
-import ReviewOrderSelector from "../../components/ReviewOrderSelector";
+import { ReviewOrderSelector } from "../../components/Selector";
 import { useAuth } from "../../mongodb/auth";
 import { useDB } from "../../mongodb/db";
 import { reviewClass, unreviewClass } from "../../redux/actions";

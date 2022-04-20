@@ -7,7 +7,7 @@ import Semester from "../../libs/semester";
 import { useIsCatalyst } from "../../libs/hooks";
 import LabeledInput from "../../components/LabeledInput";
 import ClearableInput from "../../components/ClearableInput";
-import SemesterSelector from "../../components/SemesterSelector";
+import { SemesterSelector } from "../../components/Selector";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";

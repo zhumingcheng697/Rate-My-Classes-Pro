@@ -304,30 +304,32 @@ export default function DetailScreen() {
               </Text>
             </Button>
           </VStack>
-          <VStack margin={"10px"} marginBottom={"5px"} space={"10px"}>
-            {!!reviewRecord && reviewerIds.length > 1 && (
-              <ReviewOrderSelector
-                selectedReviewOrder={reviewOrder}
-                onSelectedReviewOrderChange={setReviewOrder}
-              />
-            )}
-            {reviewRecord
-              ? reviewerIds.map((id) => (
-                  <ReviewCard
-                    key={id}
-                    classCode={classInfo}
-                    review={reviewRecord[id]}
-                    setReview={(newReview) => {
-                      const newReviewRecord = { ...reviewRecord };
-                      newReviewRecord[id] = newReview;
-                      setReviewRecord(newReviewRecord);
-                    }}
-                  />
-                ))
-              : [...Array(3)].map((_, index) => (
-                  <Skeleton borderRadius={10} height={"120px"} key={index} />
-                ))}
-          </VStack>
+          {(!reviewRecord || !!reviewerIds.length) && (
+            <VStack margin={"10px"} marginBottom={"5px"} space={"10px"}>
+              {!!reviewRecord && reviewerIds.length > 1 && (
+                <ReviewOrderSelector
+                  selectedReviewOrder={reviewOrder}
+                  onSelectedReviewOrderChange={setReviewOrder}
+                />
+              )}
+              {reviewRecord
+                ? reviewerIds.map((id) => (
+                    <ReviewCard
+                      key={id}
+                      classCode={classInfo}
+                      review={reviewRecord[id]}
+                      setReview={(newReview) => {
+                        const newReviewRecord = { ...reviewRecord };
+                        newReviewRecord[id] = newReview;
+                        setReviewRecord(newReviewRecord);
+                      }}
+                    />
+                  ))
+                : [...Array(3)].map((_, index) => (
+                    <Skeleton borderRadius={10} height={"120px"} key={index} />
+                  ))}
+            </VStack>
+          )}
         </Box>
       </KeyboardAwareSafeAreaScrollView>
     </>

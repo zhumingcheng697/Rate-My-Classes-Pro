@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Text, HStack, Switch, VStack, Box } from "native-base";
 
 import Semester from "../../libs/semester";
+import useIsCatalyst from "../../libs/useIsCatalyst";
 import LabeledInput from "../../components/LabeledInput";
 import ClearableInput from "../../components/ClearableInput";
 import SemesterSelector from "../../components/SemesterSelector";
@@ -12,14 +13,6 @@ import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";
 
 export default function SettingsScreen() {
-  const isCatalyst = useMemo(
-    () =>
-      Platform.OS === "ios" &&
-      (!/^(?:phone|pad)$/i.test(Platform.constants.interfaceIdiom) ||
-        (!Platform.isPad && /pad/i.test(Platform.constants.systemName))),
-    [Platform]
-  );
-
   const colorScheme = useColorScheme();
   const auth = useAuth();
   const dispatch = useDispatch();
@@ -100,7 +93,7 @@ export default function SettingsScreen() {
           >
             Show Previous Semesters
           </Text>
-          {Platform.OS === "macos" || isCatalyst ? (
+          {Platform.OS === "macos" || useIsCatalyst() ? (
             <Box marginRight={"-35px"}>
               <NativeSwitch
                 value={showPreviousSemesters}

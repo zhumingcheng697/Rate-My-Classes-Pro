@@ -80,12 +80,13 @@ export default function Grid({
       alignItems={"center"}
       alignContent={"center"}
       flexWrap={"wrap"}
-      marginX={acutalMargin + "px"}
+      marginX={`${acutalMargin}px`}
     >
       {(isLoaded ? children : skeletonChildren)({
-        width:
-          (windowWidth - acutalMargin * (columns + 1) * 2) / columns + "px",
-        margin: acutalMargin + "px",
+        width: `${
+          (windowWidth - acutalMargin * (columns + 1) * 2) / columns
+        }px`,
+        margin: `${acutalMargin}px`,
         ...heightProps,
       })}
     </Flex>

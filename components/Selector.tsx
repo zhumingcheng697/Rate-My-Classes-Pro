@@ -131,7 +131,6 @@ export function SemesterSelector({
       {...rest}
       selectedOption={selectedSemester}
       options={semesterOptions}
-      serializeOption={(semester) => semester.toString()}
       onSelectedOptionChange={onSelectedSemesterChange}
     />
   );

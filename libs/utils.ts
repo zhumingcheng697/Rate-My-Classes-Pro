@@ -278,39 +278,3 @@ export const ratingDescriptionMap = {
     [1]: "Really Useless",
   },
 };
-
-export const placeholderReview: Review = {
-  userId: "???",
-  enjoyment: 5,
-  difficulty: 2,
-  workload: 2,
-  value: 4,
-  instructor: "John Sterling",
-  semester: Semester.predictCurrentSemester().toJSON(),
-  upvotes: {},
-  downvotes: {},
-  reviewedDate: Date.now(),
-  comment:
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque ullam quas, eaque hic vitae error sit, dolorem id ab natus velit tempora non quasi dolores sed, corporis facere magnam ratione!",
-};
-
-export const placeholderClassNumbers = [
-  "1001",
-  "1003",
-  "1113",
-  "1114",
-  "1123",
-  "1133",
-  "1134",
-  "1143",
-  "2023",
-  "2024",
-  "2034",
-  "2124",
-  "2193",
-  "3144",
-  "3193",
-  "4193",
-  "4793",
-  "6313",
-];

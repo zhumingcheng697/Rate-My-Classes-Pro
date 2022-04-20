@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useWindowDimensions, Platform } from "react-native";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -19,11 +19,12 @@ export function useIsCatalyst() {
 export function useDimensions() {
   const isCatalyst = useIsCatalyst();
 
-  if (isCatalyst) {
-    return useSafeAreaFrame();
-  } else {
-    return useWindowDimensions();
-  }
+  const dimensionsHook = useCallback(
+    isCatalyst ? useSafeAreaFrame : useWindowDimensions,
+    []
+  );
+
+  return dimensionsHook();
 }
 
 export function useInnerHeight() {

@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
-import { useWindowDimensions } from "react-native";
 import { Select, type ISelectProps, Icon } from "native-base";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { ReviewOrder } from "../libs/types";
 import { reviewOrders } from "../libs/utils";
+import useDimensions from "../libs/useDimensions";
 
 type ReviewOrderOptionRecord = Record<string, ReviewOrder>;
 
@@ -23,7 +23,7 @@ export default function ReviewOrderSelector({
   ...rest
 }: ReviewOrderSelectorProps) {
   const inset = useSafeAreaInsets();
-  const dimension = useWindowDimensions();
+  const dimension = useDimensions();
   const reviewOrderOptionsRecord = useMemo(() => {
     const reviewOrderOptionsRecord: ReviewOrderOptionRecord = {};
     for (let reviewOrder of reviewOrders) {

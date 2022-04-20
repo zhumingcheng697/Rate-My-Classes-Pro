@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useWindowDimensions } from "react-native";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import useDimensions from "./useDimensions";
 
 export default function useInnerHeight() {
-  const { height } = useWindowDimensions();
+  const { height } = useDimensions();
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
 

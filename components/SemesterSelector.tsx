@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
-import { useWindowDimensions } from "react-native";
 import { Select, type ISelectProps, Icon } from "native-base";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import Semester from "../libs/semester";
+import useDimensions from "../libs/useDimensions";
 
 type SemesterOptionRecord = Record<string, Semester>;
 
@@ -24,7 +24,7 @@ export default function SemesterSelector({
   ...rest
 }: SemesterSelectorProps) {
   const inset = useSafeAreaInsets();
-  const dimension = useWindowDimensions();
+  const dimension = useDimensions();
   const semesterOptionsRecord = useMemo(() => {
     const record: SemesterOptionRecord = {};
     for (let semester of semesterOptions) {

@@ -1,12 +1,12 @@
 import React, { useCallback, type ReactNode } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useWindowDimensions } from "react-native";
 import {
   Flex,
   type IFlexProps,
   Skeleton,
   type ISkeletonProps,
 } from "native-base";
+import useDimensions from "../libs/useDimensions";
 
 export type GridRenderItemInfo = {
   width: string;
@@ -48,7 +48,7 @@ export default function Grid({
   const actualChildWidth = Math.max(minChildWidth, 60);
 
   const insets = useSafeAreaInsets();
-  const windowWidth = useWindowDimensions().width - insets.left - insets.right;
+  const windowWidth = useDimensions().width - insets.left - insets.right;
 
   const ratio =
     (windowWidth - acutalMargin * 2) / (actualChildWidth + acutalMargin * 2);
@@ -83,9 +83,7 @@ export default function Grid({
     >
       {(isLoaded ? children : skeletonChildren)({
         width:
-          Math.floor(
-            (windowWidth - acutalMargin * (columns + 1) * 2) / columns
-          ) + "px",
+          (windowWidth - acutalMargin * (columns + 1) * 2) / columns + "px",
         margin: acutalMargin + "px",
         ...heightProps,
       })}

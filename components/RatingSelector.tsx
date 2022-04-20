@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
-import { useWindowDimensions } from "react-native";
 import { Select, type ISelectProps, Icon } from "native-base";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { type Rating, type RatingType } from "../libs/types";
 import { ratings, ratingDescriptionMap } from "../libs/utils";
+import useDimensions from "../libs/useDimensions";
 
 type RatingOptionRecord = Record<string, Rating>;
 
@@ -24,8 +24,8 @@ export default function RatingSelector({
   onSelectedRatingChange,
   ...rest
 }: RatingSelectorProps) {
+  const dimension = useDimensions();
   const inset = useSafeAreaInsets();
-  const dimension = useWindowDimensions();
   const ratingOptionsRecord = useMemo(() => {
     const ratingOptionsRecord: RatingOptionRecord = {};
     for (let rating of ratings) {

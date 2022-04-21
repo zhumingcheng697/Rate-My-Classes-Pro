@@ -55,7 +55,7 @@ export default function AccountScreen() {
     <>
       {wasAuthenticated && (
         <AlertPopup
-          isOpen={showAlert && isFocused}
+          isOpen={showAlert}
           onClose={() => {
             setShowAlert(false);
           }}

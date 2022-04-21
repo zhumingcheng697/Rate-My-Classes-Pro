@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Text, Box } from "native-base";
 import {
-  useIsFocused,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -40,7 +39,6 @@ export default function DepartmentScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const settings = useSelector((state) => state.settings);
-  const isFocused = useIsFocused();
 
   const [classes, setClasses] = useState<ClassInfo[]>([]);
   const [showAlert, setShowAlert] = useState(false);
@@ -88,7 +86,7 @@ export default function DepartmentScreen() {
       <AlertPopup
         header={error === ErrorType.noData ? "No Classes Offered" : undefined}
         body={error === ErrorType.noData ? noDataErrorMessage() : undefined}
-        isOpen={showAlert && isFocused}
+        isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);
           navigation.goBack();

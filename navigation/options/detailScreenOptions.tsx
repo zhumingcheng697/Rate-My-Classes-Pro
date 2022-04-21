@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Platform } from "react-native";
 import { IconButton, Icon, Button } from "native-base";
-import { useIsFocused, type RouteProp } from "@react-navigation/native";
+import { type RouteProp } from "@react-navigation/native";
 import type {
   StackNavigationProp,
   StackNavigationOptions,
@@ -38,7 +38,6 @@ export default ({
     const starredClasses = useSelector((state) => state.starredClassRecord);
     const dispatch = useDispatch();
     const auth = useAuth();
-    const isFocused = useIsFocused();
     const [showAlert, setShowAlert] = useState(false);
     const isStarred =
       auth.isAuthenticated &&
@@ -53,7 +52,7 @@ export default ({
     return (
       <>
         <AlertPopup
-          isOpen={showAlert && isFocused}
+          isOpen={showAlert}
           onClose={() => {
             setShowAlert(false);
           }}

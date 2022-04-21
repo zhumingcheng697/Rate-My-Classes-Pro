@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Text, Button, Box, VStack, Skeleton, ZStack } from "native-base";
+import { Text, Button, Box, VStack, Skeleton } from "native-base";
 import {
   useIsFocused,
   useNavigation,
@@ -69,6 +69,11 @@ export default function DetailScreen() {
     ReviewOrder.mostRecentSemester
   );
 
+  const semesterName = useMemo(
+    () => new Semester(selectedSemester).toString(),
+    [selectedSemester]
+  );
+
   const description = useMemo(() => {
     return classInfo.description
       ? stripLineBreaks(classInfo.description).split(/\n/)
@@ -85,8 +90,8 @@ export default function DetailScreen() {
     );
   }, [auth, reviewRecord]);
 
-  const rating = useMemo(() => {
-    if (!reviewRecord) return;
+  const [enjoyment, difficulty, workload, value] = useMemo(() => {
+    if (!reviewRecord) return [null, null, null, null];
 
     let enjoyment = 0;
     let difficulty = 0;
@@ -104,7 +109,7 @@ export default function DetailScreen() {
     }
 
     if (count == 0) {
-      return;
+      return [NaN, NaN, NaN, NaN];
     }
 
     enjoyment /= count;
@@ -112,7 +117,7 @@ export default function DetailScreen() {
     workload /= count;
     value /= count;
 
-    return { enjoyment, difficulty, workload, value };
+    return [enjoyment, difficulty, workload, value];
   }, [reviewRecord]);
 
   const db = useMemo(() => {
@@ -239,50 +244,34 @@ export default function DetailScreen() {
               ))}
             </VStack>
           )}
-          {!!rating && (
-            <RatingDashboard
-              margin={"5px"}
-              enjoyment={rating.enjoyment}
-              difficulty={rating.difficulty}
-              workload={rating.workload}
-              value={rating.value}
-            />
-          )}
+          <RatingDashboard
+            margin={"5px"}
+            enjoyment={enjoyment}
+            difficulty={difficulty}
+            workload={workload}
+            value={value}
+          />
           <VStack margin={"10px"} space={"10px"}>
-            {sections ? (
-              <Button
-                variant={"subtle"}
-                isDisabled={!sections || !sections.length}
-                onPress={() => {
-                  navigation.navigate("Schedule", {
-                    semester: selectedSemester,
-                    sections: sections ?? [],
-                    classInfo,
-                  });
-                }}
-              >
-                <Text variant={"subtleButton"}>
-                  {!sections || sections.length
-                    ? `View ${new Semester(
-                        selectedSemester
-                      ).toString()} Schedule`
-                    : `Not Offered in ${new Semester(
-                        selectedSemester
-                      ).toString()}`}
-                </Text>
-              </Button>
-            ) : (
-              <ZStack
-                height={"40px"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Skeleton borderRadius={10}></Skeleton>
-                <Text variant={"subtleButton"} opacity={0.5}>
-                  Loading {new Semester(selectedSemester).toString()} Schedule
-                </Text>
-              </ZStack>
-            )}
+            <Button
+              variant={"subtle"}
+              isDisabled={!sections || !sections.length}
+              onPress={() => {
+                navigation.navigate("Schedule", {
+                  semester: selectedSemester,
+                  sections: sections ?? [],
+                  classInfo,
+                });
+              }}
+            >
+              <Text variant={"subtleButton"}>
+                {!sections
+                  ? `Loading ${semesterName} Schedule`
+                  : !sections.length
+                  ? `Not Offered in ${semesterName}`
+                  : `View ${semesterName} Schedule`}
+              </Text>
+            </Button>
+
             <Button
               onPress={() => {
                 if (auth.user && auth.isAuthenticated) {

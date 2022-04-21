@@ -4,7 +4,7 @@ import { RatingType } from "../libs/types";
 import IconHStack from "./IconHStack";
 import { ratingTypeIconNameMap } from "../libs/utils";
 
-type RatingBlockProps = { ratingType: RatingType; rating: number };
+type RatingBlockProps = { ratingType: RatingType; rating: number | null };
 
 function RatingBlock({ ratingType, rating }: RatingBlockProps) {
   return (
@@ -13,7 +13,9 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
       alignItems={"center"}
       background={"background.secondary.light"}
       _dark={{ background: "background.secondary.dark" }}
+      paddingX={"15px"}
       paddingY={"8px"}
+      minW={"135px"}
       margin={"5px"}
       space={"2px"}
       borderRadius={10}
@@ -28,18 +30,26 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
           {ratingType}
         </Text>
       </IconHStack>
-      <Text paddingX={"25px"} fontSize={"2xl"} textAlign={"center"}>
-        {rating.toFixed(1)} / {(5).toFixed(1)}
+      <Text
+        fontSize={"2xl"}
+        textAlign={"center"}
+        opacity={rating === null ? 0.5 : 1}
+      >
+        {rating === null
+          ? "Loading"
+          : isNaN(rating)
+          ? "N/A"
+          : `${rating.toFixed(1)} / ${(5).toFixed(1)}`}
       </Text>
     </VStack>
   );
 }
 
 type RatingDashboardBaseProps = {
-  enjoyment: number;
-  difficulty: number;
-  workload: number;
-  value: number;
+  enjoyment: number | null;
+  difficulty: number | null;
+  workload: number | null;
+  value: number | null;
 };
 
 export type RatingDashboardProps = RatingDashboardBaseProps &

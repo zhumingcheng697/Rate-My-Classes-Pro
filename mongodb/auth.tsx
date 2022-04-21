@@ -20,8 +20,7 @@ import {
 
 type AuthProviderComponentProps = {
   user: Realm.User | null;
-  settingsLoaded: boolean;
-  setSettingsLoaded: (settingsLoaded: boolean) => void;
+  setIsSettingsLoaded: (isSettingsLoaded: boolean) => void;
   isAuthenticated: boolean;
   loadUserDoc: (user: Realm.User) => Promise<void>;
   children: ReactNode;
@@ -29,18 +28,13 @@ type AuthProviderComponentProps = {
 
 class AuthProviderComponent extends Component<AuthProviderComponentProps> {
   componentDidMount() {
-    const {
-      user,
-      settingsLoaded,
-      isAuthenticated,
-      loadUserDoc,
-      setSettingsLoaded,
-    } = this.props;
+    const { user, isAuthenticated, loadUserDoc, setIsSettingsLoaded } =
+      this.props;
 
     if (user && isAuthenticated) {
       loadUserDoc(user);
-    } else if (!settingsLoaded) {
-      setSettingsLoaded(true);
+    } else {
+      setIsSettingsLoaded(true);
     }
   }
 
@@ -52,7 +46,7 @@ class AuthProviderComponent extends Component<AuthProviderComponentProps> {
 type AuthContext = {
   user: Realm.User | null;
   username: string | null;
-  settingsLoaded: boolean;
+  isSettingsLoaded: boolean;
   isAuthenticated: boolean;
   updateUsername: (username: string) => Promise<void>;
   continueWithGoogle: (idToken: string, username: string) => Promise<void>;
@@ -72,7 +66,7 @@ const Context = createContext<AuthContext | null>(null);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState(realmApp.currentUser);
-  const [settingsLoaded, setSettingsLoaded] = useState(false);
+  const [isSettingsLoaded, setIsSettingsLoaded] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
   const settings = useSelector((state) => state.settings);
   const dispatch = useDispatch();
@@ -82,16 +76,22 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const loadUserDoc = async (user: Realm.User) => {
     if (user.providerType === "anon-user") return;
 
-    const userDoc = await useDB(user).loadUserDoc();
+    try {
+      setIsSettingsLoaded(false);
 
-    if (userDoc) {
-      const { username, starredClasses, reviewedClasses, settings } = userDoc;
-      setUsername(username);
-      loadStarredClasses(dispatch)(starredClasses);
-      loadReviewedClasses(dispatch)(reviewedClasses);
-      loadSettings(dispatch)(settings);
+      const userDoc = await useDB(user).loadUserDoc();
 
-      if (!settingsLoaded) setSettingsLoaded(true);
+      if (userDoc) {
+        const { username, starredClasses, reviewedClasses, settings } = userDoc;
+        setUsername(username);
+        loadStarredClasses(dispatch)(starredClasses);
+        loadReviewedClasses(dispatch)(reviewedClasses);
+        loadSettings(dispatch)(settings);
+      }
+    } catch (e) {
+      throw e;
+    } finally {
+      setIsSettingsLoaded(true);
     }
   };
 
@@ -176,7 +176,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       value={{
         user,
         username,
-        settingsLoaded,
+        isSettingsLoaded,
         isAuthenticated,
         updateUsername,
         continueWithGoogle,
@@ -188,8 +188,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     >
       <AuthProviderComponent
         user={user}
-        settingsLoaded={settingsLoaded}
-        setSettingsLoaded={setSettingsLoaded}
+        setIsSettingsLoaded={setIsSettingsLoaded}
         isAuthenticated={isAuthenticated}
         loadUserDoc={loadUserDoc}
       >

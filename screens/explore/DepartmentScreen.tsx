@@ -67,7 +67,7 @@ export default function DepartmentScreen() {
   };
 
   useEffect(() => {
-    if (!auth.settingsLoaded) return;
+    if (!auth.isSettingsLoaded) return;
 
     getClasses(route.params, selectedSemester)
       .then((classes) => {
@@ -83,7 +83,7 @@ export default function DepartmentScreen() {
         setShowAlert(true);
         setError(ErrorType.network);
       });
-  }, [route.params, selectedSemester, auth.settingsLoaded]);
+  }, [route.params, selectedSemester, auth.isSettingsLoaded]);
 
   return (
     <>

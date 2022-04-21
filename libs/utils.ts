@@ -248,6 +248,13 @@ export const compareReviews = (() => {
 
 export const ratings: Rating[] = [5, 4, 3, 2, 1];
 
+export const ratingTypeIconNameMap = {
+  [RatingType.enjoyment]: "thumbs-up",
+  [RatingType.difficulty]: "stats-chart",
+  [RatingType.workload]: "flame",
+  [RatingType.value]: "trophy",
+};
+
 export const ratingDescriptionMap = {
   [RatingType.enjoyment]: {
     [5]: "Really Enjoyed",

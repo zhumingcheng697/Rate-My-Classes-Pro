@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Platform } from "react-native";
 import {
-  Box,
   HStack,
   Text,
   VStack,
@@ -10,6 +9,11 @@ import {
   Icon,
   Button,
 } from "native-base";
+import {
+  useNavigation,
+  useRoute,
+  type RouteProp,
+} from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -23,15 +27,12 @@ import {
   ClassCode,
 } from "../libs/types";
 import Semester from "../libs/semester";
+import { ratingTypeIconNameMap } from "../libs/utils";
+import { useAuth } from "../mongodb/auth";
+import { useDB } from "../mongodb/db";
 import PlainTextButton from "./PlainTextButton";
 import AlertPopup from "./AlertPopup";
-import { useAuth } from "../mongodb/auth";
-import {
-  useNavigation,
-  useRoute,
-  type RouteProp,
-} from "@react-navigation/native";
-import { useDB } from "../mongodb/db";
+import IconHStack from "./IconHStack";
 
 type ReviewCardNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -44,10 +45,18 @@ type RatingBlockProps = { ratingType: RatingType; rating: Rating };
 
 function RatingBlock({ ratingType, rating }: RatingBlockProps) {
   return (
-    <HStack>
-      <Text fontSize={"md"} fontWeight={"medium"}>{`${ratingType}: `}</Text>
-      <Text fontSize={"md"}>{rating} / 5</Text>
-    </HStack>
+    <IconHStack iconName={ratingTypeIconNameMap[ratingType]}>
+      <HStack flexShrink={1} flexGrow={1}>
+        <Text
+          fontSize={"md"}
+          fontWeight={"medium"}
+          lineHeight={"sm"}
+        >{`${ratingType}: `}</Text>
+        <Text fontSize={"md"} lineHeight={"sm"}>
+          {rating} / 5
+        </Text>
+      </HStack>
+    </IconHStack>
   );
 }
 
@@ -298,15 +307,12 @@ export default function ReviewCard({
       <Text fontSize={"lg"} fontWeight={"semibold"}>{`${new Semester(
         semester
       ).toString()} with ${instructor}`}</Text>
-      <HStack flexWrap={"wrap"}>
+      <VStack space={"5px"}>
         <RatingBlock ratingType={RatingType.enjoyment} rating={enjoyment} />
-        <Box minWidth={"25px"} />
         <RatingBlock ratingType={RatingType.difficulty} rating={difficulty} />
-        <Box minWidth={"25px"} />
         <RatingBlock ratingType={RatingType.workload} rating={workload} />
-        <Box minWidth={"25px"} />
         <RatingBlock ratingType={RatingType.value} rating={value} />
-      </HStack>
+      </VStack>
       {!!comment && <Text fontSize={"md"}>{comment}</Text>}
       <HStack justifyContent={"space-between"} flexWrap={"wrap"}>
         <VoteBlock

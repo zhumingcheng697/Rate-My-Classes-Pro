@@ -307,7 +307,7 @@ export default function ReviewCard({
       <Text fontSize={"lg"} fontWeight={"semibold"}>{`${new Semester(
         semester
       ).toString()} with ${instructor}`}</Text>
-      <VStack space={"5px"}>
+      <VStack space={"3px"} marginBottom={"2px"}>
         <RatingBlock ratingType={RatingType.enjoyment} rating={enjoyment} />
         <RatingBlock ratingType={RatingType.difficulty} rating={difficulty} />
         <RatingBlock ratingType={RatingType.workload} rating={workload} />
@@ -317,7 +317,7 @@ export default function ReviewCard({
       <HStack justifyContent={"space-between"} flexWrap={"wrap"}>
         <VoteBlock
           classCode={classCode}
-          margin={"-3px"}
+          margin={"-6px"}
           userId={userId}
           upvotes={upvotes}
           downvotes={downvotes}

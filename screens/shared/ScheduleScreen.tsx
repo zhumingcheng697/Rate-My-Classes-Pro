@@ -147,60 +147,64 @@ export default function ScheduleScreen() {
                         ({[getFullClassCode(classInfo), code].join(" ")})
                       </Text>
                     </HStack>
-                    {!!instructors && !!instructors.length && (
-                      <IconHStack
-                        iconName={"school"}
-                        text={instructors.join(", ")}
-                      />
-                    )}
-                    {typeof maxUnits !== "undefined" && (
-                      <IconHStack
-                        iconName={"ribbon"}
-                        text={
-                          (!!maxUnits && !minUnits) || minUnits === maxUnits
-                            ? `${maxUnits} Credit${maxUnits === 1 ? "" : "s"}`
-                            : `${minUnits}–${maxUnits} Credits`
-                        }
-                      />
-                    )}
-                    {!!type && <IconHStack iconName={"easel"} text={type} />}
-                    {!!status && <IconHStack iconName={"golf"} text={status} />}
-                    {(!!campus || !!location) && (
-                      <IconHStack
-                        iconName={"location"}
-                        text={[campus, location].join(": ")}
-                      />
-                    )}
-                    {!!meetings && !!meetings.length && (
-                      <IconHStack iconName={"time"}>
-                        <VStack space={"2px"} flexShrink={1} flexGrow={1}>
-                          {getMeetingScheduleString(
-                            meetings.map(({ beginDate, minutesDuration }) => {
-                              const begin = new Date(
-                                beginDate.replace(
-                                  /^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{1,2})/i,
-                                  "$1T$2"
-                                )
-                              );
+                    <VStack space={"3px"}>
+                      {!!instructors && !!instructors.length && (
+                        <IconHStack
+                          iconName={"school"}
+                          text={instructors.join(", ")}
+                        />
+                      )}
+                      {typeof maxUnits !== "undefined" && (
+                        <IconHStack
+                          iconName={"ribbon"}
+                          text={
+                            (!!maxUnits && !minUnits) || minUnits === maxUnits
+                              ? `${maxUnits} Credit${maxUnits === 1 ? "" : "s"}`
+                              : `${minUnits}–${maxUnits} Credits`
+                          }
+                        />
+                      )}
+                      {!!type && <IconHStack iconName={"easel"} text={type} />}
+                      {!!status && (
+                        <IconHStack iconName={"golf"} text={status} />
+                      )}
+                      {(!!campus || !!location) && (
+                        <IconHStack
+                          iconName={"location"}
+                          text={[campus, location].join(": ")}
+                        />
+                      )}
+                      {!!meetings && !!meetings.length && (
+                        <IconHStack iconName={"time"}>
+                          <VStack space={"2px"} flexShrink={1} flexGrow={1}>
+                            {getMeetingScheduleString(
+                              meetings.map(({ beginDate, minutesDuration }) => {
+                                const begin = new Date(
+                                  beginDate.replace(
+                                    /^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{1,2})/i,
+                                    "$1T$2"
+                                  )
+                                );
 
-                              const end = new Date(
-                                begin.valueOf() + minutesDuration * 60 * 1000
-                              );
+                                const end = new Date(
+                                  begin.valueOf() + minutesDuration * 60 * 1000
+                                );
 
-                              return [begin, end];
-                            })
-                          ).map(([day, time], index) => (
-                            <Text
-                              fontSize={"md"}
-                              lineHeight={"sm"}
-                              key={day + time + index}
-                            >
-                              {day}: {time}
-                            </Text>
-                          ))}
-                        </VStack>
-                      </IconHStack>
-                    )}
+                                return [begin, end];
+                              })
+                            ).map(([day, time], index) => (
+                              <Text
+                                fontSize={"md"}
+                                lineHeight={"sm"}
+                                key={day + time + index}
+                              >
+                                {day}: {time}
+                              </Text>
+                            ))}
+                          </VStack>
+                        </IconHStack>
+                      )}
+                    </VStack>
                     {!!prerequisites &&
                       stripLineBreaks(
                         prepend(cleanText(prerequisites), "Prerequisite", ": ")

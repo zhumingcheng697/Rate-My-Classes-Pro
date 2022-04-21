@@ -1,11 +1,14 @@
 import React, { type ReactNode } from "react";
 import { HStack, Icon, type IStackProps, Text } from "native-base";
+import { type InterfaceIconProps } from "native-base/lib/typescript/components/primitives/Icon/types";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 type IconHStackBaseProps = {
   iconName: string;
   text?: string;
   children?: ReactNode;
+  iconPosition?: "left" | "right";
+  _icon?: InterfaceIconProps;
 };
 
 export type IconHStackProps = IconHStackBaseProps &
@@ -15,17 +18,25 @@ export default function IconHStack({
   iconName,
   text,
   children,
+  _icon,
+  iconPosition = "left",
   ...rest
 }: IconHStackProps) {
+  _icon = Object.assign(
+    {
+      marginTop: "3px",
+      size: "xs",
+      color: "nyu.light",
+      _dark: { color: "nyu.dark" },
+    },
+    _icon
+  );
+
+  let icon = <Icon {..._icon} as={<Ionicons name={iconName} />} />;
+
   return (
     <HStack {...rest} alignItems={"flex-start"} space={"6px"}>
-      <Icon
-        marginTop={"3px"}
-        size={"xs"}
-        color={"nyu.light"}
-        _dark={{ color: "nyu.dark" }}
-        as={<Ionicons name={iconName} />}
-      />
+      {iconPosition === "left" && icon}
       {children ? (
         children
       ) : (
@@ -33,6 +44,7 @@ export default function IconHStack({
           {text || "Text"}
         </Text>
       )}
+      {iconPosition === "right" && icon}
     </HStack>
   );
 }

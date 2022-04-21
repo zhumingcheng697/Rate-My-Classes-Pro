@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box } from "native-base";
 import {
   useNavigation,
@@ -33,14 +33,17 @@ export default function StarredReviewedScreen() {
   const [alertDismissed, setAlertDismissed] = useState(false);
   const isFocused = useIsFocused();
 
-  const classes =
-    route.name === "Starred"
-      ? Object.values(starredClasses ?? {}).sort(
-          (a, b) => b.starredDate - a.starredDate
-        )
-      : Object.values(reviewedClasses ?? {}).sort(
-          (a, b) => b.reviewedDate - a.reviewedDate
-        );
+  const classes = useMemo(
+    () =>
+      route.name === "Starred"
+        ? Object.values(starredClasses ?? {}).sort(
+            (a, b) => b.starredDate - a.starredDate
+          )
+        : Object.values(reviewedClasses ?? {}).sort(
+            (a, b) => b.reviewedDate - a.reviewedDate
+          ),
+    [route.name, starredClasses, reviewedClasses]
+  );
 
   return (
     <KeyboardAwareSafeAreaScrollView>

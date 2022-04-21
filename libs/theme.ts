@@ -69,6 +69,14 @@ const inputSelectDefaultProps = {
   _focus: {
     borderColor: "gray.400",
   },
+  _web: {
+    ...colorStyleHelper((colorStyle) => ({
+      _focus: {
+        borderWidth: 2,
+        borderColor: colorStyle.nyu,
+      },
+    })),
+  },
   _dark: {
     borderColor: "gray.600",
     _focus: {

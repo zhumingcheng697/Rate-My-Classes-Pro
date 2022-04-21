@@ -104,6 +104,8 @@ export default function ScheduleScreen() {
                   {
                     code,
                     instructors,
+                    type,
+                    status,
                     meetings,
                     name,
                     campus,
@@ -135,14 +137,14 @@ export default function ScheduleScreen() {
                         fontWeight={"semibold"}
                         marginY={"1px"}
                       >
-                        {name}
+                        {name || classInfo.name}
                       </Text>
                       <Text
                         fontSize={"xl"}
                         lineHeight={"1.15em"}
                         marginY={"1px"}
                       >
-                        ({getFullClassCode(classInfo)} {code})
+                        ({[getFullClassCode(classInfo), code].join(" ")})
                       </Text>
                     </HStack>
                     {!!instructors && !!instructors.length && (
@@ -161,6 +163,8 @@ export default function ScheduleScreen() {
                         }
                       />
                     )}
+                    {!!type && <IconHStack iconName={"easel"} text={type} />}
+                    {!!status && <IconHStack iconName={"golf"} text={status} />}
                     {(!!campus || !!location) && (
                       <IconHStack
                         iconName={"location"}

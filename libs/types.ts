@@ -67,14 +67,16 @@ export type Review = {
 };
 
 export type SectionInfo = {
-  code: string;
-  instructors: string[];
+  code?: string;
+  instructors?: string[];
+  type?: string;
+  status?: string;
   meetings?: { beginDate: string; minutesDuration: number; endDate: string }[];
-  name: string;
-  campus: string;
-  minUnits: number;
-  maxUnits: number;
-  location: string;
+  name?: string;
+  campus?: string;
+  minUnits?: number;
+  maxUnits?: number;
+  location?: string;
   notes?: string;
   prerequisites?: string;
 };

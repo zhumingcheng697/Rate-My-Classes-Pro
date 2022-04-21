@@ -4,7 +4,6 @@ import {
   useNavigation,
   useRoute,
   type RouteProp,
-  useIsFocused,
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
@@ -16,6 +15,7 @@ import type {
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
+import { useAuth } from "../../mongodb/auth";
 
 type StarredReviewedScreenNavigationProp =
   StackNavigationProp<SharedNavigationParamList>;
@@ -31,7 +31,7 @@ export default function StarredReviewedScreen() {
   const navigation = useNavigation<StarredReviewedScreenNavigationProp>();
   const route = useRoute<StarredReviewedScreenRouteProp>();
   const [alertDismissed, setAlertDismissed] = useState(false);
-  const isFocused = useIsFocused();
+  const auth = useAuth();
 
   const classes = useMemo(
     () =>
@@ -45,12 +45,19 @@ export default function StarredReviewedScreen() {
     [route.name, starredClasses, reviewedClasses]
   );
 
+  useEffect(() => {
+    if (!auth.isAuthenticated) {
+      navigation.goBack();
+      return;
+    }
+  }, [auth.isAuthenticated]);
+
   return (
     <KeyboardAwareSafeAreaScrollView>
       <AlertPopup
         header={`No ${route.name} Classes`}
         body={`You have not ${route.name.toLowerCase()} any classes yet. Come back later when you have ${route.name.toLowerCase()} some classes.`}
-        isOpen={!classes.length && !alertDismissed && isFocused}
+        isOpen={!classes.length && !alertDismissed && auth.isAuthenticated}
         onClose={() => {
           setAlertDismissed(true);
           navigation.goBack();

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Keyboard } from "react-native";
 import { Text, Button, Input, VStack, Box, HStack, Icon } from "native-base";
 import {
-  useIsFocused,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -32,7 +31,6 @@ export default function SignInSignUpScreen() {
   const navigation = useNavigation<SignInSignUpScreenNavigationProp>();
   const route = useRoute<SignInSignUpScreenRouteProp>();
   const auth = useAuth();
-  const isFocused = useIsFocused();
 
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState("");
@@ -52,10 +50,10 @@ export default function SignInSignUpScreen() {
   const isAuthenticated = auth.isAuthenticated;
 
   useEffect(() => {
-    if (isFocused && isAuthenticated) {
+    if (isAuthenticated) {
       navigation.goBack();
     }
-  }, [isFocused, isAuthenticated]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     setIsLoading(false);
@@ -78,7 +76,7 @@ export default function SignInSignUpScreen() {
               : JSON.stringify(error)
             : "Unknown Error"
         }
-        isOpen={showAlert && isFocused}
+        isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);
         }}
@@ -94,7 +92,7 @@ export default function SignInSignUpScreen() {
               : JSON.stringify(googleError)
             : "Unknown Error"
         }
-        isOpen={showGoogleAlert && isFocused}
+        isOpen={showGoogleAlert}
         onClose={() => {
           setShowGoogleAlert(false);
         }}

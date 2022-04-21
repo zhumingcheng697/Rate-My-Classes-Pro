@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Box, Button, Input, Text, VStack } from "native-base";
 import {
-  useIsFocused,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -34,7 +33,6 @@ export default function ReviewScreen() {
   const navigation = useNavigation<ReviewScreenNavigationProp>();
   const route = useRoute<ReviewScreenRouteProp>();
   const { classInfo, previousReview } = route.params;
-  const isFocused = useIsFocused();
   const [showAlert, setShowAlert] = useState(false);
 
   const [enjoyment, setEnjoyment] = useState<Rating | undefined>(
@@ -110,7 +108,7 @@ export default function ReviewScreen() {
   return (
     <>
       <AlertPopup
-        isOpen={showAlert && isFocused}
+        isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);
         }}

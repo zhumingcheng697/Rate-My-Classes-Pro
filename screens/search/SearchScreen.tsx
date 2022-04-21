@@ -17,7 +17,7 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import ClearableInput from "../../components/ClearableInput";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
-import { useInnerHeight } from "../../libs/hooks";
+import { useDimensions, useInnerHeight } from "../../libs/hooks";
 
 type SearchScreenNavigationProp =
   StackNavigationProp<SharedNavigationParamList>;
@@ -104,6 +104,8 @@ export default function SearchScreen() {
     search(query, selectedSemester, schoolCodes, departmentNames);
   }, [query, selectedSemester, schoolCodes, departmentNames]);
 
+  const { width } = useDimensions();
+
   return (
     <>
       <AlertPopup
@@ -146,6 +148,8 @@ export default function SearchScreen() {
           <Divider
             background={"gray.200"}
             _dark={{ background: "gray.800" }}
+            width={width}
+            alignSelf={"center"}
             height={`${dividerHeight}px`}
           />
         </Box>

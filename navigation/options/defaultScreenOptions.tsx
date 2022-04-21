@@ -10,7 +10,7 @@ export default (): StackNavigationOptions => ({
   ...TransitionPresets.DefaultTransition,
   headerBackImage: () => (
     <Icon
-      size={"32px"}
+      size={"md"}
       marginRight={"-3px"}
       color={"nyu.light"}
       _dark={{ color: "nyu.dark" }}

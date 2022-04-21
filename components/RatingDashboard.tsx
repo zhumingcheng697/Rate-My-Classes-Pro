@@ -13,9 +13,9 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
       alignItems={"center"}
       background={"background.secondary.light"}
       _dark={{ background: "background.secondary.dark" }}
-      paddingX={"15px"}
+      paddingX={"20px"}
       paddingY={"8px"}
-      minW={"135px"}
+      minW={"145px"}
       margin={"5px"}
       space={"2px"}
       borderRadius={10}

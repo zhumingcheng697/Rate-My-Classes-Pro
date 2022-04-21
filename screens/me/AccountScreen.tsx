@@ -61,7 +61,7 @@ export default function AccountScreen() {
           }}
           header={"Sign Out"}
           body={
-            "You are about to sign out. After you signed out, you will have to sign in again with your email and password."
+            "You are about to sign out. After you signed out, you will have to sign in again to view your starred and reviewed classes or star and review more classes."
           }
           footerPrimaryButton={
             <Button

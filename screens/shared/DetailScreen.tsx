@@ -143,6 +143,8 @@ export default function DetailScreen() {
   }, [db]);
 
   useEffect(() => {
+    if (!auth.settingsLoaded) return;
+
     let semester = new Semester(selectedSemester);
     if (!Semester.equals(semester, previousSemester)) {
       setPreviousSemester(semester);
@@ -159,7 +161,7 @@ export default function DetailScreen() {
         setError(DetailScreenErrorType.loadSchedule);
         setShowAlert(true);
       });
-  }, [selectedSemester]);
+  }, [selectedSemester, auth.settingsLoaded]);
 
   const reviewerIds = useMemo(() => {
     if (!reviewRecord) return [];

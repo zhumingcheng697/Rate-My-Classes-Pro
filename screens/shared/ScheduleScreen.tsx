@@ -20,6 +20,7 @@ import {
 } from "../../libs/utils";
 import AlertPopup from "../../components/AlertPopup";
 import IconHStack from "../../components/IconHStack";
+import { useAuth } from "../../mongodb/auth";
 
 type ScheduleScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -37,6 +38,7 @@ export default function ScheduleScreen() {
     route.params.sections
   );
   const [showAlert, setShowAlert] = useState(false);
+  const auth = useAuth();
 
   const cleanText = useCallback(
     (text: string) =>
@@ -52,13 +54,15 @@ export default function ScheduleScreen() {
   );
 
   useEffect(() => {
+    if (!auth.settingsLoaded) return;
+
     if (!Semester.equals(selectedSemester, new Semester(semester))) {
       getSections(classInfo, selectedSemester)
         .then((sections) => {
+          setSections(sections);
           if (!sections.length) {
             setShowAlert(true);
           }
-          setSections(sections);
         })
         .catch(() => {
           setSections(null);
@@ -68,7 +72,7 @@ export default function ScheduleScreen() {
           navigation.setParams({ semester: selectedSemester });
         });
     }
-  }, [selectedSemester]);
+  }, [selectedSemester, auth.settingsLoaded]);
 
   const noDataErrorMessage = () => {
     const diff = Semester.between(

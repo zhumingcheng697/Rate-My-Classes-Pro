@@ -18,6 +18,7 @@ import ClearableInput from "../../components/ClearableInput";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
 import { useDimensions, useInnerHeight } from "../../libs/hooks";
+import { useAuth } from "../../mongodb/auth";
 
 type SearchScreenNavigationProp =
   StackNavigationProp<SharedNavigationParamList>;
@@ -37,6 +38,7 @@ export default function SearchScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const innerHeight = useInnerHeight();
+  const auth = useAuth();
 
   const selectedSemester = useMemo(
     () => new Semester(settings.selectedSemester),
@@ -101,8 +103,15 @@ export default function SearchScreen() {
   );
 
   useEffect(() => {
-    search(query, selectedSemester, schoolCodes, departmentNames);
-  }, [query, selectedSemester, schoolCodes, departmentNames]);
+    if (auth.settingsLoaded)
+      search(query, selectedSemester, schoolCodes, departmentNames);
+  }, [
+    query,
+    selectedSemester,
+    schoolCodes,
+    departmentNames,
+    auth.settingsLoaded,
+  ]);
 
   const { width } = useDimensions();
 
@@ -153,10 +162,12 @@ export default function SearchScreen() {
             height={`${dividerHeight}px`}
           />
         </Box>
-        {focused || matchedClasses.length || (query && !isLoaded) ? (
+        {focused ||
+        matchedClasses.length ||
+        (query && (!isLoaded || !auth.settingsLoaded)) ? (
           <ClassesGrid
             marginY={"10px"}
-            isLoaded={isLoaded}
+            isLoaded={isLoaded && auth.settingsLoaded}
             classes={matchedClasses}
             navigation={navigation}
           />

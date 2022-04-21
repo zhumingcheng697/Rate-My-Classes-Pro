@@ -10,6 +10,7 @@ import { isSchoolGrad, isObjectEmpty, getSchoolName } from "../../libs/utils";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid, { type GridRenderItemInfo } from "../../containers/Grid";
 import TieredTextButton from "../../components/TieredTextButton";
+import { useAuth } from "../../mongodb/auth";
 
 type UniversityScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -21,6 +22,7 @@ export default function UniversityScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const settings = useSelector((state) => state.settings);
+  const auth = useAuth();
 
   const isSchoolNameLoaded = !!schoolNames && !isObjectEmpty(schoolNames);
   const isDepartmentNameLoaded =
@@ -73,7 +75,9 @@ export default function UniversityScreen() {
   return (
     <KeyboardAwareSafeAreaScrollView>
       <Box marginY={"10px"}>
-        <Text variant={"h1"}>{selectedSemester.toString()}</Text>
+        <Text variant={"h1"} opacity={auth.settingsLoaded ? 1 : 0.5}>
+          {selectedSemester.toString()}
+        </Text>
         <Text variant={"h2"}>Undergraduate</Text>
         <Grid isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}>
           {(info) => undergradCodes.map(schoolCodeToNavigationButton(info))}

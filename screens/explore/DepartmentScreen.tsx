@@ -24,6 +24,7 @@ import Semester from "../../libs/semester";
 import { getClasses } from "../../libs/schedge";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
+import { useAuth } from "../../mongodb/auth";
 
 type DepartmentScreenNavigationProp =
   StackNavigationProp<SharedNavigationParamList>;
@@ -39,6 +40,7 @@ export default function DepartmentScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const settings = useSelector((state) => state.settings);
+  const auth = useAuth();
 
   const [classes, setClasses] = useState<ClassInfo[]>([]);
   const [showAlert, setShowAlert] = useState(false);
@@ -65,6 +67,8 @@ export default function DepartmentScreen() {
   };
 
   useEffect(() => {
+    if (!auth.settingsLoaded) return;
+
     getClasses(route.params, selectedSemester)
       .then((classes) => {
         if (classes && classes.length) {
@@ -79,7 +83,7 @@ export default function DepartmentScreen() {
         setShowAlert(true);
         setError(ErrorType.network);
       });
-  }, [route.params, selectedSemester]);
+  }, [route.params, selectedSemester, auth.settingsLoaded]);
 
   return (
     <>

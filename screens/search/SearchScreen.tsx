@@ -148,7 +148,7 @@ export default function SearchScreen() {
           <Divider
             background={"gray.200"}
             _dark={{ background: "gray.800" }}
-            width={width}
+            minWidth={width}
             alignSelf={"center"}
             height={`${dividerHeight}px`}
           />

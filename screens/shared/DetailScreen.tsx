@@ -232,7 +232,10 @@ export default function DetailScreen() {
       <KeyboardAwareSafeAreaScrollView>
         <Box marginY={"10px"}>
           <Text variant={"h1"}>{classInfo.name}</Text>
-          <Text variant={"h2"}>
+          <Text
+            variant={"h2"}
+            opacity={schoolNames && departmentNames ? 1 : 0.5}
+          >
             {getSchoolName(classInfo, schoolNames)}
             {": "}
             {getDepartmentName(classInfo, departmentNames)}

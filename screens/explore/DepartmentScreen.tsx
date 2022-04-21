@@ -98,10 +98,12 @@ export default function DepartmentScreen() {
       />
       <KeyboardAwareSafeAreaScrollView>
         <Box marginY={"10px"}>
-          <Text variant={"h1"}>
+          <Text variant={"h1"} opacity={departmentNames ? 1 : 0.5}>
             {getDepartmentName(route.params, departmentNames)}
           </Text>
-          <Text variant={"h2"}>{getSchoolName(route.params, schoolNames)}</Text>
+          <Text variant={"h2"} opacity={schoolNames ? 1 : 0.5}>
+            {getSchoolName(route.params, schoolNames)}
+          </Text>
           <ClassesGrid
             isLoaded={!!classes.length && !error}
             classes={classes}

@@ -45,7 +45,9 @@ export default function SchoolScreen() {
   return (
     <KeyboardAwareSafeAreaScrollView>
       <Box marginY={"10px"}>
-        <Text variant={"h1"}>{getSchoolName(route.params, schoolNames)}</Text>
+        <Text variant={"h1"} opacity={schoolNames ? 1 : 0.5}>
+          {getSchoolName(route.params, schoolNames)}
+        </Text>
         <Grid isLoaded={isLoaded}>
           {(info) =>
             departments.map((departmentCode, index) => {

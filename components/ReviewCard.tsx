@@ -27,7 +27,7 @@ import {
   ClassCode,
 } from "../libs/types";
 import Semester from "../libs/semester";
-import { ratingTypeIconNameMap } from "../libs/utils";
+import { ratingDescriptionMap, ratingTypeIconNameMap } from "../libs/utils";
 import { useAuth } from "../mongodb/auth";
 import { useDB } from "../mongodb/db";
 import PlainTextButton from "./PlainTextButton";
@@ -53,7 +53,7 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
           lineHeight={"sm"}
         >{`${ratingType}: `}</Text>
         <Text fontSize={"md"} lineHeight={"sm"}>
-          {rating} / 5
+          {ratingDescriptionMap[ratingType][rating]}
         </Text>
       </HStack>
     </IconHStack>

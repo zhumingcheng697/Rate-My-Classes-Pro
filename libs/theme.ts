@@ -218,7 +218,6 @@ const componentsStyle = {
 };
 
 export default extendTheme({
-  config: { useSystemColorMode: true },
   colors: colorStyle,
   components: componentsStyle,
 });

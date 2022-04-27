@@ -1,5 +1,4 @@
-import React, { useMemo, Component } from "react";
-import { useColorScheme } from "react-native";
+import React, { useMemo, Component, useState, useCallback } from "react";
 import {
   NavigationContainer,
   DefaultTheme,
@@ -13,6 +12,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import RootNavigation from "./navigation/RootNavigation";
 import nativeBaseTheme, { lightColorStyle, darkColorStyle } from "./libs/theme";
 import { getSchoolNames, getDepartmentNames } from "./libs/schedge";
+import { useColorScheme } from "./libs/hooks";
 import { ErrorType } from "./libs/types";
 import { isObjectEmpty } from "./libs/utils";
 import AlertPopup from "./components/AlertPopup";
@@ -46,10 +46,8 @@ type AppComponentProps = {
 };
 
 function AppComponent({ error, showAlert, hideAlert }: AppComponentProps) {
-  const colorScheme = useColorScheme();
-
-  const navigationTheme = useMemo(
-    () => ({
+  const getNavigationTheme = useCallback(
+    (colorScheme) => ({
       ...(colorScheme === "dark" ? DarkTheme : DefaultTheme),
       colors: {
         ...(colorScheme === "dark" ? DarkTheme.colors : DefaultTheme.colors),
@@ -59,13 +57,31 @@ function AppComponent({ error, showAlert, hideAlert }: AppComponentProps) {
           .background.primary,
       },
     }),
+    []
+  );
+
+  const colorScheme = useColorScheme();
+  const [navigationTheme, setNavigationScheme] = useState(() =>
+    getNavigationTheme(colorScheme)
+  );
+  const colorModeManager = useMemo(
+    () => ({
+      get: async () => {
+        setNavigationScheme(getNavigationTheme(colorScheme));
+        return colorScheme;
+      },
+      set: async () => {},
+    }),
     [colorScheme]
   );
 
   return (
     <Provider store={store}>
       <AuthProvider>
-        <NativeBaseProvider theme={nativeBaseTheme}>
+        <NativeBaseProvider
+          theme={nativeBaseTheme}
+          colorModeManager={colorModeManager}
+        >
           <NavigationContainer theme={navigationTheme}>
             <AlertPopup
               body={

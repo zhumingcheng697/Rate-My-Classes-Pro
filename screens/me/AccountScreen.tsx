@@ -92,8 +92,8 @@ export default function AccountScreen() {
         >
           <Box>
             {wasAuthenticated && (
-              <Text variant={"h1"} opacity={auth.isSettingsLoaded ? 1 : 0.5}>
-                {auth.isSettingsLoaded ? auth.username ?? " " : "Me"}
+              <Text variant={"h1"} opacity={auth.isUserDocLoaded ? 1 : 0.5}>
+                {auth.isUserDocLoaded ? auth.username ?? " " : "Me"}
               </Text>
             )}
             <VStack margin={"10px"} space={"12px"}>

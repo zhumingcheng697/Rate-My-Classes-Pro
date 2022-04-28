@@ -92,7 +92,7 @@ export default function AccountScreen() {
         >
           <Box>
             {wasAuthenticated && (
-              <Text variant={"h1"} opacity={auth.isUserDocLoaded ? 1 : 0.5}>
+              <Text variant={"h1"} opacity={auth.isSettingsSettled ? 1 : 0.5}>
                 {auth.isUserDocLoaded ? auth.username ?? " " : "Me"}
               </Text>
             )}

@@ -75,7 +75,7 @@ export default function UniversityScreen() {
   return (
     <KeyboardAwareSafeAreaScrollView>
       <Box marginY={"10px"}>
-        <Text variant={"h1"} opacity={auth.isUserDocLoaded ? 1 : 0.5}>
+        <Text variant={"h1"} opacity={auth.isSettingsSettled ? 1 : 0.5}>
           {selectedSemester.toString()}
         </Text>
         <Text variant={"h2"}>Undergraduate</Text>

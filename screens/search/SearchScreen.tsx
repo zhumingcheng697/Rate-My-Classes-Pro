@@ -103,14 +103,14 @@ export default function SearchScreen() {
   );
 
   useEffect(() => {
-    if (auth.isUserDocLoaded)
+    if (auth.isSettingsSettled)
       search(query, selectedSemester, schoolCodes, departmentNames);
   }, [
     query,
     selectedSemester,
     schoolCodes,
     departmentNames,
-    auth.isUserDocLoaded,
+    auth.isSettingsSettled,
   ]);
 
   const { width } = useDimensions();
@@ -164,10 +164,10 @@ export default function SearchScreen() {
         </Box>
         {focused ||
         matchedClasses.length ||
-        (query && (!isLoaded || !auth.isUserDocLoaded)) ? (
+        (query && (!isLoaded || !auth.isSettingsSettled)) ? (
           <ClassesGrid
             marginY={"10px"}
-            isLoaded={isLoaded && auth.isUserDocLoaded}
+            isLoaded={isLoaded && auth.isSettingsSettled}
             classes={matchedClasses}
             navigation={navigation}
           />

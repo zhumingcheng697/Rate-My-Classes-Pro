@@ -54,7 +54,7 @@ export default function ScheduleScreen() {
   );
 
   useEffect(() => {
-    if (!auth.isUserDocLoaded) return;
+    if (!auth.isSettingsSettled) return;
 
     if (!Semester.equals(selectedSemester, new Semester(semester))) {
       getSections(classInfo, selectedSemester)
@@ -72,7 +72,7 @@ export default function ScheduleScreen() {
           navigation.setParams({ semester: selectedSemester });
         });
     }
-  }, [selectedSemester, auth.isUserDocLoaded]);
+  }, [selectedSemester, auth.isSettingsSettled]);
 
   const noDataErrorMessage = () => {
     const diff = Semester.between(

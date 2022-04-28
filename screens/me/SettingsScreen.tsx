@@ -50,7 +50,7 @@ export default function SettingsScreen() {
           <LabeledInput label={"Username"}>
             <ClearableInput
               canClear={canClear && !!newUsername}
-              placeholder={previousUsername ?? "McCoy Appleseed"}
+              placeholder={previousUsername ?? "Me"}
               value={newUsername}
               onChangeText={setNewUsername}
               returnKeyType={"done"}

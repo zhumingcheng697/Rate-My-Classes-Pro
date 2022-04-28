@@ -18,38 +18,13 @@ import {
   loadStarredClasses,
 } from "../redux/actions";
 
-type AuthProviderComponentProps = {
-  user: Realm.User | null;
-  isAuthenticated: boolean;
-  isUserDocLoaded: boolean;
-  setUserDocLoaded: () => void;
-  loadUserDoc: (user: Realm.User, throws?: boolean) => Promise<void>;
-  children: ReactNode;
-};
-
-class AuthProviderComponent extends Component<AuthProviderComponentProps> {
-  componentDidMount() {
-    const { user, isAuthenticated, isUserDocLoaded, setUserDocLoaded } =
-      this.props;
-
-    if (user && isAuthenticated) {
-          loadUserDoc(user, false);
-    } else {
-      setUserDocLoaded();
-    }
-  }
-
-  render() {
-    return this.props.children;
-  }
-}
-
 type AuthContext = {
   user: Realm.User | null;
   username: string | null;
   isSettingsSettled: boolean;
   isUserDocLoaded: boolean;
   isAuthenticated: boolean;
+  fetchUserDoc: () => Promise<void>;
   updateUsername: (username: string) => Promise<void>;
   continueWithGoogle: (idToken: string, username: string) => Promise<void>;
   signInAnonymously: (override?: boolean) => Promise<void>;
@@ -76,7 +51,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const isAuthenticated = !!user && user.providerType !== "anon-user";
 
-  const loadUserDoc = async (user: Realm.User, throws: boolean = true) => {
+  const loadUserDoc = async (user: Realm.User) => {
     if (user.providerType === "anon-user") return;
 
     try {
@@ -95,8 +70,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
       setIsUserDocLoaded(true);
     } catch (e) {
-      if (throws) throw e;
+      throw e;
     } finally {
+      setIsSettingsSettled(true);
+    }
+  };
+
+  const fetchUserDoc = async () => {
+    if (user && isAuthenticated) {
+      if (!isUserDocLoaded) {
+        await loadUserDoc(user);
+      }
+    } else {
+      setIsUserDocLoaded(true);
       setIsSettingsSettled(true);
     }
   };
@@ -185,6 +171,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         isSettingsSettled,
         isUserDocLoaded,
         isAuthenticated,
+        fetchUserDoc,
         updateUsername,
         continueWithGoogle,
         signInAnonymously,
@@ -193,18 +180,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         signOut,
       }}
     >
-      <AuthProviderComponent
-        user={user}
-        isAuthenticated={isAuthenticated}
-        isUserDocLoaded={isUserDocLoaded}
-        setUserDocLoaded={() => {
-          setIsSettingsSettled(true);
-          setIsUserDocLoaded(true);
-        }}
-        loadUserDoc={loadUserDoc}
-      >
-        {children}
-      </AuthProviderComponent>
+      {children}
     </Context.Provider>
   );
 };

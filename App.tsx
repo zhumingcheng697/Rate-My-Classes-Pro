@@ -11,13 +11,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import RootNavigation from "./navigation/RootNavigation";
 import nativeBaseTheme, { lightColorStyle, darkColorStyle } from "./libs/theme";
-import { getSchoolNames, getDepartmentNames } from "./libs/schedge";
 import { useColorScheme } from "./libs/hooks";
-import { ErrorType } from "./libs/types";
-import { isObjectEmpty } from "./libs/utils";
-import AlertPopup from "./components/AlertPopup";
 import reducer from "./redux/reducers";
-import { setDepartmentNameRecord, setSchoolNameRecord } from "./redux/actions";
 import { AuthProvider } from "./mongodb/auth";
 import { useDB } from "./mongodb/db";
 import realmApp from "./mongodb/realmApp";
@@ -39,13 +34,7 @@ declare module "react-redux" {
   interface DefaultRootState extends RootState {}
 }
 
-type AppComponentProps = {
-  error: ErrorType | null;
-  showAlert: boolean;
-  hideAlert: () => void;
-};
-
-function AppComponent({ error, showAlert, hideAlert }: AppComponentProps) {
+function AppComponent() {
   const getNavigationTheme = useCallback(
     (colorScheme) => ({
       ...(colorScheme === "dark" ? DarkTheme : DefaultTheme),
@@ -83,16 +72,6 @@ function AppComponent({ error, showAlert, hideAlert }: AppComponentProps) {
           colorModeManager={colorModeManager}
         >
           <NavigationContainer theme={navigationTheme}>
-            <AlertPopup
-              body={
-                error === ErrorType.noData
-                  ? "This might be an issue with Schedge, our API provider for classes."
-                  : undefined
-              }
-              isOpen={showAlert}
-              onClose={hideAlert}
-              onlyShowWhenFocused={false}
-            />
             <RootNavigation />
           </NavigationContainer>
         </NativeBaseProvider>
@@ -101,14 +80,7 @@ function AppComponent({ error, showAlert, hideAlert }: AppComponentProps) {
   );
 }
 
-type AppState = { error: ErrorType | null; showAlert: boolean };
-
-export default class App extends Component<{}, AppState> {
-  state: AppState = {
-    error: null,
-    showAlert: false,
-  };
-
+export default class App extends Component {
   unsubsriceRedux = () => {};
 
   reduxListener = (() => {
@@ -134,44 +106,9 @@ export default class App extends Component<{}, AppState> {
 
   componentDidMount() {
     this.unsubsriceRedux = store.subscribe(this.reduxListener.bind(this));
-
-    getSchoolNames()
-      .then((record) => {
-        if (record && !isObjectEmpty(record)) {
-          setSchoolNameRecord(store.dispatch)(record);
-        } else {
-          this.setState({ error: ErrorType.noData, showAlert: true });
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-        this.setState({ error: ErrorType.network, showAlert: true });
-      });
-
-    getDepartmentNames()
-      .then((record) => {
-        if (record && !isObjectEmpty(record)) {
-          setDepartmentNameRecord(store.dispatch)(record);
-        } else {
-          this.setState({ error: ErrorType.noData, showAlert: true });
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-        this.setState({ error: ErrorType.network, showAlert: true });
-      });
   }
 
   render() {
-    const { error, showAlert } = this.state;
-    return (
-      <AppComponent
-        error={error}
-        showAlert={showAlert}
-        hideAlert={() => {
-          this.setState({ showAlert: false });
-        }}
-      />
-    );
+    return <AppComponent />;
   }
 }

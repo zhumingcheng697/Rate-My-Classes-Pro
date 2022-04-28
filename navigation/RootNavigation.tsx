@@ -51,7 +51,8 @@ export default function RootNavigation() {
     (
       schoolNameRecord: SchoolNameRecord | null,
       departmentNameRecord: DepartmentNameRecord | null,
-      dispatch: Dispatch
+      dispatch: Dispatch,
+      failSilently: boolean = false
     ) => {
       if (schoolNameRecord && departmentNameRecord) return;
 
@@ -70,7 +71,7 @@ export default function RootNavigation() {
           .catch((e) => {
             console.error(e);
             setError(ErrorType.network);
-            setShowAlert(true);
+            if (!failSilently) setShowAlert(true);
           });
 
       if (!departmentNameRecord)
@@ -79,34 +80,38 @@ export default function RootNavigation() {
             if (record && !isObjectEmpty(record)) {
               setDepartmentNameRecord(dispatch)(record);
               setError(null);
-              setShowAlert(false);
+              if (!failSilently) setShowAlert(false);
             } else {
               setError(ErrorType.noData);
-              setShowAlert(true);
+              if (!failSilently) setShowAlert(true);
             }
           })
           .catch((e) => {
             console.error(e);
             setError(ErrorType.network);
-            setShowAlert(true);
+            if (!failSilently) setShowAlert(true);
           });
     },
     []
   );
 
-  const fetchInfo = useCallback(() => {
-    auth.fetchUserDoc().catch((e) => {
-      console.error(e);
-      setAccountError(true);
-      setShowAlert(true);
-    });
+  const fetchInfo = useCallback(
+    (failSilently: boolean = false) => {
+      auth.fetchUserDoc().catch((e) => {
+        console.error(e);
+        setAccountError(true);
+        if (!failSilently) setShowAlert(true);
+      });
 
-    getSchoolAndDepartmentNames(
-      schoolNameRecord,
-      departmentNameRecord,
-      dispatch
-    );
-  }, [schoolNameRecord, departmentNameRecord, dispatch, auth]);
+      getSchoolAndDepartmentNames(
+        schoolNameRecord,
+        departmentNameRecord,
+        dispatch,
+        failSilently
+      );
+    },
+    [schoolNameRecord, departmentNameRecord, dispatch, auth]
+  );
 
   return (
     <RootNavigationComponent fetchInfo={fetchInfo}>
@@ -126,11 +131,16 @@ export default function RootNavigation() {
         isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);
+          fetchInfo(true);
         }}
         onlyShowWhenFocused={false}
       />
       <Tab.Navigator
-        screenListeners={{ tabPress: fetchInfo }}
+        screenListeners={{
+          tabPress: () => {
+            fetchInfo();
+          },
+        }}
         screenOptions={({ route }) => ({
           title: route.name.replace(/-Tab/gi, ""),
           headerShown: false,

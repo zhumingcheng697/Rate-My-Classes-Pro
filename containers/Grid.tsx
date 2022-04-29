@@ -49,10 +49,11 @@ export default function Grid({
   const actualChildWidth = Math.max(minChildWidth, 60);
 
   const insets = useSafeAreaInsets();
-  const windowWidth = useDimensions().width - insets.left - insets.right;
-
+  const realWindowWidth = useDimensions().width - insets.left - insets.right;
+  const roundedWindowWidth = Math.floor(realWindowWidth / 4) * 4;
   const ratio =
-    (windowWidth - acutalMargin * 2) / (actualChildWidth + acutalMargin * 2);
+    (roundedWindowWidth - acutalMargin * 2) /
+    (actualChildWidth + acutalMargin * 2);
   const columns = Math.max(Math.floor(ratio), 1);
 
   const skeletonChildren = useCallback(
@@ -80,11 +81,14 @@ export default function Grid({
       alignItems={"center"}
       alignContent={"center"}
       flexWrap={"wrap"}
-      marginX={`${acutalMargin}px`}
+      marginX={`${
+        acutalMargin +
+        Math.floor(Math.max(realWindowWidth - roundedWindowWidth - 1, 0) / 2)
+      }px`}
     >
       {(isLoaded ? children : skeletonChildren)({
         width: `${
-          (windowWidth - acutalMargin * (columns + 1) * 2) / columns
+          (roundedWindowWidth - acutalMargin * (columns + 1) * 2) / columns
         }px`,
         margin: `${acutalMargin}px`,
         ...heightProps,

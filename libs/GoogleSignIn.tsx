@@ -9,7 +9,7 @@ import {
   GOOGLE_IOS_CLIENT_ID,
 } from "react-native-dotenv";
 
-import OAuthSignInButton from "../components/NewOAuthSignInButton";
+import OAuthSignInButton from "../components/OAuthSignInButton";
 import { useAuth } from "../mongodb/auth";
 
 GoogleSignin.configure({
@@ -38,7 +38,7 @@ export function GoogleSignInButton({
   return (
     <OAuthSignInButton
       {...rest}
-      provider={"google"}
+      provider={"Google"}
       isDisabled={isLoading || isDisabled}
       onPress={async () => {
         try {

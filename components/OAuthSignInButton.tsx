@@ -29,12 +29,14 @@ export default function OAuthSignInButton({
         <Icon
           color={"black"}
           _dark={{ color: "white" }}
-          as={<Ionicons name={`logo-${provider}`} />}
+          size={"20px"}
+          marginRight={"-2px"}
+          as={<Ionicons name={`logo-${provider.toLowerCase()}`} />}
         />
       }
     >
       <Text variant={"button"} color={"black"} _dark={{ color: "white" }}>
-        Continue with Google
+        Continue with {provider}
       </Text>
     </Button>
   );

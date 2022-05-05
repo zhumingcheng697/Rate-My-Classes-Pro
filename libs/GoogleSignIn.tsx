@@ -47,7 +47,7 @@ export function GoogleSignInButton({
           await GoogleSignin.hasPlayServices();
 
           const user = await GoogleSignin.signIn();
-          const username = user.user.name || user.user.givenName || "New User";
+          const username = user.user.name || user.user.givenName || "User";
 
           await auth.continueWithGoogle(user.idToken!, username);
         } catch (error: any) {

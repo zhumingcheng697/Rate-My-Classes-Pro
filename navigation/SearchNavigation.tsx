@@ -18,7 +18,11 @@ const Stack = createStackNavigator<SearchNavigationParamList>();
 export default function SearchNavigation() {
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
-      <Stack.Screen name={"Search"} component={SearchScreen} />
+      <Stack.Screen
+        name={"Search"}
+        component={SearchScreen}
+        options={{ title: "Search" }}
+      />
       <Stack.Screen
         name={"Detail"}
         component={DetailScreen}

@@ -31,7 +31,7 @@ export function GoogleSignInButton({
       onSuccess={async (res) => {
         const user = res as GoogleLoginResponse;
         const username =
-          user.profileObj.name || user.profileObj.givenName || "New User";
+          user.profileObj.name || user.profileObj.givenName || "User";
 
         await auth.continueWithGoogle(user.tokenId, username);
         setIsLoading(false);

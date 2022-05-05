@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Keyboard } from "react-native";
-import { Text, Button, Input, VStack, Box, HStack, Icon } from "native-base";
+import { Text, Button, Input, VStack, Box, HStack, Divider } from "native-base";
 import {
   useNavigation,
   useRoute,

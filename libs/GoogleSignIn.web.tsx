@@ -3,7 +3,7 @@ import GoogleLogin, { type GoogleLoginResponse } from "react-google-login";
 import { IButtonProps } from "native-base";
 import { GOOGLE_WEB_CLIENT_ID } from "react-native-dotenv";
 
-import Button from "../components/GoogleSignInButton";
+import OAuthSignInButton from "../components/NewOAuthSignInButton";
 import { useAuth } from "../mongodb/auth";
 
 type GoogleSignInButtonBaseProps = {
@@ -52,8 +52,9 @@ export function GoogleSignInButton({
         setIsLoading(false);
       }}
       render={(props) => (
-        <Button
+        <OAuthSignInButton
           {...rest}
+          provider={"google"}
           isDisabled={isLoading || isDisabled || props.disabled}
           onPress={() => {
             setIsLoading(true);

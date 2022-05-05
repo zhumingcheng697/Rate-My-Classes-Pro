@@ -2,10 +2,20 @@ import React from "react";
 import { Button, type IButtonProps, Icon, Text } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-export default function GoogleSignInButton(props: IButtonProps) {
+type OAuthSignInButtonBaseProps = {
+  provider: string;
+};
+
+export type OAuthSignInButtonProps = OAuthSignInButtonBaseProps &
+  Omit<IButtonProps, keyof OAuthSignInButtonBaseProps>;
+
+export default function OAuthSignInButton({
+  provider,
+  ...rest
+}: OAuthSignInButtonProps) {
   return (
     <Button
-      {...props}
+      {...rest}
       background={"white"}
       shadow={"0"}
       borderColor={"gray.200"}
@@ -19,7 +29,7 @@ export default function GoogleSignInButton(props: IButtonProps) {
         <Icon
           color={"black"}
           _dark={{ color: "white" }}
-          as={<Ionicons name={"logo-google"} />}
+          as={<Ionicons name={`logo-${provider}`} />}
         />
       }
     >

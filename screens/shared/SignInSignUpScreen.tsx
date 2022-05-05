@@ -173,9 +173,25 @@ export default function SignInSignUpScreen() {
                 {isSigningUp ? "Sign Up" : "Sign In"}
               </Text>
             </Button>
-            <Text textAlign={"center"} fontSize={"md"} fontWeight={"medium"}>
-              - or -
-            </Text>
+            <HStack
+              marginY={"10px"}
+              space={"15px"}
+              justifyContent={"space-between"}
+              alignContent={"center"}
+              alignItems={"center"}
+            >
+              <Divider minW={0} flexShrink={1} height={"1px"} />
+              <Text
+                textAlign={"center"}
+                fontSize={"md"}
+                fontWeight={"medium"}
+                flexGrow={10}
+                flexShrink={0}
+              >
+                or
+              </Text>
+              <Divider minW={0} flexShrink={1} height={"1px"} />
+            </HStack>
             <GoogleSignInButton
               isLoading={isLoading}
               setIsLoading={setIsLoading}

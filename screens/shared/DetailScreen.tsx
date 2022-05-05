@@ -38,9 +38,11 @@ type DetailScreenNavigationProp = StackNavigationProp<
 >;
 
 enum DetailScreenErrorType {
-  loadReviews = "LOAD_REVIEWS",
-  loadSchedule = "LOAD_SCHEDULE",
-  upsertReview = "UPSERT_REVIEW",
+  loadReviews = "Load Reviews",
+  loadSchedule = "Load Schedule",
+  submitReview = "Submit Your Review",
+  updateReview = "Update Your Review",
+  deleteReview = "Delete Your Review",
 }
 
 type DetailScreenRouteProp = RouteProp<SharedNavigationParamList, "Detail">;
@@ -202,7 +204,15 @@ export default function DetailScreen() {
             }
           }
         } catch (e) {
-          setError(DetailScreenErrorType.upsertReview);
+          if (deleteReview) {
+            setError(DetailScreenErrorType.deleteReview);
+          } else if (newReview) {
+            if (myReview) {
+              setError(DetailScreenErrorType.updateReview);
+            } else {
+              setError(DetailScreenErrorType.submitReview);
+            }
+          }
           setShowAlert(true);
         } finally {
           navigation.setParams({
@@ -217,13 +227,7 @@ export default function DetailScreen() {
   return (
     <>
       <AlertPopup
-        header={
-          error === DetailScreenErrorType.loadReviews
-            ? "Unable to Load Reviews"
-            : error === DetailScreenErrorType.loadSchedule
-            ? "Unable to Load Schedule"
-            : "Unable to Review"
-        }
+        header={`Unable to ${error || "Review"}`}
         isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);

@@ -55,7 +55,11 @@ export default ({
           onClose={() => {
             setShowAlert(false);
           }}
-          header={auth.isAuthenticated ? "Unable to Star" : "Sign In to Star"}
+          header={
+            auth.isAuthenticated
+              ? `Unable to ${isStarred ? "Unstar" : "Star"}`
+              : "Sign In to Star"
+          }
           body={
             auth.isAuthenticated
               ? undefined

@@ -6,6 +6,8 @@ import {
   type ITextProps,
 } from "native-base";
 
+import { pressableBaseStyle } from "../libs/theme";
+
 type PlainTextButtonBaseProps = {
   title?: string;
   _text?: ITextProps;
@@ -32,7 +34,7 @@ export default function PlainTextButton({
   );
 
   return (
-    <Pressable {...rest}>
+    <Pressable {...pressableBaseStyle} {...rest}>
       <Text {..._text}>{title ?? children ?? "Button"}</Text>
     </Pressable>
   );

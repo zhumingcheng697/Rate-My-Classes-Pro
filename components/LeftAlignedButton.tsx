@@ -8,7 +8,8 @@ import {
   type ITextProps,
 } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { buttonBaseStyle } from "../libs/theme";
+
+import { buttonBaseStyle, pressableBaseStyle } from "../libs/theme";
 
 type LeftAlignedButtonBaseProps = {
   title?: string;
@@ -28,7 +29,7 @@ export default function LeftAlignedButton({
   ...rest
 }: LeftAlignedButtonProps) {
   return (
-    <Pressable {...rest}>
+    <Pressable {...pressableBaseStyle} {...rest}>
       <Flex
         {...buttonBaseStyle}
         justifyContent={"space-between"}

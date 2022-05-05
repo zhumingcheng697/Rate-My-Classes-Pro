@@ -99,11 +99,6 @@ const componentsStyle = {
       },
     },
   },
-  Pressable: {
-    defaultProps: {
-      ...pressableBaseStyle,
-    },
-  },
   IconButton: {
     defaultProps: {
       ...pressableBaseStyle,

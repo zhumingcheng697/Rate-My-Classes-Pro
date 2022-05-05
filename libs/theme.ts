@@ -47,13 +47,17 @@ const buttonTextBaseStyle = {
   fontSize: "md",
 };
 
+export const pressableBaseStyle = {
+  _disabled: { opacity: 0.5 },
+  _pressed: { opacity: 0.5 },
+  _hover: { opacity: 0.72 },
+};
+
 export const buttonBaseStyle = {
   paddingX: "12px",
   paddingY: "8px",
   borderRadius: 10,
-  _disabled: { opacity: 0.5 },
-  _pressed: { opacity: 0.5 },
-  _hover: { opacity: 0.72 },
+  ...pressableBaseStyle,
 };
 
 const inputSelectBaseStyle = {

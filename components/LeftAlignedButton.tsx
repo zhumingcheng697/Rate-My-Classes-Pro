@@ -29,29 +29,26 @@ export default function LeftAlignedButton({
 }: LeftAlignedButtonProps) {
   return (
     <Pressable {...rest}>
-      {({ isPressed, isHovered }) => (
-        <Flex
-          {...buttonBaseStyle}
-          justifyContent={"space-between"}
-          flexDirection={"row"}
-          alignItems={"center"}
-          alignContent={"center"}
-          opacity={isPressed ? 0.5 : isHovered ? 0.72 : 1}
-          background={"background.secondary.light"}
-          _dark={{ background: "background.secondary.dark" }}
-        >
-          <Text {..._text} variant={"subtleButton"}>
-            {title ?? children ?? "Button"}
-          </Text>
-          {showChevron && (
-            <Icon
-              marginRight={"-5px"}
-              size={"18px"}
-              as={<Ionicons name={"chevron-forward"} />}
-            />
-          )}
-        </Flex>
-      )}
+      <Flex
+        {...buttonBaseStyle}
+        justifyContent={"space-between"}
+        flexDirection={"row"}
+        alignItems={"center"}
+        alignContent={"center"}
+        background={"background.secondary.light"}
+        _dark={{ background: "background.secondary.dark" }}
+      >
+        <Text {..._text} variant={"subtleButton"}>
+          {title ?? children ?? "Button"}
+        </Text>
+        {showChevron && (
+          <Icon
+            marginRight={"-5px"}
+            size={"18px"}
+            as={<Ionicons name={"chevron-forward"} />}
+          />
+        )}
+      </Flex>
     </Pressable>
   );
 }

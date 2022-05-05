@@ -101,9 +101,12 @@ const componentsStyle = {
   },
   Pressable: {
     defaultProps: {
-      _disabled: {
-        opacity: 0.5,
-      },
+      ...pressableBaseStyle,
+    },
+  },
+  IconButton: {
+    defaultProps: {
+      ...pressableBaseStyle,
     },
   },
   Button: {

@@ -11,6 +11,8 @@ import { SemesterSelector } from "../../components/Selector";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";
+import colors from "../../libs/colors";
+import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
 
 export default function SettingsScreen() {
   const colorScheme = useColorScheme();
@@ -88,8 +90,10 @@ export default function SettingsScreen() {
           <Text
             fontSize={"17px"}
             fontWeight={"semibold"}
-            color={"nyu.light"}
-            _dark={{ color: "nyu.dark" }}
+            flexShrink={1}
+            {...colorModeResponsiveStyle((selector) => ({
+              color: selector(colors.nyu),
+            }))}
           >
             Show Previous Semesters
           </Text>

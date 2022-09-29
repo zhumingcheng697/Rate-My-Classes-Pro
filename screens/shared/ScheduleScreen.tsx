@@ -18,6 +18,8 @@ import {
   prepend,
   stripLineBreaks,
 } from "../../libs/utils";
+import colors from "../../libs/colors";
+import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
 import AlertPopup from "../../components/AlertPopup";
 import IconHStack from "../../components/IconHStack";
 import { useAuth } from "../../mongodb/auth";
@@ -126,8 +128,9 @@ export default function ScheduleScreen() {
                     key={index}
                     padding={"10px"}
                     borderRadius={10}
-                    background={"background.secondary.light"}
-                    _dark={{ background: "background.secondary.dark" }}
+                    {...colorModeResponsiveStyle((selector) => ({
+                      background: selector(colors.background.secondary),
+                    }))}
                   >
                     <HStack
                       flexWrap={"wrap"}

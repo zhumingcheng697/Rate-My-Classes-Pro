@@ -9,6 +9,8 @@ import {
 } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+import colors from "../libs/colors";
+import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
 import { buttonBaseStyle, pressableBaseStyle } from "../libs/theme";
 
 type LeftAlignedButtonBaseProps = {
@@ -36,8 +38,9 @@ export default function LeftAlignedButton({
         flexDirection={"row"}
         alignItems={"center"}
         alignContent={"center"}
-        background={"background.secondary.light"}
-        _dark={{ background: "background.secondary.dark" }}
+        {...colorModeResponsiveStyle((selector) => ({
+          background: selector(colors.background.secondary),
+        }))}
       >
         <Text {..._text} variant={"subtleButton"}>
           {title ?? children ?? "Button"}

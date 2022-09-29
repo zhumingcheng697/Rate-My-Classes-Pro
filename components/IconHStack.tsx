@@ -3,6 +3,9 @@ import { HStack, Icon, type IStackProps, Text } from "native-base";
 import { type InterfaceIconProps } from "native-base/lib/typescript/components/primitives/Icon/types";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+import colors from "../libs/colors";
+import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
+
 type IconHStackBaseProps = {
   iconName: string;
   text?: string;
@@ -26,8 +29,9 @@ export default function IconHStack({
     {
       marginTop: "3px",
       size: "xs",
-      color: "nyu.light",
-      _dark: { color: "nyu.dark" },
+      ...colorModeResponsiveStyle((selector) => ({
+        color: selector(colors.nyu),
+      })),
     },
     _icon
   );

@@ -25,6 +25,8 @@ import {
   SharedNavigationParamList,
   ClassCode,
 } from "../libs/types";
+import colors from "../libs/colors";
+import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
 import Semester from "../libs/semester";
 import { ratingDescriptionMap, ratingTypeIconNameMap } from "../libs/utils";
 import { useAuth } from "../mongodb/auth";
@@ -289,11 +291,12 @@ export default function ReviewCard({
   return (
     <VStack
       {...rest}
-      background={"background.secondary.light"}
-      _dark={{ background: "background.secondary.dark" }}
       borderRadius={10}
       space={"5px"}
       padding={"10px"}
+      {...colorModeResponsiveStyle((selector) => ({
+        background: selector(colors.background.secondary),
+      }))}
     >
       <Text fontSize={"lg"} fontWeight={"semibold"}>{`${new Semester(
         semester

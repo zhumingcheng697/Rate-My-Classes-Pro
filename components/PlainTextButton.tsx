@@ -6,6 +6,8 @@ import {
   type ITextProps,
 } from "native-base";
 
+import colors from "../libs/colors";
+import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
 import { pressableBaseStyle } from "../libs/theme";
 
 type PlainTextButtonBaseProps = {
@@ -25,10 +27,11 @@ export default function PlainTextButton({
 }: PlainTextButtonProps) {
   _text = Object.assign(
     {
-      color: "nyu.light",
-      _dark: { color: "nyu.dark" },
       fontWeight: "semibold",
       textAlign: "center",
+      ...colorModeResponsiveStyle((selector) => ({
+        color: selector(colors.nyu),
+      })),
     },
     _text
   );

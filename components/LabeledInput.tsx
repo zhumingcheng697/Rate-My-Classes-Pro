@@ -1,6 +1,9 @@
 import React, { type ReactNode } from "react";
 import { Box, type IBoxProps, HStack, Text } from "native-base";
 
+import colors from "../libs/colors";
+import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
+
 type LabeledInputBaseProps = {
   label: string;
   isDisabled?: boolean;
@@ -28,8 +31,11 @@ export default function LabeledInput({
         <Text
           variant={"label"}
           fontWeight={usePlainLabel ? undefined : "semibold"}
-          color={usePlainLabel ? undefined : "nyu.light"}
-          _dark={usePlainLabel ? undefined : { color: "nyu.dark" }}
+          {...(usePlainLabel
+            ? {}
+            : colorModeResponsiveStyle((selector) => ({
+                color: selector(colors.nyu),
+              })))}
         >
           {label ?? "Label"}
         </Text>

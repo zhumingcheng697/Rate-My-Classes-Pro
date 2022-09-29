@@ -1,7 +1,10 @@
 import React from "react";
 import { HStack, type IStackProps, Text, VStack } from "native-base";
-import { RatingType } from "../libs/types";
+
 import IconHStack from "./IconHStack";
+import colors from "../libs/colors";
+import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
+import { RatingType } from "../libs/types";
 import { ratingTypeIconNameMap } from "../libs/utils";
 
 type RatingBlockProps = { ratingType: RatingType; rating: number | null };
@@ -11,14 +14,15 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
     <VStack
       justifyContent={"center"}
       alignItems={"center"}
-      background={"background.secondary.light"}
-      _dark={{ background: "background.secondary.dark" }}
       paddingX={"20px"}
       paddingY={"8px"}
       minWidth={"140px"}
       margin={"5px"}
       space={"2px"}
       borderRadius={10}
+      {...colorModeResponsiveStyle((selector) => ({
+        background: selector(colors.background.secondary),
+      }))}
     >
       <IconHStack iconName={ratingTypeIconNameMap[ratingType]}>
         <Text

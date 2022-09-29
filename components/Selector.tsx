@@ -4,6 +4,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { type Rating, type RatingType, ReviewOrder } from "../libs/types";
+import colors from "../libs/colors";
+import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
 import { ratings, ratingDescriptionMap, reviewOrders } from "../libs/utils";
 import { useDimensions } from "../libs/hooks";
 import Semester from "../libs/semester";
@@ -54,8 +56,9 @@ export default function Selector<T>({
       _selectedItem={{
         endIcon: (
           <Icon
-            color={"nyu.light"}
-            _dark={{ color: "nyu.dark" }}
+            {...colorModeResponsiveStyle((selector) => ({
+              color: selector(colors.nyu),
+            }))}
             as={<Ionicons name={"checkmark"} />}
           />
         ),

@@ -19,6 +19,8 @@ import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
 import { useDimensions, useInnerHeight } from "../../libs/hooks";
 import { useAuth } from "../../mongodb/auth";
+import colors from "../../libs/colors";
+import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
 
 type SearchScreenNavigationProp =
   StackNavigationProp<SharedNavigationParamList>;
@@ -135,8 +137,9 @@ export default function SearchScreen() {
         }}
       >
         <Box
-          background={"background.primary.light"}
-          _dark={{ background: "background.primary.dark" }}
+          {...colorModeResponsiveStyle((selector) => ({
+            background: selector(colors.background.primary),
+          }))}
         >
           <ClearableInput
             isSearchBar

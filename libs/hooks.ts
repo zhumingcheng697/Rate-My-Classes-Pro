@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import {
   useWindowDimensions,
   Appearance,
@@ -56,7 +56,7 @@ export function useInnerHeight() {
   return cachedHeight - cachedHeaderHeight - cachedTabBarHeight;
 }
 
-export function useColorScheme(delay = 125) {
+export function useColorScheme(delay = 250) {
   const isiOS = Platform.OS === "ios" && !useIsCatalyst();
 
   const colorSchemeHook = useCallback(

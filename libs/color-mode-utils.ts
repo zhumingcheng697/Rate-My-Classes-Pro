@@ -3,16 +3,13 @@ import { type ColorSchemeName } from "react-native";
 import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 
 import { useColorScheme } from "./hooks";
-import colors, { type Colors, type ColorPair } from "./colors";
+import colors, { type ColorPair } from "./colors";
 
-export const themeColorStyleHelper = (
-  style: (
-    colors: Colors,
-    mapper: (colorPair: ColorPair) => string
-  ) => Record<string, any>
+export const colorModeResponsiveStyle = (
+  style: (selector: (colorPair: ColorPair) => string) => Record<string, any>
 ) => ({
-  ...style(colors, ({ light }) => light),
-  _dark: style(colors, ({ dark }) => dark),
+  ...style(({ light }) => light),
+  _dark: style(({ dark }) => dark),
 });
 
 export function useColorModeSynchronizer() {

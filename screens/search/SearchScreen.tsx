@@ -1,7 +1,11 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Text, Center, Divider, Box, theme } from "native-base";
-import { useNavigation } from "@react-navigation/native";
+import {
+  DarkTheme,
+  DefaultTheme,
+  useNavigation,
+} from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { inputSelectHeight } from "../../libs/theme";
@@ -163,8 +167,8 @@ export default function SearchScreen() {
             height={`${dividerHeight}px`}
             {...colorModeResponsiveStyle((selector) => ({
               background: selector({
-                light: theme.colors.gray[200],
-                dark: theme.colors.gray[800],
+                light: DefaultTheme.colors.border,
+                dark: DarkTheme.colors.border,
               }),
             }))}
           />

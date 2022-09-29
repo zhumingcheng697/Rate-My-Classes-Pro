@@ -7,7 +7,7 @@ import colors, { type Colors, type ColorPair } from "./colors";
 
 export const themeColorStyleHelper = (
   style: (
-    style: Colors,
+    colors: Colors,
     mapper: (colorPair: ColorPair) => string
   ) => Record<string, any>
 ) => ({

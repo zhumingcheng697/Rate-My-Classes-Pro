@@ -5,17 +5,6 @@ import { themeColorStyleHelper } from "./color-mode-utils";
 
 export const inputSelectHeight = 40;
 
-export const colorStyle = {
-  background: {
-    primary: { light: "#ffffff", dark: "#000000" },
-    secondary: { light: "#f2f2f7", dark: "#1c1c1e" },
-    secondaryWithOpacity: { light: "#f2f2f777", dark: "#1c1c1e77" },
-    tertiary: { light: "#e5e5ea", dark: "#2c2c2e" },
-    tertiaryWithOpacity: { light: "#e5e5ea77", dark: "#2c2c2e77" },
-  },
-  nyu: { light: "#57068c", dark: "#c05eff" },
-};
-
 const headerBaseStyle = {
   lineHeight: "1.05em",
   marginX: "10px",
@@ -55,10 +44,10 @@ const inputSelectDefaultProps = {
     borderColor: "gray.400",
   },
   _web: {
-    ...themeColorStyleHelper((colorStyle, mapper) => ({
+    ...themeColorStyleHelper((colors, mapper) => ({
       _focus: {
         borderWidth: 2,
-        borderColor: mapper(colorStyle.nyu),
+        borderColor: mapper(colors.nyu),
       },
     })),
   },
@@ -89,8 +78,8 @@ const componentsStyle = {
     variants: {
       solid: {
         ...buttonBaseStyle,
-        ...themeColorStyleHelper((colorStyle, mapper) => ({
-          background: mapper(colorStyle.nyu),
+        ...themeColorStyleHelper((colors, mapper) => ({
+          background: mapper(colors.nyu),
         })),
         _text: {
           color: "white",
@@ -99,10 +88,10 @@ const componentsStyle = {
       },
       subtle: {
         ...buttonBaseStyle,
-        ...themeColorStyleHelper((colorStyle, mapper) => ({
-          background: mapper(colorStyle.background.secondary),
+        ...themeColorStyleHelper((colors, mapper) => ({
+          background: mapper(colors.background.secondary),
           _text: {
-            color: mapper(colorStyle.nyu),
+            color: mapper(colors.nyu),
             ...buttonTextBaseStyle,
           },
         })),
@@ -111,17 +100,17 @@ const componentsStyle = {
   },
   Skeleton: {
     defaultProps: {
-      ...themeColorStyleHelper((colorStyle, mapper) => ({
-        startColor: mapper(colorStyle.background.secondary),
-        endColor: mapper(colorStyle.background.secondaryWithOpacity),
+      ...themeColorStyleHelper((colors, mapper) => ({
+        startColor: mapper(colors.background.secondary),
+        endColor: mapper(colors.background.secondaryWithOpacity),
       })),
     },
   },
   ScrollView: {
     defaultProps: {
       keyboardShouldPersistTaps: "handled",
-      ...themeColorStyleHelper((colorStyle, mapper) => ({
-        background: mapper(colorStyle.background.primary),
+      ...themeColorStyleHelper((colors, mapper) => ({
+        background: mapper(colors.background.primary),
       })),
     },
     baseStyle: {
@@ -156,18 +145,18 @@ const componentsStyle = {
         marginY: "2px",
         padding: "10px",
         borderRadius: 10,
-        ...themeColorStyleHelper((colorStyle, mapper) => ({
-          _pressed: { background: mapper(colorStyle.background.tertiary) },
+        ...themeColorStyleHelper((colors, mapper) => ({
+          _pressed: { background: mapper(colors.background.tertiary) },
           _hover: {
-            background: mapper(colorStyle.background.tertiaryWithOpacity),
+            background: mapper(colors.background.tertiaryWithOpacity),
           },
         })),
       },
       _selectedItem: {
         _text: {
           fontWeight: "semibold",
-          ...themeColorStyleHelper((colorStyle, mapper) => ({
-            color: mapper(colorStyle.nyu),
+          ...themeColorStyleHelper((colors, mapper) => ({
+            color: mapper(colors.nyu),
           })),
         },
       },
@@ -199,8 +188,8 @@ const componentsStyle = {
         ...buttonTextBaseStyle,
       },
       subtleButton: {
-        ...themeColorStyleHelper((colorStyle, mapper) => ({
-          color: mapper(colorStyle.nyu),
+        ...themeColorStyleHelper((colors, mapper) => ({
+          color: mapper(colors.nyu),
         })),
         ...buttonTextBaseStyle,
       },

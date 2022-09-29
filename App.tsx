@@ -1,17 +1,13 @@
-import React, { useMemo, Component, useState, useCallback } from "react";
-import {
-  NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
-} from "@react-navigation/native";
+import React, { Component } from "react";
+import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import RootNavigation from "./navigation/RootNavigation";
-import nativeBaseTheme, { lightColorStyle, darkColorStyle } from "./libs/theme";
-import { useColorScheme } from "./libs/hooks";
+import { useColorModeSynchronizer } from "./libs/color-mode-utils";
+import nativeBaseTheme from "./libs/theme";
 import reducer from "./redux/reducers";
 import { AuthProvider } from "./mongodb/auth";
 import { useDB } from "./mongodb/db";
@@ -35,34 +31,7 @@ declare module "react-redux" {
 }
 
 function AppComponent() {
-  const getNavigationTheme = useCallback(
-    (colorScheme) => ({
-      ...(colorScheme === "dark" ? DarkTheme : DefaultTheme),
-      colors: {
-        ...(colorScheme === "dark" ? DarkTheme.colors : DefaultTheme.colors),
-        primary: (colorScheme === "dark" ? darkColorStyle : lightColorStyle)
-          .nyu,
-        background: (colorScheme === "dark" ? darkColorStyle : lightColorStyle)
-          .background.primary,
-      },
-    }),
-    []
-  );
-
-  const colorScheme = useColorScheme();
-  const [navigationTheme, setNavigationScheme] = useState(() =>
-    getNavigationTheme(colorScheme)
-  );
-  const colorModeManager = useMemo(
-    () => ({
-      get: async () => {
-        setNavigationScheme(getNavigationTheme(colorScheme));
-        return colorScheme;
-      },
-      set: async () => {},
-    }),
-    [colorScheme]
-  );
+  const { colorModeManager, navigationTheme } = useColorModeSynchronizer();
 
   return (
     <Provider store={store}>

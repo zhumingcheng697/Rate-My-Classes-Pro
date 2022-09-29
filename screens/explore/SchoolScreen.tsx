@@ -48,7 +48,7 @@ export default function SchoolScreen() {
         <Text variant={"h1"} opacity={schoolNames ? 1 : 0.5}>
           {getSchoolName(route.params, schoolNames)}
         </Text>
-        <Grid isLoaded={isLoaded}>
+        <Grid isLoaded={isLoaded} childrenCount={departments.length}>
           {(info) =>
             departments.map((departmentCode, index) => {
               const departmentInfo: DepartmentInfo = {

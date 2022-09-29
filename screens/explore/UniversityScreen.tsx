@@ -79,14 +79,20 @@ export default function UniversityScreen() {
           {selectedSemester.toString()}
         </Text>
         <Text variant={"h2"}>Undergraduate</Text>
-        <Grid isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}>
+        <Grid
+          isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}
+          childrenCount={undergradCodes.length}
+        >
           {(info) => undergradCodes.map(schoolCodeToNavigationButton(info))}
         </Grid>
 
         <Text variant={"h2"} marginTop={"16px"}>
           Graduate
         </Text>
-        <Grid isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}>
+        <Grid
+          isLoaded={isSchoolNameLoaded && isDepartmentNameLoaded}
+          childrenCount={gradCodes.length}
+        >
           {(info) => gradCodes.map(schoolCodeToNavigationButton(info))}
         </Grid>
       </Box>

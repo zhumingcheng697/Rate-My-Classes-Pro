@@ -14,7 +14,7 @@ type ClassesGridBaseProps = {
 };
 
 export type ClassesGridProps = ClassesGridBaseProps &
-  Omit<GridProps, keyof ClassesGridBaseProps | "children">;
+  Omit<GridProps, keyof ClassesGridBaseProps | "children" | "childrenCount">;
 
 export default function ClassesGrid({
   classes,
@@ -22,7 +22,7 @@ export default function ClassesGrid({
   ...rest
 }: ClassesGridProps) {
   return (
-    <Grid {...rest}>
+    <Grid childrenCount={classes.length} {...rest}>
       {(info) =>
         classes.map((classInfo) => {
           return (

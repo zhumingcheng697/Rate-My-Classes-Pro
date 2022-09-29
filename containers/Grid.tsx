@@ -1,6 +1,7 @@
 import React, { useCallback, type ReactNode } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
+  Box,
   Flex,
   type IFlexProps,
   Skeleton,
@@ -27,6 +28,7 @@ type GridBaseProps = {
   minChildHeight?: number | string;
   maxChildHeight?: string | number;
   children: (info: GridRenderItemInfo) => ReactNode;
+  childrenCount: number;
 };
 
 export type GridProps = GridBaseProps & Omit<IFlexProps, keyof GridBaseProps>;
@@ -41,6 +43,7 @@ export default function Grid({
   minChildHeight,
   maxChildHeight,
   children,
+  childrenCount,
   ...rest
 }: GridProps) {
   skeletonProps = Object.assign({ borderRadius: 10 }, skeletonProps);
@@ -58,10 +61,21 @@ export default function Grid({
 
   const skeletonChildren = useCallback(
     (info: GridRenderItemInfo) =>
-      [...Array(skeletonCount)].map((_, index) => (
-        <Skeleton key={index} {...info} {...skeletonProps} />
-      )),
+      [...Array(Math.ceil(skeletonCount / columns) * columns)].map(
+        (_, index) => (
+          <Skeleton key={"skeleton" + index} {...info} {...skeletonProps} />
+        )
+      ),
     [skeletonCount, skeletonProps]
+  );
+
+  const placeholderChildren = useCallback(
+    (info: GridRenderItemInfo) => [
+      [...Array((columns - (childrenCount % columns)) % columns)].map(
+        (_, index) => <Box key={"placeholder" + index} {...info} />
+      ),
+    ],
+    [childrenCount, columns]
   );
 
   const heightProps = {
@@ -73,11 +87,19 @@ export default function Grid({
     maxHeight: maxChildHeight,
   };
 
+  const renderItemInfo = {
+    width: `${
+      (roundedWindowWidth - acutalMargin * (columns + 1) * 2) / columns
+    }px`,
+    margin: `${acutalMargin}px`,
+    ...heightProps,
+  };
+
   return (
     <Flex
       {...rest}
       flexDirection={"row"}
-      justifyContent={"flex-start"}
+      justifyContent={"center"}
       alignItems={"center"}
       alignContent={"center"}
       flexWrap={"wrap"}
@@ -86,13 +108,8 @@ export default function Grid({
         Math.floor(Math.max(realWindowWidth - roundedWindowWidth - 1, 0) / 2)
       }px`}
     >
-      {(isLoaded ? children : skeletonChildren)({
-        width: `${
-          (roundedWindowWidth - acutalMargin * (columns + 1) * 2) / columns
-        }px`,
-        margin: `${acutalMargin}px`,
-        ...heightProps,
-      })}
+      {(isLoaded ? children : skeletonChildren)(renderItemInfo)}
+      {isLoaded && placeholderChildren(renderItemInfo)}
     </Flex>
   );
 }

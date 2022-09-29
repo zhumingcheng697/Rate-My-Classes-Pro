@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, VStack, Button, Box } from "native-base";
+import { Text, VStack, Button, Box, theme } from "native-base";
 import {
   useNavigation,
   useRoute,
@@ -9,6 +9,7 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { type MeNavigationParamList } from "../../libs/types";
+import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
 import { useInnerHeight } from "../../libs/hooks";
 import LeftAlignedButton from "../../components/LeftAlignedButton";
 import AlertPopup from "../../components/AlertPopup";
@@ -65,8 +66,12 @@ export default function AccountScreen() {
           }
           footerPrimaryButton={
             <Button
-              background={"red.600"}
-              _dark={{ background: "red.500" }}
+              {...colorModeResponsiveStyle((selector) => ({
+                background: selector({
+                  light: theme.colors.red[600],
+                  dark: theme.colors.red[500],
+                }),
+              }))}
               onPress={async () => {
                 setIsSigningOut(true);
                 setShowAlert(false);
@@ -145,13 +150,17 @@ export default function AccountScreen() {
               {wasAuthenticated && (
                 <LeftAlignedButton
                   title={"Sign Out"}
-                  _text={{
-                    color: "red.600",
-                    _dark: { color: "red.500" },
-                  }}
                   showChevron={false}
                   marginTop={"15px"}
                   isDisabled={isSigningOut}
+                  {...colorModeResponsiveStyle((selector) => ({
+                    _text: {
+                      color: selector({
+                        light: theme.colors.red[600],
+                        dark: theme.colors.red[500],
+                      }),
+                    },
+                  }))}
                   onPress={() => {
                     setShowAlert(true);
                   }}
@@ -163,18 +172,26 @@ export default function AccountScreen() {
           <Box>
             <Text
               textAlign={"center"}
-              color={"gray.500"}
-              _dark={{ color: "gray.400" }}
               fontSize={"md"}
               fontWeight={"medium"}
+              {...colorModeResponsiveStyle((selector) => ({
+                color: selector({
+                  light: theme.colors.gray[500],
+                  dark: theme.colors.gray[400],
+                }),
+              }))}
             >
               Rate My Classes Pro
             </Text>
             <Text
               textAlign={"center"}
-              color={"gray.500"}
-              _dark={{ color: "gray.400" }}
               fontSize={"sm"}
+              {...colorModeResponsiveStyle((selector) => ({
+                color: selector({
+                  light: theme.colors.gray[500],
+                  dark: theme.colors.gray[400],
+                }),
+              }))}
             >
               © 2022 Mingcheng (McCoy) Zhu
             </Text>

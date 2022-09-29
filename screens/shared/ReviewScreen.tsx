@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Box, Button, Input, Text, VStack } from "native-base";
+import { Box, Button, Input, Text, theme, VStack } from "native-base";
 import {
   useNavigation,
   useRoute,
@@ -12,6 +12,7 @@ import {
   type Rating,
   RatingType,
 } from "../../libs/types";
+import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
 import { getFullClassCode } from "../../libs/utils";
 import Semester from "../../libs/semester";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
@@ -118,8 +119,12 @@ export default function ReviewScreen() {
         }
         footerPrimaryButton={
           <Button
-            background={"red.600"}
-            _dark={{ background: "red.500" }}
+            {...colorModeResponsiveStyle((selector) => ({
+              background: selector({
+                light: theme.colors.red[600],
+                dark: theme.colors.red[500],
+              }),
+            }))}
             onPress={() => {
               setShowAlert(false);
               navigation.navigate("Detail", { classInfo, deleteReview: true });
@@ -206,12 +211,16 @@ export default function ReviewScreen() {
             {previousReview && (
               <LeftAlignedButton
                 title={"Delete"}
-                _text={{
-                  color: "red.600",
-                  _dark: { color: "red.500" },
-                }}
                 showChevron={false}
                 marginTop={"15px"}
+                {...colorModeResponsiveStyle((selector) => ({
+                  _text: {
+                    color: selector({
+                      light: theme.colors.red[600],
+                      dark: theme.colors.red[500],
+                    }),
+                  },
+                }))}
                 onPress={() => {
                   setShowAlert(true);
                 }}

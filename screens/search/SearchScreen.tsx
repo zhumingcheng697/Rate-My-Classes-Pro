@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { Text, Center, Divider, Box } from "native-base";
+import { Text, Center, Divider, Box, theme } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
@@ -158,11 +158,15 @@ export default function SearchScreen() {
             }}
           />
           <Divider
-            background={"gray.200"}
-            _dark={{ background: "gray.800" }}
             minWidth={width}
             alignSelf={"center"}
             height={`${dividerHeight}px`}
+            {...colorModeResponsiveStyle((selector) => ({
+              background: selector({
+                light: theme.colors.gray[200],
+                dark: theme.colors.gray[800],
+              }),
+            }))}
           />
         </Box>
         {focused ||
@@ -186,10 +190,14 @@ export default function SearchScreen() {
           >
             <Text
               textAlign={"center"}
-              color={"gray.500"}
-              _dark={{ color: "gray.400" }}
               fontWeight={"medium"}
               fontSize={"17px"}
+              {...colorModeResponsiveStyle((selector) => ({
+                color: selector({
+                  light: theme.colors.gray[500],
+                  dark: theme.colors.gray[400],
+                }),
+              }))}
             >
               {query
                 ? `No Matches Found in ${selectedSemester.toString()}`

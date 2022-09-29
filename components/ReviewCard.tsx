@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import {
+  theme,
   HStack,
   Text,
   VStack,
@@ -147,8 +148,16 @@ function VoteBlock({
           icon={
             <Icon
               size={"22px"}
-              color={vote === Vote.upvote ? "nyu.light" : undefined}
-              _dark={{ color: vote === Vote.upvote ? "nyu.dark" : "gray.700" }}
+              {...colorModeResponsiveStyle((selector) => ({
+                color: selector(
+                  vote === Vote.upvote
+                    ? colors.nyu
+                    : {
+                        light: theme.colors.gray[400],
+                        dark: theme.colors.gray[700],
+                      }
+                ),
+              }))}
               as={<Ionicons name={"caret-up"} />}
             />
           }
@@ -195,10 +204,16 @@ function VoteBlock({
           icon={
             <Icon
               size={"22px"}
-              color={vote === Vote.downvote ? "nyu.light" : undefined}
-              _dark={{
-                color: vote === Vote.downvote ? "nyu.dark" : "gray.700",
-              }}
+              {...colorModeResponsiveStyle((selector) => ({
+                color: selector(
+                  vote === Vote.downvote
+                    ? colors.nyu
+                    : {
+                        light: theme.colors.gray[400],
+                        dark: theme.colors.gray[700],
+                      }
+                ),
+              }))}
               as={<Ionicons name={"caret-down"} />}
             />
           }

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { IconButton, Icon, Button } from "native-base";
+import { IconButton, Icon, Button, theme } from "native-base";
 import { type RouteProp } from "@react-navigation/native";
 import type {
   StackNavigationProp,
@@ -10,6 +10,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { starClass, unstarClass } from "../../redux/actions";
 import { type SharedNavigationParamList } from "../../libs/types";
+import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
 import { getFullClassCode } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
 import AlertPopup from "../../components/AlertPopup";
@@ -84,8 +85,14 @@ export default ({
           padding={"5px"}
           icon={
             <Icon
-              color={isStarred ? "yellow.400" : undefined}
-              _dark={{ color: isStarred ? "yellow.500" : undefined }}
+              {...(!isStarred
+                ? {}
+                : colorModeResponsiveStyle((selector) => ({
+                    color: selector({
+                      light: theme.colors.yellow[400],
+                      dark: theme.colors.yellow[500],
+                    }),
+                  })))}
               size={"22px"}
               as={<Ionicons name={"star" + (isStarred ? "" : "-outline")} />}
             />

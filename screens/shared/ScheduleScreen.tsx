@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { HStack, Skeleton, Text, VStack } from "native-base";
+import { HStack, Skeleton, Text, theme, VStack } from "native-base";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import {
   useNavigation,
@@ -186,14 +186,14 @@ export default function ScheduleScreen() {
                           <VStack space={"2px"} flexShrink={1} flexGrow={1}>
                             {getMeetingScheduleString(
                               meetings.map(({ beginDate, minutesDuration }) => {
-                                const begin = new Date(
+                                const begin: Date = new Date(
                                   beginDate.replace(
                                     /^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{1,2})/i,
                                     "$1T$2"
                                   )
                                 );
 
-                                const end = new Date(
+                                const end: Date = new Date(
                                   begin.valueOf() + minutesDuration * 60 * 1000
                                 );
 
@@ -219,10 +219,14 @@ export default function ScheduleScreen() {
                         .split(/\n/)
                         .map((prerequisite, index) => (
                           <Text
-                            color={"gray.600"}
-                            _dark={{ color: "gray.400" }}
                             key={"prerequisites" + index}
                             lineHeight={"md"}
+                            {...colorModeResponsiveStyle((selector) => ({
+                              color: selector({
+                                light: theme.colors.gray[600],
+                                dark: theme.colors.gray[400],
+                              }),
+                            }))}
                           >
                             {prerequisite}
                           </Text>
@@ -232,10 +236,14 @@ export default function ScheduleScreen() {
                         .split(/\n/)
                         .map((note, index) => (
                           <Text
-                            color={"gray.600"}
-                            _dark={{ color: "gray.400" }}
                             key={"notes" + index}
                             lineHeight={"md"}
+                            {...colorModeResponsiveStyle((selector) => ({
+                              color: selector({
+                                light: theme.colors.gray[600],
+                                dark: theme.colors.gray[400],
+                              }),
+                            }))}
                           >
                             {note}
                           </Text>

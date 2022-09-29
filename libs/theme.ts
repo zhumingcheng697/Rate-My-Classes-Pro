@@ -1,4 +1,4 @@
-import { extendTheme } from "native-base";
+import { extendTheme, theme } from "native-base";
 
 import colors from "./colors";
 import { colorModeResponsiveStyle } from "./color-mode-utils";
@@ -39,10 +39,18 @@ const inputSelectDefaultProps = {
   backgroundColor: "transparent",
   size: "lg",
   borderWidth: 1,
-  borderColor: "gray.400",
-  _focus: {
-    borderColor: "gray.400",
-  },
+  ...colorModeResponsiveStyle((selector) => ({
+    borderColor: selector({
+      light: theme.colors.gray[400],
+      dark: theme.colors.gray[600],
+    }),
+    _focus: {
+      borderColor: selector({
+        light: theme.colors.gray[400],
+        dark: theme.colors.gray[600],
+      }),
+    },
+  })),
   _web: {
     ...colorModeResponsiveStyle((selector) => ({
       _focus: {
@@ -51,22 +59,18 @@ const inputSelectDefaultProps = {
       },
     })),
   },
-  _dark: {
-    borderColor: "gray.600",
-    _focus: {
-      borderColor: "gray.600",
-    },
-  },
 };
 
 const componentsStyle = {
   Icon: {
     defaultProps: {
       size: "sm",
-      color: "gray.400",
-      _dark: {
-        color: "gray.500",
-      },
+      ...colorModeResponsiveStyle((selector) => ({
+        color: selector({
+          light: theme.colors.gray[400],
+          dark: theme.colors.gray[500],
+        }),
+      })),
     },
   },
   IconButton: {

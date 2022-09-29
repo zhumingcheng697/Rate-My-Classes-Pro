@@ -16,30 +16,6 @@ export const colorStyle = {
   nyu: { light: "#57068c", dark: "#c05eff" },
 };
 
-export const lightColorStyle = {
-  background: {
-    primary: "#ffffff",
-    secondary: "#f2f2f7",
-    tertiary: "#e5e5ea",
-  },
-  nyu: "#57068c",
-};
-
-export const darkColorStyle = {
-  background: {
-    primary: "#000000",
-    secondary: "#1c1c1e",
-    tertiary: "#2c2c2e",
-  },
-  nyu: "#c05eff",
-};
-
-const colorStyleHelper = (
-  style: (
-    colorStyle: typeof lightColorStyle | typeof darkColorStyle
-  ) => Record<string, any>
-) => ({ ...style(lightColorStyle), _dark: style(darkColorStyle) });
-
 const headerBaseStyle = {
   lineHeight: "1.05em",
   marginX: "10px",

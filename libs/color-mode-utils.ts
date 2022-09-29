@@ -5,6 +5,16 @@ import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 import { useColorScheme } from "./hooks";
 import colors, { type Colors, type ColorPair } from "./colors";
 
+export const themeColorStyleHelper = (
+  style: (
+    style: Colors,
+    mapper: (colorPair: ColorPair) => string
+  ) => Record<string, any>
+) => ({
+  ...style(colors, ({ light }) => light),
+  _dark: style(colors, ({ dark }) => dark),
+});
+
 export function useColorModeSynchronizer() {
   const colorScheme = useColorScheme();
 
@@ -13,9 +23,8 @@ export function useColorModeSynchronizer() {
       dark: colorScheme === "dark",
       colors: {
         ...(colorScheme === "dark" ? DarkTheme.colors : DefaultTheme.colors),
-        primary: colors.nyu[colorScheme === "dark" ? "dark" : "light"],
-        background:
-          colors.background.primary[colorScheme === "dark" ? "dark" : "light"],
+        primary: colors.nyu[colorScheme || "light"],
+        background: colors.background.primary[colorScheme || "light"],
       },
     }),
     []

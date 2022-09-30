@@ -18,8 +18,7 @@ export default function OAuthSignInButton({
 }: OAuthSignInButtonProps) {
   return (
     <Button
-      {...rest}
-      shadow={"0"}
+      shadow={0}
       borderWidth={"1px"}
       {...colorModeResponsiveStyle((selector) => ({
         background: selector({
@@ -31,6 +30,7 @@ export default function OAuthSignInButton({
           dark: colors.background.secondary.dark,
         }),
       }))}
+      {...rest}
       startIcon={
         <Icon
           size={"20px"}

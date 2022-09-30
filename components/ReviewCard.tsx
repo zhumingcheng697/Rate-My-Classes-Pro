@@ -305,13 +305,13 @@ export default function ReviewCard({
 
   return (
     <VStack
-      {...rest}
       borderRadius={10}
       space={"5px"}
       padding={"10px"}
       {...colorModeResponsiveStyle((selector) => ({
         background: selector(colors.background.secondary),
       }))}
+      {...rest}
     >
       <Text fontSize={"lg"} fontWeight={"semibold"}>{`${new Semester(
         semester

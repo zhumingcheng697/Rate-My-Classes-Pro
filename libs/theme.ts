@@ -5,6 +5,13 @@ import { colorModeResponsiveStyle } from "./color-mode-utils";
 
 export const inputSelectHeight = 40;
 
+const textColorStyle = colorModeResponsiveStyle((selector) => ({
+  color: selector({
+    light: theme.colors.darkText,
+    dark: theme.colors.lightText,
+  }),
+}));
+
 const headerBaseStyle = {
   lineHeight: "1.05em",
   marginX: "10px",
@@ -33,6 +40,7 @@ export const buttonBaseStyle = {
 const inputSelectBaseStyle = {
   borderRadius: 10,
   height: `${inputSelectHeight}px`,
+  ...textColorStyle,
 };
 
 const inputSelectDefaultProps = {
@@ -143,12 +151,19 @@ const componentsStyle = {
       ...inputSelectDefaultProps,
       _actionSheetContent: {
         padding: "10px",
+        ...colorModeResponsiveStyle((selector) => ({
+          background: selector({
+            light: theme.colors.white,
+            dark: theme.colors.gray[700],
+          }),
+        })),
       },
       _item: {
         marginX: "0px",
         marginY: "2px",
         padding: "10px",
         borderRadius: 10,
+        _text: textColorStyle,
         ...colorModeResponsiveStyle((selector) => ({
           _pressed: { background: selector(colors.background.tertiary) },
           _hover: {
@@ -172,6 +187,7 @@ const componentsStyle = {
   Text: {
     baseStyle: {
       fontSize: 15,
+      ...textColorStyle,
     },
     variants: {
       h1: {

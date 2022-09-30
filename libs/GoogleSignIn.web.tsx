@@ -1,6 +1,6 @@
 import React from "react";
 import GoogleLogin, { type GoogleLoginResponse } from "react-google-login";
-import { IButtonProps } from "native-base";
+import type { IButtonProps } from "native-base";
 import { GOOGLE_WEB_CLIENT_ID } from "react-native-dotenv";
 
 import OAuthSignInButton from "../components/OAuthSignInButton";

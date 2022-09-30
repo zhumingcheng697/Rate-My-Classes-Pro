@@ -3,7 +3,7 @@ import {
   GoogleSignin,
   statusCodes,
 } from "@react-native-google-signin/google-signin";
-import { type IButtonProps } from "native-base";
+import type { IButtonProps } from "native-base";
 import {
   GOOGLE_WEB_CLIENT_ID,
   GOOGLE_IOS_CLIENT_ID,

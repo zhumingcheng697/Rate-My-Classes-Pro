@@ -153,13 +153,11 @@ export default function AccountScreen() {
                   showChevron={false}
                   marginTop={"15px"}
                   isDisabled={isSigningOut}
-                  {...colorModeResponsiveStyle((selector) => ({
-                    _text: {
-                      color: selector({
-                        light: theme.colors.red[600],
-                        dark: theme.colors.red[500],
-                      }),
-                    },
+                  _text={colorModeResponsiveStyle((selector) => ({
+                    color: selector({
+                      light: theme.colors.red[600],
+                      dark: theme.colors.red[500],
+                    }),
                   }))}
                   onPress={() => {
                     setShowAlert(true);

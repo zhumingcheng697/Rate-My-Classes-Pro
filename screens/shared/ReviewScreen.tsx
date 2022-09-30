@@ -213,13 +213,11 @@ export default function ReviewScreen() {
                 title={"Delete"}
                 showChevron={false}
                 marginTop={"15px"}
-                {...colorModeResponsiveStyle((selector) => ({
-                  _text: {
-                    color: selector({
-                      light: theme.colors.red[600],
-                      dark: theme.colors.red[500],
-                    }),
-                  },
+                _text={colorModeResponsiveStyle((selector) => ({
+                  color: selector({
+                    light: theme.colors.red[600],
+                    dark: theme.colors.red[500],
+                  }),
                 }))}
                 onPress={() => {
                   setShowAlert(true);

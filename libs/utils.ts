@@ -109,22 +109,29 @@ export function getMeetingScheduleString(meetings: [Date, Date][]) {
   const getWeekDayString = (date: Date) =>
     date.toLocaleString(undefined, { weekday: "long" });
 
-  const schedule: Record<number, [Date, Date][]> = {};
+  const weeklySchedule: Record<number, [Date, Date][]> = {};
 
   for (let [begin, end] of meetings) {
-    if (!schedule[begin.getDay()]) {
-      schedule[begin.getDay()] = [];
+    if (!weeklySchedule[begin.getDay()]) {
+      weeklySchedule[begin.getDay()] = [];
     }
-    schedule[begin.getDay()].push([begin, end]);
+    weeklySchedule[begin.getDay()].push([begin, end]);
   }
 
   const stringnifiedSchedule: Record<number, string> = {};
 
-  for (let day in schedule) {
-    schedule[day].sort(([a], [b]) => a.valueOf() - b.valueOf());
-    stringnifiedSchedule[day] = schedule[day]
-      .map(([begin, end]) => `${getTimeString(begin)}–${getTimeString(end)}`)
-      .join(", ");
+  for (let day in weeklySchedule) {
+    const stringnifiedDailySchedule: Set<string> = new Set();
+
+    weeklySchedule[day]
+      .sort(([a], [b]) => a.valueOf() - b.valueOf())
+      .forEach(([begin, end]) => {
+        stringnifiedDailySchedule.add(
+          `${getTimeString(begin)}–${getTimeString(end)}`
+        );
+      });
+
+    stringnifiedSchedule[day] = [...stringnifiedDailySchedule].join(", ");
   }
 
   const finalSchedule: [string, string][] = [];
@@ -133,20 +140,20 @@ export function getMeetingScheduleString(meetings: [Date, Date][]) {
 
   for (let i = 0; i < 7; ++i) {
     const day = daysOfWeek[i];
-    if (day in schedule) {
-      const currDay = [getWeekDayString(schedule[day][0][0])];
+    if (day in weeklySchedule) {
+      const currDay = [getWeekDayString(weeklySchedule[day][0][0])];
       const currMeeting = stringnifiedSchedule[day];
-      delete schedule[day];
+      delete weeklySchedule[day];
 
       for (let j = i + 1; j < 7; ++j) {
         const otherDay = daysOfWeek[j];
 
         if (
-          otherDay in schedule &&
+          otherDay in weeklySchedule &&
           stringnifiedSchedule[otherDay] === currMeeting
         ) {
-          currDay.push(getWeekDayString(schedule[otherDay][0][0]));
-          delete schedule[otherDay];
+          currDay.push(getWeekDayString(weeklySchedule[otherDay][0][0]));
+          delete weeklySchedule[otherDay];
         }
       }
 

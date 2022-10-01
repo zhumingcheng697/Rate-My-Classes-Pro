@@ -191,7 +191,10 @@ export default function AccountScreen() {
                 }),
               }))}
             >
-              © 2022 Mingcheng (McCoy) Zhu
+              {`© ${Math.max(
+                new Date().getFullYear(),
+                2022
+              )} Mingcheng (McCoy) Zhu`}
             </Text>
           </Box>
         </VStack>

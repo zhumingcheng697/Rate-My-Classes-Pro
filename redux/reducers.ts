@@ -56,8 +56,14 @@ function settingsReducer(
       state.selectedSemester = Semester.predictCurrentSemester().toJSON();
     }
 
+    // TODO: remove after schedge is back
+    state.showPreviousSemesters = true;
+
     return state;
   }
+
+  // TODO: remove after schedge is back
+  state.showPreviousSemesters = true;
 
   if (action.type === ActionType.loadSettings) {
     if (action.payload) {

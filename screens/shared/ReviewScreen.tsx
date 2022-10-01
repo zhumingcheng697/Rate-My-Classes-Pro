@@ -13,7 +13,7 @@ import {
   RatingType,
 } from "../../libs/types";
 import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
-import { getFullClassCode } from "../../libs/utils";
+import { getFullClassCode, hasEditedReview } from "../../libs/utils";
 import Semester from "../../libs/semester";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LabeledInput from "../../components/LabeledInput";
@@ -34,6 +34,7 @@ export default function ReviewScreen() {
   const navigation = useNavigation<ReviewScreenNavigationProp>();
   const route = useRoute<ReviewScreenRouteProp>();
   const { classInfo, previousReview } = route.params;
+  const [hasEdited, setHasEdited] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
   const [enjoyment, setEnjoyment] = useState<Rating | undefined>(
@@ -77,21 +78,34 @@ export default function ReviewScreen() {
       semester &&
       instructor
     ) {
-      navigation.setParams({
-        newReview: {
-          userId: auth.user.id,
+      if (
+        hasEdited ||
+        hasEditedReview(
+          previousReview,
           enjoyment,
           difficulty,
           workload,
           value,
-          upvotes: previousReview?.upvotes ?? { [auth.user.id]: true },
-          downvotes: previousReview?.downvotes ?? {},
-          reviewedDate: previousReview?.reviewedDate ?? Date.now(),
-          semester: semester.toJSON(),
-          instructor,
-          comment,
-        },
-      });
+          comment
+        )
+      ) {
+        setHasEdited(true);
+        navigation.setParams({
+          newReview: {
+            userId: auth.user.id,
+            enjoyment,
+            difficulty,
+            workload,
+            value,
+            upvotes: previousReview?.upvotes ?? { [auth.user.id]: true },
+            downvotes: previousReview?.downvotes ?? {},
+            reviewedDate: previousReview?.reviewedDate ?? Date.now(),
+            semester: semester.toJSON(),
+            instructor,
+            comment,
+          },
+        });
+      }
     } else if (route.params.newReview) {
       navigation.setParams({ newReview: undefined });
     }

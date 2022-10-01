@@ -201,6 +201,24 @@ export function compareClasses(
   }
 }
 
+export function hasEditedReview(
+  review: Review | undefined,
+  enjoyment: Rating,
+  difficulty: Rating,
+  workload: Rating,
+  value: Rating,
+  comment: string
+) {
+  return (
+    !review ||
+    review.enjoyment != enjoyment ||
+    review.difficulty != difficulty ||
+    review.workload != workload ||
+    review.value != value ||
+    review.comment != comment
+  );
+}
+
 export const reviewOrders = [
   ReviewOrder.mostRecentSemester,
   ReviewOrder.mostRecentReview,

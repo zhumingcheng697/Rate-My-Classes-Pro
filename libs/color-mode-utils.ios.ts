@@ -6,12 +6,10 @@ import {
 } from "react-native";
 import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 
-import colors, { type ColorPair } from "./colors";
+import colors from "./colors";
 
 export const colorModeResponsiveStyle = (
-  style: (
-    selector: (colorPair: ColorPair) => ReturnType<typeof DynamicColorIOS>
-  ) => Record<string, any>
+  style: (selector: typeof DynamicColorIOS) => Record<string, any>
 ) => ({ ...style(DynamicColorIOS) });
 
 const dynamicThemeColor = (

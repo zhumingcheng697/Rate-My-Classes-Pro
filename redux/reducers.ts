@@ -42,7 +42,8 @@ function departmentNameReducer(
 function settingsReducer(
   state: Settings = {
     selectedSemester: Semester.predictCurrentSemester().toJSON(),
-    showPreviousSemesters: false,
+    // TODO: change after schedge is back
+    showPreviousSemesters: true,
   },
   action: SettingsAction
 ) {

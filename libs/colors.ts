@@ -11,6 +11,4 @@ const colors = {
 
 export default colors;
 
-export type Colors = typeof colors;
-
 export type ColorPair = { light: string; dark: string };

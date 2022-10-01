@@ -1,10 +1,5 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
-import {
-  useWindowDimensions,
-  Appearance,
-  Platform,
-  useColorScheme as _useColorScheme,
-} from "react-native";
+import { useWindowDimensions, Platform } from "react-native";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -54,39 +49,4 @@ export function useInnerHeight() {
   }, [tabBarHeight]);
 
   return cachedHeight - cachedHeaderHeight - cachedTabBarHeight;
-}
-
-export function useColorScheme(delay = 250) {
-  const isiOS = Platform.OS === "ios" && !useIsCatalyst();
-
-  const colorSchemeHook = useCallback(
-    isiOS
-      ? () => {
-          const [colorScheme, setColorScheme] = useState(() =>
-            Appearance.getColorScheme()
-          );
-
-          useEffect(() => {
-            let timeout: ReturnType<typeof setTimeout>;
-
-            const { remove } = Appearance.addChangeListener(() => {
-              clearTimeout(timeout);
-              timeout = setTimeout(() => {
-                setColorScheme(Appearance.getColorScheme());
-              }, delay);
-            });
-
-            return () => {
-              clearTimeout(timeout);
-              remove();
-            };
-          }, []);
-
-          return colorScheme;
-        }
-      : _useColorScheme,
-    []
-  );
-
-  return colorSchemeHook();
 }

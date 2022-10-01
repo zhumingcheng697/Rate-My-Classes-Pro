@@ -1,8 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
-import { type ColorSchemeName } from "react-native";
+import { useColorScheme, type ColorSchemeName } from "react-native";
 import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 
-import { useColorScheme } from "./hooks";
 import colors, { type ColorPair } from "./colors";
 
 export const colorModeResponsiveStyle = (

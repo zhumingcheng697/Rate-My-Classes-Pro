@@ -6,8 +6,11 @@ import React, {
   useEffect,
 } from "react";
 import { Keyboard } from "react-native";
-import { Button, AlertDialog } from "native-base";
+import { Button, AlertDialog, theme } from "native-base";
 import { useIsFocused } from "@react-navigation/native";
+
+import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
+import { textColorStyle } from "../libs/theme";
 
 export type AlertPopupProps = {
   isOpen: boolean;
@@ -43,10 +46,43 @@ export default function AlertPopup({
       isOpen={isOpen && (!onlyShowWhenFocused || isFocused)}
       onClose={onClose}
     >
-      <AlertDialog.Content>
-        <AlertDialog.Header>{header}</AlertDialog.Header>
-        <AlertDialog.Body>{body}</AlertDialog.Body>
-        <AlertDialog.Footer>
+      <AlertDialog.Content
+        {...colorModeResponsiveStyle((selector) => ({
+          background: selector({
+            light: theme.colors.gray[50],
+            dark: theme.colors.gray[700],
+          }),
+        }))}
+      >
+        <AlertDialog.Header
+          _text={textColorStyle}
+          {...colorModeResponsiveStyle((selector) => ({
+            borderColor: selector({
+              light: theme.colors.gray[200],
+              dark: theme.colors.gray[600],
+            }),
+          }))}
+        >
+          {header}
+        </AlertDialog.Header>
+        <AlertDialog.Body
+          _text={colorModeResponsiveStyle((selector) => ({
+            color: selector({
+              light: theme.colors.gray[500],
+              dark: theme.colors.gray[300],
+            }),
+          }))}
+        >
+          {body}
+        </AlertDialog.Body>
+        <AlertDialog.Footer
+          {...colorModeResponsiveStyle((selector) => ({
+            background: selector({
+              light: theme.colors.gray[100],
+              dark: theme.colors.gray[600],
+            }),
+          }))}
+        >
           {footer ? (
             footer(ref)
           ) : footerPrimaryButton ? (

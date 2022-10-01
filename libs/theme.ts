@@ -5,7 +5,7 @@ import { colorModeResponsiveStyle } from "./color-mode-utils";
 
 export const inputSelectHeight = 40;
 
-const textColorStyle = colorModeResponsiveStyle((selector) => ({
+export const textColorStyle = colorModeResponsiveStyle((selector) => ({
   color: selector({
     light: theme.colors.darkText,
     dark: theme.colors.lightText,

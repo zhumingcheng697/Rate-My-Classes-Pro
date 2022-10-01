@@ -3,6 +3,7 @@ import { Box, type IBoxProps, HStack, Text } from "native-base";
 
 import colors from "../libs/colors";
 import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
+import theme from "../libs/theme";
 
 type LabeledInputBaseProps = {
   label: string;
@@ -44,7 +45,12 @@ export default function LabeledInput({
             variant={"label"}
             marginLeft={"1px"}
             fontWeight={"bold"}
-            color={"red.500"}
+            {...colorModeResponsiveStyle((selector) => ({
+              color: selector({
+                light: theme.colors.red[500],
+                dark: theme.colors.red[500],
+              }),
+            }))}
           >
             *
           </Text>

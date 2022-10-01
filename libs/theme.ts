@@ -59,14 +59,12 @@ const inputSelectDefaultProps = {
       }),
     },
   })),
-  _web: {
-    ...colorModeResponsiveStyle((selector) => ({
-      _focus: {
-        borderWidth: 2,
-        borderColor: selector(colors.nyu),
-      },
-    })),
-  },
+  _web: colorModeResponsiveStyle((selector) => ({
+    _focus: {
+      borderWidth: 2,
+      borderColor: selector(colors.nyu),
+    },
+  })),
 };
 
 const componentsStyle = {
@@ -111,12 +109,10 @@ const componentsStyle = {
     },
   },
   Skeleton: {
-    defaultProps: {
-      ...colorModeResponsiveStyle((selector) => ({
-        startColor: selector(colors.background.secondary),
-        endColor: selector(colors.background.secondaryWithOpacity),
-      })),
-    },
+    defaultProps: colorModeResponsiveStyle((selector) => ({
+      startColor: selector(colors.background.secondary),
+      endColor: selector(colors.background.secondaryWithOpacity),
+    })),
   },
   ScrollView: {
     defaultProps: {

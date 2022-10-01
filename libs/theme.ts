@@ -108,6 +108,15 @@ const componentsStyle = {
       },
     },
   },
+  Switch: {
+    baseStyle: {
+      onThumbColor: "#ffffff",
+      offThumbColor: "#ffffff",
+      ...colorModeResponsiveStyle((selector) => ({
+        onTrackColor: selector(colors.nyu),
+      })),
+    },
+  },
   Skeleton: {
     defaultProps: colorModeResponsiveStyle((selector) => ({
       startColor: selector(colors.background.secondary),

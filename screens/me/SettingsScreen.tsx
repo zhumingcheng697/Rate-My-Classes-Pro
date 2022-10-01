@@ -108,9 +108,6 @@ export default function SettingsScreen() {
             <Switch
               isChecked={showPreviousSemesters}
               onValueChange={setShowPreviousSemesters(dispatch)}
-              onThumbColor={"white"}
-              offThumbColor={"white"}
-              onTrackColor={colorScheme === "dark" ? "nyu.dark" : "nyu.light"}
             />
           )}
         </HStack>

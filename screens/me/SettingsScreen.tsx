@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useColorScheme, Switch as NativeSwitch, Platform } from "react-native";
+import { Switch as NativeSwitch, Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Text, HStack, Switch, VStack, Box } from "native-base";
+import { Text, HStack, Switch, VStack, Box, theme } from "native-base";
 
 import Semester from "../../libs/semester";
 import { useIsCatalyst } from "../../libs/hooks";
@@ -15,7 +15,6 @@ import colors from "../../libs/colors";
 import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
 
 export default function SettingsScreen() {
-  const colorScheme = useColorScheme();
   const auth = useAuth();
   const dispatch = useDispatch();
   const [canClear, setCanClear] = useState(false);
@@ -81,11 +80,12 @@ export default function SettingsScreen() {
             onSelectedSemesterChange={selectSemester(dispatch)}
           />
         </LabeledInput>
-        <HStack
+        {/* // TODO: uncomment after schedge is back */}
+        {/* <HStack
           justifyContent={"space-between"}
           alignContent={"center"}
           alignItems={"center"}
-          marginY={"10px"}
+          marginTop={"10px"}
         >
           <Text
             fontSize={"17px"}
@@ -111,6 +111,19 @@ export default function SettingsScreen() {
             />
           )}
         </HStack>
+        <Text
+          lineHeight={"sm"}
+          {...colorModeResponsiveStyle((selector) => ({
+            color: selector({
+              light: theme.colors.gray[500],
+              dark: theme.colors.gray[400],
+            }),
+          }))}
+        >
+          {showPreviousSemesters
+            ? "Future and current semesters as well as the previous 4 semesters are shown."
+            : "Hide previous semesters for clarity. Only future and current semesters are shown."}
+        </Text> */}
       </VStack>
     </KeyboardAwareSafeAreaScrollView>
   );

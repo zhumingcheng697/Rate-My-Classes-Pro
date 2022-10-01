@@ -68,13 +68,7 @@ export default class Semester {
       semesterCode = SemesterCode.fall;
     }
 
-    const predicted = new Semester({ semesterCode, year: today.getFullYear() });
-
-    if (Semester.between(predicted, Semester.lastAvailableSemester) > 0) {
-      return Semester.lastAvailableSemester;
-    } else {
-      return predicted;
-    }
+    return new Semester({ semesterCode, year: today.getFullYear() });
   }
 
   static predictFurthestSemester() {
@@ -96,13 +90,7 @@ export default class Semester {
       year += 1;
     }
 
-    const predicted = new Semester({ semesterCode, year });
-
-    if (Semester.between(predicted, Semester.lastAvailableSemester) > 0) {
-      return Semester.lastAvailableSemester;
-    } else {
-      return predicted;
-    }
+    return new Semester({ semesterCode, year });
   }
 
   static getSemesterOptions(
@@ -113,8 +101,18 @@ export default class Semester {
     const semesterOptions = [];
     const current = Semester.predictCurrentSemester();
     let start = showPrev ? current.prev(Math.max(0, prevCount)) : current;
+
+    if (showNext) {
+      start = Semester.earlier(start, Semester.lastAvailableSemester);
+    }
+
     const end = (
-      showNext ? Semester.predictFurthestSemester() : current
+      showNext
+        ? Semester.earlier(
+            Semester.predictFurthestSemester(),
+            Semester.lastAvailableSemester
+          )
+        : current
     ).next();
 
     while (!Semester.equals(start, end)) {
@@ -123,6 +121,14 @@ export default class Semester {
     }
 
     return semesterOptions;
+  }
+
+  static earlier(lhs: Semester, rhs: Semester) {
+    return Semester.between(lhs, rhs) < 0 ? lhs : rhs;
+  }
+
+  static later(lhs: Semester, rhs: Semester) {
+    return Semester.between(lhs, rhs) > 0 ? lhs : rhs;
   }
 
   static equals(lhs: Semester, rhs: Semester) {

@@ -45,7 +45,10 @@ class RootNavigationComponent extends Component<RootNavigationComponentProps> {
 }
 
 export default function RootNavigation() {
-  const [error, setError] = useState<ErrorType | null>(null);
+  const [schoolError, setSchoolError] = useState<ErrorType | null>(null);
+  const [departmentError, setDepartmentError] = useState<ErrorType | null>(
+    null
+  );
   const [accountError, setAccountError] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [fetchingSchoolNames, setFetchingSchoolNames] = useState(false);
@@ -65,6 +68,8 @@ export default function RootNavigation() {
       schoolNameRecord: SchoolNameRecord | null,
       departmentNameRecord: DepartmentNameRecord | null,
       dispatch: Dispatch,
+      fetchingSchoolNames: boolean,
+      fetchingDepartmentNames: boolean,
       failSilently: boolean = false
     ) => {
       if (schoolNameRecord && departmentNameRecord) return;
@@ -76,16 +81,15 @@ export default function RootNavigation() {
           .then((record) => {
             if (record && !isObjectEmpty(record)) {
               setSchoolNameRecord(dispatch)(record);
-              setError(null);
-              setShowAlert(false);
+              setSchoolError(null);
             } else {
-              setError(ErrorType.noData);
-              setShowAlert(true);
+              setSchoolError(ErrorType.noData);
+              if (!failSilently) setShowAlert(true);
             }
           })
           .catch((e) => {
             console.error(e);
-            setError(ErrorType.network);
+            setSchoolError(ErrorType.network);
             if (!failSilently) setShowAlert(true);
           })
           .finally(() => {
@@ -100,16 +104,15 @@ export default function RootNavigation() {
           .then((record) => {
             if (record && !isObjectEmpty(record)) {
               setDepartmentNameRecord(dispatch)(record);
-              setError(null);
-              if (!failSilently) setShowAlert(false);
+              setDepartmentError(null);
             } else {
-              setError(ErrorType.noData);
+              setDepartmentError(ErrorType.noData);
               if (!failSilently) setShowAlert(true);
             }
           })
           .catch((e) => {
             console.error(e);
-            setError(ErrorType.network);
+            setDepartmentError(ErrorType.network);
             if (!failSilently) setShowAlert(true);
           })
           .finally(() => {
@@ -127,6 +130,9 @@ export default function RootNavigation() {
 
         auth
           .fetchUserDoc()
+          .then(() => {
+            setAccountError(false);
+          })
           .catch((e) => {
             console.error(e);
             setAccountError(true);
@@ -141,38 +147,59 @@ export default function RootNavigation() {
         schoolNameRecord,
         departmentNameRecord,
         dispatch,
+        fetchingSchoolNames,
+        fetchingDepartmentNames,
         failSilently
       );
     },
-    [schoolNameRecord, departmentNameRecord, dispatch, auth]
+    [
+      schoolNameRecord,
+      departmentNameRecord,
+      dispatch,
+      auth,
+      fetchingUserDoc,
+      fetchingSchoolNames,
+      fetchingDepartmentNames,
+    ]
   );
 
   useEffect(() => {
-    if ((error || accountError) && appState === "active") fetchInfo();
+    if (appState === "active") fetchInfo();
   }, [appState]);
 
   useEffect(() => {
-    if ((error || accountError) && netInfo.isInternetReachable) fetchInfo();
+    if (netInfo.isInternetReachable) fetchInfo(true);
   }, [netInfo]);
+
+  useEffect(() => {
+    if (!schoolError && !departmentError && !accountError && showAlert) {
+      setShowAlert(false);
+    }
+  }, [schoolError, departmentError, accountError, showAlert]);
 
   return (
     <RootNavigationComponent fetchInfo={fetchInfo}>
       <AlertPopup
         header={
           accountError
-            ? error
+            ? schoolError || departmentError
               ? "Unable to Load Class or Account Information"
               : "Unable to Load Account Information"
-            : undefined
+            : schoolError || departmentError
+            ? undefined
+            : "Unable to Load Class or Account Information"
         }
         body={
-          error === ErrorType.noData && !accountError
+          (schoolError === ErrorType.noData ||
+            departmentError === ErrorType.noData) &&
+          !accountError
             ? "This might be an issue with Schedge, our API provider for classes."
             : undefined
         }
         isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);
+          fetchInfo(true);
         }}
         onlyShowWhenFocused={false}
       />

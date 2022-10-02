@@ -1,4 +1,5 @@
 import React from "react";
+import { Platform, useColorScheme } from "react-native";
 import { Icon } from "native-base";
 import {
   TransitionPresets,
@@ -15,12 +16,19 @@ export default (): StackNavigationOptions => ({
   headerStyle: {
     shadowColor: "transparent",
     borderBottomWidth: 1,
-    ...colorModeResponsiveStyle((selector) => ({
-      borderColor: selector({
-        light: DefaultTheme.colors.border,
-        dark: DarkTheme.colors.border,
-      }),
-    })),
+    ...(Platform.OS === "ios" || Platform.OS === "macos"
+      ? colorModeResponsiveStyle((selector) => ({
+          borderColor: selector({
+            light: DefaultTheme.colors.border,
+            dark: DarkTheme.colors.border,
+          }),
+        }))
+      : {
+          borderColor:
+            useColorScheme() === "dark"
+              ? DarkTheme.colors.border
+              : DefaultTheme.colors.border,
+        }),
   },
   headerBackImage: () => (
     <Icon

@@ -18,6 +18,7 @@ import {
   ErrorType,
 } from "../libs/types";
 import { getDepartmentNames, getSchoolNames } from "../libs/schedge";
+import { useAppState } from "../libs/hooks";
 import { isObjectEmpty } from "../libs/utils";
 import AlertPopup from "../components/AlertPopup";
 import { useAuth } from "../mongodb/auth";
@@ -56,6 +57,7 @@ export default function RootNavigation() {
   );
   const dispatch = useDispatch();
   const auth = useAuth();
+  const appState = useAppState();
   const netInfo = useNetInfo();
 
   const getSchoolAndDepartmentNames = useCallback(
@@ -146,11 +148,11 @@ export default function RootNavigation() {
   );
 
   useEffect(() => {
-    console.log(netInfo);
+    if (error && appState === "active") fetchInfo();
+  }, [appState]);
 
-    if (error && netInfo.isInternetReachable) {
-      fetchInfo();
-    }
+  useEffect(() => {
+    if (error && netInfo.isInternetReachable) fetchInfo();
   }, [netInfo]);
 
   return (
@@ -176,11 +178,11 @@ export default function RootNavigation() {
         onlyShowWhenFocused={false}
       />
       <Tab.Navigator
-        // screenListeners={{
-        //   tabPress: () => {
-        //     fetchInfo();
-        //   },
-        // }}
+        screenListeners={{
+          tabPress: () => {
+            if (error) fetchInfo(true);
+          },
+        }}
         screenOptions={({ route }) => ({
           title: route.name.replace(/-Tab/gi, ""),
           headerShown: false,

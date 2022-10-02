@@ -1,8 +1,24 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { useWindowDimensions, Platform } from "react-native";
+import { useWindowDimensions, Platform, AppState } from "react-native";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+
+export function useAppState() {
+  const [appState, setAppState] = useState(() => AppState.currentState);
+
+  useEffect(() => {
+    const unsubscribe = AppState.addEventListener("change", (appState) => {
+      setAppState(appState);
+    });
+
+    return () => {
+      unsubscribe.remove();
+    };
+  }, []);
+
+  return appState;
+}
 
 export function useIsCatalyst() {
   const isCatalyst = useMemo(

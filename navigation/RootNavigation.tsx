@@ -1,7 +1,14 @@
-import React, { Component, type ReactNode, useCallback, useState } from "react";
+import React, {
+  Component,
+  type ReactNode,
+  useCallback,
+  useState,
+  useEffect,
+} from "react";
 import { type Dispatch } from "redux";
 import { useDispatch, useSelector } from "react-redux";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useNetInfo } from "@react-native-community/netinfo";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import {
@@ -46,6 +53,7 @@ export default function RootNavigation() {
   );
   const dispatch = useDispatch();
   const auth = useAuth();
+  const netInfo = useNetInfo();
 
   const getSchoolAndDepartmentNames = useCallback(
     (
@@ -113,6 +121,14 @@ export default function RootNavigation() {
     [schoolNameRecord, departmentNameRecord, dispatch, auth]
   );
 
+  useEffect(() => {
+    console.log(netInfo);
+
+    if (error && netInfo.isInternetReachable) {
+      fetchInfo();
+    }
+  }, [netInfo]);
+
   return (
     <RootNavigationComponent fetchInfo={fetchInfo}>
       <AlertPopup
@@ -136,11 +152,11 @@ export default function RootNavigation() {
         onlyShowWhenFocused={false}
       />
       <Tab.Navigator
-        screenListeners={{
-          tabPress: () => {
-            fetchInfo();
-          },
-        }}
+        // screenListeners={{
+        //   tabPress: () => {
+        //     fetchInfo();
+        //   },
+        // }}
         screenOptions={({ route }) => ({
           title: route.name.replace(/-Tab/gi, ""),
           headerShown: false,

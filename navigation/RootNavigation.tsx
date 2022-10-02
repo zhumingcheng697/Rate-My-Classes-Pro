@@ -47,6 +47,9 @@ export default function RootNavigation() {
   const [error, setError] = useState<ErrorType | null>(null);
   const [accountError, setAccountError] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [fetchingSchoolNames, setFetchingSchoolNames] = useState(false);
+  const [fetchingDepartmentNames, setFetchingDepartmentNames] = useState(false);
+  const [fetchingUserDoc, setFetchingUserDoc] = useState(false);
   const schoolNameRecord = useSelector((state) => state.schoolNameRecord);
   const departmentNameRecord = useSelector(
     (state) => state.departmentNameRecord
@@ -64,7 +67,9 @@ export default function RootNavigation() {
     ) => {
       if (schoolNameRecord && departmentNameRecord) return;
 
-      if (!schoolNameRecord)
+      if (!schoolNameRecord && !fetchingSchoolNames) {
+        setFetchingSchoolNames(true);
+
         getSchoolNames()
           .then((record) => {
             if (record && !isObjectEmpty(record)) {
@@ -80,9 +85,15 @@ export default function RootNavigation() {
             console.error(e);
             setError(ErrorType.network);
             if (!failSilently) setShowAlert(true);
+          })
+          .finally(() => {
+            setFetchingSchoolNames(false);
           });
+      }
 
-      if (!departmentNameRecord)
+      if (!departmentNameRecord && !fetchingDepartmentNames) {
+        setFetchingDepartmentNames(true);
+
         getDepartmentNames()
           .then((record) => {
             if (record && !isObjectEmpty(record)) {
@@ -98,18 +109,31 @@ export default function RootNavigation() {
             console.error(e);
             setError(ErrorType.network);
             if (!failSilently) setShowAlert(true);
+          })
+          .finally(() => {
+            setFetchingDepartmentNames(false);
           });
+      }
     },
     []
   );
 
   const fetchInfo = useCallback(
     (failSilently: boolean = false) => {
-      auth.fetchUserDoc().catch((e) => {
-        console.error(e);
-        setAccountError(true);
-        if (!failSilently) setShowAlert(true);
-      });
+      if (!fetchingUserDoc) {
+        setFetchingUserDoc(true);
+
+        auth
+          .fetchUserDoc()
+          .catch((e) => {
+            console.error(e);
+            setAccountError(true);
+            if (!failSilently) setShowAlert(true);
+          })
+          .finally(() => {
+            setFetchingUserDoc(false);
+          });
+      }
 
       getSchoolAndDepartmentNames(
         schoolNameRecord,

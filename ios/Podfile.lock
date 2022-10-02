@@ -299,7 +299,7 @@ PODS:
   - React-jsinspector (0.68.0)
   - React-logger (0.68.0):
     - glog
-  - react-native-netinfo (9.3.2):
+  - react-native-netinfo (9.3.3):
     - React-Core
   - react-native-safe-area-context (3.3.2):
     - React-Core
@@ -594,7 +594,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 010a66edf644339f6da72b34208b070089680415
   React-jsinspector: 90f0bfd5d04e0b066c29216a110ffb9a6c34f23f
   React-logger: 8474fefa09d05f573a13c044cb0dfd751d4e52e3
-  react-native-netinfo: 687904c63baa828543bb6e94c265977e0ac70f14
+  react-native-netinfo: b514dd6d9cd512b90e178c5b7158df1a1c568d47
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   React-perflogger: 15cb741d6c2379f4d3fc8f9e4d4e1110ef3020cb
   React-RCTActionSheet: ea9099db0597bd769430db1e2d011fd5fdb7fc5e

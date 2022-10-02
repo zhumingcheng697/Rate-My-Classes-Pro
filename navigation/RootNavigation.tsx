@@ -148,11 +148,11 @@ export default function RootNavigation() {
   );
 
   useEffect(() => {
-    if (error && appState === "active") fetchInfo();
+    if ((error || accountError) && appState === "active") fetchInfo();
   }, [appState]);
 
   useEffect(() => {
-    if (error && netInfo.isInternetReachable) fetchInfo();
+    if ((error || accountError) && netInfo.isInternetReachable) fetchInfo();
   }, [netInfo]);
 
   return (
@@ -173,16 +173,10 @@ export default function RootNavigation() {
         isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);
-          fetchInfo(true);
         }}
         onlyShowWhenFocused={false}
       />
       <Tab.Navigator
-        screenListeners={{
-          tabPress: () => {
-            if (error) fetchInfo(true);
-          },
-        }}
         screenOptions={({ route }) => ({
           title: route.name.replace(/-Tab/gi, ""),
           headerShown: false,

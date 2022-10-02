@@ -27,6 +27,18 @@
 
 @implementation AppDelegate
 
+- (void)buildMenuWithBuilder:(id<UIMenuBuilder>)builder
+{
+  if (@available(iOS 15.0, macCatalyst 15.0, *)) {
+    [builder removeMenuForIdentifier:UIMenuSidebar];
+  }
+  [builder removeMenuForIdentifier:UIMenuFile];
+  [builder removeMenuForIdentifier:UIMenuEdit];
+  [builder removeMenuForIdentifier:UIMenuFormat];
+  [builder removeMenuForIdentifier:UIMenuServices];
+  [builder removeMenuForIdentifier:UIMenuToolbar];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   RCTAppSetupPrepareApp(application);

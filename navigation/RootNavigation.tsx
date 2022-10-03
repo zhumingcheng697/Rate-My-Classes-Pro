@@ -8,6 +8,7 @@ import React, {
 import { type Dispatch } from "redux";
 import { useDispatch, useSelector } from "react-redux";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useTheme } from "@react-navigation/native";
 import { useNetInfo } from "@react-native-community/netinfo";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -207,6 +208,11 @@ export default function RootNavigation() {
         screenOptions={({ route }) => ({
           title: route.name.replace(/-Tab/gi, ""),
           headerShown: false,
+          tabBarStyle: {
+            shadowColor: "transparent",
+            borderTopWidth: 1,
+            borderColor: useTheme().colors.border,
+          },
           tabBarIcon: ({ color, size, focused }) => {
             let iconName;
 

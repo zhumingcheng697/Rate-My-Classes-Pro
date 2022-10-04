@@ -4,7 +4,6 @@ import {
   TransitionPresets,
   type StackNavigationOptions,
 } from "@react-navigation/stack";
-import { useTheme } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import colors from "../../libs/colors";
@@ -15,7 +14,9 @@ export default (): StackNavigationOptions => ({
   headerStyle: {
     shadowColor: "transparent",
     borderBottomWidth: 1,
-    borderColor: useTheme().colors.border,
+    ...colorModeResponsiveStyle((selector) => ({
+      borderBottomColor: selector(colors.border.subtle),
+    })),
   },
   headerBackImage: () => (
     <Icon

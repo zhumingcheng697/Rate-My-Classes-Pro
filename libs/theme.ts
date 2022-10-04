@@ -48,15 +48,9 @@ const inputSelectDefaultProps = {
   size: "lg",
   borderWidth: 1,
   ...colorModeResponsiveStyle((selector) => ({
-    borderColor: selector({
-      light: theme.colors.gray[400],
-      dark: theme.colors.gray[600],
-    }),
+    borderColor: selector(colors.border.solid),
     _focus: {
-      borderColor: selector({
-        light: theme.colors.gray[400],
-        dark: theme.colors.gray[600],
-      }),
+      borderColor: selector(colors.border.solid),
     },
   })),
   _web: colorModeResponsiveStyle((selector) => ({
@@ -72,10 +66,7 @@ const componentsStyle = {
     defaultProps: {
       size: "sm",
       ...colorModeResponsiveStyle((selector) => ({
-        color: selector({
-          light: theme.colors.gray[400],
-          dark: theme.colors.gray[500],
-        }),
+        color: selector(colors.border.solid),
       })),
     },
   },

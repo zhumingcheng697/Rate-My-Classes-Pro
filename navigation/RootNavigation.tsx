@@ -8,7 +8,6 @@ import React, {
 import { type Dispatch } from "redux";
 import { useDispatch, useSelector } from "react-redux";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useTheme } from "@react-navigation/native";
 import { useNetInfo } from "@react-native-community/netinfo";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -18,6 +17,8 @@ import {
   type DepartmentNameRecord,
   ErrorType,
 } from "../libs/types";
+import colors from "../libs/colors";
+import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
 import { getDepartmentNames, getSchoolNames } from "../libs/schedge";
 import { useAppState } from "../libs/hooks";
 import { isObjectEmpty } from "../libs/utils";
@@ -211,7 +212,9 @@ export default function RootNavigation() {
           tabBarStyle: {
             shadowColor: "transparent",
             borderTopWidth: 1,
-            borderColor: useTheme().colors.border,
+            ...colorModeResponsiveStyle((selector) => ({
+              borderTopColor: selector(colors.border.subtle),
+            })),
           },
           tabBarIcon: ({ color, size, focused }) => {
             let iconName;

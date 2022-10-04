@@ -18,17 +18,13 @@ export default function OAuthSignInButton({
 }: OAuthSignInButtonProps) {
   return (
     <Button
-      shadow={0}
       borderWidth={"1px"}
       {...colorModeResponsiveStyle((selector) => ({
         background: selector({
           light: "#ffffff",
           dark: colors.background.secondary.dark,
         }),
-        borderColor: selector({
-          light: "#e4e4e7",
-          dark: colors.background.secondary.dark,
-        }),
+        borderColor: selector(colors.border.subtle),
       }))}
       {...rest}
       startIcon={

@@ -3,8 +3,8 @@ import { HStack, Icon, type IStackProps, Text } from "native-base";
 import { type InterfaceIconProps } from "native-base/lib/typescript/components/primitives/Icon/types";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import colors from "../libs/colors";
-import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
+import colors from "../styling/colors";
+import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 
 type IconHStackBaseProps = {
   iconName: string;

@@ -9,9 +9,9 @@ import { Keyboard } from "react-native";
 import { Button, AlertDialog, theme } from "native-base";
 import { useIsFocused } from "@react-navigation/native";
 
-import { subtleBorder } from "../libs/colors";
-import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
-import { textColorStyle } from "../libs/theme";
+import { subtleBorder } from "../styling/colors";
+import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
+import { textColorStyle } from "../styling/theme";
 
 export type AlertPopupProps = {
   isOpen: boolean;

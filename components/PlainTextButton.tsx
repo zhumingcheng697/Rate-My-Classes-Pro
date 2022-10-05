@@ -6,9 +6,9 @@ import {
   type ITextProps,
 } from "native-base";
 
-import colors from "../libs/colors";
-import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
-import { pressableBaseStyle } from "../libs/theme";
+import colors from "../styling/colors";
+import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
+import { pressableBaseStyle } from "../styling/theme";
 
 type PlainTextButtonBaseProps = {
   title?: string;

@@ -11,23 +11,22 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNetInfo } from "@react-native-community/netinfo";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+import ExploreNavigation from "./ExploreNavigation";
+import SearchNavigation from "./SearchNavigation";
+import MeNavigation from "./MeNavigation";
+import AlertPopup from "../components/AlertPopup";
 import {
   type RootNavigationParamList,
   type SchoolNameRecord,
   type DepartmentNameRecord,
   ErrorType,
 } from "../libs/types";
-import { subtleBorder } from "../libs/colors";
-import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
 import { getDepartmentNames, getSchoolNames } from "../libs/schedge";
 import { useAppState } from "../libs/hooks";
 import { isObjectEmpty } from "../libs/utils";
-import AlertPopup from "../components/AlertPopup";
 import { useAuth } from "../mongodb/auth";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "../redux/actions";
-import ExploreNavigation from "./ExploreNavigation";
-import SearchNavigation from "./SearchNavigation";
-import MeNavigation from "./MeNavigation";
+import { subtleBorder } from "../styling/colors";
 
 const Tab = createBottomTabNavigator<RootNavigationParamList>();
 

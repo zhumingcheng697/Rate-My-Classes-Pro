@@ -8,13 +8,13 @@ import type {
 import { useSelector, useDispatch } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { starClass, unstarClass } from "../../redux/actions";
+import AlertPopup from "../../components/AlertPopup";
 import { type SharedNavigationParamList } from "../../libs/types";
-import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
 import { getFullClassCode } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
-import AlertPopup from "../../components/AlertPopup";
 import { useDB } from "../../mongodb/db";
+import { starClass, unstarClass } from "../../redux/actions";
+import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
 type DetailScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,

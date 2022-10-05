@@ -4,23 +4,23 @@ import { Text, Center, Divider, Box, theme } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
-import { inputSelectHeight } from "../../libs/theme";
+import ClearableInput from "../../components/ClearableInput";
+import AlertPopup from "../../components/AlertPopup";
+import ClassesGrid from "../../components/ClassesGrid";
+import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import type {
   ClassInfo,
   SharedNavigationParamList,
   DepartmentNameRecord,
 } from "../../libs/types";
+import { useDimensions, useInnerHeight } from "../../libs/hooks";
 import { compareClasses, isObjectEmpty } from "../../libs/utils";
 import { searchClasses } from "../../libs/schedge";
 import Semester from "../../libs/semester";
-import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
-import ClearableInput from "../../components/ClearableInput";
-import AlertPopup from "../../components/AlertPopup";
-import ClassesGrid from "../../components/ClassesGrid";
-import { useDimensions, useInnerHeight } from "../../libs/hooks";
 import { useAuth } from "../../mongodb/auth";
-import colors, { subtleBorder } from "../../libs/colors";
-import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
+import colors, { subtleBorder } from "../../styling/colors";
+import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
+import { inputSelectHeight } from "../../styling/theme";
 
 type SearchScreenNavigationProp =
   StackNavigationProp<SharedNavigationParamList>;

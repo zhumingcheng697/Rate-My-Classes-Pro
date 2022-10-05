@@ -9,9 +9,9 @@ import {
 } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import colors from "../libs/colors";
-import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
-import { buttonBaseStyle, pressableBaseStyle } from "../libs/theme";
+import colors from "../styling/colors";
+import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
+import { buttonBaseStyle, pressableBaseStyle } from "../styling/theme";
 
 type LeftAlignedButtonBaseProps = {
   title?: string;

@@ -2,8 +2,8 @@ import React from "react";
 import { Button, type IButtonProps, Icon, Text } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import colors, { subtleBorder } from "../libs/colors";
-import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
+import colors, { subtleBorder } from "../styling/colors";
+import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 
 type OAuthSignInButtonBaseProps = {
   provider: string;

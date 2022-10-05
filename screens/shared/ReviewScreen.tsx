@@ -7,20 +7,20 @@ import {
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
+import LabeledInput from "../../components/LabeledInput";
+import { RatingSelector, SemesterSelector } from "../../components/Selector";
+import LeftAlignedButton from "../../components/LeftAlignedButton";
+import AlertPopup from "../../components/AlertPopup";
+import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import {
   type SharedNavigationParamList,
   type Rating,
   RatingType,
 } from "../../libs/types";
-import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
 import { getFullClassCode, hasEditedReview } from "../../libs/utils";
 import Semester from "../../libs/semester";
-import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
-import LabeledInput from "../../components/LabeledInput";
-import { RatingSelector, SemesterSelector } from "../../components/Selector";
 import { useAuth } from "../../mongodb/auth";
-import LeftAlignedButton from "../../components/LeftAlignedButton";
-import AlertPopup from "../../components/AlertPopup";
+import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
 type ReviewScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,

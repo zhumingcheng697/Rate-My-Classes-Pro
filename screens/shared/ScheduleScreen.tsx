@@ -8,6 +8,8 @@ import {
 } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 
+import AlertPopup from "../../components/AlertPopup";
+import IconHStack from "../../components/IconHStack";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Semester from "../../libs/semester";
 import { SectionInfo, type SharedNavigationParamList } from "../../libs/types";
@@ -18,11 +20,9 @@ import {
   prepend,
   stripLineBreaks,
 } from "../../libs/utils";
-import colors from "../../libs/colors";
-import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
-import AlertPopup from "../../components/AlertPopup";
-import IconHStack from "../../components/IconHStack";
 import { useAuth } from "../../mongodb/auth";
+import colors from "../../styling/colors";
+import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
 type ScheduleScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,

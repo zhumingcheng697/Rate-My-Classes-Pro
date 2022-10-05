@@ -3,16 +3,16 @@ import { Switch as NativeSwitch, Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Text, HStack, Switch, VStack, Box, theme } from "native-base";
 
-import Semester from "../../libs/semester";
-import { useIsCatalyst } from "../../libs/hooks";
 import LabeledInput from "../../components/LabeledInput";
 import ClearableInput from "../../components/ClearableInput";
 import { SemesterSelector } from "../../components/Selector";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
+import { useIsCatalyst } from "../../libs/hooks";
+import Semester from "../../libs/semester";
 import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";
-import colors from "../../libs/colors";
-import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
+import colors from "../../styling/colors";
+import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
 export default function SettingsScreen() {
   const auth = useAuth();

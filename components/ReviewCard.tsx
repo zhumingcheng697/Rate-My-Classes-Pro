@@ -17,6 +17,9 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+import PlainTextButton from "./PlainTextButton";
+import AlertPopup from "./AlertPopup";
+import IconHStack from "./IconHStack";
 import {
   type Rating,
   RatingType,
@@ -26,15 +29,12 @@ import {
   SharedNavigationParamList,
   ClassCode,
 } from "../libs/types";
-import colors from "../libs/colors";
-import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
 import Semester from "../libs/semester";
 import { ratingDescriptionMap, ratingTypeIconNameMap } from "../libs/utils";
 import { useAuth } from "../mongodb/auth";
 import { useDB } from "../mongodb/db";
-import PlainTextButton from "./PlainTextButton";
-import AlertPopup from "./AlertPopup";
-import IconHStack from "./IconHStack";
+import colors from "../styling/colors";
+import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 
 type ReviewCardNavigationProp = StackNavigationProp<
   SharedNavigationParamList,

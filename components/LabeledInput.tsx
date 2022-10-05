@@ -1,9 +1,9 @@
 import React, { type ReactNode } from "react";
 import { Box, type IBoxProps, HStack, Text } from "native-base";
 
-import colors from "../libs/colors";
-import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
-import theme from "../libs/theme";
+import colors from "../styling/colors";
+import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
+import theme from "../styling/theme";
 
 type LabeledInputBaseProps = {
   label: string;

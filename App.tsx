@@ -6,12 +6,12 @@ import { Provider } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import RootNavigation from "./navigation/RootNavigation";
-import { useColorModeSynchronizer } from "./libs/color-mode-utils";
-import nativeBaseTheme from "./libs/theme";
-import reducer from "./redux/reducers";
 import { AuthProvider } from "./mongodb/auth";
 import { useDB } from "./mongodb/db";
 import realmApp from "./mongodb/realmApp";
+import reducer from "./redux/reducers";
+import { useColorModeSynchronizer } from "./styling/color-mode-utils";
+import nativeBaseTheme from "./styling/theme";
 import "./libs/GoogleSignIn";
 
 Ionicons.loadFont();

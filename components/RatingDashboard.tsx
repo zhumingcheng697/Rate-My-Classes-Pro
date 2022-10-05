@@ -2,10 +2,10 @@ import React from "react";
 import { HStack, type IStackProps, Text, VStack } from "native-base";
 
 import IconHStack from "./IconHStack";
-import colors from "../libs/colors";
-import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
 import { RatingType } from "../libs/types";
 import { ratingTypeIconNameMap } from "../libs/utils";
+import colors from "../styling/colors";
+import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 
 type RatingBlockProps = { ratingType: RatingType; rating: number | null };
 

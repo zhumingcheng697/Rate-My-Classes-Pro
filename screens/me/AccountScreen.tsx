@@ -8,13 +8,13 @@ import {
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
-import { type MeNavigationParamList } from "../../libs/types";
-import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
-import { useInnerHeight } from "../../libs/hooks";
-import LeftAlignedButton from "../../components/LeftAlignedButton";
 import AlertPopup from "../../components/AlertPopup";
+import LeftAlignedButton from "../../components/LeftAlignedButton";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
+import { type MeNavigationParamList } from "../../libs/types";
+import { useInnerHeight } from "../../libs/hooks";
 import { useAuth } from "../../mongodb/auth";
+import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
 type AccountScreenNavigationProp = StackNavigationProp<
   MeNavigationParamList,

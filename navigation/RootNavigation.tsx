@@ -206,7 +206,7 @@ export default function RootNavigation() {
       />
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          title: route.name.replace(/-Tab/gi, ""),
+          title: route.name.replace(/Tab/gi, ""),
           headerShown: false,
           tabBarStyle: {
             shadowColor: "transparent",
@@ -216,9 +216,9 @@ export default function RootNavigation() {
           tabBarIcon: ({ color, size, focused }) => {
             let iconName;
 
-            if (route.name === "Explore-Tab") {
+            if (route.name === "ExploreTab") {
               iconName = "compass";
-            } else if (route.name === "Search-Tab") {
+            } else if (route.name === "SearchTab") {
               iconName = "search";
             } else {
               iconName = "person";
@@ -234,9 +234,9 @@ export default function RootNavigation() {
           },
         })}
       >
-        <Tab.Screen name={"Explore-Tab"} component={ExploreNavigation} />
-        <Tab.Screen name={"Search-Tab"} component={SearchNavigation} />
-        <Tab.Screen name={"Me-Tab"} component={MeNavigation} />
+        <Tab.Screen name={"ExploreTab"} component={ExploreNavigation} />
+        <Tab.Screen name={"SearchTab"} component={SearchNavigation} />
+        <Tab.Screen name={"MeTab"} component={MeNavigation} />
       </Tab.Navigator>
     </RootNavigationComponent>
   );

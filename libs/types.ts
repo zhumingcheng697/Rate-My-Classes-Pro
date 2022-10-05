@@ -87,9 +87,9 @@ export type Settings = {
 };
 
 export type RootNavigationParamList = {
-  "Explore-Tab": undefined;
-  "Search-Tab": undefined;
-  "Me-Tab": undefined;
+  ExploreTab: undefined;
+  SearchTab: undefined;
+  MeTab: undefined;
 };
 
 export type SharedNavigationParamList = {

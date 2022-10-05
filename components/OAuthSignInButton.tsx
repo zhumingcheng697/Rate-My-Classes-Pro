@@ -2,7 +2,7 @@ import React from "react";
 import { Button, type IButtonProps, Icon, Text } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import colors from "../libs/colors";
+import colors, { subtleBorder } from "../libs/colors";
 import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
 
 type OAuthSignInButtonBaseProps = {
@@ -24,7 +24,7 @@ export default function OAuthSignInButton({
           light: "#ffffff",
           dark: colors.background.secondary.dark,
         }),
-        borderColor: selector(colors.border.subtle),
+        borderColor: subtleBorder,
       }))}
       {...rest}
       startIcon={

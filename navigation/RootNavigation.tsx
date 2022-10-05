@@ -17,7 +17,7 @@ import {
   type DepartmentNameRecord,
   ErrorType,
 } from "../libs/types";
-import colors from "../libs/colors";
+import { subtleBorder } from "../libs/colors";
 import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
 import { getDepartmentNames, getSchoolNames } from "../libs/schedge";
 import { useAppState } from "../libs/hooks";
@@ -212,9 +212,7 @@ export default function RootNavigation() {
           tabBarStyle: {
             shadowColor: "transparent",
             borderTopWidth: 1,
-            ...colorModeResponsiveStyle((selector) => ({
-              borderTopColor: selector(colors.border.subtle),
-            })),
+            borderTopColor: subtleBorder,
           },
           tabBarIcon: ({ color, size, focused }) => {
             let iconName;

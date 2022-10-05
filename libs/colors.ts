@@ -6,13 +6,12 @@ const colors = {
     tertiary: { light: "#e5e5ea", dark: "#2c2c2e" },
     tertiaryWithOpacity: { light: "#e5e5ea77", dark: "#2c2c2eaa" },
   },
-  border: {
-    solid: { light: "#797986", dark: "#797986" },
-    subtle: { light: "#79798655", dark: "#79798655" },
-  },
   nyu: { light: "#57068c", dark: "#c05eff" },
 };
 
 export default colors;
+
+export const solidBorder = "#797986";
+export const subtleBorder = "#79798655";
 
 export type ColorPair = { light: string; dark: string };

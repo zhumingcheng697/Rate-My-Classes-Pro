@@ -1,6 +1,6 @@
 import { extendTheme, theme } from "native-base";
 
-import colors from "./colors";
+import colors, { solidBorder } from "./colors";
 import { colorModeResponsiveStyle } from "./color-mode-utils";
 
 export const inputSelectHeight = 40;
@@ -47,12 +47,10 @@ const inputSelectDefaultProps = {
   backgroundColor: "transparent",
   size: "lg",
   borderWidth: 1,
-  ...colorModeResponsiveStyle((selector) => ({
-    borderColor: selector(colors.border.solid),
-    _focus: {
-      borderColor: selector(colors.border.solid),
-    },
-  })),
+  borderColor: solidBorder,
+  _focus: {
+    borderColor: solidBorder,
+  },
   _web: colorModeResponsiveStyle((selector) => ({
     _focus: {
       borderWidth: 2,
@@ -65,9 +63,7 @@ const componentsStyle = {
   Icon: {
     defaultProps: {
       size: "sm",
-      ...colorModeResponsiveStyle((selector) => ({
-        color: selector(colors.border.solid),
-      })),
+      color: solidBorder,
     },
   },
   IconButton: {

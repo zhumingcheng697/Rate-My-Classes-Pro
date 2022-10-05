@@ -19,7 +19,7 @@ import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
 import { useDimensions, useInnerHeight } from "../../libs/hooks";
 import { useAuth } from "../../mongodb/auth";
-import colors from "../../libs/colors";
+import colors, { subtleBorder } from "../../libs/colors";
 import { colorModeResponsiveStyle } from "../../libs/color-mode-utils";
 
 type SearchScreenNavigationProp =
@@ -161,9 +161,7 @@ export default function SearchScreen() {
             minWidth={width}
             alignSelf={"center"}
             height={`${dividerHeight}px`}
-            {...colorModeResponsiveStyle((selector) => ({
-              background: selector(colors.border.subtle),
-            }))}
+            background={subtleBorder}
           />
         </Box>
         {focused ||

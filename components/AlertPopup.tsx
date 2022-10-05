@@ -9,7 +9,7 @@ import { Keyboard } from "react-native";
 import { Button, AlertDialog, theme } from "native-base";
 import { useIsFocused } from "@react-navigation/native";
 
-import colors from "../libs/colors";
+import { subtleBorder } from "../libs/colors";
 import { colorModeResponsiveStyle } from "../libs/color-mode-utils";
 import { textColorStyle } from "../libs/theme";
 
@@ -55,12 +55,7 @@ export default function AlertPopup({
           }),
         }))}
       >
-        <AlertDialog.Header
-          _text={textColorStyle}
-          {...colorModeResponsiveStyle((selector) => ({
-            borderColor: selector(colors.border.subtle),
-          }))}
-        >
+        <AlertDialog.Header _text={textColorStyle} borderColor={subtleBorder}>
           {header}
         </AlertDialog.Header>
         <AlertDialog.Body

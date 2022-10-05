@@ -1,6 +1,6 @@
 import { extendTheme, theme } from "native-base";
 
-import colors, { solidBorder } from "./colors";
+import colors, { solidBorder, subtleBorder } from "./colors";
 import { colorModeResponsiveStyle } from "./color-mode-utils";
 
 export const inputSelectHeight = 40;
@@ -79,7 +79,7 @@ const componentsStyle = {
           background: selector(colors.nyu),
         })),
         _text: {
-          color: "white",
+          color: "#ffffff",
           ...buttonTextBaseStyle,
         },
       },
@@ -93,6 +93,12 @@ const componentsStyle = {
           },
         })),
       },
+    },
+  },
+  Divider: {
+    baseStyle: {
+      background: subtleBorder,
+      height: "1px",
     },
   },
   Switch: {

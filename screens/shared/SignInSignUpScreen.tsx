@@ -180,7 +180,7 @@ export default function SignInSignUpScreen() {
               alignContent={"center"}
               alignItems={"center"}
             >
-              <Divider minW={0} flexShrink={1} height={"1px"} />
+              <Divider minW={0} flexShrink={1} />
               <Text
                 textAlign={"center"}
                 fontSize={"md"}
@@ -190,7 +190,7 @@ export default function SignInSignUpScreen() {
               >
                 or
               </Text>
-              <Divider minW={0} flexShrink={1} height={"1px"} />
+              <Divider minW={0} flexShrink={1} />
             </HStack>
             <GoogleSignInButton
               isLoading={isLoading}

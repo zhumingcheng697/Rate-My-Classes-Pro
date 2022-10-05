@@ -157,12 +157,7 @@ export default function SearchScreen() {
                 search(query, selectedSemester, schoolCodes, departmentNames);
             }}
           />
-          <Divider
-            minWidth={width}
-            alignSelf={"center"}
-            height={`${dividerHeight}px`}
-            background={subtleBorder}
-          />
+          <Divider minWidth={width} alignSelf={"center"} />
         </Box>
         {focused ||
         matchedClasses.length ||

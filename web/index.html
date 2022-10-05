@@ -34,6 +34,7 @@
         flex-grow: 1;
         display: flex;
         flex: 1;
+        overflow: hidden;
       }
 
       html {
@@ -41,6 +42,7 @@
         /* Prevent text size change on orientation change https://gist.github.com/tfausak/2222823#file-ios-8-web-app-html-L138 */
         -webkit-text-size-adjust: 100%;
         height: calc(100% + env(safe-area-inset-top));
+        background-color: #ffffff;
       }
 
       body {
@@ -54,11 +56,11 @@
         -ms-overflow-style: scrollbar;
       }
       /* Enable for apps that support dark-theme */
-      /*@media (prefers-color-scheme: dark) {
-        body {
-          background-color: black;
+      @media (prefers-color-scheme: dark) {
+        html {
+          background-color: #121212;
         }
-      }*/
+      }
     </style>
   </head>
 

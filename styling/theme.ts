@@ -60,17 +60,6 @@ const inputSelectDefaultProps = {
 };
 
 const componentsStyle = {
-  Icon: {
-    defaultProps: {
-      size: "sm",
-      color: solidBorder,
-    },
-  },
-  IconButton: {
-    defaultProps: {
-      ...pressableBaseStyle,
-    },
-  },
   Button: {
     variants: {
       solid: {
@@ -101,30 +90,15 @@ const componentsStyle = {
       height: "1px",
     },
   },
-  Switch: {
-    baseStyle: {
-      onThumbColor: "#ffffff",
-      offThumbColor: "#ffffff",
-      ...colorModeResponsiveStyle((selector) => ({
-        onTrackColor: selector(colors.nyu),
-      })),
-    },
-  },
-  Skeleton: {
-    defaultProps: colorModeResponsiveStyle((selector) => ({
-      startColor: selector(colors.background.secondary),
-      endColor: selector(colors.background.secondaryWithOpacity),
-    })),
-  },
-  ScrollView: {
+  Icon: {
     defaultProps: {
-      keyboardShouldPersistTaps: "handled",
-      ...colorModeResponsiveStyle((selector) => ({
-        background: selector(colors.background.primary),
-      })),
+      size: "sm",
+      color: solidBorder,
     },
-    baseStyle: {
-      minHeight: "100%",
+  },
+  IconButton: {
+    defaultProps: {
+      ...pressableBaseStyle,
     },
   },
   Input: {
@@ -180,6 +154,32 @@ const componentsStyle = {
     },
     baseStyle: {
       ...inputSelectBaseStyle,
+    },
+  },
+  ScrollView: {
+    defaultProps: {
+      keyboardShouldPersistTaps: "handled",
+      ...colorModeResponsiveStyle((selector) => ({
+        background: selector(colors.background.primary),
+      })),
+    },
+    baseStyle: {
+      minHeight: "100%",
+    },
+  },
+  Skeleton: {
+    defaultProps: colorModeResponsiveStyle((selector) => ({
+      startColor: selector(colors.background.secondary),
+      endColor: selector(colors.background.secondaryWithOpacity),
+    })),
+  },
+  Switch: {
+    baseStyle: {
+      onThumbColor: "#ffffff",
+      offThumbColor: "#ffffff",
+      ...colorModeResponsiveStyle((selector) => ({
+        onTrackColor: selector(colors.nyu),
+      })),
     },
   },
   Text: {

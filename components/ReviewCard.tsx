@@ -27,7 +27,7 @@ import {
   VoteRecord,
   Vote,
   SharedNavigationParamList,
-  ClassCode,
+  ClassInfo,
 } from "../libs/types";
 import Semester from "../libs/semester";
 import { ratingDescriptionMap, ratingTypeIconNameMap } from "../libs/utils";
@@ -64,7 +64,7 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
 
 type VoteBlockBaseProps = {
   userId: string;
-  classCode: ClassCode;
+  classInfo: ClassInfo;
   upvotes: VoteRecord;
   downvotes: VoteRecord;
   setVotes: (upVotes?: VoteRecord, downvotes?: VoteRecord) => void;
@@ -75,7 +75,7 @@ type VoteBlockProps = VoteBlockBaseProps &
 
 function VoteBlock({
   userId,
-  classCode,
+  classInfo,
   upvotes,
   downvotes,
   setVotes,
@@ -106,15 +106,15 @@ function VoteBlock({
   }, [upvotes, downvotes, isAuthenticated]);
 
   const upvote = () => {
-    db?.voteReview(classCode, userId, Vote.upvote);
+    db?.voteReview(classInfo, userId, Vote.upvote);
   };
 
   const downvote = () => {
-    db?.voteReview(classCode, userId, Vote.downvote);
+    db?.voteReview(classInfo, userId, Vote.downvote);
   };
 
   const unvote = () => {
-    db?.voteReview(classCode, userId);
+    db?.voteReview(classInfo, userId);
   };
 
   return (
@@ -133,7 +133,7 @@ function VoteBlock({
             <Button
               onPress={() => {
                 setShowAlert(false);
-                navigation.navigate("SignInSignUp");
+                navigation.navigate("SignInSignUp", { classInfo });
               }}
             >
               Sign In
@@ -259,7 +259,7 @@ function VoteBlock({
 }
 
 type ReviewCardBaseProps = {
-  classCode: ClassCode;
+  classInfo: ClassInfo;
   review: Review;
   setReview: (review: Review) => void;
 };
@@ -268,7 +268,6 @@ export type ReviewCardProps = ReviewCardBaseProps &
   Omit<IStackProps, keyof ReviewCardBaseProps>;
 
 export default function ReviewCard({
-  classCode,
   review,
   setReview,
   ...rest
@@ -325,7 +324,7 @@ export default function ReviewCard({
       {!!comment && <Text fontSize={"md"}>{comment}</Text>}
       <HStack justifyContent={"space-between"} flexWrap={"wrap"}>
         <VoteBlock
-          classCode={classCode}
+          classInfo={classInfo}
           margin={"-6px"}
           userId={userId}
           upvotes={upvotes}

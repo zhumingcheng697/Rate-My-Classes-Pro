@@ -71,7 +71,7 @@ export default ({
               <Button
                 onPress={() => {
                   setShowAlert(false);
-                  navigation.navigate("SignInSignUp");
+                  navigation.navigate("SignInSignUp", { classInfo });
                 }}
               >
                 Sign In

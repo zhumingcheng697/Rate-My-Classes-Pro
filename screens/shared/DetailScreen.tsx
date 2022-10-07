@@ -50,7 +50,8 @@ type DetailScreenRouteProp = RouteProp<SharedNavigationParamList, "Detail">;
 export default function DetailScreen() {
   const navigation = useNavigation<DetailScreenNavigationProp>();
   const route = useRoute<DetailScreenRouteProp>();
-  const { classInfo, deleteReview, newReview } = route.params;
+  const { classInfo, deleteReview, newReview, starredOrReviewed } =
+    route.params;
   const dispatch = useDispatch();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
@@ -269,6 +270,7 @@ export default function DetailScreen() {
                   semester: selectedSemester,
                   sections: sections ?? [],
                   classInfo,
+                  starredOrReviewed,
                 });
               }}
             >
@@ -287,9 +289,13 @@ export default function DetailScreen() {
                   navigation.navigate("Review", {
                     classInfo,
                     previousReview: myReview,
+                    starredOrReviewed,
                   });
                 } else {
-                  navigation.navigate("SignInSignUp");
+                  navigation.navigate("SignInSignUp", {
+                    classInfo,
+                    starredOrReviewed,
+                  });
                 }
               }}
             >
@@ -314,7 +320,7 @@ export default function DetailScreen() {
                 ? reviewerIds.map((id) => (
                     <ReviewCard
                       key={id}
-                      classCode={classInfo}
+                      classInfo={classInfo}
                       review={reviewRecord[id]}
                       setReview={(newReview) => {
                         const newReviewRecord = { ...reviewRecord };

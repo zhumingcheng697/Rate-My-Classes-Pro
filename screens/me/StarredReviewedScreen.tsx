@@ -65,6 +65,7 @@ export default function StarredReviewedScreen() {
       />
       <Box marginY={"10px"}>
         <ClassesGrid
+          starredOrReviewed={route.name}
           isLoaded={!!classes.length}
           classes={classes}
           navigation={navigation}

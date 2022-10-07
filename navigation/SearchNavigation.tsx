@@ -20,6 +20,7 @@ export default function SearchNavigation() {
     <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name={"Search"}
+        initialParams={{}}
         component={SearchScreen}
         options={{ title: "Search" }}
       />

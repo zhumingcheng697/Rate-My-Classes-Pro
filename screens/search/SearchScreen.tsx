@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Text, Center, Divider, Box, theme } from "native-base";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import ClearableInput from "../../components/ClearableInput";
@@ -12,6 +12,7 @@ import type {
   ClassInfo,
   SharedNavigationParamList,
   DepartmentNameRecord,
+  SearchNavigationParamList,
 } from "../../libs/types";
 import { useDimensions, useInnerHeight } from "../../libs/hooks";
 import { compareClasses, isObjectEmpty } from "../../libs/utils";
@@ -25,13 +26,16 @@ import { inputSelectHeight } from "../../styling/theme";
 type SearchScreenNavigationProp =
   StackNavigationProp<SharedNavigationParamList>;
 
+type SearchScreenRouteProp = RouteProp<SearchNavigationParamList, "Search">;
+
 const dividerHeight = 1;
 const searchBarMargin = 10;
 const delay = 250; // only make API call if idle for at least this amount of time
 
 export default function SearchScreen() {
   const navigation = useNavigation<SearchScreenNavigationProp>();
-  const [query, setQuery] = useState("");
+  const route = useRoute<SearchScreenRouteProp>();
+  const [query, setQuery] = useState(route.params?.query || "");
   const [focused, setFocused] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [searchFailed, setSearchFailed] = useState(false);
@@ -68,6 +72,7 @@ export default function SearchScreen() {
         shouldDiscard = true;
 
         if (query) {
+          navigation.setParams({ query });
           setIsLoaded(false);
           timeoutId = setTimeout(() => {
             shouldDiscard = false;
@@ -97,6 +102,7 @@ export default function SearchScreen() {
               });
           }, delay);
         } else {
+          navigation.setParams({ query: undefined });
           setIsLoaded(true);
         }
       };
@@ -163,6 +169,7 @@ export default function SearchScreen() {
         matchedClasses.length ||
         (query && (!isLoaded || !auth.isSettingsSettled)) ? (
           <ClassesGrid
+            query={query}
             marginY={"10px"}
             isLoaded={isLoaded && auth.isSettingsSettled}
             classes={matchedClasses}

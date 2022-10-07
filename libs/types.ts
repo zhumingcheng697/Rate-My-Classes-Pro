@@ -92,15 +92,36 @@ export type RootNavigationParamList = {
   MeTab: undefined;
 };
 
+export type StarredOrReviewed = "Starred" | "Reviewed";
+
 export type SharedNavigationParamList = {
-  Detail: { classInfo: ClassInfo; deleteReview?: true; newReview?: Review };
-  Review: { classInfo: ClassInfo; previousReview?: Review; newReview?: Review };
+  Detail: {
+    classInfo: ClassInfo;
+    deleteReview?: true;
+    newReview?: Review;
+    query?: string;
+    starredOrReviewed?: StarredOrReviewed;
+  };
+  Review: {
+    classInfo: ClassInfo;
+    previousReview?: Review;
+    newReview?: Review;
+    query?: string;
+    starredOrReviewed?: StarredOrReviewed;
+  };
   Schedule: {
     classInfo: ClassInfo;
     semester: SemesterInfo;
     sections: SectionInfo[];
+    query?: string;
+    starredOrReviewed?: StarredOrReviewed;
   };
-  SignInSignUp: { isSigningUp: boolean } | undefined;
+  SignInSignUp: {
+    classInfo?: ClassInfo;
+    isSigningUp?: boolean;
+    query?: string;
+    starredOrReviewed?: StarredOrReviewed;
+  };
 };
 
 export type ExploreNavigationParamList = {
@@ -110,7 +131,7 @@ export type ExploreNavigationParamList = {
 } & SharedNavigationParamList;
 
 export type SearchNavigationParamList = {
-  Search: undefined;
+  Search: { query?: string };
 } & SharedNavigationParamList;
 
 export type MeNavigationParamList = {

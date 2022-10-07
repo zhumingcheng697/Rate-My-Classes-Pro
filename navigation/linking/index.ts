@@ -3,6 +3,7 @@ import {
   getStateFromPath,
   LinkingOptions,
 } from "@react-navigation/native";
+
 import {
   RootNavigationParamList,
   ExploreNavigationParamList,
@@ -10,7 +11,7 @@ import {
   MeNavigationParamList,
   ClassInfo,
   StarredOrReviewed,
-} from "../libs/types";
+} from "../../libs/types";
 
 type RouteToPathMap<ParamList> = {
   [Screen in keyof ParamList]: (param: ParamList[Screen]) => string;

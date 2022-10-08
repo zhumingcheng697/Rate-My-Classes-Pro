@@ -30,17 +30,17 @@ function stringifyExploreRoute<Screen extends keyof ExploreNavigationParamList>(
   params: ExploreNavigationParamList[Screen]
 ) {
   const exploreRouteToPathMap: RouteToPathMap<ExploreNavigationParamList> = {
-    University: () => "explore",
-    School: ({ schoolCode }) => `explore/${schoolCode}`,
+    University: () => "/explore",
+    School: ({ schoolCode }) => `/explore/${schoolCode}`,
     Department: ({ schoolCode, departmentCode }) =>
-      `explore/${schoolCode}/${departmentCode}`,
-    Detail: ({ classInfo }) => `explore/${getPathForClass(classInfo)}`,
-    Review: ({ classInfo }) => `explore/${getPathForClass(classInfo)}/review`,
+      `/explore/${schoolCode}/${departmentCode}`,
+    Detail: ({ classInfo }) => `/explore/${getPathForClass(classInfo)}`,
+    Review: ({ classInfo }) => `/explore/${getPathForClass(classInfo)}/review`,
     Schedule: ({ classInfo }) =>
-      `explore/${getPathForClass(classInfo)}/schedule`,
+      `/explore/${getPathForClass(classInfo)}/schedule`,
     SignInSignUp: ({ classInfo, isSigningUp }) =>
       classInfo
-        ? `explore/${getPathForClass(classInfo)}/${
+        ? `/explore/${getPathForClass(classInfo)}/${
             isSigningUp ? "sign-up" : "sign-in"
           }`
         : isSigningUp
@@ -56,16 +56,16 @@ function stringifySearchRoute<Screen extends keyof SearchNavigationParamList>(
   params: SearchNavigationParamList[Screen]
 ) {
   const searchRouteToPathMap: RouteToPathMap<SearchNavigationParamList> = {
-    Search: ({ query }) => "search" + addQueryParam(query),
+    Search: ({ query }) => "/search" + addQueryParam(query),
     Detail: ({ classInfo, query }) =>
-      `search/${getPathForClass(classInfo)}` + addQueryParam(query),
+      `/search/${getPathForClass(classInfo)}` + addQueryParam(query),
     Review: ({ classInfo, query }) =>
-      `search/${getPathForClass(classInfo)}/review` + addQueryParam(query),
+      `/search/${getPathForClass(classInfo)}/review` + addQueryParam(query),
     Schedule: ({ classInfo, query }) =>
-      `search/${getPathForClass(classInfo)}/schedule` + addQueryParam(query),
+      `/search/${getPathForClass(classInfo)}/schedule` + addQueryParam(query),
     SignInSignUp: ({ classInfo, isSigningUp, query }) =>
       classInfo
-        ? `search/${getPathForClass(classInfo)}/${
+        ? `/search/${getPathForClass(classInfo)}/${
             isSigningUp ? "sign-up" : "sign-in"
           }` + addQueryParam(query)
         : isSigningUp
@@ -81,25 +81,25 @@ function stringifyMeRoute<Screen extends keyof MeNavigationParamList>(
   params: MeNavigationParamList[Screen]
 ) {
   const meRouteToPathMap: RouteToPathMap<MeNavigationParamList> = {
-    Account: () => "account",
-    Starred: () => "starred",
-    Reviewed: () => "reviewed",
-    Settings: () => "settings",
+    Account: () => "/account",
+    Starred: () => "/starred",
+    Reviewed: () => "/reviewed",
+    Settings: () => "/settings",
     Detail: ({ classInfo, starredOrReviewed }) =>
-      `${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
+      `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
         classInfo
       )}`,
     Review: ({ classInfo, starredOrReviewed }) =>
-      `${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
+      `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
         classInfo
       )}/review`,
     Schedule: ({ classInfo, starredOrReviewed }) =>
-      `${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
+      `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
         classInfo
       )}/schedule`,
     SignInSignUp: ({ classInfo, isSigningUp, starredOrReviewed }) =>
       classInfo
-        ? `${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
+        ? `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
             classInfo
           )}/${isSigningUp ? "sign-up" : "sign-in"}`
         : isSigningUp

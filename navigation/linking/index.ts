@@ -7,15 +7,8 @@ import {
 import stringnify from "./stringify";
 import type {
   RootNavigationParamList,
-  ExploreNavigationParamList,
-  SearchNavigationParamList,
-  MeNavigationParamList,
+  StackNavigationParamList,
 } from "../../libs/types";
-
-type StackNavigationParamList =
-  | ExploreNavigationParamList
-  | SearchNavigationParamList
-  | MeNavigationParamList;
 
 const linking: LinkingOptions<RootNavigationParamList> = {
   prefixes: [

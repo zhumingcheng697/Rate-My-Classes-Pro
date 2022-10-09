@@ -45,11 +45,6 @@ export default function StarredReviewedScreen() {
     [route.name, starredClasses, reviewedClasses]
   );
 
-  const hasLoaded = useMemo(
-    () => (route.name === "Starred" ? !!starredClasses : !!reviewedClasses),
-    [route.name, starredClasses, reviewedClasses]
-  );
-
   useEffect(() => {
     if (!auth.isAuthenticated) {
       navigation.goBack();
@@ -63,7 +58,7 @@ export default function StarredReviewedScreen() {
         header={`No ${route.name} Classes`}
         body={`You have not ${route.name.toLowerCase()} any classes yet. Come back later when you have ${route.name.toLowerCase()} some classes.`}
         isOpen={
-          hasLoaded &&
+          auth.isSettingsSettled &&
           !classes.length &&
           !alertDismissed &&
           auth.isAuthenticated

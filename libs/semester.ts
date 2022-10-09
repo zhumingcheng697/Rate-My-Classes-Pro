@@ -17,7 +17,7 @@ export default class Semester {
 
   private static readonly numOfSemesters = Semester.semesterCodes.length;
 
-  private static readonly lastAvailableSemester = new Semester({
+  public static readonly lastAvailableSemester = new Semester({
     semesterCode: SemesterCode.fall,
     year: 2022,
   });

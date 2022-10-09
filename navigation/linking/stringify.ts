@@ -16,12 +16,17 @@ type RouteToPathMap<ParamList extends ParamListBase> = {
 };
 
 const getPathForClass = (classInfo: ClassInfo) =>
-  `${encodeURIComponent(classInfo.schoolCode)}/${encodeURIComponent(
-    classInfo.departmentCode
-  )}/${encodeURIComponent(classInfo.classNumber)}`;
+  `${encodeURIComponent(
+    classInfo.schoolCode.toUpperCase()
+  )}/${encodeURIComponent(
+    classInfo.departmentCode.toUpperCase()
+  )}/${encodeURIComponent(classInfo.classNumber.toUpperCase())}`;
 
 const addQueryParam = (query: string | undefined) =>
   query ? `?query=${encodeURIComponent(query)}` : "";
+
+const checkIsSigningUp = (isSigningUp?: boolean) =>
+  isSigningUp ? "sign-up" : "sign-in";
 
 const checkStarredOrReviewed = (
   starredOrReviewed: StarredOrReviewed | undefined
@@ -33,21 +38,19 @@ function stringifyExploreRoute<Screen extends keyof ExploreNavigationParamList>(
 ) {
   const exploreRouteToPathMap: RouteToPathMap<ExploreNavigationParamList> = {
     University: () => "/explore",
-    School: ({ schoolCode }) => `/explore/${schoolCode}`,
+    School: ({ schoolCode }) => `/explore/${schoolCode.toUpperCase()}`,
     Department: ({ schoolCode, departmentCode }) =>
-      `/explore/${schoolCode}/${departmentCode}`,
+      `/explore/${schoolCode.toUpperCase()}/${departmentCode.toUpperCase()}`,
     Detail: ({ classInfo }) => `/explore/${getPathForClass(classInfo)}`,
     Review: ({ classInfo }) => `/explore/${getPathForClass(classInfo)}/review`,
     Schedule: ({ classInfo }) =>
       `/explore/${getPathForClass(classInfo)}/schedule`,
     SignInSignUp: ({ classInfo, isSigningUp }) =>
       classInfo
-        ? `/explore/${getPathForClass(classInfo)}/${
-            isSigningUp ? "sign-up" : "sign-in"
-          }`
-        : isSigningUp
-        ? "sign-up"
-        : "sign-in",
+        ? `/explore/${getPathForClass(classInfo)}/${checkIsSigningUp(
+            isSigningUp
+          )}`
+        : checkIsSigningUp(isSigningUp),
   };
 
   return exploreRouteToPathMap[screen](params);
@@ -67,12 +70,10 @@ function stringifySearchRoute<Screen extends keyof SearchNavigationParamList>(
       `/search/${getPathForClass(classInfo)}/schedule` + addQueryParam(query),
     SignInSignUp: ({ classInfo, isSigningUp, query }) =>
       classInfo
-        ? `/search/${getPathForClass(classInfo)}/${
-            isSigningUp ? "sign-up" : "sign-in"
-          }` + addQueryParam(query)
-        : isSigningUp
-        ? "sign-up"
-        : "sign-in",
+        ? `/search/${getPathForClass(classInfo)}/${checkIsSigningUp(
+            isSigningUp
+          )}` + addQueryParam(query)
+        : checkIsSigningUp(isSigningUp),
   };
 
   return searchRouteToPathMap[screen](params);
@@ -103,10 +104,8 @@ function stringifyMeRoute<Screen extends keyof MeNavigationParamList>(
       classInfo
         ? `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
             classInfo
-          )}/${isSigningUp ? "sign-up" : "sign-in"}`
-        : isSigningUp
-        ? "sign-up"
-        : "sign-in",
+          )}/${checkIsSigningUp(isSigningUp)}`
+        : checkIsSigningUp(isSigningUp),
   };
 
   return meRouteToPathMap[screen](params);
@@ -116,7 +115,7 @@ export default function stringnify<
   Tab extends keyof RootNavigationParamList,
   Screen extends keyof NavigationParamListForTab<Tab>,
   Params extends NavigationParamListForTab<Tab>[Screen]
->(tab: Tab, screen: Screen, params: Params) {
+>(tabName: Tab, screenName: Screen, params: Params) {
   const rootRouteToPathMap: {
     [T in keyof RootNavigationParamList]: (
       screen: keyof NavigationParamListForTab<T>,
@@ -128,5 +127,5 @@ export default function stringnify<
     MeTab: stringifyMeRoute,
   };
 
-  return rootRouteToPathMap[tab](screen, params);
+  return rootRouteToPathMap[tabName](screenName, params);
 }

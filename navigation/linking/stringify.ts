@@ -5,14 +5,10 @@ import type {
   ExploreNavigationParamList,
   SearchNavigationParamList,
   MeNavigationParamList,
+  StackNavigationParamList,
   ClassInfo,
   StarredOrReviewed,
 } from "../../libs/types";
-
-type StackNavigationParamList =
-  | ExploreNavigationParamList
-  | SearchNavigationParamList
-  | MeNavigationParamList;
 
 type RouteToPathMap<ParamList extends ParamListBase> = {
   [Screen in keyof ParamList]: (param: ParamList[Screen]) => string;

@@ -140,3 +140,8 @@ export type MeNavigationParamList = {
   Reviewed: undefined;
   Settings: undefined;
 } & SharedNavigationParamList;
+
+export type StackNavigationParamList =
+  | ExploreNavigationParamList
+  | SearchNavigationParamList
+  | MeNavigationParamList;

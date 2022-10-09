@@ -5,9 +5,10 @@ import type {
   ExploreNavigationParamList,
   SearchNavigationParamList,
   MeNavigationParamList,
-  StackNavigationParamList,
   ClassInfo,
   StarredOrReviewed,
+  NavigationParamListForTab,
+  ValueOf,
 } from "../../libs/types";
 
 type RouteToPathMap<ParamList extends ParamListBase> = {
@@ -113,17 +114,13 @@ function stringifyMeRoute<Screen extends keyof MeNavigationParamList>(
 
 export default function stringnify<
   Tab extends keyof RootNavigationParamList,
-  Screen extends keyof StackNavigationParamList,
-  Params extends StackNavigationParamList[Screen]
+  Screen extends keyof NavigationParamListForTab<Tab>,
+  Params extends NavigationParamListForTab<Tab>[Screen]
 >(tab: Tab, screen: Screen, params: Params) {
   const rootRouteToPathMap: {
     [T in keyof RootNavigationParamList]: (
-      screen: keyof (T extends "ExploreTab"
-        ? ExploreNavigationParamList
-        : T extends "SearchTab"
-        ? SearchNavigationParamList
-        : MeNavigationParamList),
-      params: StackNavigationParamList[keyof StackNavigationParamList]
+      screen: keyof NavigationParamListForTab<T>,
+      params: ValueOf<NavigationParamListForTab<T>>
     ) => string;
   } = {
     ExploreTab: stringifyExploreRoute,

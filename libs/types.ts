@@ -145,3 +145,13 @@ export type StackNavigationParamList =
   | ExploreNavigationParamList
   | SearchNavigationParamList
   | MeNavigationParamList;
+
+export type NavigationParamListForTab<
+  Tab extends keyof RootNavigationParamList
+> = Tab extends "ExploreTab"
+  ? ExploreNavigationParamList
+  : Tab extends "SearchTab"
+  ? SearchNavigationParamList
+  : MeNavigationParamList;
+
+export type ValueOf<T> = T[keyof T];

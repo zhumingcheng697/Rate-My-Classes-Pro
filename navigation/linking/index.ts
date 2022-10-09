@@ -8,6 +8,7 @@ import stringnify from "./stringify";
 import type {
   RootNavigationParamList,
   StackNavigationParamList,
+  ValueOf,
 } from "../../libs/types";
 
 const linking: LinkingOptions<RootNavigationParamList> = {
@@ -34,7 +35,7 @@ const linking: LinkingOptions<RootNavigationParamList> = {
     //         return stringnify(
     //           tabName as keyof RootNavigationParamList,
     //           screenName as keyof StackNavigationParamList,
-    //           screenParams as StackNavigationParamList[keyof StackNavigationParamList]
+    //           screenParams as ValueOf<StackNavigationParamList>
     //         );
     //       }
     //     }

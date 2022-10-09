@@ -1,6 +1,6 @@
 import { ParamListBase } from "@react-navigation/native";
 
-import {
+import type {
   RootNavigationParamList,
   ExploreNavigationParamList,
   SearchNavigationParamList,
@@ -110,7 +110,7 @@ function stringifyMeRoute<Screen extends keyof MeNavigationParamList>(
   return meRouteToPathMap[screen](params);
 }
 
-export default function stringnifyRoute<
+export default function stringnify<
   Tab extends keyof RootNavigationParamList,
   Nav extends Tab extends "ExploreTab"
     ? ExploreNavigationParamList

@@ -4,13 +4,18 @@ import {
   LinkingOptions,
 } from "@react-navigation/native";
 
-import stringnifyRoute from "./stringify";
-import {
+import stringnify from "./stringify";
+import type {
   RootNavigationParamList,
   ExploreNavigationParamList,
   SearchNavigationParamList,
   MeNavigationParamList,
 } from "../../libs/types";
+
+type StackNavigationParamList =
+  | ExploreNavigationParamList
+  | SearchNavigationParamList
+  | MeNavigationParamList;
 
 const linking: LinkingOptions<RootNavigationParamList> = {
   prefixes: [
@@ -20,7 +25,7 @@ const linking: LinkingOptions<RootNavigationParamList> = {
   getPathFromState(tabState, options) {
     // console.log(tabState);
 
-    const path = getPathFromState(tabState, options); //.replace(/\?.*$/, "");
+    const path = getPathFromState(tabState, options);
 
     // const { index: tabIndex, routes: tabRoutes } = tabState;
 
@@ -34,16 +39,11 @@ const linking: LinkingOptions<RootNavigationParamList> = {
     //       const { name: screenName, params: screenParams } =
     //         stackRoutes[stackIndex] ?? {};
 
-    //       type Nav =
-    //         | ExploreNavigationParamList
-    //         | SearchNavigationParamList
-    //         | MeNavigationParamList;
-
     //       if (screenName) {
-    //         return stringnifyRoute(
+    //         return stringnify(
     //           tabName as keyof RootNavigationParamList,
-    //           screenName as keyof Nav,
-    //           screenParams as Nav[keyof Nav]
+    //           screenName as keyof StackNavigationParamList,
+    //           screenParams as StackNavigationParamList[keyof StackNavigationParamList]
     //         );
     //       }
     //     }
@@ -55,7 +55,7 @@ const linking: LinkingOptions<RootNavigationParamList> = {
   getStateFromPath(path, options) {
     const [route, queryParam] = path.split(/\?/);
 
-    const routes = route.split(/\//).filter(Boolean);
+    const routes = route?.split(/\//)?.filter(Boolean) ?? [];
 
     const state = getStateFromPath(path, options);
     console.log(routes, queryParam, state);

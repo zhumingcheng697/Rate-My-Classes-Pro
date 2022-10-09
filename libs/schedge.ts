@@ -64,7 +64,7 @@ export async function getSchoolNames() {
       json[schoolCode]?.name || fallbackMap[schoolCode.toUpperCase()];
 
     if (name) {
-      record[schoolCode] = name;
+      record[schoolCode.toUpperCase()] = name;
     }
   }
 
@@ -77,12 +77,12 @@ export async function getDepartmentNames() {
   const record: DepartmentNameRecord = {};
 
   for (let schoolCode in json) {
-    if (!record[schoolCode]) {
-      record[schoolCode] = {};
+    if (!record[schoolCode.toUpperCase()]) {
+      record[schoolCode.toUpperCase()] = {};
     }
 
     for (let departmentCode of Object.keys(json[schoolCode]).sort()) {
-      record[schoolCode][departmentCode] =
+      record[schoolCode.toUpperCase()][departmentCode.toUpperCase()] =
         json[schoolCode][departmentCode].name;
     }
   }

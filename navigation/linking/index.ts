@@ -23,8 +23,6 @@ const linking: LinkingOptions<RootNavigationParamList> = {
     "https://rate-my-classes-pro.netlify.app/",
   ],
   getPathFromState(tabState, options) {
-    // console.log(tabState);
-
     const path = getPathFromState(tabState, options);
 
     // const { index: tabIndex, routes: tabRoutes } = tabState;
@@ -53,12 +51,17 @@ const linking: LinkingOptions<RootNavigationParamList> = {
     return path;
   },
   getStateFromPath(path, options) {
-    const [route, queryParam] = path.split(/\?/);
+    const [route, param] = path.split(/\?/);
 
     const routes = route?.split(/\//)?.filter(Boolean) ?? [];
 
+    const params: Record<string, string> = Object.fromEntries(
+      param
+        ?.split(/&/)
+        ?.map((param) => param.split(/=/).map(decodeURIComponent)) ?? []
+    );
+
     const state = getStateFromPath(path, options);
-    console.log(routes, queryParam, state);
 
     return state;
   },

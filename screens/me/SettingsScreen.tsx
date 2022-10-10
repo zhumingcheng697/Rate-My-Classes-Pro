@@ -58,6 +58,9 @@ export default function SettingsScreen() {
               onFocus={() => {
                 setCanClear(true);
               }}
+              onBlur={() => {
+                setCanClear(false);
+              }}
               onEndEditing={() => {
                 setCanClear(false);
                 if (newUsername) {

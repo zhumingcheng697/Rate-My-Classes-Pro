@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Box } from "native-base";
 import {
   useNavigation,
+  useNavigationState,
   useRoute,
   type RouteProp,
 } from "@react-navigation/native";
@@ -32,6 +33,8 @@ export default function StarredReviewedScreen() {
   const route = useRoute<StarredReviewedScreenRouteProp>();
   const [alertDismissed, setAlertDismissed] = useState(false);
   const auth = useAuth();
+  const routeIndex = useNavigationState((state) => state.index);
+  const routes = useNavigationState((state) => state.routes);
 
   const classes = useMemo(
     () =>
@@ -46,11 +49,15 @@ export default function StarredReviewedScreen() {
   );
 
   useEffect(() => {
-    if (!auth.isAuthenticated) {
+    if (
+      !auth.isAuthenticated &&
+      routeIndex === routes.length - 1 &&
+      routes[routeIndex]?.name === route.name
+    ) {
       navigation.goBack();
       return;
     }
-  }, [auth.isAuthenticated]);
+  }, [auth.isAuthenticated, routes, routeIndex]);
 
   return (
     <KeyboardAwareSafeAreaScrollView>

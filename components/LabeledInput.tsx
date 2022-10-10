@@ -10,6 +10,7 @@ type LabeledInputBaseProps = {
   isDisabled?: boolean;
   usePlainLabel?: boolean;
   showRequiredIcon?: boolean;
+  dimDisabledInput?: boolean;
   input?: ReactNode;
   children?: ReactNode;
 };
@@ -22,6 +23,7 @@ export default function LabeledInput({
   isDisabled,
   usePlainLabel = false,
   showRequiredIcon = false,
+  dimDisabledInput = true,
   input,
   children,
   ...rest
@@ -56,7 +58,9 @@ export default function LabeledInput({
           </Text>
         )}
       </HStack>
-      {input ?? children}
+      <Box opacity={isDisabled && dimDisabledInput ? 0.5 : undefined}>
+        {input ?? children}
+      </Box>
     </Box>
   );
 }

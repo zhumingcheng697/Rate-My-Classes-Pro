@@ -55,6 +55,11 @@
         -moz-osx-font-smoothing: grayscale;
         -ms-overflow-style: scrollbar;
       }
+
+      select ~ div > input {
+        max-height: 100%;
+      }
+
       /* Enable for apps that support dark-theme */
       @media (prefers-color-scheme: dark) {
         html {

@@ -16,33 +16,36 @@ const linking: LinkingOptions<RootNavigationParamList> = {
     "rate-my-classes-pro://",
     "https://rate-my-classes-pro.netlify.app/",
   ],
-  getPathFromState(tabState, options) {
-    const path = getPathFromState(tabState, options);
+  getPathFromState(tabState) {
+    try {
+      const { index: tabIndex, routes: tabRoutes } = tabState;
 
-    // const { index: tabIndex, routes: tabRoutes } = tabState;
+      if (typeof tabIndex === "number" && tabRoutes) {
+        const { name: tabName, state: stackState } = tabRoutes[tabIndex] ?? {};
 
-    // if (typeof tabIndex === "number" && tabRoutes) {
-    //   const { name: tabName, state: stackState } = tabRoutes[tabIndex] ?? {};
+        if (tabName && stackState) {
+          const { index: stackIndex, routes: stackRoutes } = stackState;
 
-    //   if (tabName && stackState) {
-    //     const { index: stackIndex, routes: stackRoutes } = stackState;
+          if (typeof stackIndex === "number" && stackRoutes) {
+            const { name: screenName, params: screenParams } =
+              stackRoutes[stackIndex] ?? {};
 
-    //     if (typeof stackIndex === "number" && stackRoutes) {
-    //       const { name: screenName, params: screenParams } =
-    //         stackRoutes[stackIndex] ?? {};
+            if (screenName) {
+              return stringnify(
+                tabName as keyof RootNavigationParamList,
+                screenName as keyof StackNavigationParamList,
+                screenParams as ValueOf<StackNavigationParamList>
+              );
+            }
+          }
+        }
+      }
 
-    //       if (screenName) {
-    //         return stringnify(
-    //           tabName as keyof RootNavigationParamList,
-    //           screenName as keyof StackNavigationParamList,
-    //           screenParams as ValueOf<StackNavigationParamList>
-    //         );
-    //       }
-    //     }
-    //   }
-    // }
-
-    return path;
+      return "/explore";
+    } catch (e) {
+      console.error(tabState, e);
+      return "/explore";
+    }
   },
   getStateFromPath(path, options) {
     const [route, param] = path.split(/\?/);

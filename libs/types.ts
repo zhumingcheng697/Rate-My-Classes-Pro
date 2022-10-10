@@ -14,9 +14,13 @@ export type SchoolInfo = { schoolCode: string };
 
 export type DepartmentInfo = SchoolInfo & { departmentCode: string };
 
-export type ClassCode = DepartmentInfo & { classNumber: string };
+export type ClassCode = DepartmentInfo & {
+  classNumber: string;
+  name?: string;
+  description?: string;
+};
 
-export type ClassInfo = ClassCode & { name: string; description?: string };
+export type ClassInfo = Required<ClassCode>;
 
 export type StarredClassInfo = ClassInfo & { starredDate: number };
 

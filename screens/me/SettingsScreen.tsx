@@ -48,11 +48,12 @@ export default function SettingsScreen() {
     <KeyboardAwareSafeAreaScrollView>
       <VStack margin={"10px"} space={"8px"}>
         {auth.isAuthenticated && (
-          <LabeledInput label={"Username"}>
+          <LabeledInput label={"Username"} isDisabled={!auth.isSettingsSettled}>
             <ClearableInput
+              isDisabled={!auth.isSettingsSettled}
               canClear={canClear && !!newUsername}
               placeholder={previousUsername ?? "Me"}
-              value={newUsername}
+              value={auth.isSettingsSettled ? newUsername : " "}
               onChangeText={setNewUsername}
               returnKeyType={"done"}
               onFocus={() => {
@@ -76,9 +77,12 @@ export default function SettingsScreen() {
             />
           </LabeledInput>
         )}
-        <LabeledInput label={"Semester"}>
+        <LabeledInput label={"Semester"} isDisabled={!auth.isSettingsSettled}>
           <SemesterSelector
-            selectedSemester={selectedSemester}
+            isDisabled={!auth.isSettingsSettled}
+            selectedSemester={
+              auth.isSettingsSettled ? selectedSemester : undefined
+            }
             semesterOptions={semesterOptions}
             onSelectedSemesterChange={selectSemester(dispatch)}
           />

@@ -2,6 +2,7 @@ import type {
   SchoolNameRecord,
   DepartmentNameRecord,
   DepartmentInfo,
+  ClassCode,
   ClassInfo,
   SectionInfo,
 } from "./types";
@@ -93,7 +94,7 @@ export async function getDepartmentNames() {
 export async function getClasses(
   { schoolCode, departmentCode }: DepartmentInfo,
   semester: SemesterInfo
-) {
+): Promise<ClassInfo[]> {
   const res = await fetch(
     composeUrl(
       `/${semester.year}/${semester.semesterCode}/${schoolCode}/${departmentCode}`
@@ -115,7 +116,19 @@ export async function getClasses(
     : [];
 }
 
-export async function searchClasses(query: string, semester: SemesterInfo) {
+export async function getClass(
+  { schoolCode, departmentCode, classNumber }: ClassCode,
+  semester: SemesterInfo
+): Promise<ClassInfo | undefined> {
+  return (await getClasses({ schoolCode, departmentCode }, semester)).find(
+    (classInfo) => classInfo.classNumber === classNumber
+  );
+}
+
+export async function searchClasses(
+  query: string,
+  semester: SemesterInfo
+): Promise<ClassInfo[]> {
   const res = await fetch(
     composeUrl(`/${semester.year}/${semester.semesterCode}/search`, {
       full: true,
@@ -142,7 +155,7 @@ export async function searchClasses(query: string, semester: SemesterInfo) {
 export async function getSections(
   { name, schoolCode, departmentCode, classNumber }: ClassInfo,
   semester: SemesterInfo
-) {
+): Promise<SectionInfo[]> {
   const res = await fetch(
     composeUrl(`/${semester.year}/${semester.semesterCode}/search`, {
       full: true,

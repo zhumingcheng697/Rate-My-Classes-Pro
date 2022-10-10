@@ -198,7 +198,11 @@ export default function SearchScreen() {
             >
               {query
                 ? `No Matches Found in ${selectedSemester.toString()}`
-                : `Search ${selectedSemester.toString()} Classes`}
+                : `Search${
+                    auth.isSettingsSettled
+                      ? ` ${selectedSemester.toString()} `
+                      : " "
+                  }Classes`}
             </Text>
           </Center>
         )}

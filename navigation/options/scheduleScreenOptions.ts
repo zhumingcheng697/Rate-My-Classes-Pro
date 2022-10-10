@@ -13,5 +13,7 @@ export type ScheduleScreenOptionsProp = {
 export default ({
   route,
 }: ScheduleScreenOptionsProp): StackNavigationOptions => ({
-  title: `${new Semester(route.params.semester).toString()} Schedule`,
+  title: route.params.semester
+    ? `${new Semester(route.params.semester).toString()} Schedule`
+    : "Schedule",
 });

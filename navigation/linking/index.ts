@@ -55,7 +55,15 @@ const linking: LinkingOptions<RootNavigationParamList> = {
     const params: Record<string, string> = Object.fromEntries(
       param
         ?.split(/&/)
-        ?.map((param) => param.split(/=/).map(decodeURIComponent)) ?? []
+        ?.map((param) =>
+          param
+            .split(/=/)
+            .map((e, i) =>
+              i === 0
+                ? decodeURIComponent(e).toLowerCase()
+                : decodeURIComponent(e)
+            )
+        ) ?? []
     );
 
     const state = getStateFromPath(path, options);

@@ -1,5 +1,4 @@
-import Semester from "./semester";
-
+import Semester, { type SemesterInfo } from "./semester";
 import {
   type SchoolNameRecord,
   type DepartmentNameRecord,
@@ -85,8 +84,10 @@ export function formSentence(str: string) {
 export function notOfferedMessage(
   classCode: ClassCode,
   classInfo: ClassInfo | null | undefined,
-  semester: Semester
+  semesterInfo: SemesterInfo
 ) {
+  const semester = new Semester(semesterInfo);
+
   const diff = Semester.between(Semester.predictCurrentSemester(), semester);
 
   return `${

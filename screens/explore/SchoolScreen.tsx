@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Text, Box } from "native-base";
 import {
   useNavigation,
@@ -14,6 +14,7 @@ import type {
 } from "../../libs/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
+import AlertPopup from "../../components/AlertPopup";
 import TieredTextButton from "../../components/TieredTextButton";
 import {
   getSchoolName,
@@ -35,6 +36,7 @@ export default function SchoolScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const isLoaded = !!departmentNames && !isObjectEmpty(departmentNames);
+  const [showAlert, setShowAlert] = useState(false);
 
   const departments = useMemo(() => {
     if (!isLoaded) return [];
@@ -42,38 +44,61 @@ export default function SchoolScreen() {
     return Object.keys(departmentNames[schoolCode] ?? {});
   }, [departmentNames]);
 
-  return (
-    <KeyboardAwareSafeAreaScrollView>
-      <Box marginY={"10px"}>
-        <Text variant={"h1"} opacity={schoolNames ? 1 : 0.5}>
-          {getSchoolName(route.params, schoolNames)}
-        </Text>
-        <Grid isLoaded={isLoaded} childrenCount={departments.length}>
-          {(info) =>
-            departments.map((departmentCode, index) => {
-              const departmentInfo: DepartmentInfo = {
-                ...route.params,
-                departmentCode,
-              };
+  useEffect(() => {
+    if (departmentNames && !(schoolCode in departmentNames)) {
+      setShowAlert(true);
+    }
+  }, [departmentNames]);
 
-              return (
-                <TieredTextButton
-                  key={index}
-                  {...info}
-                  primaryText={getDepartmentName(
-                    departmentInfo,
-                    departmentNames
-                  )}
-                  secondaryText={`${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`}
-                  onPress={() => {
-                    navigation.navigate("Department", departmentInfo);
-                  }}
-                />
-              );
-            })
-          }
-        </Grid>
-      </Box>
-    </KeyboardAwareSafeAreaScrollView>
+  return (
+    <>
+      <AlertPopup
+        header={"No Departments Available"}
+        body={`${getSchoolName(
+          route.params,
+          schoolNames
+        )} does not have any course offering departments.`}
+        isOpen={showAlert}
+        onClose={() => {
+          setShowAlert(false);
+          navigation.goBack();
+        }}
+      />
+      <KeyboardAwareSafeAreaScrollView>
+        <Box marginY={"10px"}>
+          <Text variant={"h1"} opacity={schoolNames ? 1 : 0.5}>
+            {getSchoolName(route.params, schoolNames)}
+          </Text>
+          <Grid
+            isLoaded={isLoaded && !!departments.length}
+            childrenCount={departments.length}
+          >
+            {(info) =>
+              departments.map((departmentCode, index) => {
+                const departmentInfo: DepartmentInfo = {
+                  ...route.params,
+                  departmentCode,
+                };
+
+                return (
+                  <TieredTextButton
+                    key={index}
+                    {...info}
+                    primaryText={getDepartmentName(
+                      departmentInfo,
+                      departmentNames
+                    )}
+                    secondaryText={`${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`}
+                    onPress={() => {
+                      navigation.navigate("Department", departmentInfo);
+                    }}
+                  />
+                );
+              })
+            }
+          </Grid>
+        </Box>
+      </KeyboardAwareSafeAreaScrollView>
+    </>
   );
 }

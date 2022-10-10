@@ -5,7 +5,7 @@ import type {
   StarredClassInfo,
   ReviewedClassRecord,
   ReviewedClassInfo,
-  ClassInfo,
+  ClassCode,
   Settings,
 } from "../libs/types";
 import type Semester from "../libs/semester";
@@ -42,9 +42,9 @@ export type SettingsAction =
 export type StarClassAction =
   | { type: ActionType.loadStarredClasses; payload?: StarredClassRecord }
   | { type: ActionType.starClass; payload?: StarredClassInfo }
-  | { type: ActionType.unstarClass; payload?: ClassInfo };
+  | { type: ActionType.unstarClass; payload?: ClassCode };
 
 export type ReviewClassAction =
   | { type: ActionType.loadReviewedClasses; payload?: ReviewedClassRecord }
   | { type: ActionType.reviewClass; payload?: ReviewedClassInfo }
-  | { type: ActionType.unreviewClass; payload?: ClassInfo };
+  | { type: ActionType.unreviewClass; payload?: ClassCode };

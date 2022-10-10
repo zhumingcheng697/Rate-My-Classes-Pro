@@ -102,15 +102,17 @@ export async function getClasses(
 
   const json: SchedgeClassRecord = await res.json();
 
-  return json
-    .map(({ name, deptCourseId, description }) => ({
-      schoolCode,
-      departmentCode,
-      classNumber: deptCourseId,
-      name,
-      description: description ?? "",
-    }))
-    .sort((a, b) => parseInt(a.classNumber) - parseInt(b.classNumber));
+  return json && Array.isArray(json)
+    ? json
+        .map(({ name, deptCourseId, description }) => ({
+          schoolCode,
+          departmentCode,
+          classNumber: deptCourseId,
+          name,
+          description: description ?? "",
+        }))
+        .sort((a, b) => parseInt(a.classNumber) - parseInt(b.classNumber))
+    : [];
 }
 
 export async function searchClasses(query: string, semester: SemesterInfo) {

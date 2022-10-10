@@ -216,10 +216,12 @@ export default function DetailScreen() {
           }
           setShowAlert(true);
         } finally {
-          navigation.setParams({
-            deleteReview: undefined,
-            newReview: undefined,
-          });
+          if (deleteReview || newReview) {
+            navigation.setParams({
+              deleteReview: undefined,
+              newReview: undefined,
+            });
+          }
         }
       }
     })();

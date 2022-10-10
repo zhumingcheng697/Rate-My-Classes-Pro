@@ -176,7 +176,13 @@ export default function DetailScreen() {
 
   useEffect(() => {
     (async () => {
-      if (isFocused && auth.user && auth.isAuthenticated && db) {
+      if (
+        isFocused &&
+        auth.user &&
+        auth.isAuthenticated &&
+        db &&
+        (deleteReview || newReview)
+      ) {
         try {
           if (deleteReview) {
             await db.deleteReview(classInfo);
@@ -216,12 +222,10 @@ export default function DetailScreen() {
           }
           setShowAlert(true);
         } finally {
-          if (deleteReview || newReview) {
-            navigation.setParams({
-              deleteReview: undefined,
-              newReview: undefined,
-            });
-          }
+          navigation.setParams({
+            deleteReview: undefined,
+            newReview: undefined,
+          });
         }
       }
     })();

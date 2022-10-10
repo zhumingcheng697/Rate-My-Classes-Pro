@@ -162,9 +162,7 @@ export default function ReviewScreen() {
                 value={instructor}
                 onChangeText={setInstructor}
                 autoCapitalize={"words"}
-                isReadOnly={!!previousReview}
-                showRequiredIcon={!previousReview}
-                opacity={previousReview ? 0.5 : undefined}
+                isDisabled={!!previousReview}
               />
             </LabeledInput>
             <LabeledInput

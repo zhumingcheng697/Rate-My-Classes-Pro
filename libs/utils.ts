@@ -82,6 +82,26 @@ export function formSentence(str: string) {
   );
 }
 
+export function notOfferedMessage(
+  classCode: ClassCode,
+  classInfo: ClassInfo | null | undefined,
+  semester: Semester
+) {
+  const diff = Semester.between(Semester.predictCurrentSemester(), semester);
+
+  return `${
+    classInfo
+      ? `${classInfo.name} (${getFullClassCode(classCode)})`
+      : getFullClassCode(classCode)
+  } ${
+    diff > 0
+      ? "was not offered"
+      : diff < 0
+      ? "will not be offered"
+      : "is not offered"
+  } in ${semester.toString()}.`;
+}
+
 export function smartJoin(tokens: string[]) {
   if (tokens.length === 0) return "";
   if (tokens.length === 1) return tokens[0];
@@ -167,8 +187,8 @@ export function getMeetingScheduleString(meetings: [Date, Date][]) {
 export function compareClasses(
   schoolCodes: string[],
   departmentNames: DepartmentNameRecord,
-  a: ClassInfo,
-  b: ClassInfo
+  a: ClassCode,
+  b: ClassCode
 ) {
   if (a.schoolCode !== b.schoolCode) {
     return (

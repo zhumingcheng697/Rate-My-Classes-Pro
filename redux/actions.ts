@@ -5,7 +5,7 @@ import type {
   DepartmentNameRecord,
   StarredClassRecord,
   ReviewedClassRecord,
-  ClassInfo,
+  ClassCode,
   ReviewedClassInfo,
   StarredClassInfo,
   Settings,
@@ -81,10 +81,10 @@ export const starClass =
   };
 
 export const unstarClass =
-  (dispath: Dispatch<StarClassAction>) => (classInfo: ClassInfo) => {
+  (dispath: Dispatch<StarClassAction>) => (classCode: ClassCode) => {
     dispath({
       type: ActionType.unstarClass,
-      payload: classInfo,
+      payload: classCode,
     });
   };
 
@@ -107,9 +107,9 @@ export const reviewClass =
   };
 
 export const unreviewClass =
-  (dispath: Dispatch<ReviewClassAction>) => (classInfo: ClassInfo) => {
+  (dispath: Dispatch<ReviewClassAction>) => (classCode: ClassCode) => {
     dispath({
       type: ActionType.unreviewClass,
-      payload: classInfo,
+      payload: classCode,
     });
   };

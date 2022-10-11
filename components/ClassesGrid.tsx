@@ -41,7 +41,7 @@ export default function ClassesGrid({
               secondaryText={getFullClassCode(classInfo)}
               onPress={() => {
                 navigation.navigate("Detail", {
-                  classInfo,
+                  classCode: classInfo,
                   query,
                   starredOrReviewed,
                 });

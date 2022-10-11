@@ -6,6 +6,7 @@ import {
   type RouteProp,
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
+import { useSelector } from "react-redux";
 
 import LabeledInput from "../../components/LabeledInput";
 import { RatingSelector, SemesterSelector } from "../../components/Selector";
@@ -15,11 +16,20 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import {
   type SharedNavigationParamList,
   type Rating,
+  type Review,
+  type ReviewRecord,
   RatingType,
+  ErrorType,
 } from "../../libs/types";
-import { getFullClassCode, hasEditedReview } from "../../libs/utils";
+import {
+  getFullClassCode,
+  hasEditedReview,
+  notOfferedMessage,
+} from "../../libs/utils";
+import { useClassInfoLoader } from "../../libs/hooks";
 import Semester from "../../libs/semester";
 import { useAuth } from "../../mongodb/auth";
+import { useDB } from "../../mongodb/db";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
 type ReviewScreenNavigationProp = StackNavigationProp<
@@ -33,9 +43,15 @@ export default function ReviewScreen() {
   const auth = useAuth();
   const navigation = useNavigation<ReviewScreenNavigationProp>();
   const route = useRoute<ReviewScreenRouteProp>();
-  const { classInfo, previousReview } = route.params;
+  const { selectedSemester } = useSelector((state) => state.settings);
+  const { classCode, previousReview } = route.params;
   const [hasEdited, setHasEdited] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const { classInfo, classInfoError } = useClassInfoLoader(
+    classCode,
+    selectedSemester,
+    auth.isSettingsSettled && !!auth.user
+  );
 
   const [enjoyment, setEnjoyment] = useState<Rating | undefined>(
     previousReview?.enjoyment
@@ -54,14 +70,51 @@ export default function ReviewScreen() {
     previousReview?.instructor ?? ""
   );
   const [comment, setComment] = useState(previousReview?.comment ?? "");
+  const [reviewError, setReviewError] = useState(false);
 
   const semesterOptions = useMemo(
     () =>
       previousReview
         ? [new Semester(previousReview.semester)]
         : Semester.getSemesterOptions(true, false, 12).reverse(),
-    []
+    [previousReview]
   );
+
+  const db = useMemo(() => {
+    if (auth.user) return useDB(auth.user);
+  }, [auth.user]);
+
+  useEffect(() => {
+    if (classInfo && !previousReview && db) {
+      const loadMyReview = async () => {
+        if (auth.isAuthenticated && auth.user && !previousReview) {
+          try {
+            const reviewRecord: ReviewRecord =
+              (await db.loadReviewDoc(classCode)) ?? {};
+            const review: Review | undefined = reviewRecord[auth.user.id];
+            if (review) {
+              setEnjoyment(review.enjoyment);
+              setDifficulty(review.difficulty);
+              setWorkload(review.workload);
+              setValue(review.value);
+              setSemester(new Semester(review.semester));
+              setInstructor(review.instructor);
+              setComment(review.comment);
+              navigation.setParams({
+                previousReview: review,
+              });
+            }
+          } catch (e) {
+            setReviewError(true);
+            setShowAlert(true);
+          }
+        }
+      };
+      loadMyReview();
+    } else if (!classInfo && classInfoError) {
+      setShowAlert(true);
+    }
+  }, [classInfo, classInfoError, db]);
 
   useEffect(() => {
     if (!auth.isAuthenticated) {
@@ -126,32 +179,48 @@ export default function ReviewScreen() {
         isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);
+          if (reviewError || classInfoError) {
+            navigation.pop(classInfoError === ErrorType.noData ? 2 : 1);
+          }
         }}
-        header={"Delete Review"}
+        header={
+          reviewError || classInfoError ? "Unable to Review" : "Delete Review"
+        }
         body={
-          "You are about to delete your review. This action is not reversable."
+          classInfoError === ErrorType.noData
+            ? notOfferedMessage(classCode, classInfo, selectedSemester)
+            : reviewError || classInfoError
+            ? undefined
+            : "You are about to delete your review. This action is not reversable."
         }
         footerPrimaryButton={
-          <Button
-            {...colorModeResponsiveStyle((selector) => ({
-              background: selector({
-                light: theme.colors.red[600],
-                dark: theme.colors.red[500],
-              }),
-            }))}
-            onPress={() => {
-              setShowAlert(false);
-              navigation.navigate("Detail", { classInfo, deleteReview: true });
-            }}
-          >
-            Delete
-          </Button>
+          reviewError || classInfoError ? undefined : (
+            <Button
+              {...colorModeResponsiveStyle((selector) => ({
+                background: selector({
+                  light: theme.colors.red[600],
+                  dark: theme.colors.red[500],
+                }),
+              }))}
+              onPress={() => {
+                setShowAlert(false);
+                navigation.navigate("Detail", {
+                  classCode: classInfo ?? classCode,
+                  deleteReview: true,
+                });
+              }}
+            >
+              Delete
+            </Button>
+          )
         }
       />
       <KeyboardAwareSafeAreaScrollView>
         <Box marginY={"10px"}>
-          <Text variant={"h1"}>{classInfo.name}</Text>
-          <Text variant={"h2"}>{getFullClassCode(classInfo)}</Text>
+          <Text variant={"h1"} opacity={classInfo?.name ? 1 : 0.5}>
+            {classInfo?.name ?? "Review"}
+          </Text>
+          <Text variant={"h2"}>{getFullClassCode(classCode)}</Text>
           <VStack marginX={"10px"} marginY={"5px"} space={"8px"}>
             <LabeledInput
               label={"Instructor"}

@@ -10,6 +10,7 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
+  ErrorType,
   ReviewOrder,
   type ReviewRecord,
   type SectionInfo,
@@ -18,11 +19,14 @@ import {
 import {
   compareReviews,
   getDepartmentName,
+  getFullClassCode,
   getSchoolName,
+  notOfferedMessage,
   stripLineBreaks,
 } from "../../libs/utils";
 import Semester from "../../libs/semester";
 import { getSections } from "../../libs/schedge";
+import { useClassInfoLoader } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import AlertPopup from "../../components/AlertPopup";
 import ReviewCard from "../../components/ReviewCard";
@@ -50,7 +54,7 @@ type DetailScreenRouteProp = RouteProp<SharedNavigationParamList, "Detail">;
 export default function DetailScreen() {
   const navigation = useNavigation<DetailScreenNavigationProp>();
   const route = useRoute<DetailScreenRouteProp>();
-  const { classInfo, deleteReview, newReview, starredOrReviewed, query } =
+  const { classCode, deleteReview, newReview, starredOrReviewed, query } =
     route.params;
   const dispatch = useDispatch();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
@@ -76,12 +80,6 @@ export default function DetailScreen() {
     () => new Semester(selectedSemester).toString(),
     [selectedSemester]
   );
-
-  const description = useMemo(() => {
-    return classInfo.description
-      ? stripLineBreaks(classInfo.description).split(/\n/)
-      : undefined;
-  }, [classInfo.description]);
 
   const myReview = useMemo(() => {
     return (
@@ -128,12 +126,26 @@ export default function DetailScreen() {
     auth.signInAnonymously();
   }, [auth.user]);
 
+  const { classInfo, classInfoError } = useClassInfoLoader(
+    classCode,
+    selectedSemester,
+    auth.isSettingsSettled
+  );
+
+  const description = useMemo(() => {
+    return classInfo?.description
+      ? stripLineBreaks(classInfo?.description).split(/\n/)
+      : undefined;
+  }, [classInfo?.description]);
+
+  const semester = new Semester(selectedSemester);
+
   useEffect(() => {
     if (!reviewRecord && db) {
       const loadReviewDoc = async () => {
         try {
           const reviewRecord: ReviewRecord =
-            (await db.loadReviewDoc(classInfo)) ?? {};
+            (await db.loadReviewDoc(classCode)) ?? {};
           delete reviewRecord["_id"];
           setReviewRecord(reviewRecord);
         } catch (e) {
@@ -146,9 +158,16 @@ export default function DetailScreen() {
   }, [db]);
 
   useEffect(() => {
-    if (!auth.isSettingsSettled) return;
+    if (!classInfo && classInfoError) {
+      setShowAlert(true);
+    } else if (classInfo && !classCode.name) {
+      navigation.setParams({ classCode: classInfo });
+    }
+  }, [classInfo, classInfoError]);
 
-    let semester = new Semester(selectedSemester);
+  useEffect(() => {
+    if (!auth.isSettingsSettled || !classInfo) return;
+
     if (!Semester.equals(semester, previousSemester)) {
       setPreviousSemester(semester);
     } else if (sections) {
@@ -164,7 +183,7 @@ export default function DetailScreen() {
         setError(DetailScreenErrorType.loadSchedule);
         setShowAlert(true);
       });
-  }, [selectedSemester, auth.isSettingsSettled]);
+  }, [selectedSemester, auth.isSettingsSettled, classInfo]);
 
   const reviewerIds = useMemo(() => {
     if (!reviewRecord) return [];
@@ -185,9 +204,9 @@ export default function DetailScreen() {
       ) {
         try {
           if (deleteReview) {
-            await db.deleteReview(classInfo);
-            await db.unreviewClass(classInfo);
-            unreviewClass(dispatch)(classInfo);
+            await db.deleteReview(classCode);
+            await db.unreviewClass(classCode);
+            unreviewClass(dispatch)(classCode);
 
             if (reviewRecord) {
               const newReviewRecord = { ...reviewRecord };
@@ -196,12 +215,14 @@ export default function DetailScreen() {
             }
           } else if (newReview) {
             if (myReview) {
-              await db.updateReview(classInfo, newReview);
-            } else {
+              await db.updateReview(classCode, newReview);
+            } else if (classInfo) {
               const reviewedClass = { ...classInfo, reviewedDate: Date.now() };
-              await db.submitReview(classInfo, newReview);
+              await db.submitReview(classCode, newReview);
               await db.reviewClass(reviewedClass);
               reviewClass(dispatch)(reviewedClass);
+            } else {
+              setError(DetailScreenErrorType.submitReview);
             }
 
             if (reviewRecord) {
@@ -234,22 +255,40 @@ export default function DetailScreen() {
   return (
     <>
       <AlertPopup
-        header={`Unable to ${error || "Review"}`}
+        header={
+          classInfoError === ErrorType.noData
+            ? "Not Offered"
+            : `Unable to ${
+                classInfoError === ErrorType.network
+                  ? "Load Class Information"
+                  : error || "Review"
+              }`
+        }
+        body={
+          classInfoError === ErrorType.noData
+            ? notOfferedMessage(classCode, classInfo, semester)
+            : undefined
+        }
         isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);
+          if (classInfoError === ErrorType.noData) {
+            navigation.goBack();
+          }
         }}
       />
       <KeyboardAwareSafeAreaScrollView>
         <Box marginY={"10px"}>
-          <Text variant={"h1"}>{classInfo.name}</Text>
+          <Text variant={"h1"} opacity={classInfo || classInfoError ? 1 : 0.5}>
+            {classInfo?.name ?? getFullClassCode(classCode)}
+          </Text>
           <Text
             variant={"h2"}
             opacity={schoolNames && departmentNames ? 1 : 0.5}
           >
-            {getSchoolName(classInfo, schoolNames)}
+            {getSchoolName(classCode, schoolNames)}
             {": "}
-            {getDepartmentName(classInfo, departmentNames)}
+            {getDepartmentName(classCode, departmentNames)}
           </Text>
           {!!description && (
             <VStack margin={"10px"} space={"5px"}>
@@ -275,33 +314,36 @@ export default function DetailScreen() {
                 navigation.navigate("Schedule", {
                   semester: selectedSemester,
                   sections: sections ?? [],
-                  classInfo,
+                  classCode: classInfo ?? classCode,
                   starredOrReviewed,
                   query,
                 });
               }}
             >
               <Text variant={"subtleButton"}>
-                {!sections
-                  ? `Loading ${semesterName} Schedule`
-                  : !sections.length
+                {!sections && !classInfoError
+                  ? `Loading${
+                      auth.isSettingsSettled ? ` ${semesterName} ` : " "
+                    }Schedule`
+                  : classInfoError || !sections?.length
                   ? `Not Offered in ${semesterName}`
                   : `View ${semesterName} Schedule`}
               </Text>
             </Button>
 
             <Button
+              isDisabled={!classInfo}
               onPress={() => {
                 if (auth.user && auth.isAuthenticated) {
                   navigation.navigate("Review", {
-                    classInfo,
+                    classCode: classInfo ?? classCode,
                     previousReview: myReview,
                     starredOrReviewed,
                     query,
                   });
                 } else {
                   navigation.navigate("SignInSignUp", {
-                    classInfo,
+                    classCode,
                     starredOrReviewed,
                     query,
                   });
@@ -329,7 +371,7 @@ export default function DetailScreen() {
                 ? reviewerIds.map((id) => (
                     <ReviewCard
                       key={id}
-                      classInfo={classInfo}
+                      classInfo={classInfo ?? undefined}
                       review={reviewRecord[id]}
                       setReview={(newReview) => {
                         const newReviewRecord = { ...reviewRecord };

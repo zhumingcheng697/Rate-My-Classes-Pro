@@ -5,7 +5,7 @@ import type {
   ExploreNavigationParamList,
   SearchNavigationParamList,
   MeNavigationParamList,
-  ClassInfo,
+  ClassCode,
   StarredOrReviewed,
   NavigationParamListForTab,
   ValueOf,
@@ -15,12 +15,12 @@ type RouteToPathMap<ParamList extends ParamListBase> = {
   [Screen in keyof ParamList]: (param: ParamList[Screen]) => string;
 };
 
-const getPathForClass = (classInfo: ClassInfo) =>
+const getPathForClass = (classCode: ClassCode) =>
   `${encodeURIComponent(
-    classInfo.schoolCode.toUpperCase()
+    classCode.schoolCode.toUpperCase()
   )}/${encodeURIComponent(
-    classInfo.departmentCode.toUpperCase()
-  )}/${encodeURIComponent(classInfo.classNumber.toUpperCase())}`;
+    classCode.departmentCode.toUpperCase()
+  )}/${encodeURIComponent(classCode.classNumber.toUpperCase())}`;
 
 const addQueryParam = (query: string | undefined) =>
   query ? `?query=${encodeURIComponent(query)}` : "";
@@ -41,13 +41,13 @@ function stringifyExploreRoute<Screen extends keyof ExploreNavigationParamList>(
     School: ({ schoolCode }) => `/explore/${schoolCode.toUpperCase()}`,
     Department: ({ schoolCode, departmentCode }) =>
       `/explore/${schoolCode.toUpperCase()}/${departmentCode.toUpperCase()}`,
-    Detail: ({ classInfo }) => `/explore/${getPathForClass(classInfo)}`,
-    Review: ({ classInfo }) => `/explore/${getPathForClass(classInfo)}/review`,
-    Schedule: ({ classInfo }) =>
-      `/explore/${getPathForClass(classInfo)}/schedule`,
-    SignInSignUp: ({ classInfo, isSigningUp }) =>
-      classInfo
-        ? `/explore/${getPathForClass(classInfo)}/${checkIsSigningUp(
+    Detail: ({ classCode }) => `/explore/${getPathForClass(classCode)}`,
+    Review: ({ classCode }) => `/explore/${getPathForClass(classCode)}/review`,
+    Schedule: ({ classCode }) =>
+      `/explore/${getPathForClass(classCode)}/schedule`,
+    SignInSignUp: ({ classCode, isSigningUp }) =>
+      classCode
+        ? `/explore/${getPathForClass(classCode)}/${checkIsSigningUp(
             isSigningUp
           )}`
         : checkIsSigningUp(isSigningUp),
@@ -62,15 +62,15 @@ function stringifySearchRoute<Screen extends keyof SearchNavigationParamList>(
 ) {
   const searchRouteToPathMap: RouteToPathMap<SearchNavigationParamList> = {
     Search: ({ query }) => "/search" + addQueryParam(query),
-    Detail: ({ classInfo, query }) =>
-      `/search/${getPathForClass(classInfo)}` + addQueryParam(query),
-    Review: ({ classInfo, query }) =>
-      `/search/${getPathForClass(classInfo)}/review` + addQueryParam(query),
-    Schedule: ({ classInfo, query }) =>
-      `/search/${getPathForClass(classInfo)}/schedule` + addQueryParam(query),
-    SignInSignUp: ({ classInfo, isSigningUp, query }) =>
-      classInfo
-        ? `/search/${getPathForClass(classInfo)}/${checkIsSigningUp(
+    Detail: ({ classCode, query }) =>
+      `/search/${getPathForClass(classCode)}` + addQueryParam(query),
+    Review: ({ classCode, query }) =>
+      `/search/${getPathForClass(classCode)}/review` + addQueryParam(query),
+    Schedule: ({ classCode, query }) =>
+      `/search/${getPathForClass(classCode)}/schedule` + addQueryParam(query),
+    SignInSignUp: ({ classCode, isSigningUp, query }) =>
+      classCode
+        ? `/search/${getPathForClass(classCode)}/${checkIsSigningUp(
             isSigningUp
           )}` + addQueryParam(query)
         : checkIsSigningUp(isSigningUp),
@@ -88,22 +88,22 @@ function stringifyMeRoute<Screen extends keyof MeNavigationParamList>(
     Starred: () => "/starred",
     Reviewed: () => "/reviewed",
     Settings: () => "/settings",
-    Detail: ({ classInfo, starredOrReviewed }) =>
+    Detail: ({ classCode, starredOrReviewed }) =>
       `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
-        classInfo
+        classCode
       )}`,
-    Review: ({ classInfo, starredOrReviewed }) =>
+    Review: ({ classCode, starredOrReviewed }) =>
       `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
-        classInfo
+        classCode
       )}/review`,
-    Schedule: ({ classInfo, starredOrReviewed }) =>
+    Schedule: ({ classCode, starredOrReviewed }) =>
       `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
-        classInfo
+        classCode
       )}/schedule`,
-    SignInSignUp: ({ classInfo, isSigningUp, starredOrReviewed }) =>
-      classInfo
+    SignInSignUp: ({ classCode, isSigningUp, starredOrReviewed }) =>
+      classCode
         ? `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
-            classInfo
+            classCode
           )}/${checkIsSigningUp(isSigningUp)}`
         : checkIsSigningUp(isSigningUp),
   };

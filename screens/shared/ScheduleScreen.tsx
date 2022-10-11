@@ -12,11 +12,17 @@ import AlertPopup from "../../components/AlertPopup";
 import IconHStack from "../../components/IconHStack";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Semester from "../../libs/semester";
-import { SectionInfo, type SharedNavigationParamList } from "../../libs/types";
+import {
+  ErrorType,
+  type SectionInfo,
+  type SharedNavigationParamList,
+} from "../../libs/types";
+import { useClassInfoLoader } from "../../libs/hooks";
 import { getSections } from "../../libs/schedge";
 import {
   getFullClassCode,
   getMeetingScheduleString,
+  notOfferedMessage,
   prepend,
   stripLineBreaks,
 } from "../../libs/utils";
@@ -34,10 +40,10 @@ type ScheduleScreenRouteProp = RouteProp<SharedNavigationParamList, "Schedule">;
 export default function ScheduleScreen() {
   const navigation = useNavigation<ScheduleScreenNavigationProp>();
   const route = useRoute<ScheduleScreenRouteProp>();
-  const { semester, classInfo } = route.params;
+  const { semester, classCode } = route.params;
   const settings = useSelector((state) => state.settings);
   const [sections, setSections] = useState<SectionInfo[] | null>(
-    route.params.sections
+    route.params.sections ?? null
   );
   const [showAlert, setShowAlert] = useState(false);
   const auth = useAuth();
@@ -45,9 +51,9 @@ export default function ScheduleScreen() {
   const cleanText = useCallback(
     (text: string) =>
       text
-        .replace(new RegExp(`^\s*${getFullClassCode(classInfo)}\s*`, "gi"), "")
+        .replace(new RegExp(`^\s*${getFullClassCode(classCode)}\s*`, "gi"), "")
         .replace(/^\s+/gi, ""),
-    [classInfo]
+    [classCode]
   );
 
   const selectedSemester = useMemo(
@@ -55,11 +61,36 @@ export default function ScheduleScreen() {
     [settings.selectedSemester]
   );
 
-  useEffect(() => {
-    if (!auth.isSettingsSettled) return;
+  const { classInfo, classInfoError } = useClassInfoLoader(
+    classCode,
+    settings.selectedSemester,
+    auth.isSettingsSettled
+  );
 
-    if (!Semester.equals(selectedSemester, new Semester(semester))) {
-      getSections(classInfo, selectedSemester)
+  const notOffered = !!sections || classInfoError === ErrorType.noData;
+
+  useEffect(() => {
+    if (!classInfoError && sections && sections.length) {
+      setShowAlert(false);
+    }
+  }, [classInfoError, sections]);
+
+  useEffect(() => {
+    if (!classInfo && classInfoError) {
+      setShowAlert(true);
+      navigation.setParams({ semester: selectedSemester });
+      return;
+    }
+  }, [classInfo, classInfoError]);
+
+  useEffect(() => {
+    if (!auth.isSettingsSettled || !classInfo) return;
+
+    if (
+      !Semester.equals(selectedSemester, new Semester(semester)) ||
+      !sections
+    ) {
+      getSections(classInfo, settings.selectedSemester)
         .then((sections) => {
           setSections(sections);
           if (!sections.length) {
@@ -74,32 +105,21 @@ export default function ScheduleScreen() {
           navigation.setParams({ semester: selectedSemester });
         });
     }
-  }, [selectedSemester, auth.isSettingsSettled]);
-
-  const noDataErrorMessage = () => {
-    const diff = Semester.between(
-      Semester.predictCurrentSemester(),
-      selectedSemester
-    );
-
-    return `${classInfo.name} (${getFullClassCode(classInfo)}) ${
-      diff > 0
-        ? "was not offered"
-        : diff < 0
-        ? "will not be offered"
-        : "is not offered"
-    } in ${selectedSemester.toString()}.`;
-  };
+  }, [selectedSemester, auth.isSettingsSettled, classInfo]);
 
   return (
     <>
       <AlertPopup
         isOpen={showAlert}
-        header={sections ? "No Sections Offered" : "Unable to Load Schedule"}
-        body={sections ? noDataErrorMessage() : undefined}
+        header={notOffered ? "No Sections Offered" : "Unable to Load Schedule"}
+        body={
+          notOffered
+            ? notOfferedMessage(classCode, classInfo, selectedSemester)
+            : undefined
+        }
         onClose={() => {
           setShowAlert(false);
-          navigation.goBack();
+          navigation.pop(classInfoError === ErrorType.noData ? 2 : 1);
         }}
       />
       <KeyboardAwareSafeAreaScrollView>
@@ -144,14 +164,15 @@ export default function ScheduleScreen() {
                         fontWeight={"semibold"}
                         marginY={"1px"}
                       >
-                        {name || classInfo.name}
+                        {name ||
+                          (classInfo?.name ?? getFullClassCode(classCode))}
                       </Text>
                       <Text
                         fontSize={"xl"}
                         lineHeight={"1.15em"}
                         marginY={"1px"}
                       >
-                        ({[getFullClassCode(classInfo), code].join(" ")})
+                        ({[getFullClassCode(classCode), code].join(" ")})
                       </Text>
                     </HStack>
                     <VStack space={"3px"}>

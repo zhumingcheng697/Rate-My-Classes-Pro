@@ -21,13 +21,14 @@ import PlainTextButton from "./PlainTextButton";
 import AlertPopup from "./AlertPopup";
 import IconHStack from "./IconHStack";
 import {
-  type Rating,
   RatingType,
-  type Review,
-  VoteRecord,
   Vote,
-  SharedNavigationParamList,
-  ClassInfo,
+  type Rating,
+  type VoteRecord,
+  type Review,
+  type SharedNavigationParamList,
+  type ClassCode,
+  type ClassInfo,
 } from "../libs/types";
 import Semester from "../libs/semester";
 import { ratingDescriptionMap, ratingTypeIconNameMap } from "../libs/utils";
@@ -64,7 +65,7 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
 
 type VoteBlockBaseProps = {
   userId: string;
-  classInfo: ClassInfo;
+  classCode: ClassCode;
   upvotes: VoteRecord;
   downvotes: VoteRecord;
   setVotes: (upVotes?: VoteRecord, downvotes?: VoteRecord) => void;
@@ -75,7 +76,7 @@ type VoteBlockProps = VoteBlockBaseProps &
 
 function VoteBlock({
   userId,
-  classInfo,
+  classCode,
   upvotes,
   downvotes,
   setVotes,
@@ -133,7 +134,7 @@ function VoteBlock({
             <Button
               onPress={() => {
                 setShowAlert(false);
-                navigation.navigate("SignInSignUp", { classInfo });
+                navigation.navigate("SignInSignUp", { classCode });
               }}
             >
               Sign In
@@ -259,7 +260,7 @@ function VoteBlock({
 }
 
 type ReviewCardBaseProps = {
-  classInfo: ClassInfo;
+  classInfo?: ClassInfo;
   review: Review;
   setReview: (review: Review) => void;
 };
@@ -268,6 +269,7 @@ export type ReviewCardProps = ReviewCardBaseProps &
   Omit<IStackProps, keyof ReviewCardBaseProps>;
 
 export default function ReviewCard({
+  classInfo,
   review,
   setReview,
   ...rest
@@ -288,7 +290,7 @@ export default function ReviewCard({
 
   const navigation = useNavigation<ReviewCardNavigationProp>();
   const route = useRoute<ReviewCardRouteProp>();
-  const { classInfo } = route.params;
+  const { classCode } = route.params;
   const auth = useAuth();
 
   const setVotes = (newUpvotes?: VoteRecord, newDownvotes?: VoteRecord) => {
@@ -324,7 +326,7 @@ export default function ReviewCard({
       {!!comment && <Text fontSize={"md"}>{comment}</Text>}
       <HStack justifyContent={"space-between"} flexWrap={"wrap"}>
         <VoteBlock
-          classInfo={classInfo}
+          classCode={classCode}
           margin={"-6px"}
           userId={userId}
           upvotes={upvotes}
@@ -336,7 +338,7 @@ export default function ReviewCard({
             title={"Edit My Review"}
             onPress={() => {
               navigation.navigate("Review", {
-                classInfo,
+                classCode: classInfo ?? classCode,
                 previousReview: review,
               });
             }}

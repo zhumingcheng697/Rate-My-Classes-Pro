@@ -100,6 +100,7 @@ export type StarredOrReviewed = "Starred" | "Reviewed";
 
 export type SharedNavigationParamList = {
   Detail: {
+    classCode: ClassCode;
     classInfo: ClassInfo;
     deleteReview?: true;
     newReview?: Review;
@@ -107,21 +108,21 @@ export type SharedNavigationParamList = {
     starredOrReviewed?: StarredOrReviewed;
   };
   Review: {
-    classInfo: ClassInfo;
+    classCode: ClassCode;
     previousReview?: Review;
     newReview?: Review;
     query?: string;
     starredOrReviewed?: StarredOrReviewed;
   };
   Schedule: {
-    classInfo: ClassInfo;
+    classCode: ClassCode;
     semester: SemesterInfo;
-    sections: SectionInfo[];
+    sections?: SectionInfo[];
     query?: string;
     starredOrReviewed?: StarredOrReviewed;
   };
   SignInSignUp: {
-    classInfo?: ClassInfo;
+    classCode?: ClassCode;
     isSigningUp?: boolean;
     query?: string;
     starredOrReviewed?: StarredOrReviewed;

@@ -9,7 +9,11 @@ import { useSelector, useDispatch } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import AlertPopup from "../../components/AlertPopup";
-import { type SharedNavigationParamList } from "../../libs/types";
+import type {
+  StarredClassInfo,
+  SharedNavigationParamList,
+} from "../../libs/types";
+import { useClassInfoLoader } from "../../libs/hooks";
 import { getFullClassCode } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
 import { useDB } from "../../mongodb/db";
@@ -32,9 +36,15 @@ export default ({
   navigation,
   route,
 }: DetailScreenOptionsProp): StackNavigationOptions => ({
-  title: getFullClassCode(route.params.classInfo),
+  title: getFullClassCode(route.params.classCode),
   headerRight: (props) => {
-    const { classInfo } = route.params;
+    const { classCode } = route.params;
+    const { selectedSemester } = useSelector((state) => state.settings);
+    const { classInfo } = useClassInfoLoader(
+      classCode,
+      selectedSemester,
+      false
+    );
     const starredClasses = useSelector((state) => state.starredClassRecord);
     const dispatch = useDispatch();
     const auth = useAuth();
@@ -42,7 +52,7 @@ export default ({
     const isStarred =
       auth.isAuthenticated &&
       starredClasses &&
-      !!starredClasses[getFullClassCode(classInfo)];
+      !!starredClasses[getFullClassCode(classCode)];
 
     const db = useMemo(() => {
       if (auth.user) return useDB(auth.user);
@@ -71,7 +81,7 @@ export default ({
               <Button
                 onPress={() => {
                   setShowAlert(false);
-                  navigation.navigate("SignInSignUp", { classInfo });
+                  navigation.navigate("SignInSignUp", { classCode });
                 }}
               >
                 Sign In
@@ -80,6 +90,7 @@ export default ({
           }
         />
         <IconButton
+          isDisabled={!classInfo}
           variant={"unstyled"}
           marginRight={"5px"}
           padding={"5px"}
@@ -101,10 +112,10 @@ export default ({
             if (auth.user && auth.isAuthenticated && db) {
               try {
                 if (isStarred) {
-                  await db.unstarClass(classInfo);
-                  unstarClass(dispatch)(classInfo);
-                } else {
-                  const starredClass = {
+                  await db.unstarClass(classCode);
+                  unstarClass(dispatch)(classCode);
+                } else if (classInfo) {
+                  const starredClass: StarredClassInfo = {
                     ...classInfo,
                     starredDate: Date.now(),
                   };

@@ -41,7 +41,7 @@ export default ({
     );
   },
   headerRight: (props) => {
-    const { classInfo, previousReview, newReview } = route.params;
+    const { classCode, previousReview, newReview } = route.params;
     return (
       <PlainTextButton
         isDisabled={newReview ? false : true}
@@ -49,7 +49,7 @@ export default ({
         title={previousReview ? "Update" : "Submit"}
         _text={{ fontSize: "md", fontWeight: "semibold" }}
         onPress={() => {
-          navigation.navigate("Detail", { classInfo, newReview });
+          navigation.navigate("Detail", { classCode, newReview });
         }}
         {...props}
       />

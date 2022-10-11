@@ -15,6 +15,7 @@ export function useClassInfoLoader(
 ) {
   const [classInfo, setClassInfo] = useState<ClassInfo | null>(null);
   const [classInfoError, setClassInfoError] = useState<ErrorType | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const name = classInfo?.name ?? classCode.name;
@@ -26,7 +27,9 @@ export function useClassInfoLoader(
           description: classInfo?.description ?? classCode.description ?? "",
         });
       }
-    } else if (isSettingsSettled) {
+    } else if (isSettingsSettled && !isLoading) {
+      setIsLoading(true);
+
       getClass(classCode, semester)
         .then((classInfo) => {
           if (classInfo) {
@@ -41,6 +44,9 @@ export function useClassInfoLoader(
           console.error(e);
           setClassInfo(null);
           setClassInfoError(ErrorType.network);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
   }, [

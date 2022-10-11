@@ -4,6 +4,58 @@ import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
+import { type ClassCode, type ClassInfo, ErrorType } from "./types";
+import type { SemesterInfo } from "./semester";
+import { getClass } from "./schedge";
+
+export function useClassInfoLoader(
+  classCode: ClassCode,
+  semester: SemesterInfo,
+  isSettingsSettled: boolean
+) {
+  const [classInfo, setClassInfo] = useState<ClassInfo | null>(null);
+  const [classInfoError, setClassInfoError] = useState<ErrorType | null>(null);
+
+  useEffect(() => {
+    const name = classInfo?.name ?? classCode.name;
+    if (typeof name === "string") {
+      if (name !== classInfo?.name) {
+        setClassInfo({
+          ...classCode,
+          name,
+          description: classInfo?.description ?? classCode.description ?? "",
+        });
+      }
+    } else if (isSettingsSettled) {
+      getClass(classCode, semester)
+        .then((classInfo) => {
+          if (classInfo) {
+            setClassInfo(classInfo);
+            setClassInfoError(null);
+          } else {
+            setClassInfo(null);
+            setClassInfoError(ErrorType.noData);
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+          setClassInfo(null);
+          setClassInfoError(ErrorType.network);
+        });
+    }
+  }, [
+    classCode.schoolCode,
+    classCode.departmentCode,
+    classCode.classNumber,
+    classCode.name,
+    semester.semesterCode,
+    semester.year,
+    isSettingsSettled,
+  ]);
+
+  return { classInfo, classInfoError };
+}
+
 export function useAppState() {
   const [appState, setAppState] = useState(() => AppState.currentState);
 

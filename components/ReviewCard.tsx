@@ -92,7 +92,6 @@ function VoteBlock({
   );
   const db = useMemo(() => {
     if (auth.user && auth.isAuthenticated) return useDB(auth.user);
-    auth.signInAnonymously();
   }, [auth.user]);
 
   const vote = useMemo(() => {
@@ -106,16 +105,16 @@ function VoteBlock({
     }
   }, [upvotes, downvotes, isAuthenticated]);
 
-  const upvote = () => {
-    db?.voteReview(classInfo, userId, Vote.upvote);
+  const upvote = async () => {
+    await db?.voteReview(classCode, userId, Vote.upvote);
   };
 
-  const downvote = () => {
-    db?.voteReview(classInfo, userId, Vote.downvote);
+  const downvote = async () => {
+    await db?.voteReview(classCode, userId, Vote.downvote);
   };
 
-  const unvote = () => {
-    db?.voteReview(classInfo, userId);
+  const unvote = async () => {
+    await db?.voteReview(classCode, userId);
   };
 
   return (

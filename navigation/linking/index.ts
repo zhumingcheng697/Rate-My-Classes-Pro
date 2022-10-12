@@ -1,9 +1,6 @@
-import {
-  getPathFromState,
-  getStateFromPath,
-  LinkingOptions,
-} from "@react-navigation/native";
+import type { LinkingOptions } from "@react-navigation/native";
 
+import parse from "./parse";
 import stringnify from "./stringify";
 import type {
   RootNavigationParamList,
@@ -49,28 +46,30 @@ const linking: LinkingOptions<RootNavigationParamList> = {
       return "/explore";
     }
   },
-  getStateFromPath(path, options) {
-    const [route, param] = path.split(/\?/);
+  getStateFromPath(path) {
+    try {
+      const [route, param] = path.split(/\?/);
 
-    const routes = route?.split(/\//)?.filter(Boolean) ?? [];
+      const routes = route?.split(/\//)?.filter(Boolean) ?? [];
 
-    const params: Record<string, string> = Object.fromEntries(
-      param
-        ?.split(/&/)
-        ?.map((param) =>
-          param
-            .split(/=/)
-            .map((e, i) =>
-              i === 0
-                ? decodeURIComponent(e).toLowerCase()
-                : decodeURIComponent(e)
-            )
-        ) ?? []
-    );
+      const params: Record<string, string> = Object.fromEntries(
+        param
+          ?.split(/&/)
+          ?.map((param) =>
+            param
+              .split(/=/)
+              .map((e, i) =>
+                i === 0
+                  ? decodeURIComponent(e).toLowerCase()
+                  : decodeURIComponent(e)
+              )
+          ) ?? []
+      );
 
-    const state = getStateFromPath(path, options);
-
-    return state;
+      return parse(routes, params);
+    } catch (e) {
+      console.error(path, e);
+    }
   },
 };
 

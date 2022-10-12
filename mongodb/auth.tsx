@@ -1,7 +1,6 @@
 // https://github.com/mongodb-university/realm-tutorial-react-native/blob/final/providers/AuthProvider.js
 
 import React, {
-  Component,
   useContext,
   useState,
   type ReactNode,

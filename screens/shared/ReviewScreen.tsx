@@ -44,7 +44,7 @@ export default function ReviewScreen() {
   const navigation = useNavigation<ReviewScreenNavigationProp>();
   const route = useRoute<ReviewScreenRouteProp>();
   const { selectedSemester } = useSelector((state) => state.settings);
-  const { classCode, previousReview } = route.params;
+  const { classCode, previousReview, newOrEdit } = route.params;
   const [hasEdited, setHasEdited] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const { classInfo, classInfoError } = useClassInfoLoader(
@@ -102,7 +102,10 @@ export default function ReviewScreen() {
               setComment(review.comment);
               navigation.setParams({
                 previousReview: review,
+                newOrEdit: "Edit",
               });
+            } else {
+              navigation.setParams({ newOrEdit: "New" });
             }
           } catch (e) {
             setReviewError(true);
@@ -123,6 +126,7 @@ export default function ReviewScreen() {
     }
 
     if (
+      newOrEdit &&
       auth.user &&
       enjoyment &&
       difficulty &&
@@ -171,6 +175,7 @@ export default function ReviewScreen() {
     instructor,
     comment,
     auth.isAuthenticated,
+    newOrEdit,
   ]);
 
   return (
@@ -218,75 +223,90 @@ export default function ReviewScreen() {
       <KeyboardAwareSafeAreaScrollView>
         <Box marginY={"10px"}>
           <Text variant={"h1"} opacity={classInfo?.name ? 1 : 0.5}>
-            {classInfo?.name ?? "Review"}
+            {classInfo?.name ?? (newOrEdit ? `${newOrEdit} Review"` : "Review")}
           </Text>
           <Text variant={"h2"}>{getFullClassCode(classCode)}</Text>
           <VStack marginX={"10px"} marginY={"5px"} space={"8px"}>
             <LabeledInput
               label={"Instructor"}
-              isDisabled={!!previousReview}
-              showRequiredIcon={!previousReview}
+              isDisabled={!newOrEdit || !!previousReview}
+              showRequiredIcon={!!newOrEdit && !previousReview}
             >
               <Input
                 value={instructor}
                 onChangeText={setInstructor}
                 autoCapitalize={"words"}
-                isDisabled={!!previousReview}
+                isDisabled={!newOrEdit || !!previousReview}
               />
             </LabeledInput>
             <LabeledInput
               label={"Semester"}
-              isDisabled={!!previousReview}
-              showRequiredIcon={!previousReview}
+              isDisabled={!newOrEdit || !!previousReview}
+              showRequiredIcon={!!newOrEdit && !previousReview}
             >
               <SemesterSelector
                 selectedSemester={semester}
                 semesterOptions={semesterOptions}
                 onSelectedSemesterChange={setSemester}
-                isDisabled={!!previousReview}
+                isDisabled={!newOrEdit || !!previousReview}
               />
             </LabeledInput>
             <LabeledInput
               label={"Enjoyment"}
-              showRequiredIcon={!previousReview}
+              isDisabled={!newOrEdit}
+              showRequiredIcon={!!newOrEdit && !previousReview}
             >
               <RatingSelector
                 selectedRating={enjoyment}
                 ratingType={RatingType.enjoyment}
                 onSelectedRatingChange={setEnjoyment}
+                isDisabled={!newOrEdit}
               />
             </LabeledInput>
             <LabeledInput
               label={"Difficulty"}
-              showRequiredIcon={!previousReview}
+              isDisabled={!newOrEdit}
+              showRequiredIcon={!!newOrEdit && !previousReview}
             >
               <RatingSelector
                 selectedRating={difficulty}
                 ratingType={RatingType.difficulty}
                 onSelectedRatingChange={setDifficulty}
+                isDisabled={!newOrEdit}
               />
             </LabeledInput>
-            <LabeledInput label={"Workload"} showRequiredIcon={!previousReview}>
+            <LabeledInput
+              label={"Workload"}
+              isDisabled={!newOrEdit}
+              showRequiredIcon={!!newOrEdit && !previousReview}
+            >
               <RatingSelector
                 selectedRating={workload}
                 ratingType={RatingType.workload}
                 onSelectedRatingChange={setWorkload}
+                isDisabled={!newOrEdit}
               />
             </LabeledInput>
-            <LabeledInput label={"Value"} showRequiredIcon={!previousReview}>
+            <LabeledInput
+              label={"Value"}
+              isDisabled={!newOrEdit}
+              showRequiredIcon={!!newOrEdit && !previousReview}
+            >
               <RatingSelector
                 selectedRating={value}
                 ratingType={RatingType.value}
                 onSelectedRatingChange={setValue}
+                isDisabled={!newOrEdit}
               />
             </LabeledInput>
-            <LabeledInput label={"Comment"}>
+            <LabeledInput label={"Comment"} isDisabled={!newOrEdit}>
               <Input
                 placeholder={"Optional"}
                 value={comment}
                 onChangeText={setComment}
                 multiline
                 height={"130px"}
+                isDisabled={!newOrEdit}
               />
             </LabeledInput>
             {previousReview && (

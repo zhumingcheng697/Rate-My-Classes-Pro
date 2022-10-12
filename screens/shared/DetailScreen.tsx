@@ -313,7 +313,7 @@ export default function DetailScreen() {
               onPress={() => {
                 navigation.navigate("Schedule", {
                   semester: selectedSemester,
-                  sections: sections ?? [],
+                  sections: sections ?? undefined,
                   classCode: classInfo ?? classCode,
                   starredOrReviewed,
                   query,
@@ -339,6 +339,7 @@ export default function DetailScreen() {
                     classCode: classInfo ?? classCode,
                     previousReview: myReview,
                     starredOrReviewed,
+                    newOrEdit: myReview ? "Edit" : "New",
                     query,
                   });
                 } else {

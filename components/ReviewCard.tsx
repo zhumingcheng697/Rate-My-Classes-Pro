@@ -339,6 +339,7 @@ export default function ReviewCard({
               navigation.navigate("Review", {
                 classCode: classInfo ?? classCode,
                 previousReview: review,
+                newOrEdit: "Edit",
               });
             }}
           />

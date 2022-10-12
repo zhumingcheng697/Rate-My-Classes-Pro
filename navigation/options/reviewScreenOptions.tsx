@@ -26,7 +26,7 @@ export default ({
   navigation,
   route,
 }: ReviewScreenOptionsProp): StackNavigationOptions => ({
-  title: route.params.previousReview ? "Edit Review" : "New Review",
+  title: route.params.newOrEdit ? `${route.params.newOrEdit} Review` : "Review",
   presentation: "modal",
   gestureEnabled: false,
   headerLeft: (props) => {
@@ -41,12 +41,12 @@ export default ({
     );
   },
   headerRight: (props) => {
-    const { classCode, previousReview, newReview } = route.params;
+    const { classCode, newReview, newOrEdit } = route.params;
     return (
       <PlainTextButton
-        isDisabled={newReview ? false : true}
+        isDisabled={!newReview || !newOrEdit}
         marginRight={"10px"}
-        title={previousReview ? "Update" : "Submit"}
+        title={newOrEdit === "Edit" ? "Update" : "Submit"}
         _text={{ fontSize: "md", fontWeight: "semibold" }}
         onPress={() => {
           navigation.navigate("Detail", { classCode, newReview });

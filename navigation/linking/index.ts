@@ -14,6 +14,8 @@ import type {
 const linking: LinkingOptions<RootNavigationParamList> = {
   prefixes: [
     "rate-my-classes-pro://",
+    "rate-my-classes://",
+    "ratemyclasses://",
     "https://rate-my-classes-pro.netlify.app/",
   ],
   getPathFromState(tabState) {

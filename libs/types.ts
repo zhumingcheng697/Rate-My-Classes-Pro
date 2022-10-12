@@ -67,7 +67,7 @@ export type Review = {
   reviewedDate: number;
   semester: SemesterInfo;
   instructor: string;
-  comment?: string;
+  comment: string;
 };
 
 export type SectionInfo = {
@@ -98,10 +98,11 @@ export type RootNavigationParamList = {
 
 export type StarredOrReviewed = "Starred" | "Reviewed";
 
+export type NewOrEdit = "New" | "Edit";
+
 export type SharedNavigationParamList = {
   Detail: {
     classCode: ClassCode;
-    classInfo: ClassInfo;
     deleteReview?: true;
     newReview?: Review;
     query?: string;
@@ -113,6 +114,7 @@ export type SharedNavigationParamList = {
     newReview?: Review;
     query?: string;
     starredOrReviewed?: StarredOrReviewed;
+    newOrEdit?: NewOrEdit;
   };
   Schedule: {
     classCode: ClassCode;

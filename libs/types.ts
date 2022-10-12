@@ -118,7 +118,7 @@ export type SharedNavigationParamList = {
   };
   Schedule: {
     classCode: ClassCode;
-    semester: SemesterInfo;
+    semester?: SemesterInfo;
     sections?: SectionInfo[];
     query?: string;
     starredOrReviewed?: StarredOrReviewed;

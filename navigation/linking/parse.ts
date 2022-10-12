@@ -114,6 +114,7 @@ function parseExplorePath(
     number,
     (keyof ExploreNavigationParamList)[]
   > = {
+    [0]: ["University"],
     [1]: ["University"],
     [2]: ["University", "School"],
     [3]: ["University", "School", "Department"],
@@ -122,20 +123,14 @@ function parseExplorePath(
 
   let screenNames: (keyof ExploreNavigationParamList)[];
 
-  if (paths.length in pathsLengthToScreenNamesMap) {
-    screenNames = pathsLengthToScreenNamesMap[paths.length];
-  } else if (paths.length === 5) {
-    const finalPath = paths[4].toLowerCase();
-    if (finalPath in lastPathToScreenNameMap) {
-      screenNames = [
-        ...pathsLengthToScreenNamesMap[4],
-        lastPathToScreenNameMap[finalPath],
-      ];
-    } else {
-      screenNames = ["University"];
-    }
+  const lastPath = paths[4]?.toLowerCase();
+  if (lastPath in lastPathToScreenNameMap) {
+    screenNames = [
+      ...pathsLengthToScreenNamesMap[4],
+      lastPathToScreenNameMap[lastPath],
+    ];
   } else {
-    screenNames = ["University"];
+    screenNames = pathsLengthToScreenNamesMap[Math.min(paths.length, 4)];
   }
 
   return screenNames.map((screenName) =>
@@ -176,15 +171,11 @@ function parseSearchPath(
 
   let screenNames: (keyof SearchNavigationParamList)[];
 
-  if (paths.length === 4) {
+  const lastPath = paths[4]?.toLowerCase();
+  if (lastPath in lastPathToScreenNameMap) {
+    screenNames = ["Search", "Detail", lastPathToScreenNameMap[lastPath]];
+  } else if (paths.length >= 4) {
     screenNames = ["Search", "Detail"];
-  } else if (paths.length === 5) {
-    const finalPath = paths[4].toLowerCase();
-    if (finalPath in lastPathToScreenNameMap) {
-      screenNames = ["Search", "Detail", lastPathToScreenNameMap[finalPath]];
-    } else {
-      screenNames = ["Search"];
-    }
   } else {
     screenNames = ["Search"];
   }
@@ -240,15 +231,23 @@ function parseMePath(
   const firstPath = paths[0]?.toLowerCase();
 
   if (firstPath in firstMePathToFirstScreenNamesMap) {
-    const finalPath = paths[paths.length - 1]?.toLowerCase();
-    if (paths.length === 4) {
-      screenNames = [...firstMePathToFirstScreenNamesMap[firstPath], "Detail"];
-    } else if (paths.length === 5 && finalPath in lastPathToScreenNameMap) {
-      screenNames = [
-        ...firstMePathToFirstScreenNamesMap[firstPath],
-        "Detail",
-        lastPathToScreenNameMap[finalPath],
-      ];
+    if (
+      paths.length >= 4 &&
+      (firstPath === "starred" || firstPath === "reviewed")
+    ) {
+      const lastPath = paths[4]?.toLowerCase();
+      if (lastPath in lastPathToScreenNameMap) {
+        screenNames = [
+          ...firstMePathToFirstScreenNamesMap[firstPath],
+          "Detail",
+          lastPathToScreenNameMap[lastPath],
+        ];
+      } else {
+        screenNames = [
+          ...firstMePathToFirstScreenNamesMap[firstPath],
+          "Detail",
+        ];
+      }
     } else {
       screenNames = firstMePathToFirstScreenNamesMap[firstPath];
     }

@@ -5,6 +5,7 @@ import { createStore } from "redux";
 import { Provider } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+import linking from "./navigation/linking";
 import RootNavigation from "./navigation/RootNavigation";
 import { AuthProvider } from "./mongodb/auth";
 import { useDB } from "./mongodb/db";
@@ -40,7 +41,16 @@ function AppComponent() {
           theme={nativeBaseTheme}
           colorModeManager={colorModeManager}
         >
-          <NavigationContainer theme={navigationTheme}>
+          <NavigationContainer
+            linking={linking}
+            theme={navigationTheme}
+            documentTitle={{
+              formatter: (options, route) =>
+                options?.title ?? route?.name
+                  ? `${options?.title ?? route?.name} | Rate My Classes Pro`
+                  : "Rate My Classes Pro",
+            }}
+          >
             <RootNavigation />
           </NavigationContainer>
         </NativeBaseProvider>

@@ -1,12 +1,8 @@
-import type { LinkingOptions } from "@react-navigation/native";
+import type { LinkingOptions, NavigationState } from "@react-navigation/native";
 
 import parse from "./parse";
 import stringnify from "./stringify";
-import type {
-  RootNavigationParamList,
-  StackNavigationParamList,
-  ValueOf,
-} from "../../libs/types";
+import type { RootNavigationParamList } from "../../libs/types";
 
 const linking: LinkingOptions<RootNavigationParamList> = {
   prefixes: [
@@ -15,34 +11,11 @@ const linking: LinkingOptions<RootNavigationParamList> = {
     "ratemyclasses://",
     "https://rate-my-classes-pro.netlify.app/",
   ],
-  getPathFromState(tabState) {
+  getPathFromState(state) {
     try {
-      const { index: tabIndex, routes: tabRoutes } = tabState;
-
-      if (typeof tabIndex === "number" && tabRoutes) {
-        const { name: tabName, state: stackState } = tabRoutes[tabIndex] ?? {};
-
-        if (tabName && stackState) {
-          const { index: stackIndex, routes: stackRoutes } = stackState;
-
-          if (typeof stackIndex === "number" && stackRoutes) {
-            const { name: screenName, params: screenParams } =
-              stackRoutes[stackIndex] ?? {};
-
-            if (screenName) {
-              return stringnify(
-                tabName as keyof RootNavigationParamList,
-                screenName as keyof StackNavigationParamList,
-                screenParams as ValueOf<StackNavigationParamList>
-              );
-            }
-          }
-        }
-      }
-
-      return "/explore";
+      return stringnify(state as NavigationState<RootNavigationParamList>);
     } catch (e) {
-      console.error(tabState, e);
+      console.error(state, e);
       return "/explore";
     }
   },

@@ -8,7 +8,9 @@ import type {
   StackNavigationParamList,
   ClassCode,
   StarredOrReviewed,
-  NavigationParamListForTab,
+  NavigationParamListFor,
+  RouteNameFor,
+  RouteParamsFor,
   ValueOf,
 } from "../../libs/types";
 
@@ -138,13 +140,13 @@ export function flattenRoute(
 
 export function stringifyRoute<
   Tab extends keyof RootNavigationParamList,
-  Screen extends keyof NavigationParamListForTab<Tab>,
-  Params extends NavigationParamListForTab<Tab>[Screen]
+  Screen extends RouteNameFor<Tab>,
+  Params extends RouteParamsFor<Tab, Screen>
 >(tabName: Tab, screenName: Screen, params: Params) {
   const rootRouteToPathMap: {
     [T in keyof RootNavigationParamList]: (
-      screen: keyof NavigationParamListForTab<T>,
-      params: ValueOf<NavigationParamListForTab<T>>
+      screen: keyof NavigationParamListFor<T>,
+      params: ValueOf<NavigationParamListFor<T>>
     ) => string;
   } = {
     ExploreTab: stringifyExploreRoute,
@@ -152,7 +154,10 @@ export function stringifyRoute<
     MeTab: stringifyMeRoute,
   };
 
-  return rootRouteToPathMap[tabName](screenName, params);
+  return rootRouteToPathMap[tabName](
+    screenName as keyof NavigationParamListFor<Tab>,
+    params as ValueOf<NavigationParamListFor<Tab>>
+  );
 }
 
 export default function stringify(

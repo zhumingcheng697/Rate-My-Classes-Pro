@@ -21,25 +21,7 @@ const linking: LinkingOptions<RootNavigationParamList> = {
   },
   getStateFromPath(path) {
     try {
-      const [route, param] = path.split(/\?/);
-
-      const routes = route?.split(/\//)?.filter(Boolean) ?? [];
-
-      const params: Record<string, string> = Object.fromEntries(
-        param
-          ?.split(/&/)
-          ?.map((param) =>
-            param
-              .split(/=/)
-              .map((e, i) =>
-                i === 0
-                  ? decodeURIComponent(e).toLowerCase()
-                  : decodeURIComponent(e)
-              )
-          ) ?? []
-      );
-
-      return parse(routes, params);
+      return parse(path);
     } catch (e) {
       console.error(path, e);
     }

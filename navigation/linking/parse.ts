@@ -261,8 +261,7 @@ function parseMePath(
 }
 
 export default function parse(
-  paths: string[],
-  params: Record<string, string>
+  path: string
 ): ResultState<RootNavigationParamList> {
   const rootPathsToRoutesMap: {
     [T in keyof RootNavigationParamList]: (
@@ -274,6 +273,24 @@ export default function parse(
     SearchTab: parseSearchPath,
     MeTab: parseMePath,
   };
+
+  const [route, param] = path.split(/\?/);
+
+  const paths = route?.split(/\//)?.filter(Boolean) ?? [];
+
+  const params: Record<string, string> = Object.fromEntries(
+    param
+      ?.split(/&/)
+      ?.map((param) =>
+        param
+          .split(/=/)
+          .map((e, i) =>
+            i === 0
+              ? decodeURIComponent(e).toLowerCase()
+              : decodeURIComponent(e)
+          )
+      ) ?? []
+  );
 
   const firstPathToTabNameMap: Record<string, keyof RootNavigationParamList> = {
     explore: "ExploreTab",

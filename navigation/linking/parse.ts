@@ -13,8 +13,8 @@ import type {
   ExploreNavigationParamList,
   SearchNavigationParamList,
   MeNavigationParamList,
-  NavigationParamListForTab,
   StarredOrReviewed,
+  NavigationParamListFor,
 } from "../../libs/types";
 
 type PathToRouteMap<ParamList extends ParamListBase> = {
@@ -267,7 +267,7 @@ export default function parse(
     [T in keyof RootNavigationParamList]: (
       paths: string[],
       params: Record<string, string>
-    ) => ResultRoute<NavigationParamListForTab<T>>[];
+    ) => ResultRoute<NavigationParamListFor<T>>[];
   } = {
     ExploreTab: parseExplorePath,
     SearchTab: parseSearchPath,

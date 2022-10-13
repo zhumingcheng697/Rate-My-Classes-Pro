@@ -153,12 +153,29 @@ export type StackNavigationParamList =
   | SearchNavigationParamList
   | MeNavigationParamList;
 
-export type NavigationParamListForTab<
-  Tab extends keyof RootNavigationParamList
-> = Tab extends "ExploreTab"
-  ? ExploreNavigationParamList
-  : Tab extends "SearchTab"
-  ? SearchNavigationParamList
-  : MeNavigationParamList;
+export type NavigationParamListFor<Tab extends keyof RootNavigationParamList> =
+  Tab extends "ExploreTab"
+    ? ExploreNavigationParamList
+    : Tab extends "SearchTab"
+    ? SearchNavigationParamList
+    : MeNavigationParamList;
+
+export type RouteNameFor<Tab extends keyof RootNavigationParamList> =
+  Tab extends "ExploreTab"
+    ? keyof ExploreNavigationParamList
+    : Tab extends "SearchTab"
+    ? keyof SearchNavigationParamList
+    : keyof MeNavigationParamList;
+
+export type RouteParamsFor<
+  Tab extends keyof RootNavigationParamList,
+  Screen extends RouteNameFor<Tab>
+> = Screen extends keyof ExploreNavigationParamList
+  ? ExploreNavigationParamList[Screen]
+  : Screen extends keyof SearchNavigationParamList
+  ? SearchNavigationParamList[Screen]
+  : Screen extends keyof MeNavigationParamList
+  ? MeNavigationParamList[Screen]
+  : never;
 
 export type ValueOf<T> = T[keyof T];

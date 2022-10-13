@@ -31,6 +31,10 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import AlertPopup from "../../components/AlertPopup";
 import ReviewCard from "../../components/ReviewCard";
 import RatingDashboard from "../../components/RatingDashboard";
+import {
+  SolidButton,
+  SubtleButton,
+} from "../../components/LinkCompatibleButtons";
 import { ReviewOrderSelector } from "../../components/Selector";
 import { useAuth } from "../../mongodb/auth";
 import { useDB } from "../../mongodb/db";
@@ -307,8 +311,7 @@ export default function DetailScreen() {
             value={value}
           />
           <VStack margin={"10px"} space={"10px"}>
-            <Button
-              variant={"subtle"}
+            <SubtleButton
               isDisabled={!sections || !sections.length}
               onPress={() => {
                 navigation.navigate("Schedule", {
@@ -329,9 +332,8 @@ export default function DetailScreen() {
                   ? `Not Offered in ${semesterName}`
                   : `View ${semesterName} Schedule`}
               </Text>
-            </Button>
-
-            <Button
+            </SubtleButton>
+            <SolidButton
               isDisabled={!classInfo}
               onPress={() => {
                 if (auth.user && auth.isAuthenticated) {
@@ -358,7 +360,7 @@ export default function DetailScreen() {
                     : "Review"
                   : "Sign In to Review"}
               </Text>
-            </Button>
+            </SolidButton>
           </VStack>
           {(!reviewRecord || !!reviewerIds.length) && (
             <VStack margin={"10px"} marginBottom={"5px"} space={"10px"}>

@@ -59,29 +59,33 @@ const inputSelectDefaultProps = {
   })),
 };
 
+export const solidButtonStyle = {
+  ...buttonBaseStyle,
+  ...colorModeResponsiveStyle((selector) => ({
+    background: selector(colors.nyu),
+  })),
+  _text: {
+    color: "#ffffff",
+    ...buttonTextBaseStyle,
+  },
+};
+
+export const subtleButtonStyle = {
+  ...buttonBaseStyle,
+  ...colorModeResponsiveStyle((selector) => ({
+    background: selector(colors.background.secondary),
+    _text: {
+      color: selector(colors.nyu),
+      ...buttonTextBaseStyle,
+    },
+  })),
+};
+
 const componentsStyle = {
   Button: {
     variants: {
-      solid: {
-        ...buttonBaseStyle,
-        ...colorModeResponsiveStyle((selector) => ({
-          background: selector(colors.nyu),
-        })),
-        _text: {
-          color: "#ffffff",
-          ...buttonTextBaseStyle,
-        },
-      },
-      subtle: {
-        ...buttonBaseStyle,
-        ...colorModeResponsiveStyle((selector) => ({
-          background: selector(colors.background.secondary),
-          _text: {
-            color: selector(colors.nyu),
-            ...buttonTextBaseStyle,
-          },
-        })),
-      },
+      solid: solidButtonStyle,
+      subtle: subtleButtonStyle,
     },
   },
   Divider: {

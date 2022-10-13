@@ -1,10 +1,12 @@
 import React from "react";
-import { Text, Button, type IButtonProps } from "native-base";
+import { Text, type IButtonProps } from "native-base";
+
+import { SubtleButton, type LinkTo } from "./LinkCompatibleButtons";
 
 type TieredTextButtonBaseProps = {
   primaryText: string;
   secondaryText?: string;
-};
+} & LinkTo;
 
 export type TieredTextButtonProps = TieredTextButtonBaseProps &
   Omit<IButtonProps, keyof TieredTextButtonBaseProps>;
@@ -17,7 +19,7 @@ export default function TieredTextButton({
   const { width } = rest;
 
   return (
-    <Button {...rest} paddingX={"0"} variant={"subtle"}>
+    <SubtleButton {...rest}>
       <Text
         width={width}
         paddingX={"8px"}
@@ -39,6 +41,6 @@ export default function TieredTextButton({
           {secondaryText}
         </Text>
       )}
-    </Button>
+    </SubtleButton>
   );
 }

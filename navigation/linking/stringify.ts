@@ -112,21 +112,10 @@ function stringifyMeRoute<Screen extends keyof MeNavigationParamList>(
   return meRouteToPathMap[screen](params);
 }
 
-export default function stringnify(
-  tabState: NavigationState<RootNavigationParamList>
+export function flattenRoute(
+  tabState?: NavigationState<RootNavigationParamList>
 ) {
-  const rootRouteToPathMap: {
-    [T in keyof RootNavigationParamList]: (
-      screen: keyof NavigationParamListForTab<T>,
-      params: ValueOf<NavigationParamListForTab<T>>
-    ) => string;
-  } = {
-    ExploreTab: stringifyExploreRoute,
-    SearchTab: stringifySearchRoute,
-    MeTab: stringifyMeRoute,
-  };
-
-  const { index: tabIndex, routes: tabRoutes } = tabState;
+  const { index: tabIndex, routes: tabRoutes } = tabState ?? {};
 
   if (typeof tabIndex === "number" && tabRoutes) {
     const { name: tabName, state: stackState } = tabRoutes[tabIndex] ?? {};
@@ -140,10 +129,40 @@ export default function stringnify(
           stackRoutes[stackIndex] ?? {};
 
         if (screenName) {
-          return rootRouteToPathMap[tabName](screenName, screenParams);
+          return { tabName, screenName, screenParams };
         }
       }
     }
+  }
+}
+
+export function stringifyRoute<
+  Tab extends keyof RootNavigationParamList,
+  Screen extends keyof NavigationParamListForTab<Tab>,
+  Params extends NavigationParamListForTab<Tab>[Screen]
+>(tabName: Tab, screenName: Screen, params: Params) {
+  const rootRouteToPathMap: {
+    [T in keyof RootNavigationParamList]: (
+      screen: keyof NavigationParamListForTab<T>,
+      params: ValueOf<NavigationParamListForTab<T>>
+    ) => string;
+  } = {
+    ExploreTab: stringifyExploreRoute,
+    SearchTab: stringifySearchRoute,
+    MeTab: stringifyMeRoute,
+  };
+
+  return rootRouteToPathMap[tabName](screenName, params);
+}
+
+export default function stringify(
+  tabState: NavigationState<RootNavigationParamList>
+) {
+  const route = flattenRoute(tabState);
+
+  if (route) {
+    const { tabName, screenName, screenParams } = route;
+    return stringifyRoute(tabName, screenName, screenParams);
   }
 
   return "/explore";

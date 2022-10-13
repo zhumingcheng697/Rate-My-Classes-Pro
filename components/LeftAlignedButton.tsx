@@ -2,7 +2,6 @@ import React, { type ReactText } from "react";
 import {
   Flex,
   Icon,
-  Pressable,
   type IPressableProps,
   Text,
   type ITextProps,
@@ -12,13 +11,14 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import colors from "../styling/colors";
 import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 import { buttonBaseStyle, pressableBaseStyle } from "../styling/theme";
+import { Pressable, type LinkTo } from "./LinkCompatibleButtons";
 
 type LeftAlignedButtonBaseProps = {
   title?: string;
   _text?: ITextProps;
   showChevron?: boolean;
   children?: ReactText;
-};
+} & LinkTo;
 
 export type LeftAlignedButtonProps = LeftAlignedButtonBaseProps &
   Omit<IPressableProps, keyof LeftAlignedButtonBaseProps>;

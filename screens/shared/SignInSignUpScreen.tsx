@@ -13,6 +13,7 @@ import { type SharedNavigationParamList } from "../../libs/types";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LabeledInput from "../../components/LabeledInput";
 import PlainTextButton from "../../components/PlainTextButton";
+import { SolidButton } from "../../components/LinkCompatibleButtons";
 import AlertPopup from "../../components/AlertPopup";
 import { useAuth } from "../../mongodb/auth";
 import { GoogleSignInButton } from "../../libs/GoogleSignIn";
@@ -138,7 +139,7 @@ export default function SignInSignUpScreen() {
             </LabeledInput>
           )}
           <VStack marginY={"15px"} space={"10px"}>
-            <Button
+            <SolidButton
               isDisabled={
                 isLoading ||
                 !email ||
@@ -172,7 +173,7 @@ export default function SignInSignUpScreen() {
               <Text variant={"button"}>
                 {isSigningUp ? "Sign Up" : "Sign In"}
               </Text>
-            </Button>
+            </SolidButton>
             <HStack
               marginY={"10px"}
               space={"15px"}
@@ -213,7 +214,10 @@ export default function SignInSignUpScreen() {
                 title={isSigningUp ? "Sign In" : "Sign Up"}
                 onPress={() => {
                   Keyboard.dismiss();
-                  navigation.setParams({ isSigningUp: !isSigningUp });
+                  navigation.navigate("SignInSignUp", {
+                    ...route.params,
+                    isSigningUp: !isSigningUp,
+                  });
                 }}
               />
             </HStack>

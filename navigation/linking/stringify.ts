@@ -1,10 +1,11 @@
-import { ParamListBase } from "@react-navigation/native";
+import type { NavigationState, ParamListBase } from "@react-navigation/native";
 
 import type {
   RootNavigationParamList,
   ExploreNavigationParamList,
   SearchNavigationParamList,
   MeNavigationParamList,
+  StackNavigationParamList,
   ClassCode,
   StarredOrReviewed,
   NavigationParamListForTab,
@@ -50,7 +51,7 @@ function stringifyExploreRoute<Screen extends keyof ExploreNavigationParamList>(
         ? `/explore/${getPathForClass(classCode)}/${checkIsSigningUp(
             isSigningUp
           )}`
-        : checkIsSigningUp(isSigningUp),
+        : `/${checkIsSigningUp(isSigningUp)}`,
   };
 
   return exploreRouteToPathMap[screen](params);
@@ -73,7 +74,7 @@ function stringifySearchRoute<Screen extends keyof SearchNavigationParamList>(
         ? `/search/${getPathForClass(classCode)}/${checkIsSigningUp(
             isSigningUp
           )}` + addQueryParam(query)
-        : checkIsSigningUp(isSigningUp),
+        : `/${checkIsSigningUp(isSigningUp)}`,
   };
 
   return searchRouteToPathMap[screen](params);
@@ -105,17 +106,15 @@ function stringifyMeRoute<Screen extends keyof MeNavigationParamList>(
         ? `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
             classCode
           )}/${checkIsSigningUp(isSigningUp)}`
-        : checkIsSigningUp(isSigningUp),
+        : `/${checkIsSigningUp(isSigningUp)}`,
   };
 
   return meRouteToPathMap[screen](params);
 }
 
-export default function stringnify<
-  Tab extends keyof RootNavigationParamList,
-  Screen extends keyof NavigationParamListForTab<Tab>,
-  Params extends NavigationParamListForTab<Tab>[Screen]
->(tabName: Tab, screenName: Screen, params: Params) {
+export default function stringnify(
+  tabState: NavigationState<RootNavigationParamList>
+) {
   const rootRouteToPathMap: {
     [T in keyof RootNavigationParamList]: (
       screen: keyof NavigationParamListForTab<T>,
@@ -127,5 +126,25 @@ export default function stringnify<
     MeTab: stringifyMeRoute,
   };
 
-  return rootRouteToPathMap[tabName](screenName, params);
+  const { index: tabIndex, routes: tabRoutes } = tabState;
+
+  if (typeof tabIndex === "number" && tabRoutes) {
+    const { name: tabName, state: stackState } = tabRoutes[tabIndex] ?? {};
+
+    if (tabName && stackState) {
+      const { index: stackIndex, routes: stackRoutes } =
+        stackState as NavigationState<StackNavigationParamList>;
+
+      if (typeof stackIndex === "number" && stackRoutes) {
+        const { name: screenName, params: screenParams } =
+          stackRoutes[stackIndex] ?? {};
+
+        if (screenName) {
+          return rootRouteToPathMap[tabName](screenName, screenParams);
+        }
+      }
+    }
+  }
+
+  return "/explore";
 }

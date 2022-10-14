@@ -12,7 +12,7 @@ import AlertPopup from "../../components/AlertPopup";
 import LeftAlignedButton from "../../components/LeftAlignedButton";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { type MeNavigationParamList } from "../../libs/types";
-import { useInitialTabName, useInnerHeight } from "../../libs/hooks";
+import { useInnerHeight } from "../../libs/hooks";
 import { Route } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
@@ -32,7 +32,6 @@ export default function AccountScreen() {
   const [showAlert, setShowAlert] = useState(false);
   const innerHeight = useInnerHeight();
   const auth = useAuth();
-  const tabName = useInitialTabName();
 
   const isAuthenticated = auth.isAuthenticated;
 
@@ -108,11 +107,11 @@ export default function AccountScreen() {
                 <>
                   <LeftAlignedButton
                     title={"Starred"}
-                    linkTo={Route(tabName, "Starred")}
+                    linkTo={Route("MeTab", "Starred")}
                   />
                   <LeftAlignedButton
                     title={"Reviewed"}
-                    linkTo={Route(tabName, "Reviewed")}
+                    linkTo={Route("MeTab", "Reviewed")}
                   />
                 </>
               )}
@@ -121,7 +120,7 @@ export default function AccountScreen() {
                   <LeftAlignedButton
                     showChevron={false}
                     title={"Sign In"}
-                    linkTo={Route(tabName, "SignInSignUp", {
+                    linkTo={Route("MeTab", "SignInSignUp", {
                       isSigningUp: false,
                     })}
                   />
@@ -129,7 +128,7 @@ export default function AccountScreen() {
                     showChevron={false}
                     marginBottom={"15px"}
                     title={"Sign Up"}
-                    linkTo={Route(tabName, "SignInSignUp", {
+                    linkTo={Route("MeTab", "SignInSignUp", {
                       isSigningUp: true,
                     })}
                   />
@@ -137,7 +136,7 @@ export default function AccountScreen() {
               )}
               <LeftAlignedButton
                 title={"Settings"}
-                linkTo={Route(tabName, "Settings")}
+                linkTo={Route("MeTab", "Settings")}
               />
               {wasAuthenticated && (
                 <LeftAlignedButton

@@ -18,7 +18,6 @@ import {
   isObjectEmpty,
   Route,
 } from "../../libs/utils";
-import { useInitialTabName } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import AlertPopup from "../../components/AlertPopup";
@@ -51,8 +50,6 @@ export default function SchoolScreen() {
       setShowAlert(true);
     }
   }, [departmentNames]);
-
-  const tabName = useInitialTabName();
 
   return (
     <>
@@ -93,7 +90,7 @@ export default function SchoolScreen() {
                       departmentNames
                     )}
                     secondaryText={`${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`}
-                    linkTo={Route(tabName, "Department", departmentInfo)}
+                    linkTo={Route("ExploreTab", "Department", departmentInfo)}
                   />
                 );
               })

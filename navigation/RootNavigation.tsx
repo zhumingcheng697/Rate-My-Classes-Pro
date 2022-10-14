@@ -205,6 +205,7 @@ export default function RootNavigation() {
         onlyShowWhenFocused={false}
       />
       <Tab.Navigator
+        backBehavior="history"
         screenOptions={({ route }) => ({
           title: route.name.replace(/Tab/gi, ""),
           headerShown: false,

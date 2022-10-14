@@ -42,14 +42,10 @@ export default function ClassesGrid({
               {...info}
               primaryText={classInfo.name}
               secondaryText={getFullClassCode(classInfo)}
-              linkTo={Route({
-                tabName,
-                screenName: "Detail",
-                screenParams: {
-                  classCode: classInfo,
-                  query,
-                  starredOrReviewed,
-                },
+              linkTo={Route(tabName, "Detail", {
+                classCode: classInfo,
+                query,
+                starredOrReviewed,
               })}
             />
           );

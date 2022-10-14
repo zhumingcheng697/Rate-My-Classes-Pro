@@ -108,11 +108,11 @@ export default function AccountScreen() {
                 <>
                   <LeftAlignedButton
                     title={"Starred"}
-                    linkTo={Route({ tabName, screenName: "Starred" })}
+                    linkTo={Route(tabName, "Starred")}
                   />
                   <LeftAlignedButton
                     title={"Reviewed"}
-                    linkTo={Route({ tabName, screenName: "Reviewed" })}
+                    linkTo={Route(tabName, "Reviewed")}
                   />
                 </>
               )}
@@ -121,31 +121,23 @@ export default function AccountScreen() {
                   <LeftAlignedButton
                     showChevron={false}
                     title={"Sign In"}
-                    linkTo={Route({
-                      tabName,
-                      screenName: "SignInSignUp",
-                      screenParams: {
-                        isSigningUp: false,
-                      },
+                    linkTo={Route(tabName, "SignInSignUp", {
+                      isSigningUp: false,
                     })}
                   />
                   <LeftAlignedButton
                     showChevron={false}
                     marginBottom={"15px"}
                     title={"Sign Up"}
-                    linkTo={Route({
-                      tabName,
-                      screenName: "SignInSignUp",
-                      screenParams: {
-                        isSigningUp: true,
-                      },
+                    linkTo={Route(tabName, "SignInSignUp", {
+                      isSigningUp: true,
                     })}
                   />
                 </>
               )}
               <LeftAlignedButton
                 title={"Settings"}
-                linkTo={Route({ tabName, screenName: "Settings" })}
+                linkTo={Route(tabName, "Settings")}
               />
               {wasAuthenticated && (
                 <LeftAlignedButton

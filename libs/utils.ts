@@ -339,12 +339,11 @@ export function Route<
   Tab extends keyof RootNavigationParamList,
   Screen extends RouteNameFor<Tab>,
   Params extends RouteParamsFor<Tab, Screen>
->({
-  tabName,
-  screenName,
-  screenParams,
-}: Params extends undefined
-  ? { tabName: Tab | undefined; screenName: Screen; screenParams?: undefined }
-  : { tabName: Tab | undefined; screenName: Screen; screenParams: Params }) {
+>(
+  ...args: Params extends undefined
+    ? [Tab | undefined, Screen] | [Tab | undefined, Screen, undefined]
+    : [Tab | undefined, Screen, Params]
+) {
+  const [tabName, screenName, screenParams] = args;
   return { tabName, screenName, screenParams };
 }

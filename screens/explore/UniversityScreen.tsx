@@ -6,7 +6,13 @@ import { useSelector } from "react-redux";
 
 import Semester from "../../libs/semester";
 import type { ExploreNavigationParamList, SchoolInfo } from "../../libs/types";
-import { isSchoolGrad, isObjectEmpty, getSchoolName } from "../../libs/utils";
+import {
+  isSchoolGrad,
+  isObjectEmpty,
+  getSchoolName,
+  Route,
+} from "../../libs/utils";
+import { useInitialTabName } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid, { type GridRenderItemInfo } from "../../containers/Grid";
 import TieredTextButton from "../../components/TieredTextButton";
@@ -32,6 +38,8 @@ export default function UniversityScreen() {
     () => new Semester(settings.selectedSemester),
     [settings.selectedSemester]
   );
+
+  const tabName = useInitialTabName();
 
   const [undergradCodes, gradCodes] = useMemo(() => {
     if (!isSchoolNameLoaded || !isDepartmentNameLoaded) return [[], []];
@@ -63,13 +71,15 @@ export default function UniversityScreen() {
           {...info}
           primaryText={getSchoolName(schoolInfo, schoolNames)}
           secondaryText={schoolCode.toUpperCase()}
-          onPress={() => {
-            navigation.navigate("School", schoolInfo);
-          }}
+          linkTo={Route({
+            tabName,
+            screenName: "School",
+            screenParams: schoolInfo,
+          })}
         />
       );
     },
-    [navigation, schoolNames]
+    [schoolNames, tabName]
   );
 
   return (

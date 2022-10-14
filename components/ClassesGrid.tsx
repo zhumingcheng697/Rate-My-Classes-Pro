@@ -6,9 +6,10 @@ import type {
   ClassInfo,
   StarredOrReviewed,
 } from "../libs/types";
+import { getFullClassCode, Route } from "../libs/utils";
+import { useInitialTabName } from "../libs/hooks";
 import Grid, { type GridProps } from "../containers/Grid";
 import TieredTextButton from "./TieredTextButton";
-import { getFullClassCode } from "../libs/utils";
 
 type ClassesGridNavigationProp = StackNavigationProp<SharedNavigationParamList>;
 
@@ -29,6 +30,8 @@ export default function ClassesGrid({
   starredOrReviewed,
   ...rest
 }: ClassesGridProps) {
+  const tabName = useInitialTabName();
+
   return (
     <Grid childrenCount={classes.length} {...rest}>
       {(info) =>
@@ -39,13 +42,15 @@ export default function ClassesGrid({
               {...info}
               primaryText={classInfo.name}
               secondaryText={getFullClassCode(classInfo)}
-              onPress={() => {
-                navigation.navigate("Detail", {
+              linkTo={Route({
+                tabName,
+                screenName: "Detail",
+                screenParams: {
                   classCode: classInfo,
                   query,
                   starredOrReviewed,
-                });
-              }}
+                },
+              })}
             />
           );
         })

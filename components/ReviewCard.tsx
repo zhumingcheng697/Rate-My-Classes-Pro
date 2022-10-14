@@ -31,7 +31,12 @@ import {
   type ClassInfo,
 } from "../libs/types";
 import Semester from "../libs/semester";
-import { ratingDescriptionMap, ratingTypeIconNameMap } from "../libs/utils";
+import {
+  ratingDescriptionMap,
+  ratingTypeIconNameMap,
+  Route,
+} from "../libs/utils";
+import { useInitialTabName } from "../libs/hooks";
 import { useAuth } from "../mongodb/auth";
 import { useDB } from "../mongodb/db";
 import colors from "../styling/colors";
@@ -303,6 +308,8 @@ export default function ReviewCard({
     setReview(newReview);
   };
 
+  const tabName = useInitialTabName();
+
   return (
     <VStack
       borderRadius={10}
@@ -335,13 +342,15 @@ export default function ReviewCard({
         {auth.isAuthenticated && auth.user?.id === userId && (
           <PlainTextButton
             title={"Edit My Review"}
-            onPress={() => {
-              navigation.navigate("Review", {
+            linkTo={Route({
+              tabName,
+              screenName: "Review",
+              screenParams: {
                 classCode: classInfo ?? classCode,
                 previousReview: review,
                 newOrEdit: "Edit",
-              });
-            }}
+              },
+            })}
           />
         )}
         <Text>

@@ -8,7 +8,6 @@ import {
   Pressable as _Pressable,
 } from "native-base";
 
-import { type Route } from "../libs/utils";
 import { useLinkProps } from "../libs/hooks";
 import {
   pressableBaseStyle,
@@ -17,7 +16,7 @@ import {
 } from "../styling/theme";
 
 export type LinkTo = {
-  linkTo?: ReturnType<typeof Route>;
+  linkTo?: Parameters<typeof useLinkProps>[0];
 };
 
 export type LinkCompatibleButtonBaseProps = {

@@ -95,14 +95,13 @@ export default ({
           padding={"5px"}
           icon={
             <Icon
-              {...(!isStarred
-                ? {}
-                : colorModeResponsiveStyle((selector) => ({
-                    color: selector({
-                      light: theme.colors.yellow[400],
-                      dark: theme.colors.yellow[500],
-                    }),
-                  })))}
+              {...(isStarred &&
+                colorModeResponsiveStyle((selector) => ({
+                  color: selector({
+                    light: theme.colors.yellow[400],
+                    dark: theme.colors.yellow[500],
+                  }),
+                })))}
               size={"22px"}
               as={<Ionicons name={"star" + (isStarred ? "" : "-outline")} />}
             />

@@ -34,11 +34,10 @@ export default function LabeledInput({
         <Text
           variant={"label"}
           fontWeight={usePlainLabel ? undefined : "semibold"}
-          {...(usePlainLabel
-            ? {}
-            : colorModeResponsiveStyle((selector) => ({
-                color: selector(colors.nyu),
-              })))}
+          {...(!usePlainLabel &&
+            colorModeResponsiveStyle((selector) => ({
+              color: selector(colors.nyu),
+            })))}
         >
           {label ?? "Label"}
         </Text>

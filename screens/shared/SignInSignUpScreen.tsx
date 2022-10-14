@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Keyboard } from "react-native";
 import { Text, Button, Input, VStack, Box, HStack, Divider } from "native-base";
 import {
+  CommonActions,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -214,10 +215,15 @@ export default function SignInSignUpScreen() {
               <PlainTextButton
                 isDisabled={isLoading}
                 title={isSigningUp ? "Sign In" : "Sign Up"}
-                linkTo={Route(tabName, "SignInSignUp", {
-                  ...route.params,
-                  isSigningUp: !isSigningUp,
-                })}
+                linkTo={{
+                  ...Route(tabName, "SignInSignUp", {
+                    ...route.params,
+                    isSigningUp: !isSigningUp,
+                  }),
+                  action: CommonActions.setParams({
+                    isSigningUp: !isSigningUp,
+                  }),
+                }}
                 onPress={() => {
                   Keyboard.dismiss();
                 }}

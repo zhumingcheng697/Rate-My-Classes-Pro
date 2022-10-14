@@ -5,17 +5,18 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import {
-  CommonActions,
-  NavigationState,
+  type NavigationAction,
+  type NavigationState,
   useIsFocused,
   useLinkProps as _useLinkProps,
+  CommonActions,
   useNavigation,
 } from "@react-navigation/native";
 
 import {
+  ErrorType,
   type ClassCode,
   type ClassInfo,
-  ErrorType,
   type RootNavigationParamList,
   type ExploreNavigationParamList,
   type SearchNavigationParamList,
@@ -48,7 +49,7 @@ export function useInitialTabName() {
     if (isFocused && tabState && !tabName && newTabName) {
       setTabName(newTabName);
     }
-  }, [tabState, isFocused]);
+  }, [tabState]);
 
   return tabName;
 }
@@ -62,10 +63,12 @@ export function useLinkProps<
     tabName,
     screenName,
     screenParams,
+    action: _action,
   }: {
     tabName?: Tab;
     screenName?: Screen;
     screenParams?: Params;
+    action?: NavigationAction;
   },
   simultaneousAction?: ((...arg: any[]) => void) | null
 ) {
@@ -87,10 +90,11 @@ export function useLinkProps<
   const action = useMemo(
     () =>
       screenName &&
-      CommonActions.navigate({
-        name: screenName,
-        params: screenParams,
-      }),
+      (_action ??
+        CommonActions.navigate({
+          name: screenName,
+          params: screenParams,
+        })),
     [screenName, screenParams]
   );
 

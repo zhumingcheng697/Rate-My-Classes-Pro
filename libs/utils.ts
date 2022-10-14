@@ -1,5 +1,8 @@
 import Semester, { type SemesterInfo } from "./semester";
 import {
+  type RootNavigationParamList,
+  type RouteNameFor,
+  type RouteParamsFor,
   type SchoolNameRecord,
   type DepartmentNameRecord,
   type SchoolInfo,
@@ -331,3 +334,17 @@ export const ratingDescriptionMap = {
     [1]: "Really Useless (1/5)",
   },
 };
+
+export function Route<
+  Tab extends keyof RootNavigationParamList,
+  Screen extends RouteNameFor<Tab>,
+  Params extends RouteParamsFor<Tab, Screen>
+>({
+  tabName,
+  screenName,
+  screenParams,
+}: Params extends undefined
+  ? { tabName: Tab | undefined; screenName: Screen; screenParams?: undefined }
+  : { tabName: Tab | undefined; screenName: Screen; screenParams: Params }) {
+  return { tabName, screenName, screenParams };
+}

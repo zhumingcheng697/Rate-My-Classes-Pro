@@ -8,15 +8,16 @@ import {
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
-import { isObjectEmpty, formSentence } from "../../libs/utils";
+import { isObjectEmpty, formSentence, Route } from "../../libs/utils";
 import { type SharedNavigationParamList } from "../../libs/types";
+import { GoogleSignInButton } from "../../libs/GoogleSignIn";
+import { useInitialTabName } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LabeledInput from "../../components/LabeledInput";
 import PlainTextButton from "../../components/PlainTextButton";
 import { SolidButton } from "../../components/LinkCompatibleButtons";
 import AlertPopup from "../../components/AlertPopup";
 import { useAuth } from "../../mongodb/auth";
-import { GoogleSignInButton } from "../../libs/GoogleSignIn";
 
 type SignInSignUpScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -32,6 +33,7 @@ export default function SignInSignUpScreen() {
   const navigation = useNavigation<SignInSignUpScreenNavigationProp>();
   const route = useRoute<SignInSignUpScreenRouteProp>();
   const auth = useAuth();
+  const tabName = useInitialTabName();
 
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState("");
@@ -212,12 +214,16 @@ export default function SignInSignUpScreen() {
               <PlainTextButton
                 isDisabled={isLoading}
                 title={isSigningUp ? "Sign In" : "Sign Up"}
-                onPress={() => {
-                  Keyboard.dismiss();
-                  navigation.navigate("SignInSignUp", {
+                linkTo={Route({
+                  tabName,
+                  screenName: "SignInSignUp",
+                  screenParams: {
                     ...route.params,
                     isSigningUp: !isSigningUp,
-                  });
+                  },
+                })}
+                onPress={() => {
+                  Keyboard.dismiss();
                 }}
               />
             </HStack>

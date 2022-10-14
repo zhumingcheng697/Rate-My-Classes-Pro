@@ -12,7 +12,8 @@ import AlertPopup from "../../components/AlertPopup";
 import LeftAlignedButton from "../../components/LeftAlignedButton";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { type MeNavigationParamList } from "../../libs/types";
-import { useInnerHeight } from "../../libs/hooks";
+import { useInitialTabName, useInnerHeight } from "../../libs/hooks";
+import { Route } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
@@ -31,6 +32,7 @@ export default function AccountScreen() {
   const [showAlert, setShowAlert] = useState(false);
   const innerHeight = useInnerHeight();
   const auth = useAuth();
+  const tabName = useInitialTabName();
 
   const isAuthenticated = auth.isAuthenticated;
 
@@ -106,15 +108,11 @@ export default function AccountScreen() {
                 <>
                   <LeftAlignedButton
                     title={"Starred"}
-                    onPress={() => {
-                      navigation.navigate("Starred");
-                    }}
+                    linkTo={Route({ tabName, screenName: "Starred" })}
                   />
                   <LeftAlignedButton
                     title={"Reviewed"}
-                    onPress={() => {
-                      navigation.navigate("Reviewed");
-                    }}
+                    linkTo={Route({ tabName, screenName: "Reviewed" })}
                   />
                 </>
               )}
@@ -123,29 +121,31 @@ export default function AccountScreen() {
                   <LeftAlignedButton
                     showChevron={false}
                     title={"Sign In"}
-                    onPress={() => {
-                      navigation.navigate("SignInSignUp", {
+                    linkTo={Route({
+                      tabName,
+                      screenName: "SignInSignUp",
+                      screenParams: {
                         isSigningUp: false,
-                      });
-                    }}
+                      },
+                    })}
                   />
                   <LeftAlignedButton
                     showChevron={false}
                     marginBottom={"15px"}
                     title={"Sign Up"}
-                    onPress={() => {
-                      navigation.navigate("SignInSignUp", {
+                    linkTo={Route({
+                      tabName,
+                      screenName: "SignInSignUp",
+                      screenParams: {
                         isSigningUp: true,
-                      });
-                    }}
+                      },
+                    })}
                   />
                 </>
               )}
               <LeftAlignedButton
                 title={"Settings"}
-                onPress={() => {
-                  navigation.navigate("Settings");
-                }}
+                linkTo={Route({ tabName, screenName: "Settings" })}
               />
               {wasAuthenticated && (
                 <LeftAlignedButton

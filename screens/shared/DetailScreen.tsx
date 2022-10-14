@@ -22,11 +22,12 @@ import {
   getFullClassCode,
   getSchoolName,
   notOfferedMessage,
+  Route,
   stripLineBreaks,
 } from "../../libs/utils";
 import Semester from "../../libs/semester";
 import { getSections } from "../../libs/schedge";
-import { useClassInfoLoader } from "../../libs/hooks";
+import { useClassInfoLoader, useInitialTabName } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import AlertPopup from "../../components/AlertPopup";
 import ReviewCard from "../../components/ReviewCard";
@@ -66,6 +67,7 @@ export default function DetailScreen() {
   const auth = useAuth();
   const isFocused = useIsFocused();
   const { selectedSemester } = useSelector((state) => state.settings);
+  const tabName = useInitialTabName();
 
   const [showAlert, setShowAlert] = useState(false);
   const [error, setError] = useState<DetailScreenErrorType | null>(null);
@@ -313,15 +315,17 @@ export default function DetailScreen() {
           <VStack margin={"10px"} space={"10px"}>
             <SubtleButton
               isDisabled={!sections || !sections.length}
-              onPress={() => {
-                navigation.navigate("Schedule", {
+              linkTo={Route({
+                tabName,
+                screenName: "Schedule",
+                screenParams: {
                   semester: selectedSemester,
                   sections: sections ?? undefined,
                   classCode: classInfo ?? classCode,
                   starredOrReviewed,
                   query,
-                });
-              }}
+                },
+              })}
             >
               <Text variant={"subtleButton"}>
                 {!sections && !classInfoError
@@ -335,23 +339,29 @@ export default function DetailScreen() {
             </SubtleButton>
             <SolidButton
               isDisabled={!classInfo}
-              onPress={() => {
-                if (auth.user && auth.isAuthenticated) {
-                  navigation.navigate("Review", {
-                    classCode: classInfo ?? classCode,
-                    previousReview: myReview,
-                    starredOrReviewed,
-                    newOrEdit: myReview ? "Edit" : "New",
-                    query,
-                  });
-                } else {
-                  navigation.navigate("SignInSignUp", {
-                    classCode,
-                    starredOrReviewed,
-                    query,
-                  });
-                }
-              }}
+              linkTo={
+                auth.user && auth.isAuthenticated
+                  ? Route({
+                      tabName,
+                      screenName: "Review",
+                      screenParams: {
+                        classCode: classInfo ?? classCode,
+                        previousReview: myReview,
+                        starredOrReviewed,
+                        newOrEdit: myReview ? "Edit" : "New",
+                        query,
+                      },
+                    })
+                  : Route({
+                      tabName,
+                      screenName: "SignInSignUp",
+                      screenParams: {
+                        classCode,
+                        starredOrReviewed,
+                        query,
+                      },
+                    })
+              }
             >
               <Text variant={"button"}>
                 {auth.user && auth.isAuthenticated

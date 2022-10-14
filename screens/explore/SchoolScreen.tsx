@@ -12,15 +12,17 @@ import type {
   ExploreNavigationParamList,
   DepartmentInfo,
 } from "../../libs/types";
-import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
-import Grid from "../../containers/Grid";
-import AlertPopup from "../../components/AlertPopup";
-import TieredTextButton from "../../components/TieredTextButton";
 import {
   getSchoolName,
   getDepartmentName,
   isObjectEmpty,
+  Route,
 } from "../../libs/utils";
+import { useInitialTabName } from "../../libs/hooks";
+import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
+import Grid from "../../containers/Grid";
+import AlertPopup from "../../components/AlertPopup";
+import TieredTextButton from "../../components/TieredTextButton";
 
 type SchoolScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -49,6 +51,8 @@ export default function SchoolScreen() {
       setShowAlert(true);
     }
   }, [departmentNames]);
+
+  const tabName = useInitialTabName();
 
   return (
     <>
@@ -89,9 +93,11 @@ export default function SchoolScreen() {
                       departmentNames
                     )}
                     secondaryText={`${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`}
-                    onPress={() => {
-                      navigation.navigate("Department", departmentInfo);
-                    }}
+                    linkTo={Route({
+                      tabName,
+                      screenName: "Department",
+                      screenParams: departmentInfo,
+                    })}
                   />
                 );
               })

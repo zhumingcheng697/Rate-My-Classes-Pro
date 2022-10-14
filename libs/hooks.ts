@@ -2,11 +2,111 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import { useWindowDimensions, Platform, AppState } from "react-native";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import {
+  CommonActions,
+  NavigationState,
+  useIsFocused,
+  useLinkProps,
+  useNavigation,
+} from "@react-navigation/native";
 
-import { type ClassCode, type ClassInfo, ErrorType } from "./types";
+import {
+  type StackNavigationParamList,
+  type ClassCode,
+  type ClassInfo,
+  ErrorType,
+  RootNavigationParamList,
+  RouteNameFor,
+  RouteParamsFor,
+} from "./types";
 import type { SemesterInfo } from "./semester";
 import { getClass } from "./schedge";
+import { stringifyRoute } from "../navigation/linking/stringify";
+
+export function useInitialTabName() {
+  const tabNavigation =
+    useNavigation<StackNavigationProp<StackNavigationParamList>>().getParent();
+
+  const isFocused = useIsFocused();
+
+  const tabState =
+    tabNavigation?.getState() as NavigationState<RootNavigationParamList>;
+
+  const [tabName, setTabName] = useState<
+    keyof RootNavigationParamList | undefined
+  >(undefined);
+
+  useEffect(() => {
+    const newTabName = tabState?.routes[tabState.index]?.name;
+    if (isFocused && tabState && !tabName && newTabName) {
+      setTabName(newTabName);
+    }
+  }, [tabState, isFocused]);
+
+  return tabName;
+}
+
+export function useLinkTo<
+  Tab extends keyof RootNavigationParamList,
+  Screen extends RouteNameFor<Tab>,
+  Params extends RouteParamsFor<Tab, Screen>
+>(
+  {
+    tabName,
+    screenName,
+    screenParams,
+  }: {
+    tabName?: Tab;
+    screenName?: Screen;
+    screenParams?: Params;
+  },
+  simultaneousAction?: ((...arg: any[]) => void) | null
+) {
+  const to = useMemo(() => {
+    if (tabName && screenName) {
+      try {
+        return stringifyRoute(
+          tabName,
+          screenName,
+          screenParams as RouteParamsFor<Tab, Screen>
+        );
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return "";
+  }, [tabName, screenName, screenParams]);
+
+  const action = useMemo(
+    () =>
+      screenName &&
+      CommonActions.navigate({
+        name: screenName,
+        params: screenParams,
+      }),
+    [screenName, screenParams]
+  );
+
+  const { onPress, ...rest } = useLinkProps({ to, action });
+
+  const handler = useCallback(
+    simultaneousAction
+      ? (...args: Parameters<typeof onPress>) => {
+          onPress(...args);
+          simultaneousAction();
+        }
+      : onPress,
+    [onPress, simultaneousAction]
+  );
+
+  if (tabName && screenName && to && action) {
+    return { onPress: handler, ...rest };
+  } else {
+    return { onPress: simultaneousAction ?? undefined };
+  }
+}
 
 export function useClassInfoLoader(
   classCode: ClassCode,

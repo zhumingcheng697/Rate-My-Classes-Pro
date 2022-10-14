@@ -315,16 +315,12 @@ export default function DetailScreen() {
           <VStack margin={"10px"} space={"10px"}>
             <SubtleButton
               isDisabled={!sections || !sections.length}
-              linkTo={Route({
-                tabName,
-                screenName: "Schedule",
-                screenParams: {
-                  semester: selectedSemester,
-                  sections: sections ?? undefined,
-                  classCode: classInfo ?? classCode,
-                  starredOrReviewed,
-                  query,
-                },
+              linkTo={Route(tabName, "Schedule", {
+                semester: selectedSemester,
+                sections: sections ?? undefined,
+                classCode: classInfo ?? classCode,
+                starredOrReviewed,
+                query,
               })}
             >
               <Text variant={"subtleButton"}>
@@ -341,25 +337,17 @@ export default function DetailScreen() {
               isDisabled={!classInfo}
               linkTo={
                 auth.user && auth.isAuthenticated
-                  ? Route({
-                      tabName,
-                      screenName: "Review",
-                      screenParams: {
-                        classCode: classInfo ?? classCode,
-                        previousReview: myReview,
-                        starredOrReviewed,
-                        newOrEdit: myReview ? "Edit" : "New",
-                        query,
-                      },
+                  ? Route(tabName, "Review", {
+                      classCode: classInfo ?? classCode,
+                      previousReview: myReview,
+                      starredOrReviewed,
+                      newOrEdit: myReview ? "Edit" : "New",
+                      query,
                     })
-                  : Route({
-                      tabName,
-                      screenName: "SignInSignUp",
-                      screenParams: {
-                        classCode,
-                        starredOrReviewed,
-                        query,
-                      },
+                  : Route(tabName, "SignInSignUp", {
+                      classCode,
+                      starredOrReviewed,
+                      query,
                     })
               }
             >

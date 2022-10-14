@@ -342,14 +342,10 @@ export default function ReviewCard({
         {auth.isAuthenticated && auth.user?.id === userId && (
           <PlainTextButton
             title={"Edit My Review"}
-            linkTo={Route({
-              tabName,
-              screenName: "Review",
-              screenParams: {
-                classCode: classInfo ?? classCode,
-                previousReview: review,
-                newOrEdit: "Edit",
-              },
+            linkTo={Route(tabName, "Review", {
+              classCode: classInfo ?? classCode,
+              previousReview: review,
+              newOrEdit: "Edit",
             })}
           />
         )}

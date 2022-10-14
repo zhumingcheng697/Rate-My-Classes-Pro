@@ -214,13 +214,9 @@ export default function SignInSignUpScreen() {
               <PlainTextButton
                 isDisabled={isLoading}
                 title={isSigningUp ? "Sign In" : "Sign Up"}
-                linkTo={Route({
-                  tabName,
-                  screenName: "SignInSignUp",
-                  screenParams: {
-                    ...route.params,
-                    isSigningUp: !isSigningUp,
-                  },
+                linkTo={Route(tabName, "SignInSignUp", {
+                  ...route.params,
+                  isSigningUp: !isSigningUp,
                 })}
                 onPress={() => {
                   Keyboard.dismiss();

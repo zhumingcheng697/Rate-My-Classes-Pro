@@ -71,11 +71,7 @@ export default function UniversityScreen() {
           {...info}
           primaryText={getSchoolName(schoolInfo, schoolNames)}
           secondaryText={schoolCode.toUpperCase()}
-          linkTo={Route({
-            tabName,
-            screenName: "School",
-            screenParams: schoolInfo,
-          })}
+          linkTo={Route(tabName, "School", schoolInfo)}
         />
       );
     },

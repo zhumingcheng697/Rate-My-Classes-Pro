@@ -93,11 +93,7 @@ export default function SchoolScreen() {
                       departmentNames
                     )}
                     secondaryText={`${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`}
-                    linkTo={Route({
-                      tabName,
-                      screenName: "Department",
-                      screenParams: departmentInfo,
-                    })}
+                    linkTo={Route(tabName, "Department", departmentInfo)}
                   />
                 );
               })

@@ -341,8 +341,10 @@ export function Route<
   Params extends RouteParamsFor<Tab, Screen>
 >(
   ...args: Params extends undefined
-    ? [Tab | undefined, Screen] | [Tab | undefined, Screen, undefined]
-    : [Tab | undefined, Screen, Params]
+    ?
+        | [Tab | undefined, Screen | undefined]
+        | [Tab | undefined, Screen | undefined, undefined]
+    : [Tab | undefined, Screen | undefined, Params]
 ) {
   const [tabName, screenName, screenParams] = args;
   return { tabName, screenName, screenParams };

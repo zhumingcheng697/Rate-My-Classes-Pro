@@ -8,7 +8,7 @@ import {
   CommonActions,
   NavigationState,
   useIsFocused,
-  useLinkProps,
+  useLinkProps as _useLinkProps,
   useNavigation,
 } from "@react-navigation/native";
 
@@ -48,7 +48,7 @@ export function useInitialTabName() {
   return tabName;
 }
 
-export function useLinkTo<
+export function useLinkProps<
   Tab extends keyof RootNavigationParamList,
   Screen extends RouteNameFor<Tab>,
   Params extends RouteParamsFor<Tab, Screen>
@@ -89,7 +89,7 @@ export function useLinkTo<
     [screenName, screenParams]
   );
 
-  const { onPress, ...rest } = useLinkProps({ to, action });
+  const { onPress, ...rest } = _useLinkProps({ to, action });
 
   const handler = useCallback(
     simultaneousAction

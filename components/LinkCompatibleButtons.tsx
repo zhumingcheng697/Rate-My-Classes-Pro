@@ -8,23 +8,16 @@ import {
   Pressable as _Pressable,
 } from "native-base";
 
+import { type Route } from "../libs/utils";
+import { useLinkTo } from "../libs/hooks";
 import {
   pressableBaseStyle,
   solidButtonStyle,
   subtleButtonStyle,
 } from "../styling/theme";
-import type {
-  RootNavigationParamList,
-  RouteNameFor,
-  RouteParamsFor,
-} from "../libs/types";
 
-export type LinkTo<
-  Tab extends keyof RootNavigationParamList = keyof RootNavigationParamList,
-  Screen extends RouteNameFor<Tab> = RouteNameFor<Tab>,
-  Params extends RouteParamsFor<Tab, Screen> = RouteParamsFor<Tab, Screen>
-> = {
-  linkTo?: { screen: Screen; params: Params };
+export type LinkTo = {
+  linkTo?: ReturnType<typeof Route>;
 };
 
 export type LinkCompatibleButtonBaseProps = {
@@ -100,23 +93,39 @@ function LinkButton({
 type ButtonProps = LinkCompatibleButtonBaseProps &
   Omit<IButtonProps, keyof LinkCompatibleButtonBaseProps>;
 
-export function SolidButton({ linkTo, children, ...rest }: ButtonProps) {
+export function SolidButton({
+  linkTo,
+  onPress,
+  children,
+  ...rest
+}: ButtonProps) {
+  const linkProps = useLinkTo(linkTo ?? {}, onPress);
+
   return linkTo && Platform.OS === "web" ? (
-    <LinkButton {...solidButtonStyle} {...rest}>
+    <LinkButton {...solidButtonStyle} {...linkProps} {...rest}>
       {children}
     </LinkButton>
   ) : (
-    <Button {...rest}>{children}</Button>
+    <Button onPress={onPress} {...rest}>
+      {children}
+    </Button>
   );
 }
 
-export function SubtleButton({ linkTo, children, ...rest }: ButtonProps) {
+export function SubtleButton({
+  linkTo,
+  onPress,
+  children,
+  ...rest
+}: ButtonProps) {
+  const linkProps = useLinkTo(linkTo ?? {}, onPress);
+
   return linkTo && Platform.OS === "web" ? (
-    <LinkButton {...subtleButtonStyle} {...rest}>
+    <LinkButton {...subtleButtonStyle} {...linkProps} {...rest}>
       {children}
     </LinkButton>
   ) : (
-    <Button {...rest} variant={"subtle"}>
+    <Button onPress={onPress} {...rest} variant={"subtle"}>
       {children}
     </Button>
   );
@@ -125,11 +134,20 @@ export function SubtleButton({ linkTo, children, ...rest }: ButtonProps) {
 export type PressableProps = LinkCompatibleButtonBaseProps &
   Omit<IPressableProps, keyof LinkCompatibleButtonBaseProps>;
 
-export function Pressable({ linkTo, children, ...rest }: PressableProps) {
+export function Pressable({
+  linkTo,
+  onPress,
+  children,
+  ...rest
+}: PressableProps) {
+  const linkProps = useLinkTo(linkTo ?? {}, onPress);
+
   return linkTo && Platform.OS === "web" ? (
-    <LinkButton {...rest}>{children}</LinkButton>
+    <LinkButton {...linkProps} {...rest}>
+      {children}
+    </LinkButton>
   ) : (
-    <_Pressable {...pressableBaseStyle} {...rest}>
+    <_Pressable {...pressableBaseStyle} onPress={onPress} {...rest}>
       {children}
     </_Pressable>
   );

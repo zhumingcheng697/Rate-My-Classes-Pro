@@ -1,4 +1,4 @@
-import React, { type ReactNode, useState, useEffect } from "react";
+import React, { type ReactNode, useState, useCallback } from "react";
 import { Platform } from "react-native";
 import {
   Button,
@@ -43,17 +43,23 @@ function LinkButton({
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
-  useEffect(() => {
+  const handler = useCallback(() => {
     const unsetIsClicked = () => {
       setIsClicked(false);
+      // @ts-ignore
+      window.removeEventListener("mouseup", unsetIsClicked);
+      // @ts-ignore
+      window.removeEventListener("drop", unsetIsClicked);
+      // @ts-ignore
+      window.removeEventListener("dragend", unsetIsClicked);
     };
 
     // @ts-ignore
-    document.addEventListener("mouseup", unsetIsClicked);
-    return () => {
-      // @ts-ignore
-      document.removeEventListener("mouseup", unsetIsClicked);
-    };
+    window.addEventListener("mouseup", unsetIsClicked);
+    // @ts-ignore
+    window.addEventListener("drop", unsetIsClicked);
+    // @ts-ignore
+    window.addEventListener("dragend", unsetIsClicked);
   }, []);
 
   return (
@@ -69,9 +75,13 @@ function LinkButton({
       isDisabled={isDisabled}
       userSelect={"none"}
       onMouseDown={() => {
+        handler();
         setIsClicked(true);
       }}
       onMouseUp={() => {
+        setIsClicked(false);
+      }}
+      onDragEnd={() => {
         setIsClicked(false);
       }}
       onMouseEnter={() => {

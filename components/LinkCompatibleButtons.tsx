@@ -49,6 +49,8 @@ function LinkButton({
       window.removeEventListener("drop", unsetIsClicked);
       // @ts-ignore
       window.removeEventListener("dragend", unsetIsClicked);
+      // @ts-ignore
+      window.removeEventListener("contextmenu", unsetIsClicked);
     };
 
     // @ts-ignore
@@ -57,6 +59,8 @@ function LinkButton({
     window.addEventListener("drop", unsetIsClicked);
     // @ts-ignore
     window.addEventListener("dragend", unsetIsClicked);
+    // @ts-ignore
+    window.addEventListener("contextmenu", unsetIsClicked);
   }, []);
 
   return (

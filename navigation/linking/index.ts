@@ -16,7 +16,7 @@ const linking: LinkingOptions<RootNavigationParamList> = {
       return stringnify(state as NavigationState<RootNavigationParamList>);
     } catch (e) {
       console.error(state, e);
-      return "/explore";
+      return "";
     }
   },
   getStateFromPath(path) {

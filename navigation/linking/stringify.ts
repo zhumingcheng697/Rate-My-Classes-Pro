@@ -135,6 +135,8 @@ export function flattenRoute(
         }
       }
     }
+
+    return { tabName };
   }
 }
 
@@ -165,10 +167,21 @@ export default function stringify(
 ) {
   const route = flattenRoute(tabState);
 
+  const baseRoutePathMap: { [T in keyof RootNavigationParamList]: string } = {
+    ExploreTab: "/explore",
+    SearchTab: "/search",
+    MeTab: "/account",
+  };
+
   if (route) {
     const { tabName, screenName, screenParams } = route;
-    return stringifyRoute(tabName, screenName, screenParams);
+    if (tabName) {
+      if (screenName) {
+        return stringifyRoute(tabName, screenName, screenParams);
+      }
+      return baseRoutePathMap[tabName];
+    }
   }
 
-  return "/explore";
+  return "/";
 }

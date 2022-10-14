@@ -28,6 +28,7 @@ export const pressableBaseStyle = {
   _disabled: { opacity: 0.5 },
   _pressed: { opacity: 0.5 },
   _hover: { opacity: 0.72 },
+  _web: { userSelect: "none" },
 };
 
 export const buttonBaseStyle = {
@@ -98,6 +99,10 @@ const componentsStyle = {
     defaultProps: {
       size: "sm",
       color: solidBorder,
+      _web: {
+        userSelect: "none",
+        "aria-hidden": "true",
+      },
     },
   },
   IconButton: {

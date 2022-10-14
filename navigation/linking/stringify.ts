@@ -5,7 +5,6 @@ import type {
   ExploreNavigationParamList,
   SearchNavigationParamList,
   MeNavigationParamList,
-  StackNavigationParamList,
   ClassCode,
   StarredOrReviewed,
   NavigationParamListFor,
@@ -123,8 +122,10 @@ export function flattenRoute(
     const { name: tabName, state: stackState } = tabRoutes[tabIndex] ?? {};
 
     if (tabName && stackState) {
-      const { index: stackIndex, routes: stackRoutes } =
-        stackState as NavigationState<StackNavigationParamList>;
+      const { index: stackIndex, routes: stackRoutes } = stackState as
+        | NavigationState<ExploreNavigationParamList>
+        | NavigationState<SearchNavigationParamList>
+        | NavigationState<MeNavigationParamList>;
 
       if (typeof stackIndex === "number" && stackRoutes) {
         const { name: screenName, params: screenParams } =

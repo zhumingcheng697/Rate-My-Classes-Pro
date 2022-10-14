@@ -13,21 +13,26 @@ import {
 } from "@react-navigation/native";
 
 import {
-  type StackNavigationParamList,
   type ClassCode,
   type ClassInfo,
   ErrorType,
-  RootNavigationParamList,
-  RouteNameFor,
-  RouteParamsFor,
+  type RootNavigationParamList,
+  type ExploreNavigationParamList,
+  type SearchNavigationParamList,
+  type MeNavigationParamList,
+  type RouteNameFor,
+  type RouteParamsFor,
 } from "./types";
 import type { SemesterInfo } from "./semester";
 import { getClass } from "./schedge";
 import { stringifyRoute } from "../navigation/linking/stringify";
 
 export function useInitialTabName() {
-  const tabNavigation =
-    useNavigation<StackNavigationProp<StackNavigationParamList>>().getParent();
+  const tabNavigation = useNavigation<
+    | StackNavigationProp<ExploreNavigationParamList>
+    | StackNavigationProp<SearchNavigationParamList>
+    | StackNavigationProp<MeNavigationParamList>
+  >().getParent();
 
   const isFocused = useIsFocused();
 

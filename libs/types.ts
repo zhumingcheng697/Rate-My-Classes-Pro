@@ -148,11 +148,6 @@ export type MeNavigationParamList = {
   Settings: undefined;
 } & SharedNavigationParamList;
 
-export type StackNavigationParamList =
-  | ExploreNavigationParamList
-  | SearchNavigationParamList
-  | MeNavigationParamList;
-
 export type NavigationParamListFor<Tab extends keyof RootNavigationParamList> =
   Tab extends "ExploreTab"
     ? ExploreNavigationParamList

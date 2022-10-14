@@ -12,7 +12,6 @@ import {
   getSchoolName,
   Route,
 } from "../../libs/utils";
-import { useInitialTabName } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid, { type GridRenderItemInfo } from "../../containers/Grid";
 import TieredTextButton from "../../components/TieredTextButton";
@@ -24,7 +23,6 @@ type UniversityScreenNavigationProp = StackNavigationProp<
 >;
 
 export default function UniversityScreen() {
-  const navigation = useNavigation<UniversityScreenNavigationProp>();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const settings = useSelector((state) => state.settings);
@@ -38,8 +36,6 @@ export default function UniversityScreen() {
     () => new Semester(settings.selectedSemester),
     [settings.selectedSemester]
   );
-
-  const tabName = useInitialTabName();
 
   const [undergradCodes, gradCodes] = useMemo(() => {
     if (!isSchoolNameLoaded || !isDepartmentNameLoaded) return [[], []];
@@ -71,11 +67,11 @@ export default function UniversityScreen() {
           {...info}
           primaryText={getSchoolName(schoolInfo, schoolNames)}
           secondaryText={schoolCode.toUpperCase()}
-          linkTo={Route(tabName, "School", schoolInfo)}
+          linkTo={Route("ExploreTab", "School", schoolInfo)}
         />
       );
     },
-    [schoolNames, tabName]
+    [schoolNames]
   );
 
   return (

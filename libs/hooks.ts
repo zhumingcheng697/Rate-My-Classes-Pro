@@ -11,6 +11,7 @@ import {
   useLinkProps as _useLinkProps,
   CommonActions,
   useNavigation,
+  useNavigationState,
 } from "@react-navigation/native";
 
 import {
@@ -52,6 +53,28 @@ export function useInitialTabName() {
   }, [tabState]);
 
   return tabName;
+}
+
+export function useInitialPreviousRoute() {
+  const current = useNavigationState(
+    (state) => state.routes[state.index - 1]
+  ) as (
+    | NavigationState<ExploreNavigationParamList>
+    | NavigationState<SearchNavigationParamList>
+    | NavigationState<MeNavigationParamList>
+  )["routes"][number];
+
+  const isFocused = useIsFocused();
+
+  const [route, setRoute] = useState<typeof current | undefined>(undefined);
+
+  useEffect(() => {
+    if (isFocused && !route && current) {
+      setRoute(current);
+    }
+  }, [current]);
+
+  return route;
 }
 
 export function useLinkProps<

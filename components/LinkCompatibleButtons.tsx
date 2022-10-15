@@ -26,6 +26,11 @@ export type LinkCompatibleButtonBaseProps = {
 type LinkButtonProps = LinkCompatibleButtonBaseProps &
   Omit<IButtonProps | IPressableProps, keyof LinkCompatibleButtonBaseProps>;
 
+declare const window: {
+  addEventListener: (event: string, callback: Function) => void;
+  removeEventListener: (event: string, callback: Function) => void;
+};
+
 function LinkButton({
   isDisabled,
   children,
@@ -38,23 +43,15 @@ function LinkButton({
   const handler = useCallback(() => {
     const unsetIsClicked = () => {
       setIsClicked(false);
-      // @ts-ignore
       window.removeEventListener("mouseup", unsetIsClicked);
-      // @ts-ignore
       window.removeEventListener("drop", unsetIsClicked);
-      // @ts-ignore
       window.removeEventListener("dragend", unsetIsClicked);
-      // @ts-ignore
       window.removeEventListener("contextmenu", unsetIsClicked);
     };
 
-    // @ts-ignore
     window.addEventListener("mouseup", unsetIsClicked);
-    // @ts-ignore
     window.addEventListener("drop", unsetIsClicked);
-    // @ts-ignore
     window.addEventListener("dragend", unsetIsClicked);
-    // @ts-ignore
     window.addEventListener("contextmenu", unsetIsClicked);
   }, []);
 

@@ -1,4 +1,5 @@
 import type { LinkingOptions, NavigationState } from "@react-navigation/native";
+import { WEB_DEPLOYMENT_URL } from "react-native-dotenv";
 
 import parse from "./parse";
 import stringnify from "./stringify";
@@ -9,7 +10,7 @@ const linking: LinkingOptions<RootNavigationParamList> = {
     "rate-my-classes-pro://",
     "rate-my-classes://",
     "ratemyclasses://",
-    "https://rate-my-classes-pro.netlify.app/",
+    WEB_DEPLOYMENT_URL,
   ],
   getPathFromState(state) {
     try {

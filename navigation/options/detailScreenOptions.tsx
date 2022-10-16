@@ -80,7 +80,9 @@ export default ({
               <Button
                 onPress={() => {
                   setShowAlert(false);
-                  navigation.navigate("SignInSignUp", { classCode });
+                  navigation.navigate("SignInSignUp", {
+                    classCode: classInfo ?? classCode,
+                  });
                 }}
               >
                 Sign In

@@ -95,20 +95,18 @@ export function useLinkProps<
   },
   simultaneousAction?: ((...arg: any[]) => void) | null
 ) {
-  const to = useMemo(() => {
-    if (tabName && screenName) {
-      try {
-        return stringifyRoute(
+  const to = useMemo(
+    () =>
+      (tabName &&
+        screenName &&
+        stringifyRoute(
           tabName,
           screenName,
           screenParams as RouteParamsFor<Tab, Screen>
-        );
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    return "";
-  }, [tabName, screenName, screenParams]);
+        )) ??
+      "",
+    [tabName, screenName, screenParams]
+  );
 
   const action = useMemo(
     () =>

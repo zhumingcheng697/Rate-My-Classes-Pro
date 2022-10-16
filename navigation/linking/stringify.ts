@@ -157,10 +157,14 @@ export function stringifyRoute<
     MeTab: stringifyMeRoute,
   };
 
-  return rootRouteToPathMap[tabName](
-    screenName as keyof NavigationParamListFor<Tab>,
-    params as ValueOf<NavigationParamListFor<Tab>>
-  );
+  try {
+    return rootRouteToPathMap[tabName](
+      screenName as keyof NavigationParamListFor<Tab>,
+      params as ValueOf<NavigationParamListFor<Tab>>
+    );
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 export default function stringify(
@@ -178,11 +182,11 @@ export default function stringify(
     const { tabName, screenName, screenParams } = route;
     if (tabName) {
       if (screenName) {
-        return stringifyRoute(tabName, screenName, screenParams);
+        return stringifyRoute(tabName, screenName, screenParams) ?? "";
       }
       return baseRoutePathMap[tabName];
     }
   }
 
-  return "/";
+  return "";
 }

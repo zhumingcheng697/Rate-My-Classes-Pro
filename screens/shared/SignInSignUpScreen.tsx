@@ -9,7 +9,7 @@ import {
 } from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
-import { isObjectEmpty, formSentence, Route } from "../../libs/utils";
+import { Route, composeErrorMessage } from "../../libs/utils";
 import { type SharedNavigationParamList } from "../../libs/types";
 import { GoogleSignInButton } from "../../libs/GoogleSignIn";
 import { useInitialTabName } from "../../libs/hooks";
@@ -73,13 +73,7 @@ export default function SignInSignUpScreen() {
     <>
       <AlertPopup
         header={`Unable to ${isSigningUp ? "Sign Up" : "Sign In"}`}
-        body={
-          error && !isObjectEmpty(error)
-            ? error.message
-              ? formSentence(error.message)
-              : JSON.stringify(error)
-            : "Unknown Error"
-        }
+        body={composeErrorMessage(error)}
         isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);
@@ -87,15 +81,7 @@ export default function SignInSignUpScreen() {
       />
       <AlertPopup
         header={`Unable to ${isSigningUp ? "Sign Up" : "Sign In"} with Google`}
-        body={
-          googleError
-            ? typeof googleError === "string"
-              ? googleError
-              : !isObjectEmpty(googleError) && googleError.message
-              ? formSentence(googleError.message)
-              : JSON.stringify(googleError)
-            : "Unknown Error"
-        }
+        body={composeErrorMessage(googleError)}
         isOpen={showGoogleAlert}
         onClose={() => {
           setShowGoogleAlert(false);

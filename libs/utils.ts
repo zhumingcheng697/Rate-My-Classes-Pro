@@ -58,6 +58,28 @@ export function isSchoolGrad(schoolCode: string) {
   return code.startsWith("G") || code === "DN";
 }
 
+export function composeErrorMessage(
+  error: any,
+  fallback: string = "Unknown Error"
+) {
+  if (error) {
+    if (typeof error === "string") {
+      return formSentence(error);
+    }
+    if (!isObjectEmpty(error) && error.message) {
+      return formSentence(error.message);
+    }
+    if ("" + error !== "" + {}) {
+      return formSentence("" + error);
+    }
+    const stringified = JSON.stringify(error);
+    if (stringified !== "{}") {
+      return stringified;
+    }
+  }
+  return fallback;
+}
+
 export function isObjectEmpty(obj: object) {
   return Object.keys(obj).length === 0;
 }

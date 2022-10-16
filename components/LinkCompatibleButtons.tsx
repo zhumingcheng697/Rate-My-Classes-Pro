@@ -26,11 +26,6 @@ export type LinkCompatibleButtonBaseProps = {
 type LinkButtonProps = LinkCompatibleButtonBaseProps &
   Omit<IButtonProps | IPressableProps, keyof LinkCompatibleButtonBaseProps>;
 
-declare const window: {
-  addEventListener: (event: string, callback: Function) => void;
-  removeEventListener: (event: string, callback: Function) => void;
-};
-
 function LinkButton({
   isDisabled,
   children,

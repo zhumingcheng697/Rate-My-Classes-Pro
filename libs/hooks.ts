@@ -143,7 +143,21 @@ export function useClassInfoLoader(
   semester: SemesterInfo,
   isSettingsSettled: boolean
 ) {
-  const [classInfo, setClassInfo] = useState<ClassInfo | null>(null);
+  const getInitialClassInfo = useCallback((classCode: ClassCode) => {
+    const name = classCode.name;
+    if (typeof name === "string") {
+      return {
+        ...classCode,
+        name,
+        description: classCode.description ?? "",
+      };
+    }
+    return null;
+  }, []);
+
+  const [classInfo, setClassInfo] = useState<ClassInfo | null>(() =>
+    getInitialClassInfo(classCode)
+  );
   const [classInfoError, setClassInfoError] = useState<ErrorType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 

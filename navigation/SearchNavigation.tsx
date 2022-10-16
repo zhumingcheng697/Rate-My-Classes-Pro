@@ -12,6 +12,7 @@ import scheduleScreenOptions from "./options/scheduleScreenOptions";
 import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
 import { type SearchNavigationParamList } from "../libs/types";
 import defaultScreenOptions from "./options/defaultScreenOptions";
+import SharingButton from "../components/SharingButton";
 
 const Stack = createStackNavigator<SearchNavigationParamList>();
 
@@ -22,7 +23,7 @@ export default function SearchNavigation() {
         name={"Search"}
         initialParams={{}}
         component={SearchScreen}
-        options={{ title: "Search" }}
+        options={{ title: "Search", headerRight: () => <SharingButton /> }}
       />
       <Stack.Screen
         name={"Detail"}

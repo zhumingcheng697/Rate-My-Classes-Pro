@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { IconButton, Icon, Button, theme } from "native-base";
+import { IconButton, Icon, Button, theme, HStack } from "native-base";
 import { type RouteProp } from "@react-navigation/native";
 import type {
   StackNavigationProp,
@@ -19,6 +19,7 @@ import { useAuth } from "../../mongodb/auth";
 import { useDB } from "../../mongodb/db";
 import { starClass, unstarClass } from "../../redux/actions";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
+import SharingButton from "../../components/SharingButton";
 
 type DetailScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -90,47 +91,50 @@ export default ({
             )
           }
         />
-        <IconButton
-          isDisabled={!classInfo}
-          variant={"unstyled"}
-          marginRight={"5px"}
-          padding={"5px"}
-          icon={
-            <Icon
-              {...(isStarred &&
-                colorModeResponsiveStyle((selector) => ({
-                  color: selector({
-                    light: theme.colors.yellow[400],
-                    dark: theme.colors.yellow[500],
-                  }),
-                })))}
-              size={"22px"}
-              as={<Ionicons name={"star" + (isStarred ? "" : "-outline")} />}
-            />
-          }
-          onPress={async () => {
-            if (auth.user && auth.isAuthenticated && db) {
-              try {
-                if (isStarred) {
-                  await db.unstarClass(classCode);
-                  unstarClass(dispatch)(classCode);
-                } else if (classInfo) {
-                  const starredClass: StarredClassInfo = {
-                    ...classInfo,
-                    starredDate: Date.now(),
-                  };
-                  await db.starClass(starredClass);
-                  starClass(dispatch)(starredClass);
+        <HStack>
+          <IconButton
+            isDisabled={!classInfo}
+            variant={"unstyled"}
+            marginRight={"5px"}
+            padding={"5px"}
+            icon={
+              <Icon
+                {...(isStarred &&
+                  colorModeResponsiveStyle((selector) => ({
+                    color: selector({
+                      light: theme.colors.yellow[400],
+                      dark: theme.colors.yellow[500],
+                    }),
+                  })))}
+                size={"22px"}
+                as={<Ionicons name={"star" + (isStarred ? "" : "-outline")} />}
+              />
+            }
+            onPress={async () => {
+              if (auth.user && auth.isAuthenticated && db) {
+                try {
+                  if (isStarred) {
+                    await db.unstarClass(classCode);
+                    unstarClass(dispatch)(classCode);
+                  } else if (classInfo) {
+                    const starredClass: StarredClassInfo = {
+                      ...classInfo,
+                      starredDate: Date.now(),
+                    };
+                    await db.starClass(starredClass);
+                    starClass(dispatch)(starredClass);
+                  }
+                } catch (e) {
+                  setShowAlert(true);
                 }
-              } catch (e) {
+              } else {
                 setShowAlert(true);
               }
-            } else {
-              setShowAlert(true);
-            }
-          }}
-          {...props}
-        />
+            }}
+            {...props}
+          />
+          <SharingButton />
+        </HStack>
       </>
     );
   },

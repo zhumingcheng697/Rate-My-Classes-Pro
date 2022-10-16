@@ -15,6 +15,7 @@ import scheduleScreenOptions from "./options/scheduleScreenOptions";
 import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
 import { type ExploreNavigationParamList } from "../libs/types";
 import { getFullDepartmentCode } from "../libs/utils";
+import SharingButton from "../components/SharingButton";
 
 const Stack = createStackNavigator<ExploreNavigationParamList>();
 
@@ -24,13 +25,14 @@ export default function ExploreNavigation() {
       <Stack.Screen
         name={"University"}
         component={UniversityScreen}
-        options={{ title: "Explore" }}
+        options={{ title: "Explore", headerRight: () => <SharingButton /> }}
       />
       <Stack.Screen
         name={"School"}
         component={SchoolScreen}
         options={({ route }) => ({
           title: route.params.schoolCode.toUpperCase(),
+          headerRight: () => <SharingButton />,
         })}
       />
       <Stack.Screen
@@ -38,6 +40,7 @@ export default function ExploreNavigation() {
         component={DepartmentScreen}
         options={({ route }) => ({
           title: getFullDepartmentCode(route.params),
+          headerRight: () => <SharingButton />,
         })}
       />
       <Stack.Screen

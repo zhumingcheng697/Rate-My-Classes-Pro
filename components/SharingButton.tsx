@@ -94,9 +94,11 @@ function NativeSharingButton({ url, copyLink }: SharingButtonProps) {
             Share.share(
               Platform.OS === "ios" ? { url } : { message: url }
             ).catch((err) => {
-              console.log(err);
-              setShareError(err);
-              setShareAlert(true);
+              if (!/Cancel/i.test(composeErrorMessage(err, ""))) {
+                console.log(err);
+                setShareError(err);
+                setShareAlert(true);
+              }
             });
           }
         }}

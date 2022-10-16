@@ -345,7 +345,7 @@ export default function DetailScreen() {
                       query,
                     })
                   : Route(tabName, "SignInSignUp", {
-                      classCode,
+                      classCode: classInfo ?? classCode,
                       starredOrReviewed,
                       query,
                     })

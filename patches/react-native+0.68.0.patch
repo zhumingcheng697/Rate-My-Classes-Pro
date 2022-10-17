@@ -1,8 +1,16 @@
 diff --git a/node_modules/react-native/Libraries/Share/Share.js b/node_modules/react-native/Libraries/Share/Share.js
-index e2e7656..7c0d286 100644
+index e2e7656..1a64d55 100644
 --- a/node_modules/react-native/Libraries/Share/Share.js
 +++ b/node_modules/react-native/Libraries/Share/Share.js
-@@ -133,6 +133,7 @@ class Share {
+@@ -32,6 +32,7 @@ type Options = {
+   excludedActivityTypes?: Array<string>,
+   tintColor?: string,
+   subject?: string,
++  anchor?: number,
+   ...
+ };
+ 
+@@ -133,6 +134,7 @@ class Share {
              subject: options.subject,
              tintColor: typeof tintColor === 'number' ? tintColor : undefined,
              excludedActivityTypes: options.excludedActivityTypes,

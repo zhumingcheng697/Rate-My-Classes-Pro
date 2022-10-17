@@ -27,6 +27,7 @@ import { isObjectEmpty } from "../libs/utils";
 import { useAuth } from "../mongodb/auth";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "../redux/actions";
 import { subtleBorder } from "../styling/colors";
+import { useDynamicColor } from "../styling/color-mode-utils";
 
 const Tab = createBottomTabNavigator<RootNavigationParamList>();
 
@@ -214,6 +215,10 @@ export default function RootNavigation() {
             borderTopWidth: 1,
             borderTopColor: subtleBorder,
           },
+          tabBarInactiveTintColor: useDynamicColor({
+            light: "#8E8E8F",
+            dark: "#7C7C7D",
+          }),
           tabBarIcon: ({ color, size, focused }) => {
             let iconName;
 

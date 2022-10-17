@@ -8,6 +8,10 @@ import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 
 import colors from "./colors";
 
+export function useDynamicColor(colors: Parameters<typeof DynamicColorIOS>[0]) {
+  return DynamicColorIOS(colors);
+}
+
 export const colorModeResponsiveStyle = (
   style: (selector: typeof DynamicColorIOS) => Record<string, any>
 ) => ({ ...style(DynamicColorIOS) });

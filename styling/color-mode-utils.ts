@@ -4,6 +4,11 @@ import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 
 import colors, { type ColorPair } from "./colors";
 
+export function useDynamicColor({ light, dark }: ColorPair) {
+  const colorScheme = useColorScheme();
+  return colorScheme === "dark" ? dark : light;
+}
+
 export const colorModeResponsiveStyle = (
   style: (selector: (colorPair: ColorPair) => string) => Record<string, any>
 ) => ({

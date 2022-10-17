@@ -49,6 +49,9 @@ const inputSelectDefaultProps = {
   size: "lg",
   borderWidth: 1,
   borderColor: solidBorder,
+  ...colorModeResponsiveStyle((selector) => ({
+    selectionColor: selector(colors.nyu),
+  })),
   _focus: {
     borderColor: solidBorder,
   },

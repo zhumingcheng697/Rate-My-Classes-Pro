@@ -23,13 +23,16 @@ export type LinkCompatibleButtonBaseProps = {
   children: ReactNode;
 } & LinkTo;
 
-type LinkButtonProps = LinkCompatibleButtonBaseProps &
-  Omit<IButtonProps | IPressableProps, keyof LinkCompatibleButtonBaseProps>;
+type LinkButtonProps = LinkCompatibleButtonBaseProps & { href?: string } & Omit<
+    IButtonProps | IPressableProps,
+    keyof LinkCompatibleButtonBaseProps | "href"
+  >;
 
 function LinkButton({
   isDisabled,
   children,
   onPress,
+  href,
   ...rest
 }: LinkButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
@@ -55,6 +58,7 @@ function LinkButton({
       justifyContent={"center"}
       opacity={isDisabled ? 0.5 : isClicked ? 0.5 : isHovered ? 0.72 : 1}
       // @ts-ignore
+      href={isDisabled ? undefined : href}
       tabIndex={isDisabled ? -1 : 0}
       cursor={isDisabled ? "not-allowed" : "pointer"}
       onClick={isDisabled ? undefined : onPress}

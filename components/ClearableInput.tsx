@@ -56,6 +56,12 @@ export default function ClearableInput({
               onPress={() => {
                 onChangeText("");
               }}
+              _web={{
+                // @ts-ignore
+                onMouseUp: () => {
+                  onChangeText("");
+                },
+              }}
             />
           )}
         </Box>

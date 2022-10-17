@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Platform, Share } from "react-native";
 import { Button, Icon, IconButton, Toast, Text, HStack } from "native-base";
 import { type RouteProp, useRoute } from "@react-navigation/native";
@@ -61,6 +61,9 @@ function NativeSharingButton({ url, copyLink }: SharingButtonProps) {
   const [shareAlert, setShareAlert] = useState(false);
   const [shareError, setShareError] = useState<any>(null);
 
+  const ref = useRef<{ _nativeTag?: number }>();
+  const anchor = ref.current?._nativeTag;
+
   return (
     <>
       <AlertPopup
@@ -84,6 +87,7 @@ function NativeSharingButton({ url, copyLink }: SharingButtonProps) {
         }
       />
       <IconButton
+        ref={ref}
         isDisabled={!url}
         variant={"unstyled"}
         marginRight={"5px"}
@@ -92,7 +96,10 @@ function NativeSharingButton({ url, copyLink }: SharingButtonProps) {
         onPress={() => {
           if (url) {
             Share.share(
-              Platform.OS === "ios" ? { url } : { message: url }
+              Platform.OS === "ios" ? { url } : { message: url },
+              typeof anchor === "number" && Platform.OS === "ios"
+                ? { anchor }
+                : undefined
             ).catch((err) => {
               if (!/Cancel/i.test(composeErrorMessage(err, ""))) {
                 console.log(err);

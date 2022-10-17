@@ -1,0 +1,12 @@
+diff --git a/node_modules/@types/react-native/index.d.ts b/node_modules/@types/react-native/index.d.ts
+index dbcef96..716deb1 100755
+--- a/node_modules/@types/react-native/index.d.ts
++++ b/node_modules/@types/react-native/index.d.ts
+@@ -6997,6 +6997,7 @@ export type ShareOptions = {
+     excludedActivityTypes?: Array<string> | undefined;
+     tintColor?: ColorValue | undefined;
+     subject?: string | undefined;
++    anchor?: number;
+ };
+ 
+ export type ShareSharedAction = {

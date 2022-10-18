@@ -57,7 +57,7 @@ const inputSelectDefaultProps = {
   },
   _web: colorModeResponsiveStyle((selector) => ({
     _focus: {
-      borderWidth: 2,
+      boxShadow: "0 0 0 1px " + selector(colors.nyu),
       borderColor: selector(colors.nyu),
     },
   })),

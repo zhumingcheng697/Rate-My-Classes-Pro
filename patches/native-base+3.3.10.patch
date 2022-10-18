@@ -1,0 +1,74 @@
+diff --git a/node_modules/native-base/lib/commonjs/components/primitives/Input/Input.js b/node_modules/native-base/lib/commonjs/components/primitives/Input/Input.js
+index 67d7dd2..4525de9 100644
+--- a/node_modules/native-base/lib/commonjs/components/primitives/Input/Input.js
++++ b/node_modules/native-base/lib/commonjs/components/primitives/Input/Input.js
+@@ -80,7 +80,7 @@ const Input = ({
+     isInvalid: inputThemeProps.isInvalid,
+     isReadOnly: inputThemeProps.isReadOnly
+   });
+-  const [layoutProps, nonLayoutProps] = (0, _utils.extractInObject)(resolvedProps, [..._utils.stylingProps.margin, ..._utils.stylingProps.border, ..._utils.stylingProps.layout, ..._utils.stylingProps.flexbox, ..._utils.stylingProps.position, ..._utils.stylingProps.background, 'shadow', 'opacity']);
++  const [layoutProps, nonLayoutProps] = (0, _utils.extractInObject)(resolvedProps, [..._utils.stylingProps.margin, ..._utils.stylingProps.border, ..._utils.stylingProps.layout, ..._utils.stylingProps.flexbox, ..._utils.stylingProps.position, ..._utils.stylingProps.background, 'shadow', 'opacity', 'boxShadow']);
+   const [, baseInputProps] = (0, _utils.extractInObject)(nonLayoutProps, ['variant']); //TODO: refactor for responsive prop
+ 
+   if ((0, _useHasResponsiveProps.useHasResponsiveProps)(props)) {
+diff --git a/node_modules/native-base/lib/commonjs/theme/styled-system.js b/node_modules/native-base/lib/commonjs/theme/styled-system.js
+index 97309ef..78e3a8d 100644
+--- a/node_modules/native-base/lib/commonjs/theme/styled-system.js
++++ b/node_modules/native-base/lib/commonjs/theme/styled-system.js
+@@ -576,6 +576,7 @@ exports.typography = typography;
+ const extraProps = {
+   outline: true,
+   outlineWidth: true,
++  boxShadow: true,
+   shadow: {
+     scale: 'shadows'
+   },
+diff --git a/node_modules/native-base/lib/module/components/primitives/Input/Input.js b/node_modules/native-base/lib/module/components/primitives/Input/Input.js
+index cdd877c..a3111cf 100644
+--- a/node_modules/native-base/lib/module/components/primitives/Input/Input.js
++++ b/node_modules/native-base/lib/module/components/primitives/Input/Input.js
+@@ -58,7 +58,7 @@ const Input = ({
+     isInvalid: inputThemeProps.isInvalid,
+     isReadOnly: inputThemeProps.isReadOnly
+   });
+-  const [layoutProps, nonLayoutProps] = extractInObject(resolvedProps, [...stylingProps.margin, ...stylingProps.border, ...stylingProps.layout, ...stylingProps.flexbox, ...stylingProps.position, ...stylingProps.background, 'shadow', 'opacity']);
++  const [layoutProps, nonLayoutProps] = extractInObject(resolvedProps, [...stylingProps.margin, ...stylingProps.border, ...stylingProps.layout, ...stylingProps.flexbox, ...stylingProps.position, ...stylingProps.background, 'shadow', 'opacity', 'boxShadow']);
+   const [, baseInputProps] = extractInObject(nonLayoutProps, ['variant']); //TODO: refactor for responsive prop
+ 
+   if (useHasResponsiveProps(props)) {
+diff --git a/node_modules/native-base/lib/module/theme/styled-system.js b/node_modules/native-base/lib/module/theme/styled-system.js
+index 637de0c..715ce46 100644
+--- a/node_modules/native-base/lib/module/theme/styled-system.js
++++ b/node_modules/native-base/lib/module/theme/styled-system.js
+@@ -553,6 +553,7 @@ export const typography = {
+ const extraProps = {
+   outline: true,
+   outlineWidth: true,
++  boxShadow: true,
+   shadow: {
+     scale: 'shadows'
+   },
+diff --git a/node_modules/native-base/src/components/primitives/Input/Input.tsx b/node_modules/native-base/src/components/primitives/Input/Input.tsx
+index 4adb61f..d8df714 100644
+--- a/node_modules/native-base/src/components/primitives/Input/Input.tsx
++++ b/node_modules/native-base/src/components/primitives/Input/Input.tsx
+@@ -69,6 +69,7 @@ const Input = (
+     ...stylingProps.background,
+     'shadow',
+     'opacity',
++    'boxShadow',
+   ]);
+ 
+   const [, baseInputProps] = extractInObject(nonLayoutProps, ['variant']);
+diff --git a/node_modules/native-base/src/theme/styled-system.ts b/node_modules/native-base/src/theme/styled-system.ts
+index 6dc36a5..c27b9fc 100644
+--- a/node_modules/native-base/src/theme/styled-system.ts
++++ b/node_modules/native-base/src/theme/styled-system.ts
+@@ -566,6 +566,7 @@ export const typography = {
+ const extraProps = {
+   outline: true,
+   outlineWidth: true,
++  boxShadow: true,
+   shadow: {
+     scale: 'shadows',
+   },

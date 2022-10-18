@@ -35,12 +35,14 @@ function WebBackButton(props: HeaderBackButtonProps) {
   return !canGoBack ? null : (
     <Pressable
       {...rest}
+      marginLeft={"11px"}
+      marginRight={"8px"}
       linkTo={{
         ...Route(tabName, previousRoute?.name, previousRoute?.params),
         action: CommonActions.goBack(),
       }}
     >
-      <ChevronIcon marginLeft={"11px"} marginRight={"8px"} />
+      <ChevronIcon />
     </Pressable>
   );
 }

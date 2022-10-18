@@ -58,8 +58,10 @@ export default function ClearableInput({
               }}
               _web={{
                 // @ts-ignore
-                onMouseUp: () => {
-                  onChangeText("");
+                onMouseUp: (e: MouseEvent) => {
+                  if (!e.button) {
+                    onChangeText("");
+                  }
                 },
               }}
             />

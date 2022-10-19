@@ -1,4 +1,8 @@
 import type Realm from "./Realm";
+import {
+  MONGODB_SERVICE_NAME,
+  MONGODB_DATABASE_NAME,
+} from "react-native-dotenv";
 
 import { type UserDoc, type ReviewDoc, Collections } from "./types";
 import {
@@ -11,11 +15,8 @@ import {
 } from "../libs/types";
 import { getFullClassCode } from "../libs/utils";
 
-const servieName = "mongodb-atlas";
-const dbName = "RateMyClassesPro";
-
 export function useDB(user: Realm.User) {
-  const db = user.mongoClient(servieName).db(dbName);
+  const db = user.mongoClient(MONGODB_SERVICE_NAME).db(MONGODB_DATABASE_NAME);
 
   const isAuthenticated = user.id && user.providerType !== "anon-user";
 

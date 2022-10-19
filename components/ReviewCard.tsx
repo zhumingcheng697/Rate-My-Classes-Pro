@@ -32,8 +32,8 @@ import {
 } from "../libs/types";
 import Semester from "../libs/semester";
 import {
-  ratingDescriptionMap,
-  ratingTypeIconNameMap,
+  getRatingDescription,
+  getRatingTypeIconName,
   Route,
 } from "../libs/utils";
 import { useInitialTabName } from "../libs/hooks";
@@ -53,7 +53,7 @@ type RatingBlockProps = { ratingType: RatingType; rating: Rating };
 
 function RatingBlock({ ratingType, rating }: RatingBlockProps) {
   return (
-    <IconHStack iconName={ratingTypeIconNameMap[ratingType]}>
+    <IconHStack iconName={getRatingTypeIconName(ratingType)}>
       <HStack flexShrink={1} flexGrow={1}>
         <Text
           fontSize={"md"}
@@ -61,7 +61,7 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
           lineHeight={"sm"}
         >{`${ratingType}: `}</Text>
         <Text fontSize={"md"} lineHeight={"sm"}>
-          {ratingDescriptionMap[ratingType][rating]}
+          {getRatingDescription(ratingType, rating)}
         </Text>
       </HStack>
     </IconHStack>

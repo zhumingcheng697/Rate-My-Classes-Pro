@@ -3,7 +3,7 @@ import { HStack, type IStackProps, Text, VStack } from "native-base";
 
 import IconHStack from "./IconHStack";
 import { RatingType } from "../libs/types";
-import { ratingTypeIconNameMap } from "../libs/utils";
+import { getRatingTypeIconName } from "../libs/utils";
 import colors from "../styling/colors";
 import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 
@@ -24,7 +24,7 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
         background: selector(colors.background.secondary),
       }))}
     >
-      <IconHStack iconName={ratingTypeIconNameMap[ratingType]}>
+      <IconHStack iconName={getRatingTypeIconName(ratingType)}>
         <Text
           fontSize={"md"}
           fontWeight={"semibold"}

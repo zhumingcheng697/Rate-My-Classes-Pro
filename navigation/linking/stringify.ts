@@ -172,7 +172,7 @@ export default function stringify(
 ) {
   const route = flattenRoute(tabState);
 
-  const baseRoutePathMap: { [T in keyof RootNavigationParamList]: string } = {
+  const baseRoutePathMap: Record<keyof RootNavigationParamList, string> = {
     ExploreTab: "/explore",
     SearchTab: "/search",
     MeTab: "/account",

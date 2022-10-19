@@ -319,43 +319,51 @@ export const compareReviews = (() => {
 
 export const ratings: Rating[] = [5, 4, 3, 2, 1];
 
-export const ratingTypeIconNameMap = {
-  [RatingType.enjoyment]: "heart",
-  [RatingType.difficulty]: "stats-chart",
-  [RatingType.workload]: "flame",
-  [RatingType.value]: "trophy",
-};
+export function getRatingTypeIconName(ratingType: RatingType) {
+  const ratingTypeIconNameMap: Record<RatingType, string> = {
+    [RatingType.enjoyment]: "heart",
+    [RatingType.difficulty]: "stats-chart",
+    [RatingType.workload]: "flame",
+    [RatingType.value]: "trophy",
+  };
 
-export const ratingDescriptionMap = {
-  [RatingType.enjoyment]: {
-    [5]: "Really Enjoyed (5/5)",
-    [4]: "Somewhat Enjoyed (4/5)",
-    [3]: "Neutral (3/5)",
-    [2]: "Somewhat Disliked (2/5)",
-    [1]: "Really Disliked (1/5)",
-  },
-  [RatingType.difficulty]: {
-    [5]: "Really Difficult (5/5)",
-    [4]: "Somewhat Difficult (4/5)",
-    [3]: "Neutral (3/5)",
-    [2]: "Somewhat Easy (2/5)",
-    [1]: "Really Easy (1/5)",
-  },
-  [RatingType.workload]: {
-    [5]: "Really Heavy (5/5)",
-    [4]: "Somewhat Heavy (4/5)",
-    [3]: "Neutral (3/5)",
-    [2]: "Somewhat Light (2/5)",
-    [1]: "Really Light (1/5)",
-  },
-  [RatingType.value]: {
-    [5]: "Really Valuable (5/5)",
-    [4]: "Somewhat Valuable (4/5)",
-    [3]: "Neutral (3/5)",
-    [2]: "Somewhat Useless (2/5)",
-    [1]: "Really Useless (1/5)",
-  },
-};
+  return ratingTypeIconNameMap[ratingType];
+}
+
+export function getRatingDescription(ratingType: RatingType, rating: Rating) {
+  const ratingDescriptionMap: Record<RatingType, Record<Rating, string>> = {
+    [RatingType.enjoyment]: {
+      [5]: "Really Enjoyed (5/5)",
+      [4]: "Somewhat Enjoyed (4/5)",
+      [3]: "Neutral (3/5)",
+      [2]: "Somewhat Disliked (2/5)",
+      [1]: "Really Disliked (1/5)",
+    },
+    [RatingType.difficulty]: {
+      [5]: "Really Difficult (5/5)",
+      [4]: "Somewhat Difficult (4/5)",
+      [3]: "Neutral (3/5)",
+      [2]: "Somewhat Easy (2/5)",
+      [1]: "Really Easy (1/5)",
+    },
+    [RatingType.workload]: {
+      [5]: "Really Heavy (5/5)",
+      [4]: "Somewhat Heavy (4/5)",
+      [3]: "Neutral (3/5)",
+      [2]: "Somewhat Light (2/5)",
+      [1]: "Really Light (1/5)",
+    },
+    [RatingType.value]: {
+      [5]: "Really Valuable (5/5)",
+      [4]: "Somewhat Valuable (4/5)",
+      [3]: "Neutral (3/5)",
+      [2]: "Somewhat Useless (2/5)",
+      [1]: "Really Useless (1/5)",
+    },
+  };
+
+  return ratingDescriptionMap[ratingType]?.[rating];
+}
 
 export function Route<
   Tab extends keyof RootNavigationParamList,

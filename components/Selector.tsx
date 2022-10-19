@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { type Rating, type RatingType, ReviewOrder } from "../libs/types";
-import { ratings, ratingDescriptionMap, reviewOrders } from "../libs/utils";
+import { ratings, reviewOrders, getRatingDescription } from "../libs/utils";
 import { useDimensions } from "../libs/hooks";
 import Semester from "../libs/semester";
 import colors from "../styling/colors";
@@ -91,7 +91,7 @@ export function RatingSelector({
       {...rest}
       selectedOption={selectedRating}
       options={ratings}
-      serializeOption={(rating) => ratingDescriptionMap[ratingType][rating]}
+      serializeOption={(rating) => getRatingDescription(ratingType, rating)}
       onSelectedOptionChange={onSelectedRatingChange}
     />
   );

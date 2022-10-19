@@ -69,7 +69,7 @@ export function composeErrorMessage(
     if (!isObjectEmpty(error) && error.message) {
       return formSentence(error.message);
     }
-    if ("" + error !== "" + {}) {
+    if (!/\[object [a-z0-9_]+\]/i.test("" + error)) {
       return formSentence("" + error);
     }
     const stringified = JSON.stringify(error);

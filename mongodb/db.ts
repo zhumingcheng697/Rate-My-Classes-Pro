@@ -20,9 +20,11 @@ export function useDB(user: Realm.User) {
 
   const isAuthenticated = user.id && user.providerType !== "anon-user";
 
-  const updateOneFunc = db.collection("").updateOne;
-  type Update = Parameters<typeof updateOneFunc>[1];
-  type UpdateOptions = Parameters<typeof updateOneFunc>[2];
+  type UpdateOneParams = Parameters<
+    ReturnType<typeof db.collection>["updateOne"]
+  >;
+  type Update = UpdateOneParams[1];
+  type UpdateOptions = UpdateOneParams[2];
 
   async function createUserDoc(username: string, settings: Settings) {
     if (!isAuthenticated) return;

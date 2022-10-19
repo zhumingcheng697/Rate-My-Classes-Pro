@@ -81,11 +81,13 @@ export default function ReviewScreen() {
   );
 
   const db = useMemo(() => {
-    if (auth.user) return useDB(auth.user);
+    if (auth.user && !previousReview && newOrEdit !== "New") {
+      return useDB(auth.user);
+    }
   }, [auth.user]);
 
   useEffect(() => {
-    if (classInfo && !previousReview && db) {
+    if (classInfo && !previousReview && newOrEdit !== "New" && db) {
       const loadMyReview = async () => {
         if (auth.isAuthenticated && auth.user && !previousReview) {
           try {

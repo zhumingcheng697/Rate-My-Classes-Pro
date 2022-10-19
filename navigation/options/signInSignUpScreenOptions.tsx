@@ -35,7 +35,8 @@ export default ({
   headerLeft: (props) => {
     return (
       <PlainTextButton
-        marginLeft={"10px"}
+        marginLeft={"5px"}
+        padding={"5px"}
         title={"Cancel"}
         _text={{ fontSize: "md", fontWeight: "normal" }}
         onPress={navigation.goBack}

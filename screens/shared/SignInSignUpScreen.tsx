@@ -199,6 +199,7 @@ export default function SignInSignUpScreen() {
             </Text>
             <HStack justifyContent={"center"}>
               <PlainTextButton
+                paddingX={"5px"}
                 isDisabled={isLoading}
                 title={isSigningUp ? "Sign In" : "Sign Up"}
                 linkTo={{

@@ -32,7 +32,8 @@ export default ({
   headerLeft: (props) => {
     return (
       <PlainTextButton
-        marginLeft={"10px"}
+        marginLeft={"5px"}
+        padding={"5px"}
         title={"Cancel"}
         _text={{ fontSize: "md", fontWeight: "normal" }}
         onPress={navigation.goBack}
@@ -45,7 +46,8 @@ export default ({
     return (
       <PlainTextButton
         isDisabled={!newReview || !newOrEdit}
-        marginRight={"10px"}
+        marginRight={"5px"}
+        padding={"5px"}
         title={newOrEdit === "Edit" ? "Update" : "Submit"}
         _text={{ fontSize: "md", fontWeight: "semibold" }}
         onPress={() => {

@@ -341,6 +341,7 @@ export default function ReviewCard({
         />
         {auth.isAuthenticated && auth.user?.id === userId && (
           <PlainTextButton
+            paddingX={"5px"}
             title={"Edit My Review"}
             linkTo={Route(tabName, "Review", {
               classCode: classInfo ?? classCode,

@@ -8,7 +8,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import linking from "./navigation/linking";
 import RootNavigation from "./navigation/RootNavigation";
 import { AuthProvider } from "./mongodb/auth";
-import { Database } from "./mongodb/db";
+import Database from "./mongodb/db";
 import realmApp from "./mongodb/realmApp";
 import reducer from "./redux/reducers";
 import { useColorModeSynchronizer } from "./styling/color-mode-utils";
@@ -73,7 +73,7 @@ export default class App extends Component {
           realmApp.currentUser &&
           realmApp.currentUser.providerType !== "anon-user"
         ) {
-          await Database(realmApp.currentUser).updateSettings(settings);
+          await new Database(realmApp.currentUser).updateSettings(settings);
         }
       }
     };

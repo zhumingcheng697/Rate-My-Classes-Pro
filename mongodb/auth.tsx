@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Realm from "./Realm";
 
 import realmApp from "./realmApp";
-import { Database } from "./db";
+import Database from "./db";
 import {
   loadReviewedClasses,
   loadSettings,
@@ -50,7 +50,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const settings = useSelector((state) => state.settings);
   const dispatch = useDispatch();
   const [db, setDB] = useState<Database | null>(() =>
-    user ? Database(user) : null
+    user ? new Database(user) : null
   );
 
   const isAuthenticated = !!user && user.providerType !== "anon-user";
@@ -84,7 +84,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const guardDB = (user: Realm.User) => {
     let currDB = db;
     if (!currDB) {
-      currDB = Database(user);
+      currDB = new Database(user);
     }
     setDB(currDB);
     return currDB;
@@ -114,7 +114,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const credentials = Realm.Credentials.anonymous();
     const newUser = await realmApp.logIn(credentials);
     setUser(newUser);
-    setDB(Database(newUser));
+    setDB(new Database(newUser));
   };
 
   // The signIn function takes an email and password and uses the
@@ -124,7 +124,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const credentials = Realm.Credentials.emailPassword(email, password);
     const newUser = await realmApp.logIn(credentials);
-    const newDB = Database(newUser);
+    const newDB = new Database(newUser);
     await loadUserDoc(newUser, newDB);
     setUser(newUser);
     setDB(newDB);
@@ -143,7 +143,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setUsername(username);
     const credentials = Realm.Credentials.emailPassword(email, password);
     const newUser = await realmApp.logIn(credentials);
-    const newDB = Database(newUser);
+    const newDB = new Database(newUser);
     await newDB.createUserDoc(username, settings);
     setUser(newUser);
     setDB(newDB);
@@ -155,7 +155,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     // use Google ID token to sign into Realm
     const credential = Realm.Credentials.google(idToken);
     const newUser = await realmApp.logIn(credential);
-    const newDB = Database(newUser);
+    const newDB = new Database(newUser);
     const upserted = await newDB.createUserDoc(username, settings);
 
     if (upserted) {

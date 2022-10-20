@@ -15,200 +15,197 @@ import {
 } from "../libs/types";
 import { getFullClassCode } from "../libs/utils";
 
-export type Database = ReturnType<typeof Database>;
+type MongoDocument = Realm.Services.MongoDB.Document;
 
-export function Database(user: Realm.User) {
-  const db = user.mongoClient(MONGODB_SERVICE_NAME).db(MONGODB_DATABASE_NAME);
+type UpdateOneParams<Doc extends MongoDocument> = Parameters<
+  Realm.Services.MongoDB.MongoDBCollection<Doc>["updateOne"]
+>;
+type Update<Doc extends MongoDocument> = UpdateOneParams<Doc>[1];
+type UpdateOptions<Doc extends MongoDocument> = UpdateOneParams<Doc>[2];
 
-  const isAuthenticated = user.id && user.providerType !== "anon-user";
+export default class Database {
+  constructor(user: Realm.User) {
+    this.user = user;
+    this.isAuthenticated = this.user.providerType !== "anon-user";
+    this.db = this.user
+      .mongoClient(MONGODB_SERVICE_NAME)
+      .db(MONGODB_DATABASE_NAME);
+  }
 
-  type UpdateOneParams = Parameters<
-    ReturnType<typeof db.collection>["updateOne"]
-  >;
-  type Update = UpdateOneParams[1];
-  type UpdateOptions = UpdateOneParams[2];
+  private readonly user: Realm.User;
+  private readonly isAuthenticated: boolean;
+  private readonly db: Realm.Services.MongoDBDatabase;
 
-  async function createUserDoc(username: string, settings: Settings) {
-    if (!isAuthenticated) return;
+  async createUserDoc(username: string, settings: Settings) {
+    if (!this.isAuthenticated) return;
 
-    const result = await db.collection<UserDoc>(Collections.users).updateOne(
-      { _id: user.id },
-      {
-        $setOnInsert: {
-          username,
-          starredClasses: {},
-          reviewedClasses: {},
-          settings,
+    const result = await this.db
+      .collection<UserDoc>(Collections.users)
+      .updateOne(
+        { _id: this.user.id },
+        {
+          $setOnInsert: {
+            username,
+            starredClasses: {},
+            reviewedClasses: {},
+            settings,
+          },
         },
-      },
-      { upsert: true }
-    );
+        { upsert: true }
+      );
 
     return !!result.upsertedId;
   }
 
-  async function loadUserDoc() {
-    if (!isAuthenticated) return;
+  async loadUserDoc() {
+    if (!this.isAuthenticated) return;
 
-    return await db
+    return await this.db
       .collection<UserDoc>(Collections.users)
-      .findOne({ _id: user.id });
+      .findOne({ _id: this.user.id });
   }
 
-  async function updateUserDoc(update: Update) {
-    if (!isAuthenticated) return;
+  async updateUserDoc(update: Update<UserDoc>) {
+    if (!this.isAuthenticated) return;
 
-    await db
+    await this.db
       .collection<UserDoc>(Collections.users)
-      .updateOne({ _id: user.id }, update);
+      .updateOne({ _id: this.user.id }, update);
   }
 
-  async function updateUsername(username: string) {
-    await updateUserDoc({ $set: { username } });
+  async updateUsername(username: string) {
+    await this.updateUserDoc({ $set: { username } });
   }
 
-  async function updateSettings(settings: Settings) {
-    await updateUserDoc({ $set: { settings } });
+  async updateSettings(settings: Settings) {
+    await this.updateUserDoc({ $set: { settings } });
   }
 
-  async function starClass(starredClass: StarredClassInfo) {
-    await updateUserDoc({
+  async starClass(starredClass: StarredClassInfo) {
+    await this.updateUserDoc({
       $set: {
         [`starredClasses.${getFullClassCode(starredClass)}`]: starredClass,
       },
     });
   }
 
-  async function unstarClass(classCode: ClassCode) {
-    await updateUserDoc({
+  async unstarClass(classCode: ClassCode) {
+    await this.updateUserDoc({
       $unset: {
         [`starredClasses.${getFullClassCode(classCode)}`]: null,
       },
     });
   }
 
-  async function reviewClass(reviewedClass: ReviewedClassInfo) {
-    await updateUserDoc({
+  async reviewClass(reviewedClass: ReviewedClassInfo) {
+    await this.updateUserDoc({
       $set: {
         [`reviewedClasses.${getFullClassCode(reviewedClass)}`]: reviewedClass,
       },
     });
   }
 
-  async function unreviewClass(classCode: ClassCode) {
-    await updateUserDoc({
+  async unreviewClass(classCode: ClassCode) {
+    await this.updateUserDoc({
       $unset: {
         [`reviewedClasses.${getFullClassCode(classCode)}`]: null,
       },
     });
   }
 
-  async function loadReviewDoc(classCode: ClassCode) {
-    return await db
+  async loadReviewDoc(classCode: ClassCode) {
+    return await this.db
       .collection<ReviewDoc>(Collections.reviews)
       .findOne({ _id: getFullClassCode(classCode) });
   }
 
-  async function updateReviewDoc(
+  async updateReviewDoc(
     classCode: ClassCode,
-    update: Update,
-    options?: UpdateOptions
+    update: Update<ReviewDoc>,
+    options?: UpdateOptions<ReviewDoc>
   ) {
-    if (!isAuthenticated) return;
+    if (!this.isAuthenticated) return;
 
-    await db
+    await this.db
       .collection<ReviewDoc>(Collections.reviews)
       .updateOne({ _id: getFullClassCode(classCode) }, update, options);
   }
 
-  async function submitReview(classCode: ClassCode, review: Review) {
-    await updateReviewDoc(
+  async submitReview(classCode: ClassCode, review: Review) {
+    const id = this.user.id;
+    await this.updateReviewDoc(
       classCode,
       {
         $set: {
-          [`${[user.id]}.enjoyment`]: review.enjoyment,
-          [`${[user.id]}.difficulty`]: review.difficulty,
-          [`${[user.id]}.workload`]: review.workload,
-          [`${[user.id]}.value`]: review.value,
-          [`${[user.id]}.comment`]: review.comment,
-          [`${[user.id]}.userId`]: review.userId,
-          [`${[user.id]}.upvotes`]: review.upvotes,
-          [`${[user.id]}.downvotes`]: review.downvotes,
-          [`${[user.id]}.reviewedDate`]: review.reviewedDate,
-          [`${[user.id]}.semester`]: review.semester,
-          [`${[user.id]}.instructor`]: review.instructor,
+          [`${[id]}.enjoyment`]: review.enjoyment,
+          [`${[id]}.difficulty`]: review.difficulty,
+          [`${[id]}.workload`]: review.workload,
+          [`${[id]}.value`]: review.value,
+          [`${[id]}.comment`]: review.comment,
+          [`${[id]}.userId`]: review.userId,
+          [`${[id]}.upvotes`]: review.upvotes,
+          [`${[id]}.downvotes`]: review.downvotes,
+          [`${[id]}.reviewedDate`]: review.reviewedDate,
+          [`${[id]}.semester`]: review.semester,
+          [`${[id]}.instructor`]: review.instructor,
         },
       },
       { upsert: true }
     );
   }
 
-  async function updateReview(classCode: ClassCode, review: Review) {
-    await updateReviewDoc(classCode, {
+  async updateReview(classCode: ClassCode, review: Review) {
+    const id = this.user.id;
+    await this.updateReviewDoc(classCode, {
       $set: {
-        [`${[user.id]}.enjoyment`]: review.enjoyment,
-        [`${[user.id]}.difficulty`]: review.difficulty,
-        [`${[user.id]}.workload`]: review.workload,
-        [`${[user.id]}.value`]: review.value,
-        [`${[user.id]}.comment`]: review.comment,
+        [`${[id]}.enjoyment`]: review.enjoyment,
+        [`${[id]}.difficulty`]: review.difficulty,
+        [`${[id]}.workload`]: review.workload,
+        [`${[id]}.value`]: review.value,
+        [`${[id]}.comment`]: review.comment,
       },
     });
   }
 
-  async function voteReview(classCode: ClassCode, userId: string, vote?: Vote) {
-    let update: Update;
+  async voteReview(classCode: ClassCode, userId: string, vote?: Vote) {
+    let update: Update<ReviewDoc>;
+    const id = this.user.id;
 
     if (vote === Vote.upvote) {
       update = {
         $set: {
-          [`${[userId]}.upvotes.${user.id}`]: true,
+          [`${[userId]}.upvotes.${id}`]: true,
         },
         $unset: {
-          [`${[userId]}.downvotes.${user.id}`]: null,
+          [`${[userId]}.downvotes.${id}`]: null,
         },
       };
     } else if (vote === Vote.downvote) {
       update = {
         $set: {
-          [`${[userId]}.downvotes.${user.id}`]: true,
+          [`${[userId]}.downvotes.${id}`]: true,
         },
         $unset: {
-          [`${[userId]}.upvotes.${user.id}`]: null,
+          [`${[userId]}.upvotes.${id}`]: null,
         },
       };
     } else {
       update = {
         $unset: {
-          [`${[userId]}.upvotes.${user.id}`]: null,
-          [`${[userId]}.downvotes.${user.id}`]: null,
+          [`${[userId]}.upvotes.${id}`]: null,
+          [`${[userId]}.downvotes.${id}`]: null,
         },
       };
     }
 
-    await updateReviewDoc(classCode, update);
+    await this.updateReviewDoc(classCode, update);
   }
 
-  async function deleteReview(classCode: ClassCode) {
-    await updateReviewDoc(classCode, {
+  async deleteReview(classCode: ClassCode) {
+    await this.updateReviewDoc(classCode, {
       $unset: {
-        [`${[user.id]}`]: null,
+        [`${[this.user.id]}`]: null,
       },
     });
   }
-
-  return {
-    createUserDoc,
-    loadUserDoc,
-    updateUsername,
-    updateSettings,
-    starClass,
-    unstarClass,
-    reviewClass,
-    unreviewClass,
-    loadReviewDoc,
-    submitReview,
-    updateReview,
-    voteReview,
-    deleteReview,
-  };
 }

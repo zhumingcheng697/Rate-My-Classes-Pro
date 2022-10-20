@@ -189,9 +189,7 @@ export function useClassInfoLoader(
           setClassInfo(null);
           setClassInfoError(ErrorType.network);
         })
-        .finally(() => {
-          setIsLoading(false);
-        });
+        .finally(() => setIsLoading(false));
     }
   }, [
     classCode.schoolCode,
@@ -210,13 +208,11 @@ export function useAppState() {
   const [appState, setAppState] = useState(() => AppState.currentState);
 
   useEffect(() => {
-    const unsubscribe = AppState.addEventListener("change", (appState) => {
-      setAppState(appState);
-    });
+    const unsubscribe = AppState.addEventListener("change", (appState) =>
+      setAppState(appState)
+    );
 
-    return () => {
-      unsubscribe.remove();
-    };
+    return () => unsubscribe.remove();
   }, []);
 
   return appState;

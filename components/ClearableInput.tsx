@@ -53,9 +53,7 @@ export default function ClearableInput({
               icon={
                 <Icon size={"22px"} as={<Ionicons name={"close-circle"} />} />
               }
-              onPress={() => {
-                onChangeText("");
-              }}
+              onPress={() => onChangeText("")}
               _web={{
                 // @ts-ignore
                 onMouseUp: (e: MouseEvent) => {

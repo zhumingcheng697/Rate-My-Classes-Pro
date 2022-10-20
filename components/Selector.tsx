@@ -45,9 +45,7 @@ export default function Selector<T>({
       selectedValue={
         selectedOption ? serializeOption(selectedOption) : undefined
       }
-      onValueChange={(option) => {
-        onSelectedOptionChange(optionRecord[option]);
-      }}
+      onValueChange={(option) => onSelectedOptionChange(optionRecord[option])}
       _actionSheetContent={{
         marginLeft: `${inset.left}px`,
         marginRight: `${inset.right}px`,

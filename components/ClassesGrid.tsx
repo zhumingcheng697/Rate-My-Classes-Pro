@@ -35,21 +35,19 @@ export default function ClassesGrid({
   return (
     <Grid childrenCount={classes.length} {...rest}>
       {(info) =>
-        classes.map((classInfo) => {
-          return (
-            <TieredTextButton
-              key={`${getFullClassCode(classInfo)} ${classInfo.name}`}
-              {...info}
-              primaryText={classInfo.name}
-              secondaryText={getFullClassCode(classInfo)}
-              linkTo={Route(tabName, "Detail", {
-                classCode: classInfo,
-                query,
-                starredOrReviewed,
-              })}
-            />
-          );
-        })
+        classes.map((classInfo) => (
+          <TieredTextButton
+            key={`${getFullClassCode(classInfo)} ${classInfo.name}`}
+            {...info}
+            primaryText={classInfo.name}
+            secondaryText={getFullClassCode(classInfo)}
+            linkTo={Route(tabName, "Detail", {
+              classCode: classInfo,
+              query,
+              starredOrReviewed,
+            })}
+          />
+        ))
       }
     </Grid>
   );

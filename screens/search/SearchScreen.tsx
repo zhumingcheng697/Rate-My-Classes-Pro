@@ -152,12 +152,8 @@ export default function SearchScreen() {
             margin={`${searchBarMargin}px`}
             value={query}
             onChangeText={setQuery}
-            onFocus={() => {
-              setFocused(true);
-            }}
-            onBlur={() => {
-              setFocused(false);
-            }}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
             onSubmitEditing={() => {
               if (!matchedClasses.length)
                 search(query, selectedSemester, schoolCodes, departmentNames);

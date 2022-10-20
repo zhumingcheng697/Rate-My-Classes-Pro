@@ -15,13 +15,13 @@ import {
 } from "../libs/types";
 import { getFullClassCode } from "../libs/utils";
 
-type MongoDocument = Realm.Services.MongoDB.Document;
+type MongoDoc = Realm.Services.MongoDB.Document;
 
-type UpdateOneParams<Doc extends MongoDocument> = Parameters<
+type UpdateOneParams<Doc extends MongoDoc> = Parameters<
   Realm.Services.MongoDB.MongoDBCollection<Doc>["updateOne"]
 >;
-type Update<Doc extends MongoDocument> = UpdateOneParams<Doc>[1];
-type UpdateOptions<Doc extends MongoDocument> = UpdateOneParams<Doc>[2];
+type Update<Doc extends MongoDoc> = UpdateOneParams<Doc>[1];
+type UpdateOptions<Doc extends MongoDoc> = UpdateOneParams<Doc>[2];
 
 export default class Database {
   constructor(user: Realm.User) {

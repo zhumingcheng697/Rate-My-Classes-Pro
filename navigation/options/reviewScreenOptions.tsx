@@ -29,18 +29,16 @@ export default ({
   title: route.params.newOrEdit ? `${route.params.newOrEdit} Review` : "Review",
   presentation: "modal",
   gestureEnabled: false,
-  headerLeft: (props) => {
-    return (
-      <PlainTextButton
-        marginLeft={"5px"}
-        padding={"5px"}
-        title={"Cancel"}
-        _text={{ fontSize: "md", fontWeight: "normal" }}
-        onPress={navigation.goBack}
-        {...props}
-      />
-    );
-  },
+  headerLeft: (props) => (
+    <PlainTextButton
+      marginLeft={"5px"}
+      padding={"5px"}
+      title={"Cancel"}
+      _text={{ fontSize: "md", fontWeight: "normal" }}
+      onPress={navigation.goBack}
+      {...props}
+    />
+  ),
   headerRight: (props) => {
     const { classCode, newReview, newOrEdit } = route.params;
     return (
@@ -50,9 +48,7 @@ export default ({
         padding={"5px"}
         title={newOrEdit === "Edit" ? "Update" : "Submit"}
         _text={{ fontSize: "md", fontWeight: "semibold" }}
-        onPress={() => {
-          navigation.navigate("Detail", { classCode, newReview });
-        }}
+        onPress={() => navigation.navigate("Detail", { classCode, newReview })}
         {...props}
       />
     );

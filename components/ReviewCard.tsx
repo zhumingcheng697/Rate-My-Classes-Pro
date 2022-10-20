@@ -105,17 +105,13 @@ function VoteBlock({
     }
   }, [upvotes, downvotes, isAuthenticated]);
 
-  const upvote = async () => {
+  const upvote = async () =>
     await db?.voteReview(classCode, userId, Vote.upvote);
-  };
 
-  const downvote = async () => {
+  const downvote = async () =>
     await db?.voteReview(classCode, userId, Vote.downvote);
-  };
 
-  const unvote = async () => {
-    await db?.voteReview(classCode, userId);
-  };
+  const unvote = async () => await db?.voteReview(classCode, userId);
 
   return (
     <>

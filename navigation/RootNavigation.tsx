@@ -94,9 +94,7 @@ export default function RootNavigation() {
             setSchoolError(ErrorType.network);
             if (!failSilently) setShowAlert(true);
           })
-          .finally(() => {
-            setFetchingSchoolNames(false);
-          });
+          .finally(() => setFetchingSchoolNames(false));
       }
 
       if (!departmentNameRecord && !fetchingDepartmentNames) {
@@ -117,9 +115,7 @@ export default function RootNavigation() {
             setDepartmentError(ErrorType.network);
             if (!failSilently) setShowAlert(true);
           })
-          .finally(() => {
-            setFetchingDepartmentNames(false);
-          });
+          .finally(() => setFetchingDepartmentNames(false));
       }
     },
     []
@@ -132,17 +128,13 @@ export default function RootNavigation() {
 
         auth
           .fetchUserDoc()
-          .then(() => {
-            setAccountError(false);
-          })
+          .then(() => setAccountError(false))
           .catch((e) => {
             console.error(e);
             setAccountError(true);
             if (!failSilently) setShowAlert(true);
           })
-          .finally(() => {
-            setFetchingUserDoc(false);
-          });
+          .finally(() => setFetchingUserDoc(false));
       }
 
       getSchoolAndDepartmentNames(

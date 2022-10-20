@@ -75,17 +75,13 @@ export default function SignInSignUpScreen() {
         header={`Unable to ${isSigningUp ? "Sign Up" : "Sign In"}`}
         body={composeErrorMessage(error)}
         isOpen={showAlert}
-        onClose={() => {
-          setShowAlert(false);
-        }}
+        onClose={() => setShowAlert(false)}
       />
       <AlertPopup
         header={`Unable to ${isSigningUp ? "Sign Up" : "Sign In"} with Google`}
         body={composeErrorMessage(googleError)}
         isOpen={showGoogleAlert}
-        onClose={() => {
-          setShowGoogleAlert(false);
-        }}
+        onClose={() => setShowGoogleAlert(false)}
       />
       <KeyboardAwareSafeAreaScrollView>
         <VStack margin={"10px"} space={"8px"}>
@@ -211,9 +207,7 @@ export default function SignInSignUpScreen() {
                     isSigningUp: !isSigningUp,
                   }),
                 }}
-                onPress={() => {
-                  Keyboard.dismiss();
-                }}
+                onPress={() => Keyboard.dismiss()}
               />
             </HStack>
           </Box>

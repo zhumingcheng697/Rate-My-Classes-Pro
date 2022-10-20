@@ -171,11 +171,11 @@ export function getMeetingScheduleString(meetings: [Date, Date][]) {
 
     weeklySchedule[day]
       .sort(([a], [b]) => a.valueOf() - b.valueOf())
-      .forEach(([begin, end]) => {
+      .forEach(([begin, end]) =>
         stringnifiedDailySchedule.add(
           `${getTimeString(begin)}–${getTimeString(end)}`
-        );
-      });
+        )
+      );
 
     stringnifiedSchedule[day] = [...stringnifiedDailySchedule].join(", ");
   }

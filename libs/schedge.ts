@@ -175,9 +175,7 @@ export async function getSections(
     json.find((e) => e.name === name && e.deptCourseId === classNumber)
       ?.sections ?? [];
 
-  sections.forEach((section) => {
-    delete section.recitations;
-  });
+  sections.forEach((section) => delete section.recitations);
 
   return sections;
 }

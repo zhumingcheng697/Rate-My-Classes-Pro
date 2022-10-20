@@ -315,9 +315,7 @@ export default function ReviewScreen() {
                     dark: theme.colors.red[500],
                   }),
                 }))}
-                onPress={() => {
-                  setShowAlert(true);
-                }}
+                onPress={() => setShowAlert(true)}
               />
             )}
           </VStack>

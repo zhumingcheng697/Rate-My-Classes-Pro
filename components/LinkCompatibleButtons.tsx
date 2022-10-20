@@ -70,18 +70,10 @@ function LinkButton({
         handler();
         setIsClicked(true);
       }}
-      onMouseUp={() => {
-        setIsClicked(false);
-      }}
-      onDragEnd={() => {
-        setIsClicked(false);
-      }}
-      onMouseEnter={() => {
-        setIsHovered(true);
-      }}
-      onMouseLeave={() => {
-        setIsHovered(false);
-      }}
+      onMouseUp={() => setIsClicked(false)}
+      onDragEnd={() => setIsClicked(false)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       {...rest}
     >
       {children}

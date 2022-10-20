@@ -58,9 +58,7 @@ export default function AccountScreen() {
       {wasAuthenticated && (
         <AlertPopup
           isOpen={showAlert}
-          onClose={() => {
-            setShowAlert(false);
-          }}
+          onClose={() => setShowAlert(false)}
           header={"Sign Out"}
           body={
             "You are about to sign out. After you signed out, you will have to sign in again to view your starred and reviewed classes or star and review more classes."
@@ -150,9 +148,7 @@ export default function AccountScreen() {
                       dark: theme.colors.red[500],
                     }),
                   }))}
-                  onPress={() => {
-                    setShowAlert(true);
-                  }}
+                  onPress={() => setShowAlert(true)}
                 />
               )}
             </VStack>

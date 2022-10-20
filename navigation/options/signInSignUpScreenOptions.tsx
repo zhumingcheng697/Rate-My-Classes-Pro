@@ -32,18 +32,16 @@ export default ({
   presentation: "modal",
   gestureEnabled: false,
   title: route.params?.isSigningUp ? "Sign Up" : "Sign In",
-  headerLeft: (props) => {
-    return (
-      <PlainTextButton
-        marginLeft={"5px"}
-        padding={"5px"}
-        title={"Cancel"}
-        _text={{ fontSize: "md", fontWeight: "normal" }}
-        onPress={navigation.goBack}
-        {...props}
-      />
-    );
-  },
+  headerLeft: (props) => (
+    <PlainTextButton
+      marginLeft={"5px"}
+      padding={"5px"}
+      title={"Cancel"}
+      _text={{ fontSize: "md", fontWeight: "normal" }}
+      onPress={navigation.goBack}
+      {...props}
+    />
+  ),
   ...(Platform.OS === "ios" || Platform.OS === "macos"
     ? TransitionPresets.ModalSlideFromBottomIOS
     : TransitionPresets.DefaultTransition),

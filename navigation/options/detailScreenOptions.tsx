@@ -58,9 +58,7 @@ export default ({
       <>
         <AlertPopup
           isOpen={showAlert}
-          onClose={() => {
-            setShowAlert(false);
-          }}
+          onClose={() => setShowAlert(false)}
           header={
             isAuthenticated
               ? `Unable to ${isStarred ? "Unstar" : "Star"}`

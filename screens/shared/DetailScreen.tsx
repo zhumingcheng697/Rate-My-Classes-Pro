@@ -179,9 +179,7 @@ export default function DetailScreen() {
     }
 
     getSections(classInfo, selectedSemester)
-      .then((sections) => {
-        setSections(sections);
-      })
+      .then((sections) => setSections(sections))
       .catch(() => {
         setSections(null);
         setError(DetailScreenErrorType.loadSchedule);

@@ -56,12 +56,8 @@ export default function SettingsScreen() {
               value={auth.isSettingsSettled ? newUsername : " "}
               onChangeText={setNewUsername}
               returnKeyType={"done"}
-              onFocus={() => {
-                setCanClear(true);
-              }}
-              onBlur={() => {
-                setCanClear(false);
-              }}
+              onFocus={() => setCanClear(true)}
+              onBlur={() => setCanClear(false)}
               onEndEditing={() => {
                 setCanClear(false);
                 if (newUsername) {

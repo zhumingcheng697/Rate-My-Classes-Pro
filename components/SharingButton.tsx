@@ -70,9 +70,7 @@ function NativeSharingButton({ url, copyLink }: SharingButtonProps) {
         isOpen={shareAlert}
         header={"Unable to Share"}
         body={composeErrorMessage(shareError)}
-        onClose={() => {
-          setShareAlert(false);
-        }}
+        onClose={() => setShareAlert(false)}
         footerPrimaryButton={
           url ? (
             <Button
@@ -166,9 +164,7 @@ export default function SharingButton() {
         isOpen={copyAlert}
         header={"Unable to Copy"}
         body={composeErrorMessage(copyError)}
-        onClose={() => {
-          setCopyAlert(false);
-        }}
+        onClose={() => setCopyAlert(false)}
       />
       {Platform.OS !== "web" ? (
         <NativeSharingButton url={url} copyLink={copyLink} />

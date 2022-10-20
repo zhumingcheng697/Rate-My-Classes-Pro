@@ -101,9 +101,7 @@ export default function ScheduleScreen() {
           setSections(null);
           setShowAlert(true);
         })
-        .finally(() => {
-          navigation.setParams({ semester: selectedSemester });
-        });
+        .finally(() => navigation.setParams({ semester: selectedSemester }));
     }
   }, [selectedSemester, auth.isSettingsSettled, classInfo]);
 

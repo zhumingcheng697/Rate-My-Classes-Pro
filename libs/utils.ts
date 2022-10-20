@@ -53,6 +53,14 @@ export function getDepartmentName(
   );
 }
 
+export function extractClassCode({
+  schoolCode,
+  departmentCode,
+  classNumber,
+}: ClassCode): ClassCode {
+  return { schoolCode, departmentCode, classNumber };
+}
+
 export function extractClassInfo({
   schoolCode,
   departmentCode,

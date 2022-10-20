@@ -13,7 +13,7 @@ import {
   Vote,
   type Settings,
 } from "../libs/types";
-import { getFullClassCode } from "../libs/utils";
+import { getFullClassCode, extractClassCode } from "../libs/utils";
 
 type MongoDoc = Realm.Services.MongoDB.Document;
 
@@ -46,8 +46,8 @@ export default class Database {
         {
           $setOnInsert: {
             username,
-            starredClasses: {},
-            reviewedClasses: {},
+            starredClasses: [],
+            reviewedClasses: [],
             settings,
           },
         },
@@ -83,33 +83,25 @@ export default class Database {
 
   async starClass(starredClass: StarredClassInfo) {
     await this.updateUserDoc({
-      $set: {
-        [`starredClasses.${getFullClassCode(starredClass)}`]: starredClass,
-      },
+      $push: { starred: starredClass },
     });
   }
 
   async unstarClass(classCode: ClassCode) {
     await this.updateUserDoc({
-      $unset: {
-        [`starredClasses.${getFullClassCode(classCode)}`]: null,
-      },
+      $pull: { starred: extractClassCode(classCode) },
     });
   }
 
   async reviewClass(reviewedClass: ReviewedClassInfo) {
     await this.updateUserDoc({
-      $set: {
-        [`reviewedClasses.${getFullClassCode(reviewedClass)}`]: reviewedClass,
-      },
+      $push: { reviewed: reviewedClass },
     });
   }
 
   async unreviewClass(classCode: ClassCode) {
     await this.updateUserDoc({
-      $unset: {
-        [`reviewedClasses.${getFullClassCode(classCode)}`]: null,
-      },
+      $pull: { reviewed: extractClassCode(classCode) },
     });
   }
 

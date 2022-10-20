@@ -1,8 +1,8 @@
 import type {
-  StarredClassRecord,
-  ReviewedClassRecord,
   ReviewRecord,
   Settings,
+  StarredClassInfo,
+  ReviewedClassInfo,
 } from "../libs/types";
 
 export enum Collections {
@@ -13,8 +13,8 @@ export enum Collections {
 export type UserDoc = {
   _id: string;
   username: string;
-  starredClasses: StarredClassRecord;
-  reviewedClasses: ReviewedClassRecord;
+  starred: StarredClassInfo[];
+  reviewed: ReviewedClassInfo[];
   settings: Settings;
 };
 

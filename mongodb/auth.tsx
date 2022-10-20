@@ -23,6 +23,7 @@ import {
   MONGODB_SERVICE_NAME,
 } from "react-native-dotenv";
 import { Collections, UserDoc } from "./types";
+import { getFullClassCode } from "../libs/utils";
 
 type AuthContext = {
   db: Database | null;
@@ -61,55 +62,61 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     user ? new Database(user) : null
   );
 
-  useEffect(() => {
-    if (user && Platform.OS === "web") {
-      const db = user
-        .mongoClient(MONGODB_SERVICE_NAME)
-        .db(MONGODB_DATABASE_NAME);
+  // useEffect(() => {
+  //   if (user && Platform.OS === "web") {
+  //     const db = user
+  //       .mongoClient(MONGODB_SERVICE_NAME)
+  //       .db(MONGODB_DATABASE_NAME);
 
-      const stream = db.collection<UserDoc>(Collections.users).watch(
-        [{ $match: { $and: [{ _id: user.id }, { operationType: "update" }] } }],
-        // @ts-ignore
-        { fullDocument: "updateLookup" }
-      );
+  //     const stream = db.collection<UserDoc>(Collections.users).watch(
+  //       [{ $match: { $and: [{ _id: user.id }, { operationType: "update" }] } }],
+  //       // @ts-ignore
+  //       { fullDocument: "updateLookup" }
+  //     );
 
-      (async () => {
-        for await (const event of stream) {
-          if (event.operationType === "update") {
-            const { updateDescription, fullDocument } = event;
-            if (!fullDocument) continue;
+  //     (async () => {
+  //       for await (const event of stream) {
+  //         if (event.operationType === "update") {
+  //           const { updateDescription, fullDocument } = event;
+  //           if (!fullDocument) continue;
 
-            const updatedKeys: Set<UpdateKey> = new Set();
+  //           const updatedKeys: Set<UpdateKey> = new Set();
 
-            Object.keys(updateDescription.updatedFields)
-              .concat(updateDescription.removedFields)
-              .map((path) => path.split(".")[0])
-              .forEach((key) => updatedKeys.add(key as UpdateKey));
+  //           Object.keys(updateDescription.updatedFields)
+  //             .concat(updateDescription.removedFields)
+  //             .map((path) => path.split(".")[0])
+  //             .forEach((key) => updatedKeys.add(key as UpdateKey));
 
-            const updateActionMap: Record<
-              UpdateKey,
-              (userDoc: UserDoc) => void
-            > = {
-              username: ({ username }) => setUsername(username),
-              starredClasses: ({ starredClasses }) =>
-                loadStarredClasses(dispatch)(starredClasses),
-              reviewedClasses: ({ reviewedClasses }) =>
-                loadReviewedClasses(dispatch)(reviewedClasses),
-              settings: ({ settings }) => loadSettings(dispatch)(settings),
-            };
+  //           const updateActionMap: Record<
+  //             UpdateKey,
+  //             (userDoc: UserDoc) => void
+  //           > = {
+  //             username: ({ username }) => setUsername(username),
+  //             starredClasses: ({ starredClasses }) =>
+  //               loadStarredClasses(dispatch)(starredClasses),
+  //             reviewedClasses: ({ reviewedClasses }) =>
+  //               loadReviewedClasses(dispatch)(reviewedClasses),
+  //             settings: ({ settings }) => loadSettings(dispatch)(settings),
+  //           };
 
-            for (let updatedKey of updatedKeys) {
-              updateActionMap[updatedKey]?.(fullDocument);
-            }
-          }
-        }
-      })();
+  //           for (let updatedKey of updatedKeys) {
+  //             updateActionMap[updatedKey]?.(fullDocument);
+  //           }
+  //         }
+  //       }
+  //     })();
 
-      return () => {
-        stream.return(null);
-      };
-    }
-  }, [user]);
+  //     return () => {
+  //       stream.return(null);
+  //     };
+  //   }
+  // }, [user]);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     return sync(user);
+  //   }
+  // }, [user]);
 
   const isAuthenticated = !!user && user.providerType !== "anon-user";
 
@@ -123,10 +130,18 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       const userDoc = await db.loadUserDoc();
 
       if (userDoc) {
-        const { username, starredClasses, reviewedClasses, settings } = userDoc;
+        const { username, starred, reviewed, settings } = userDoc;
         setUsername(username);
-        loadStarredClasses(dispatch)(starredClasses);
-        loadReviewedClasses(dispatch)(reviewedClasses);
+        loadStarredClasses(dispatch)(
+          Object.fromEntries(
+            starred.map((info) => [getFullClassCode(info), info])
+          )
+        );
+        loadReviewedClasses(dispatch)(
+          Object.fromEntries(
+            reviewed.map((info) => [getFullClassCode(info), info])
+          )
+        );
         loadSettings(dispatch)(settings);
       }
 

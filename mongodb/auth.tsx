@@ -5,8 +5,9 @@ import React, {
   useState,
   type ReactNode,
   createContext,
-  useMemo,
+  useEffect,
 } from "react";
+import { Platform } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import Realm from "./Realm";
 
@@ -17,6 +18,11 @@ import {
   loadSettings,
   loadStarredClasses,
 } from "../redux/actions";
+import {
+  MONGODB_DATABASE_NAME,
+  MONGODB_SERVICE_NAME,
+} from "react-native-dotenv";
+import { Collections, UserDoc } from "./types";
 
 type AuthContext = {
   db: Database | null;
@@ -40,6 +46,8 @@ type AuthContext = {
 
 type AuthProviderProps = { children: ReactNode };
 
+type UpdateKey = Exclude<keyof UserDoc, "_id">;
+
 const Context = createContext<AuthContext | null>(null);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -52,6 +60,56 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [db, setDB] = useState<Database | null>(() =>
     user ? new Database(user) : null
   );
+
+  useEffect(() => {
+    if (user && Platform.OS === "web") {
+      const db = user
+        .mongoClient(MONGODB_SERVICE_NAME)
+        .db(MONGODB_DATABASE_NAME);
+
+      const stream = db.collection<UserDoc>(Collections.users).watch(
+        [{ $match: { $and: [{ _id: user.id }, { operationType: "update" }] } }],
+        // @ts-ignore
+        { fullDocument: "updateLookup" }
+      );
+
+      (async () => {
+        for await (const event of stream) {
+          if (event.operationType === "update") {
+            const { updateDescription, fullDocument } = event;
+            if (!fullDocument) continue;
+
+            const updatedKeys: Set<UpdateKey> = new Set();
+
+            Object.keys(updateDescription.updatedFields)
+              .concat(updateDescription.removedFields)
+              .map((path) => path.split(".")[0])
+              .forEach((key) => updatedKeys.add(key as UpdateKey));
+
+            const updateActionMap: Record<
+              UpdateKey,
+              (userDoc: UserDoc) => void
+            > = {
+              username: ({ username }) => setUsername(username),
+              starredClasses: ({ starredClasses }) =>
+                loadStarredClasses(dispatch)(starredClasses),
+              reviewedClasses: ({ reviewedClasses }) =>
+                loadReviewedClasses(dispatch)(reviewedClasses),
+              settings: ({ settings }) => loadSettings(dispatch)(settings),
+            };
+
+            for (let updatedKey of updatedKeys) {
+              updateActionMap[updatedKey]?.(fullDocument);
+            }
+          }
+        }
+      })();
+
+      return () => {
+        stream.return(null);
+      };
+    }
+  }, [user]);
 
   const isAuthenticated = !!user && user.providerType !== "anon-user";
 

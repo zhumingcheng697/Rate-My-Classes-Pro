@@ -15,14 +15,15 @@ import colors from "../../styling/colors";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
 export default function SettingsScreen() {
-  const auth = useAuth();
+  const { user, username, isAuthenticated, isSettingsSettled, updateUsername } =
+    useAuth();
   const dispatch = useDispatch();
   const [canClear, setCanClear] = useState(false);
   const [previousUsername, setPreviousUsername] = useState(
-    auth.isAuthenticated ? auth.username : ""
+    isAuthenticated ? username : ""
   );
   const [newUsername, setNewUsername] = useState(
-    (auth.isAuthenticated && auth.username) || ""
+    (isAuthenticated && username) || ""
   );
   const settings = useSelector((state) => state.settings);
   const showPreviousSemesters = settings.showPreviousSemesters;
@@ -38,47 +39,43 @@ export default function SettingsScreen() {
   );
 
   useEffect(() => {
-    if (auth.isAuthenticated && auth.username) {
-      setPreviousUsername(auth.username);
-      setNewUsername(auth.username);
+    if (isAuthenticated && username) {
+      setPreviousUsername(username);
+      setNewUsername(username);
     }
-  }, [auth.user, auth.isAuthenticated, auth.username]);
+  }, [user, isAuthenticated, username]);
 
   return (
     <KeyboardAwareSafeAreaScrollView>
       <VStack margin={"10px"} space={"8px"}>
-        {auth.isAuthenticated && (
-          <LabeledInput label={"Username"} isDisabled={!auth.isSettingsSettled}>
+        {isAuthenticated && (
+          <LabeledInput label={"Username"} isDisabled={!isSettingsSettled}>
             <ClearableInput
-              isDisabled={!auth.isSettingsSettled}
+              isDisabled={!isSettingsSettled}
               canClear={canClear && !!newUsername}
               placeholder={previousUsername ?? "Me"}
-              value={auth.isSettingsSettled ? newUsername : " "}
+              value={isSettingsSettled ? newUsername : " "}
               onChangeText={setNewUsername}
               returnKeyType={"done"}
               onFocus={() => setCanClear(true)}
-              onBlur={() => setCanClear(false)}
-              onEndEditing={() => {
+              onBlur={() => {
                 setCanClear(false);
                 if (newUsername) {
                   setPreviousUsername(newUsername);
-                  if (newUsername !== auth.username)
-                    auth.updateUsername(newUsername);
+                  if (newUsername !== username) updateUsername(newUsername);
                 } else if (!newUsername && previousUsername) {
                   setNewUsername(previousUsername);
-                  if (previousUsername !== auth.username)
-                    auth.updateUsername(previousUsername);
+                  if (previousUsername !== username)
+                    updateUsername(previousUsername);
                 }
               }}
             />
           </LabeledInput>
         )}
-        <LabeledInput label={"Semester"} isDisabled={!auth.isSettingsSettled}>
+        <LabeledInput label={"Semester"} isDisabled={!isSettingsSettled}>
           <SemesterSelector
-            isDisabled={!auth.isSettingsSettled}
-            selectedSemester={
-              auth.isSettingsSettled ? selectedSemester : undefined
-            }
+            isDisabled={!isSettingsSettled}
+            selectedSemester={isSettingsSettled ? selectedSemester : undefined}
             semesterOptions={semesterOptions}
             onSelectedSemesterChange={selectSemester(dispatch)}
           />

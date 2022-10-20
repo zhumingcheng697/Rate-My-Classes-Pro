@@ -29,7 +29,6 @@ import {
 import { useClassInfoLoader } from "../../libs/hooks";
 import Semester from "../../libs/semester";
 import { useAuth } from "../../mongodb/auth";
-import { useDB } from "../../mongodb/db";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
 type ReviewScreenNavigationProp = StackNavigationProp<
@@ -40,7 +39,7 @@ type ReviewScreenNavigationProp = StackNavigationProp<
 type ReviewScreenRouteProp = RouteProp<SharedNavigationParamList, "Review">;
 
 export default function ReviewScreen() {
-  const auth = useAuth();
+  const { user, isSettingsSettled, isAuthenticated, db } = useAuth();
   const navigation = useNavigation<ReviewScreenNavigationProp>();
   const route = useRoute<ReviewScreenRouteProp>();
   const { selectedSemester } = useSelector((state) => state.settings);
@@ -50,7 +49,7 @@ export default function ReviewScreen() {
   const { classInfo, classInfoError } = useClassInfoLoader(
     classCode,
     selectedSemester,
-    auth.isSettingsSettled && !!auth.user
+    isSettingsSettled && !!user
   );
 
   const [enjoyment, setEnjoyment] = useState<Rating | undefined>(
@@ -80,20 +79,14 @@ export default function ReviewScreen() {
     [previousReview]
   );
 
-  const db = useMemo(() => {
-    if (auth.user && !previousReview && newOrEdit !== "New") {
-      return useDB(auth.user);
-    }
-  }, [auth.user]);
-
   useEffect(() => {
     if (classInfo && !previousReview && newOrEdit !== "New" && db) {
       const loadMyReview = async () => {
-        if (auth.isAuthenticated && auth.user && !previousReview) {
+        if (isAuthenticated && user && !previousReview) {
           try {
             const reviewRecord: ReviewRecord =
               (await db.loadReviewDoc(classCode)) ?? {};
-            const review: Review | undefined = reviewRecord[auth.user.id];
+            const review: Review | undefined = reviewRecord[user.id];
             if (review) {
               setEnjoyment(review.enjoyment);
               setDifficulty(review.difficulty);
@@ -122,14 +115,14 @@ export default function ReviewScreen() {
   }, [classInfo, classInfoError, db]);
 
   useEffect(() => {
-    if (!auth.isAuthenticated) {
+    if (!isAuthenticated) {
       navigation.goBack();
       return;
     }
 
     if (
       newOrEdit &&
-      auth.user &&
+      user &&
       enjoyment &&
       difficulty &&
       workload &&
@@ -151,12 +144,12 @@ export default function ReviewScreen() {
         setHasEdited(true);
         navigation.setParams({
           newReview: {
-            userId: auth.user.id,
+            userId: user.id,
             enjoyment,
             difficulty,
             workload,
             value,
-            upvotes: previousReview?.upvotes ?? { [auth.user.id]: true },
+            upvotes: previousReview?.upvotes ?? { [user.id]: true },
             downvotes: previousReview?.downvotes ?? {},
             reviewedDate: previousReview?.reviewedDate ?? Date.now(),
             semester: semester.toJSON(),
@@ -176,7 +169,7 @@ export default function ReviewScreen() {
     semester,
     instructor,
     comment,
-    auth.isAuthenticated,
+    isAuthenticated,
     newOrEdit,
   ]);
 

@@ -38,7 +38,6 @@ import {
 } from "../libs/utils";
 import { useInitialTabName } from "../libs/hooks";
 import { useAuth } from "../mongodb/auth";
-import { useDB } from "../mongodb/db";
 import colors from "../styling/colors";
 import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 
@@ -89,23 +88,19 @@ function VoteBlock({
 }: VoteBlockProps) {
   const navigation = useNavigation<ReviewCardNavigationProp>();
   const [showAlert, setShowAlert] = useState(false);
-  const auth = useAuth();
-  const isAuthenticated = auth.isAuthenticated;
+  const { user, isAuthenticated, db } = useAuth();
   const voteCount = useMemo(
     () => Object.keys(upvotes).length - Object.keys(downvotes).length,
     [upvotes, downvotes]
   );
-  const db = useMemo(() => {
-    if (auth.user && auth.isAuthenticated) return useDB(auth.user);
-  }, [auth.user]);
 
   const vote = useMemo(() => {
-    if (!auth.user || !isAuthenticated) {
+    if (!user || !isAuthenticated) {
       return undefined;
     }
-    if (upvotes[auth.user.id]) {
+    if (upvotes[user.id]) {
       return Vote.upvote;
-    } else if (downvotes[auth.user.id]) {
+    } else if (downvotes[user.id]) {
       return Vote.downvote;
     }
   }, [upvotes, downvotes, isAuthenticated]);
@@ -167,13 +162,13 @@ function VoteBlock({
             />
           }
           onPress={async () => {
-            if (auth.user && isAuthenticated) {
+            if (user && isAuthenticated) {
               if (vote === Vote.upvote) {
                 try {
                   await unvote();
 
                   const newUpvotes = { ...upvotes };
-                  delete newUpvotes[auth.user.id];
+                  delete newUpvotes[user.id];
                   setVotes(newUpvotes);
                 } catch (e) {
                   setShowAlert(true);
@@ -183,11 +178,11 @@ function VoteBlock({
                   await upvote();
 
                   const newUpvotes = { ...upvotes };
-                  newUpvotes[auth.user.id] = true;
+                  newUpvotes[user.id] = true;
 
                   if (vote === Vote.downvote) {
                     const newDownvotes = { ...downvotes };
-                    delete newDownvotes[auth.user.id];
+                    delete newDownvotes[user.id];
                     setVotes(newUpvotes, newDownvotes);
                     return;
                   }
@@ -223,13 +218,13 @@ function VoteBlock({
             />
           }
           onPress={async () => {
-            if (auth.user && isAuthenticated) {
+            if (user && isAuthenticated) {
               if (vote === Vote.downvote) {
                 try {
                   await unvote();
 
                   const newDownvotes = { ...downvotes };
-                  delete newDownvotes[auth.user.id];
+                  delete newDownvotes[user.id];
                   setVotes(undefined, newDownvotes);
                 } catch (e) {
                   setShowAlert(true);
@@ -239,11 +234,11 @@ function VoteBlock({
                   await downvote();
 
                   const newDownvotes = { ...downvotes };
-                  newDownvotes[auth.user.id] = true;
+                  newDownvotes[user.id] = true;
 
                   if (vote === Vote.upvote) {
                     const newUpvotes = { ...upvotes };
-                    delete newUpvotes[auth.user.id];
+                    delete newUpvotes[user.id];
                     setVotes(newUpvotes, newDownvotes);
                     return;
                   }
@@ -291,11 +286,9 @@ export default function ReviewCard({
     reviewedDate,
     comment,
   } = review;
-
-  const navigation = useNavigation<ReviewCardNavigationProp>();
   const route = useRoute<ReviewCardRouteProp>();
   const { classCode } = route.params;
-  const auth = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   const setVotes = (newUpvotes?: VoteRecord, newDownvotes?: VoteRecord) => {
     const newReview = { ...review };
@@ -339,7 +332,7 @@ export default function ReviewCard({
           downvotes={downvotes}
           setVotes={setVotes}
         />
-        {auth.isAuthenticated && auth.user?.id === userId && (
+        {isAuthenticated && user?.id === userId && (
           <PlainTextButton
             paddingX={"5px"}
             title={"Edit My Review"}

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { IconButton, Icon, Button, theme, HStack } from "native-base";
 import { type RouteProp } from "@react-navigation/native";
 import type {
@@ -16,7 +16,6 @@ import type {
 import { useClassInfoLoader } from "../../libs/hooks";
 import { getFullClassCode } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
-import { useDB } from "../../mongodb/db";
 import { starClass, unstarClass } from "../../redux/actions";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 import SharingButton from "../../components/SharingButton";
@@ -48,16 +47,12 @@ export default ({
     );
     const starredClasses = useSelector((state) => state.starredClassRecord);
     const dispatch = useDispatch();
-    const auth = useAuth();
+    const { user, isAuthenticated, db } = useAuth();
     const [showAlert, setShowAlert] = useState(false);
     const isStarred =
-      auth.isAuthenticated &&
+      isAuthenticated &&
       starredClasses &&
       !!starredClasses[getFullClassCode(classCode)];
-
-    const db = useMemo(() => {
-      if (auth.user) return useDB(auth.user);
-    }, [auth.user]);
 
     return (
       <>
@@ -67,17 +62,17 @@ export default ({
             setShowAlert(false);
           }}
           header={
-            auth.isAuthenticated
+            isAuthenticated
               ? `Unable to ${isStarred ? "Unstar" : "Star"}`
               : "Sign In to Star"
           }
           body={
-            auth.isAuthenticated
+            isAuthenticated
               ? undefined
               : "You need to sign in to keep track of your starred classes."
           }
           footerPrimaryButton={
-            auth.isAuthenticated ? undefined : (
+            isAuthenticated ? undefined : (
               <Button
                 onPress={() => {
                   setShowAlert(false);
@@ -111,7 +106,7 @@ export default ({
               />
             }
             onPress={async () => {
-              if (auth.user && auth.isAuthenticated && db) {
+              if (user && isAuthenticated && db) {
                 try {
                   if (isStarred) {
                     await db.unstarClass(classCode);

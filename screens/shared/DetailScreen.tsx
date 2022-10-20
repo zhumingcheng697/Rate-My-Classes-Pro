@@ -38,7 +38,6 @@ import {
 } from "../../components/LinkCompatibleButtons";
 import { ReviewOrderSelector } from "../../components/Selector";
 import { useAuth } from "../../mongodb/auth";
-import { useDB } from "../../mongodb/db";
 import { reviewClass, unreviewClass } from "../../redux/actions";
 
 type DetailScreenNavigationProp = StackNavigationProp<
@@ -64,7 +63,8 @@ export default function DetailScreen() {
   const dispatch = useDispatch();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-  const auth = useAuth();
+  const { user, isAuthenticated, isSettingsSettled, db, signInAnonymously } =
+    useAuth();
   const isFocused = useIsFocused();
   const { selectedSemester } = useSelector((state) => state.settings);
   const tabName = useInitialTabName();
@@ -89,13 +89,10 @@ export default function DetailScreen() {
 
   const myReview = useMemo(() => {
     return (
-      (!!auth.user &&
-        auth.isAuthenticated &&
-        !!reviewRecord &&
-        reviewRecord[auth.user.id]) ||
+      (!!user && isAuthenticated && !!reviewRecord && reviewRecord[user.id]) ||
       undefined
     );
-  }, [auth, reviewRecord]);
+  }, [user, isAuthenticated, reviewRecord]);
 
   const [enjoyment, difficulty, workload, value] = useMemo(() => {
     if (!reviewRecord) return [null, null, null, null];
@@ -127,15 +124,16 @@ export default function DetailScreen() {
     return [enjoyment, difficulty, workload, value];
   }, [reviewRecord]);
 
-  const db = useMemo(() => {
-    if (auth.user) return useDB(auth.user);
-    auth.signInAnonymously();
-  }, [auth.user]);
+  useEffect(() => {
+    if (!user) {
+      signInAnonymously();
+    }
+  }, [user]);
 
   const { classInfo, classInfoError } = useClassInfoLoader(
     classCode,
     selectedSemester,
-    auth.isSettingsSettled
+    isSettingsSettled
   );
 
   const description = useMemo(() => {
@@ -172,7 +170,7 @@ export default function DetailScreen() {
   }, [classInfo, classInfoError]);
 
   useEffect(() => {
-    if (!auth.isSettingsSettled || !classInfo) return;
+    if (!isSettingsSettled || !classInfo) return;
 
     if (!Semester.equals(semester, previousSemester)) {
       setPreviousSemester(semester);
@@ -189,7 +187,7 @@ export default function DetailScreen() {
         setError(DetailScreenErrorType.loadSchedule);
         setShowAlert(true);
       });
-  }, [selectedSemester, auth.isSettingsSettled, classInfo]);
+  }, [selectedSemester, isSettingsSettled, classInfo]);
 
   const reviewerIds = useMemo(() => {
     if (!reviewRecord) return [];
@@ -203,8 +201,8 @@ export default function DetailScreen() {
     (async () => {
       if (
         isFocused &&
-        auth.user &&
-        auth.isAuthenticated &&
+        user &&
+        isAuthenticated &&
         db &&
         (deleteReview || newReview)
       ) {
@@ -216,7 +214,7 @@ export default function DetailScreen() {
 
             if (reviewRecord) {
               const newReviewRecord = { ...reviewRecord };
-              delete newReviewRecord[auth.user.id];
+              delete newReviewRecord[user.id];
               setReviewRecord(newReviewRecord);
             }
           } else if (newReview) {
@@ -233,7 +231,7 @@ export default function DetailScreen() {
 
             if (reviewRecord) {
               const newReviewRecord = { ...reviewRecord };
-              newReviewRecord[auth.user.id] = newReview;
+              newReviewRecord[user.id] = newReview;
               setReviewRecord(newReviewRecord);
             }
           }
@@ -256,7 +254,7 @@ export default function DetailScreen() {
         }
       }
     })();
-  }, [isFocused, auth.user]);
+  }, [isFocused, user]);
 
   return (
     <>
@@ -326,7 +324,7 @@ export default function DetailScreen() {
               <Text variant={"subtleButton"}>
                 {!sections && !classInfoError
                   ? `Loading${
-                      auth.isSettingsSettled ? ` ${semesterName} ` : " "
+                      isSettingsSettled ? ` ${semesterName} ` : " "
                     }Schedule`
                   : classInfoError || !sections?.length
                   ? `Not Offered in ${semesterName}`
@@ -336,7 +334,7 @@ export default function DetailScreen() {
             <SolidButton
               isDisabled={!classInfo}
               linkTo={
-                auth.user && auth.isAuthenticated
+                user && isAuthenticated
                   ? Route(tabName, "Review", {
                       classCode: classInfo ?? classCode,
                       previousReview: myReview,
@@ -352,7 +350,7 @@ export default function DetailScreen() {
               }
             >
               <Text variant={"button"}>
-                {auth.user && auth.isAuthenticated
+                {user && isAuthenticated
                   ? myReview
                     ? "Edit My Review"
                     : "Review"

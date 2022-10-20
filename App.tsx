@@ -60,7 +60,7 @@ function AppComponent() {
 }
 
 export default class App extends Component {
-  unsubsriceRedux = () => {};
+  unsubscribeRedux = () => {};
 
   reduxListener = (() => {
     let previousSettings = store.getState().settings;
@@ -80,11 +80,11 @@ export default class App extends Component {
   })();
 
   componentWillUnmount() {
-    this.unsubsriceRedux();
+    this.unsubscribeRedux();
   }
 
   componentDidMount() {
-    this.unsubsriceRedux = store.subscribe(this.reduxListener.bind(this));
+    this.unsubscribeRedux = store.subscribe(this.reduxListener.bind(this));
   }
 
   render() {

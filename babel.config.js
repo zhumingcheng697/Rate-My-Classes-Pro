@@ -18,6 +18,7 @@ module.exports = function (api) {
       isUsingExpoWithNPM || isUsingExpoWithCLI ? expoPreset : reactNativePreset,
     ],
     plugins: [
+      "@babel/plugin-proposal-async-generator-functions",
       [
         "module:react-native-dotenv",
         {

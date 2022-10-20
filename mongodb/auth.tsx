@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Realm from "./Realm";
 
 import realmApp from "./realmApp";
-import { type Database, useDB } from "./db";
+import { Database } from "./db";
 import {
   loadReviewedClasses,
   loadSettings,
@@ -49,18 +49,20 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [username, setUsername] = useState<string | null>(null);
   const settings = useSelector((state) => state.settings);
   const dispatch = useDispatch();
-  const db = useMemo(() => (user ? useDB(user) : null), [user]);
+  const [db, setDB] = useState<Database | null>(() =>
+    user ? Database(user) : null
+  );
 
   const isAuthenticated = !!user && user.providerType !== "anon-user";
 
-  const loadUserDoc = async (user: Realm.User) => {
+  const loadUserDoc = async (user: Realm.User, db: Database) => {
     if (user.providerType === "anon-user") return;
 
     try {
       setIsSettingsSettled(false);
       setIsUserDocLoaded(false);
 
-      const userDoc = await useDB(user).loadUserDoc();
+      const userDoc = await db.loadUserDoc();
 
       if (userDoc) {
         const { username, starredClasses, reviewedClasses, settings } = userDoc;
@@ -79,10 +81,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const guardDB = (user: Realm.User) => {
+    let currDB = db;
+    if (!currDB) {
+      currDB = Database(user);
+    }
+    setDB(currDB);
+    return currDB;
+  };
+
   const fetchUserDoc = async () => {
     if (user && isAuthenticated) {
       if (!isUserDocLoaded) {
-        await loadUserDoc(user);
+        await loadUserDoc(user, guardDB(user));
       }
     } else {
       setIsUserDocLoaded(true);
@@ -94,7 +105,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     if (!isAuthenticated) return;
 
     setUsername(username);
-    await useDB(user).updateUsername(username);
+    await guardDB(user).updateUsername(username);
   };
 
   const signInAnonymously = async (override: boolean = false) => {
@@ -103,6 +114,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const credentials = Realm.Credentials.anonymous();
     const newUser = await realmApp.logIn(credentials);
     setUser(newUser);
+    setDB(Database(newUser));
   };
 
   // The signIn function takes an email and password and uses the
@@ -112,8 +124,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const credentials = Realm.Credentials.emailPassword(email, password);
     const newUser = await realmApp.logIn(credentials);
-    await loadUserDoc(newUser);
+    const newDB = Database(newUser);
+    await loadUserDoc(newUser, newDB);
     setUser(newUser);
+    setDB(newDB);
   };
 
   // The signUp function takes an email and password and uses the
@@ -129,8 +143,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setUsername(username);
     const credentials = Realm.Credentials.emailPassword(email, password);
     const newUser = await realmApp.logIn(credentials);
-    await useDB(newUser).createUserDoc(username, settings);
+    const newDB = Database(newUser);
+    await newDB.createUserDoc(username, settings);
     setUser(newUser);
+    setDB(newDB);
   };
 
   const continueWithGoogle = async (idToken: string, username: string) => {
@@ -139,15 +155,17 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     // use Google ID token to sign into Realm
     const credential = Realm.Credentials.google(idToken);
     const newUser = await realmApp.logIn(credential);
-    const upserted = await useDB(newUser).createUserDoc(username, settings);
+    const newDB = Database(newUser);
+    const upserted = await newDB.createUserDoc(username, settings);
 
     if (upserted) {
       setUsername(username);
     } else {
-      await loadUserDoc(newUser);
+      await loadUserDoc(newUser, newDB);
     }
 
     setUser(newUser);
+    setDB(newDB);
   };
 
   // The signOut function calls the logOut function on the currently
@@ -164,6 +182,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     loadStarredClasses(dispatch)({});
     loadReviewedClasses(dispatch)({});
     setUser(null);
+    setDB(null);
   };
 
   return (

@@ -15,9 +15,9 @@ import {
 } from "../libs/types";
 import { getFullClassCode } from "../libs/utils";
 
-export type Database = ReturnType<typeof useDB>;
+export type Database = ReturnType<typeof Database>;
 
-export function useDB(user: Realm.User) {
+export function Database(user: Realm.User) {
   const db = user.mongoClient(MONGODB_SERVICE_NAME).db(MONGODB_DATABASE_NAME);
 
   const isAuthenticated = user.id && user.providerType !== "anon-user";

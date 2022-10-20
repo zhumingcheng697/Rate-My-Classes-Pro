@@ -5,12 +5,13 @@ import React, {
   useState,
   type ReactNode,
   createContext,
+  useMemo,
 } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Realm from "./Realm";
 
 import realmApp from "./realmApp";
-import { useDB } from "./db";
+import { type Database, useDB } from "./db";
 import {
   loadReviewedClasses,
   loadSettings,
@@ -18,6 +19,7 @@ import {
 } from "../redux/actions";
 
 type AuthContext = {
+  db: Database | null;
   user: Realm.User | null;
   username: string | null;
   isSettingsSettled: boolean;
@@ -47,6 +49,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [username, setUsername] = useState<string | null>(null);
   const settings = useSelector((state) => state.settings);
   const dispatch = useDispatch();
+  const db = useMemo(() => (user ? useDB(user) : null), [user]);
 
   const isAuthenticated = !!user && user.providerType !== "anon-user";
 
@@ -69,6 +72,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
       setIsUserDocLoaded(true);
     } catch (e) {
+      console.error(e);
       throw e;
     } finally {
       setIsSettingsSettled(true);
@@ -165,6 +169,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <Context.Provider
       value={{
+        db,
         user,
         username,
         isSettingsSettled,

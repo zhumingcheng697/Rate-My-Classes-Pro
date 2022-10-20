@@ -15,6 +15,8 @@ import {
 } from "../libs/types";
 import { getFullClassCode } from "../libs/utils";
 
+export type Database = ReturnType<typeof useDB>;
+
 export function useDB(user: Realm.User) {
   const db = user.mongoClient(MONGODB_SERVICE_NAME).db(MONGODB_DATABASE_NAME);
 

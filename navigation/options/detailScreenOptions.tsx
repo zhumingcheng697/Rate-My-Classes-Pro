@@ -14,7 +14,7 @@ import type {
   SharedNavigationParamList,
 } from "../../libs/types";
 import { useClassInfoLoader } from "../../libs/hooks";
-import { getFullClassCode } from "../../libs/utils";
+import { getFullClassCode, extractClassInfo } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
 import { starClass, unstarClass } from "../../redux/actions";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
@@ -111,7 +111,7 @@ export default ({
                     unstarClass(dispatch)(classCode);
                   } else if (classInfo) {
                     const starredClass: StarredClassInfo = {
-                      ...classInfo,
+                      ...extractClassInfo(classInfo),
                       starredDate: Date.now(),
                     };
                     await db.starClass(starredClass);

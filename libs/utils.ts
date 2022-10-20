@@ -53,6 +53,16 @@ export function getDepartmentName(
   );
 }
 
+export function extractClassInfo({
+  schoolCode,
+  departmentCode,
+  classNumber,
+  name,
+  description,
+}: ClassInfo): ClassInfo {
+  return { schoolCode, departmentCode, classNumber, name, description };
+}
+
 export function isSchoolGrad(schoolCode: string) {
   const code = schoolCode.toUpperCase();
   return code.startsWith("G") || code === "DN";

@@ -18,6 +18,7 @@ import {
 } from "../../libs/types";
 import {
   compareReviews,
+  extractClassInfo,
   getDepartmentName,
   getFullClassCode,
   getSchoolName,
@@ -219,7 +220,10 @@ export default function DetailScreen() {
             if (myReview) {
               await db.updateReview(classCode, newReview);
             } else if (classInfo) {
-              const reviewedClass = { ...classInfo, reviewedDate: Date.now() };
+              const reviewedClass = {
+                ...extractClassInfo(classInfo),
+                reviewedDate: Date.now(),
+              };
               await db.submitReview(classCode, newReview);
               await db.reviewClass(reviewedClass);
               reviewClass(dispatch)(reviewedClass);

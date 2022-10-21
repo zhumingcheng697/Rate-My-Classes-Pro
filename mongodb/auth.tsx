@@ -94,15 +94,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     [dispatch]
   );
 
-  const restartSync = useCallback(() => {
-    syncCleanup();
-    if (user && isAuthenticated) {
-      setTimeout(() => {
-        syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
-      }, 1000);
-    }
-  }, [user, isAuthenticated, syncCleanup, updateUserDoc]);
-
   useEffect(() => {
     if (appState === "background" || !isInternetReachable || !isAuthenticated) {
       syncCleanup();
@@ -120,9 +111,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       if (user.providerType === "anon-user") return;
 
       try {
-        setIsSettingsSettled(false);
-        setIsUserDocLoaded(false);
-
         const userDoc = await db.loadUserDoc();
         if (userDoc) updateUserDoc(userDoc);
 
@@ -148,6 +136,20 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     },
     [db]
   );
+
+  const restartSync = useCallback(async () => {
+    syncCleanup();
+    if (user && isAuthenticated) {
+      try {
+        await loadUserDoc(user, guardDB(user));
+      } catch (e) {
+        console.error(e);
+      }
+      setTimeout(() => {
+        syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
+      }, 1000);
+    }
+  }, [user, isAuthenticated, syncCleanup, updateUserDoc, guardDB, loadUserDoc]);
 
   const fetchUserDoc = useCallback(async () => {
     if (user && isAuthenticated) {
@@ -219,6 +221,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       const credentials = Realm.Credentials.emailPassword(email, password);
       const newUser = await realmApp.logIn(credentials);
       const newDB = new Database(newUser);
+      setIsSettingsSettled(false);
+      setIsUserDocLoaded(false);
       await loadUserDoc(newUser, newDB);
       setUser(newUser);
       setDB(newDB);
@@ -259,6 +263,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       if (upserted) {
         setUsername(username);
       } else {
+        setIsSettingsSettled(false);
+        setIsUserDocLoaded(false);
         await loadUserDoc(newUser, newDB);
       }
 

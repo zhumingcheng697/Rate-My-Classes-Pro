@@ -82,7 +82,7 @@ export default function sync(
   };
 
   try {
-    Realm.deleteFile(realmConfig);
+    if (Realm.exists(realmConfig)) Realm.deleteFile(realmConfig);
   } catch (e) {
     console.error(e);
   }

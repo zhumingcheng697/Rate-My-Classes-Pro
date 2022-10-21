@@ -6,7 +6,8 @@ import React, {
   useState,
   createContext,
   useCallback,
-  useMemo,
+  useEffect,
+  useRef,
 } from "react";
 import { Platform } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
@@ -52,11 +53,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isSettingsSettled, setIsSettingsSettled] = useState(false);
   const [isUserDocLoaded, setIsUserDocLoaded] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
+  const syncCleanupRef = useRef<(() => void) | null>(null);
   const settings = useSelector((state) => state.settings);
   const dispatch = useDispatch();
   const [db, setDB] = useState<Database | null>(() =>
     user ? new Database(user) : null
   );
+
+  const syncCleanup = useCallback(() => {
+    if (syncCleanupRef.current) {
+      syncCleanupRef.current();
+      syncCleanupRef.current = null;
+    }
+  }, [syncCleanupRef.current]);
 
   const updateUserDoc = useCallback(
     ({ username, starred, reviewed, settings }: Partial<UserDoc>) => {
@@ -81,9 +90,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     [dispatch]
   );
 
-  const syncCleanup = useMemo(() => {
+  useEffect(() => {
+    syncCleanup();
     if (user && isAuthenticated) {
-      return sync(user, updateUserDoc);
+      syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
     }
   }, [user]);
 
@@ -145,7 +155,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signInAnonymously = async (override: boolean = false) => {
     if (user && !override) return;
-    syncCleanup?.();
+    syncCleanup();
 
     const credentials = Realm.Credentials.anonymous();
     const newUser = await realmApp.logIn(credentials);
@@ -157,7 +167,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // emailPassword authentication provider to log in.
   const signInWithEmailPassword = async (email: string, password: string) => {
     if (user) await signOut();
-    syncCleanup?.();
+    syncCleanup();
 
     const credentials = Realm.Credentials.emailPassword(email, password);
     const newUser = await realmApp.logIn(credentials);
@@ -175,7 +185,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     password: string
   ) => {
     if (user) await signOut();
-    syncCleanup?.();
+    syncCleanup();
 
     await realmApp.emailPasswordAuth.registerUser({ email, password });
     setUsername(username);
@@ -189,7 +199,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const continueWithGoogle = async (idToken: string, username: string) => {
     if (user) await signOut();
-    syncCleanup?.();
+    syncCleanup();
 
     // use Google ID token to sign into Realm
     const credential = Realm.Credentials.google(idToken);
@@ -220,7 +230,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     await user.logOut();
     loadStarredClasses(dispatch)({});
     loadReviewedClasses(dispatch)({});
-    syncCleanup?.();
+    syncCleanup();
     setUser(null);
     setDB(null);
   };

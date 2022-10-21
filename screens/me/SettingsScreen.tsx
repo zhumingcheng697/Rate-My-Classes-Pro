@@ -14,6 +14,7 @@ import { useAuth } from "../../mongodb/auth";
 import colors from "../../styling/colors";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 import { validateSettings } from "../../libs/utils";
+import AlertPopup from "../../components/AlertPopup";
 
 export default function SettingsScreen() {
   const {
@@ -25,6 +26,7 @@ export default function SettingsScreen() {
     db,
   } = useAuth();
   const dispatch = useDispatch();
+  const [showAlert, setShowAlert] = useState(false);
   const [canClear, setCanClear] = useState(false);
   const [previousUsername, setPreviousUsername] = useState(
     isAuthenticated ? username : ""
@@ -54,6 +56,11 @@ export default function SettingsScreen() {
 
   return (
     <KeyboardAwareSafeAreaScrollView>
+      <AlertPopup
+        isOpen={showAlert}
+        onClose={() => setShowAlert(false)}
+        header={"Unable to Update Settings"}
+      />
       <VStack margin={"10px"} space={"8px"}>
         {isAuthenticated && (
           <LabeledInput label={"Username"} isDisabled={!isSettingsSettled}>
@@ -78,6 +85,7 @@ export default function SettingsScreen() {
                       await updateUsername(previousUsername);
                   }
                 } catch (e) {
+                  setShowAlert(true);
                   console.error(e);
                 }
               }}
@@ -103,6 +111,7 @@ export default function SettingsScreen() {
                   await db.updateSettings(validateSettings(newSettings));
                 } catch (e) {
                   selectSemester(dispatch)(oldSemester);
+                  setShowAlert(true);
                   console.error(e);
                 }
               }

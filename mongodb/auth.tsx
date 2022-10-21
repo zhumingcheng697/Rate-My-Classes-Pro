@@ -102,9 +102,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       isInternetReachable &&
       isAuthenticated
     ) {
-      restartSync();
+      restartSync(true);
     }
-  }, [appState, isInternetReachable, isAuthenticated]);
+  }, [appState, isInternetReachable]);
 
   const loadUserDoc = useCallback(
     async (user: Realm.User, db: Database) => {
@@ -137,19 +137,22 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     [db]
   );
 
-  const restartSync = useCallback(async () => {
-    syncCleanup();
-    if (user && isAuthenticated) {
-      try {
-        await loadUserDoc(user, guardDB(user));
-      } catch (e) {
-        console.error(e);
+  const restartSync = useCallback(
+    async (reload: boolean) => {
+      syncCleanup();
+      if (user && isAuthenticated) {
+        try {
+          if (reload) await loadUserDoc(user, guardDB(user));
+        } catch (e) {
+          console.error(e);
+        }
+        setTimeout(() => {
+          syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
+        }, 1000);
       }
-      setTimeout(() => {
-        syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
-      }, 1000);
-    }
-  }, [user, isAuthenticated, syncCleanup, updateUserDoc, guardDB, loadUserDoc]);
+    },
+    [user, isAuthenticated, syncCleanup, updateUserDoc, guardDB, loadUserDoc]
+  );
 
   const fetchUserDoc = useCallback(async () => {
     if (user && isAuthenticated) {
@@ -226,6 +229,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       await loadUserDoc(newUser, newDB);
       setUser(newUser);
       setDB(newDB);
+      restartSync(false);
     },
     [user, loadUserDoc, syncCleanup, signOut]
   );
@@ -245,6 +249,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       await newDB.createUserDoc(username, settings);
       setUser(newUser);
       setDB(newDB);
+      restartSync(false);
     },
     [user, settings, syncCleanup, signOut]
   );
@@ -270,6 +275,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
       setUser(newUser);
       setDB(newDB);
+      restartSync(false);
     },
     [user, settings, loadUserDoc, syncCleanup, signOut]
   );

@@ -9,8 +9,8 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { Platform } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import { useNetInfo } from "@react-native-community/netinfo";
 import Realm from "./Realm";
 
 import realmApp from "./realmApp";
@@ -23,6 +23,7 @@ import {
   loadStarredClasses,
 } from "../redux/actions";
 import { getFullClassCode } from "../libs/utils";
+import { useAppState } from "../libs/hooks";
 
 type AuthContext = {
   db: Database | null;
@@ -55,10 +56,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [username, setUsername] = useState<string | null>(null);
   const syncCleanupRef = useRef<(() => void) | null>(null);
   const settings = useSelector((state) => state.settings);
+  const appState = useAppState();
   const dispatch = useDispatch();
+  const { isInternetReachable } = useNetInfo();
   const [db, setDB] = useState<Database | null>(() =>
     user ? new Database(user) : null
   );
+  const isAuthenticated = !!user && user.providerType !== "anon-user";
 
   const syncCleanup = useCallback(() => {
     if (syncCleanupRef.current) {
@@ -66,6 +70,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       syncCleanupRef.current = null;
     }
   }, [syncCleanupRef.current]);
+
+  const restartSync = useCallback(() => {
+    syncCleanup();
+    if (user && isAuthenticated) {
+      syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
+    }
+  }, [user, isAuthenticated, syncCleanup]);
 
   const updateUserDoc = useCallback(
     ({ username, starred, reviewed, settings }: Partial<UserDoc>) => {
@@ -91,13 +102,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   useEffect(() => {
-    syncCleanup();
-    if (user && isAuthenticated) {
-      syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
+    if (appState === "background" || !isInternetReachable || !isAuthenticated) {
+      syncCleanup();
+    } else if (
+      appState === "active" &&
+      isInternetReachable &&
+      isAuthenticated
+    ) {
+      restartSync();
     }
-  }, [user]);
-
-  const isAuthenticated = !!user && user.providerType !== "anon-user";
+  }, [appState, isInternetReachable, isAuthenticated]);
 
   const loadUserDoc = async (user: Realm.User, db: Database) => {
     if (user.providerType === "anon-user") return;

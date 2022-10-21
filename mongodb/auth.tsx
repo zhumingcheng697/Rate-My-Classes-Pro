@@ -6,6 +6,7 @@ import React, {
   type ReactNode,
   createContext,
   useEffect,
+  useCallback,
 } from "react";
 import { Platform } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
@@ -47,8 +48,6 @@ type AuthContext = {
 
 type AuthProviderProps = { children: ReactNode };
 
-type UpdateKey = Exclude<keyof UserDoc, "_id">;
-
 const Context = createContext<AuthContext | null>(null);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -62,25 +61,28 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     user ? new Database(user) : null
   );
 
-  // useEffect(() => {
-  //   if (user && Platform.OS === "web") {
-  //     const db = user
-  //       .mongoClient(MONGODB_SERVICE_NAME)
-  //       .db(MONGODB_DATABASE_NAME);
+  const updateUserDoc = useCallback(
+    ({ username, starred, reviewed, settings }: Partial<UserDoc>) => {
+      if (username) setUsername(username);
 
-  //     const stream = db.collection<UserDoc>(Collections.users).watch(
-  //       [{ $match: { $and: [{ _id: user.id }, { operationType: "update" }] } }],
-  //       // @ts-ignore
-  //       { fullDocument: "updateLookup" }
-  //     );
+      if (starred)
+        loadStarredClasses(dispatch)(
+          Object.fromEntries(
+            starred.map((info) => [getFullClassCode(info), info])
+          )
+        );
 
-  //     (async () => {
-  //       for await (const event of stream) {
-  //         if (event.operationType === "update") {
-  //           const { updateDescription, fullDocument } = event;
-  //           if (!fullDocument) continue;
+      if (reviewed)
+        loadReviewedClasses(dispatch)(
+          Object.fromEntries(
+            reviewed.map((info) => [getFullClassCode(info), info])
+          )
+        );
 
-  //           const updatedKeys: Set<UpdateKey> = new Set();
+      if (settings) loadSettings(dispatch)(settings);
+    },
+    [dispatch]
+  );
 
   //           Object.keys(updateDescription.updatedFields)
   //             .concat(updateDescription.removedFields)
@@ -128,22 +130,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       setIsUserDocLoaded(false);
 
       const userDoc = await db.loadUserDoc();
-
-      if (userDoc) {
-        const { username, starred, reviewed, settings } = userDoc;
-        setUsername(username);
-        loadStarredClasses(dispatch)(
-          Object.fromEntries(
-            starred.map((info) => [getFullClassCode(info), info])
-          )
-        );
-        loadReviewedClasses(dispatch)(
-          Object.fromEntries(
-            reviewed.map((info) => [getFullClassCode(info), info])
-          )
-        );
-        loadSettings(dispatch)(settings);
-      }
+      if (userDoc) updateUserDoc(userDoc);
 
       setIsUserDocLoaded(true);
     } catch (e) {
@@ -174,11 +161,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const updateUsername = async (username: string) => {
+  const updateUsername = async (newUsername: string) => {
     if (!isAuthenticated) return;
 
+    const oldUsername = username;
     setUsername(username);
-    await guardDB(user).updateUsername(username);
+
+    try {
+      await guardDB(user).updateUsername(newUsername);
+    } catch (e) {
+      setUsername(oldUsername);
+      console.error(e);
+      throw e;
+    }
   };
 
   const signInAnonymously = async (override: boolean = false) => {

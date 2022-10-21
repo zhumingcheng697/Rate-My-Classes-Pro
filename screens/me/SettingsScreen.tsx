@@ -3,6 +3,7 @@ import { Switch as NativeSwitch, Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Text, HStack, Switch, VStack, Box, theme } from "native-base";
 
+import AlertPopup from "../../components/AlertPopup";
 import LabeledInput from "../../components/LabeledInput";
 import ClearableInput from "../../components/ClearableInput";
 import { SemesterSelector } from "../../components/Selector";
@@ -14,7 +15,6 @@ import { useAuth } from "../../mongodb/auth";
 import colors from "../../styling/colors";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 import { validateSettings } from "../../libs/utils";
-import AlertPopup from "../../components/AlertPopup";
 
 export default function SettingsScreen() {
   const {

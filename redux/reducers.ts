@@ -14,7 +14,7 @@ import {
   type SettingsAction,
   ActionType,
 } from "./types";
-import { getFullClassCode } from "../libs/utils";
+import { getFullClassCode, validateSettings } from "../libs/utils";
 import Semester from "../libs/semester";
 
 function schoolNameReducer(
@@ -47,22 +47,6 @@ function settingsReducer(
   },
   action: SettingsAction
 ) {
-  function validateSettings(state: Settings) {
-    if (
-      !Semester.getSemesterOptions(state.showPreviousSemesters).some(
-        (semester) =>
-          Semester.equals(semester, new Semester(state.selectedSemester))
-      )
-    ) {
-      state.selectedSemester = Semester.predictCurrentSemester().toJSON();
-    }
-
-    // TODO: remove after schedge is back
-    state.showPreviousSemesters = true;
-
-    return state;
-  }
-
   // TODO: remove after schedge is back
   state.showPreviousSemesters = true;
 

@@ -13,6 +13,7 @@ import {
   type Rating,
   RatingType,
   ReviewOrder,
+  Settings,
 } from "./types";
 
 export function getFullDepartmentCode({
@@ -69,6 +70,22 @@ export function extractClassInfo({
   description,
 }: ClassInfo): ClassInfo {
   return { schoolCode, departmentCode, classNumber, name, description };
+}
+
+export function validateSettings(settings: Settings) {
+  if (
+    !Semester.getSemesterOptions(settings.showPreviousSemesters).some(
+      (semester) =>
+        Semester.equals(semester, new Semester(settings.selectedSemester))
+    )
+  ) {
+    settings.selectedSemester = Semester.predictCurrentSemester().toJSON();
+  }
+
+  // TODO: remove after schedge is back
+  settings.showPreviousSemesters = true;
+
+  return settings;
 }
 
 export function isSchoolGrad(schoolCode: string) {

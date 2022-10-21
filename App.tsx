@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
 import { createStore } from "redux";
@@ -8,8 +8,6 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import linking from "./navigation/linking";
 import RootNavigation from "./navigation/RootNavigation";
 import { AuthProvider } from "./mongodb/auth";
-import Database from "./mongodb/db";
-import realmApp from "./mongodb/realmApp";
 import reducer from "./redux/reducers";
 import { useColorModeSynchronizer } from "./styling/color-mode-utils";
 import nativeBaseTheme from "./styling/theme";
@@ -31,7 +29,7 @@ declare module "react-redux" {
   interface DefaultRootState extends RootState {}
 }
 
-function AppComponent() {
+export default function App() {
   const { colorModeManager, navigationTheme } = useColorModeSynchronizer();
 
   return (
@@ -57,37 +55,4 @@ function AppComponent() {
       </AuthProvider>
     </Provider>
   );
-}
-
-export default class App extends Component {
-  unsubscribeRedux = () => {};
-
-  // reduxListener = (() => {
-  //   let previousSettings = store.getState().settings;
-
-  //   return async () => {
-  //     const { settings } = store.getState();
-
-  //     if (settings !== previousSettings) {
-  //       if (
-  //         realmApp.currentUser &&
-  //         realmApp.currentUser.providerType !== "anon-user"
-  //       ) {
-  //         await new Database(realmApp.currentUser).updateSettings(settings);
-  //       }
-  //     }
-  //   };
-  // })();
-
-  componentWillUnmount() {
-    // this.unsubscribeRedux();
-  }
-
-  componentDidMount() {
-    // this.unsubscribeRedux = store.subscribe(this.reduxListener.bind(this));
-  }
-
-  render() {
-    return <AppComponent />;
-  }
 }

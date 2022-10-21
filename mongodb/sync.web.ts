@@ -24,11 +24,8 @@ export default function sync(
     for await (const event of stream) {
       if (event.operationType === "update") {
         const { updateDescription, fullDocument } = event;
+
         if (!fullDocument) continue;
-
-        console.log(fullDocument);
-
-        console.log(event);
 
         const updatedKeys: Set<UpdateKey> = new Set();
 
@@ -37,24 +34,12 @@ export default function sync(
           .map((path) => path.split(".")[0])
           .forEach((key) => updatedKeys.add(key as UpdateKey));
 
-        console.log(updatedKeys);
-
-        console.log(Object.keys(fullDocument));
-
         for (let key of Object.keys(fullDocument)) {
           const updatedKey = key as UpdateKey;
           if (!updatedKeys.has(updatedKey)) {
             delete fullDocument[updatedKey];
           }
         }
-
-        console.log(
-          Object.keys(updateDescription.updatedFields).concat(
-            updateDescription.removedFields
-          )
-        );
-
-        console.log(fullDocument);
 
         callback(fullDocument);
       }

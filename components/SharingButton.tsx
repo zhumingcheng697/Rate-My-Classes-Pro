@@ -100,7 +100,7 @@ function NativeSharingButton({ url, copyLink }: SharingButtonProps) {
                 : undefined
             ).catch((err) => {
               if (!/Cancel/i.test(composeErrorMessage(err, ""))) {
-                console.log(err);
+                console.error(err);
                 setShareError(err);
                 setShareAlert(true);
               }

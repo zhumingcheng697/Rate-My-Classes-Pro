@@ -94,7 +94,10 @@ export default function sync(
       .objects<UserDoc>(Schema.user)
       .filtered(`_id == "${user.id}"`);
 
-    realm.subscriptions.update((sub) => sub.add(userObj));
+    realm.subscriptions.update((sub) => {
+      sub.removeAll();
+      sub.add(userObj);
+    });
 
     userObj.addListener((user) => {
       const userDoc = user.isValid() && user[0]?.toJSON();

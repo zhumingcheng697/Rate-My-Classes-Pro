@@ -62,29 +62,29 @@ function AppComponent() {
 export default class App extends Component {
   unsubscribeRedux = () => {};
 
-  reduxListener = (() => {
-    let previousSettings = store.getState().settings;
+  // reduxListener = (() => {
+  //   let previousSettings = store.getState().settings;
 
-    return async () => {
-      const { settings } = store.getState();
+  //   return async () => {
+  //     const { settings } = store.getState();
 
-      if (settings !== previousSettings) {
-        if (
-          realmApp.currentUser &&
-          realmApp.currentUser.providerType !== "anon-user"
-        ) {
-          await new Database(realmApp.currentUser).updateSettings(settings);
-        }
-      }
-    };
-  })();
+  //     if (settings !== previousSettings) {
+  //       if (
+  //         realmApp.currentUser &&
+  //         realmApp.currentUser.providerType !== "anon-user"
+  //       ) {
+  //         await new Database(realmApp.currentUser).updateSettings(settings);
+  //       }
+  //     }
+  //   };
+  // })();
 
   componentWillUnmount() {
-    this.unsubscribeRedux();
+    // this.unsubscribeRedux();
   }
 
   componentDidMount() {
-    this.unsubscribeRedux = store.subscribe(this.reduxListener.bind(this));
+    // this.unsubscribeRedux = store.subscribe(this.reduxListener.bind(this));
   }
 
   render() {

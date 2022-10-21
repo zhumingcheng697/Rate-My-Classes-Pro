@@ -13,10 +13,17 @@ import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";
 import colors from "../../styling/colors";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
+import { validateSettings } from "../../libs/utils";
 
 export default function SettingsScreen() {
-  const { user, username, isAuthenticated, isSettingsSettled, updateUsername } =
-    useAuth();
+  const {
+    user,
+    username,
+    isAuthenticated,
+    isSettingsSettled,
+    updateUsername,
+    db,
+  } = useAuth();
   const dispatch = useDispatch();
   const [canClear, setCanClear] = useState(false);
   const [previousUsername, setPreviousUsername] = useState(
@@ -28,7 +35,7 @@ export default function SettingsScreen() {
   const settings = useSelector((state) => state.settings);
   const showPreviousSemesters = settings.showPreviousSemesters;
 
-  const selectedSemester = useMemo(
+  const semester = useMemo(
     () => new Semester(settings.selectedSemester),
     [settings.selectedSemester]
   );
@@ -58,15 +65,20 @@ export default function SettingsScreen() {
               onChangeText={setNewUsername}
               returnKeyType={"done"}
               onFocus={() => setCanClear(true)}
-              onBlur={() => {
+              onBlur={async () => {
                 setCanClear(false);
-                if (newUsername) {
-                  setPreviousUsername(newUsername);
-                  if (newUsername !== username) updateUsername(newUsername);
-                } else if (!newUsername && previousUsername) {
-                  setNewUsername(previousUsername);
-                  if (previousUsername !== username)
-                    updateUsername(previousUsername);
+                try {
+                  if (newUsername) {
+                    setPreviousUsername(newUsername);
+                    if (newUsername !== username)
+                      await updateUsername(newUsername);
+                  } else if (!newUsername && previousUsername) {
+                    setNewUsername(previousUsername);
+                    if (previousUsername !== username)
+                      await updateUsername(previousUsername);
+                  }
+                } catch (e) {
+                  console.error(e);
                 }
               }}
             />
@@ -75,9 +87,26 @@ export default function SettingsScreen() {
         <LabeledInput label={"Semester"} isDisabled={!isSettingsSettled}>
           <SemesterSelector
             isDisabled={!isSettingsSettled}
-            selectedSemester={isSettingsSettled ? selectedSemester : undefined}
+            selectedSemester={isSettingsSettled ? semester : undefined}
             semesterOptions={semesterOptions}
-            onSelectedSemesterChange={selectSemester(dispatch)}
+            onSelectedSemesterChange={async (newSemester) => {
+              const newSettings = {
+                ...settings,
+                selectedSemester: newSemester.toJSON(),
+              };
+
+              const oldSemester = semester;
+              selectSemester(dispatch)(newSemester);
+
+              if (isAuthenticated && db) {
+                try {
+                  await db.updateSettings(validateSettings(newSettings));
+                } catch (e) {
+                  selectSemester(dispatch)(oldSemester);
+                  console.error(e);
+                }
+              }
+            }}
           />
         </LabeledInput>
         {/* // TODO: uncomment after schedge is back */}

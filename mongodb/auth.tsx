@@ -71,13 +71,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [syncCleanupRef.current]);
 
-  const restartSync = useCallback(() => {
-    syncCleanup();
-    if (user && isAuthenticated) {
-      syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
-    }
-  }, [user, isAuthenticated, syncCleanup]);
-
   const updateUserDoc = useCallback(
     ({ username, starred, reviewed, settings }: Partial<UserDoc>) => {
       if (username) setUsername(username);
@@ -101,6 +94,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     [dispatch]
   );
 
+  const restartSync = useCallback(() => {
+    syncCleanup();
+    if (user && isAuthenticated) {
+      setTimeout(() => {
+        syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
+      }, 1000);
+    }
+  }, [user, isAuthenticated, syncCleanup, updateUserDoc]);
+
   useEffect(() => {
     if (appState === "background" || !isInternetReachable || !isAuthenticated) {
       syncCleanup();
@@ -113,35 +115,41 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [appState, isInternetReachable, isAuthenticated]);
 
-  const loadUserDoc = async (user: Realm.User, db: Database) => {
-    if (user.providerType === "anon-user") return;
+  const loadUserDoc = useCallback(
+    async (user: Realm.User, db: Database) => {
+      if (user.providerType === "anon-user") return;
 
-    try {
-      setIsSettingsSettled(false);
-      setIsUserDocLoaded(false);
+      try {
+        setIsSettingsSettled(false);
+        setIsUserDocLoaded(false);
 
-      const userDoc = await db.loadUserDoc();
-      if (userDoc) updateUserDoc(userDoc);
+        const userDoc = await db.loadUserDoc();
+        if (userDoc) updateUserDoc(userDoc);
 
-      setIsUserDocLoaded(true);
-    } catch (e) {
-      console.error(e);
-      throw e;
-    } finally {
-      setIsSettingsSettled(true);
-    }
-  };
+        setIsUserDocLoaded(true);
+      } catch (e) {
+        console.error(e);
+        throw e;
+      } finally {
+        setIsSettingsSettled(true);
+      }
+    },
+    [updateUserDoc]
+  );
 
-  const guardDB = (user: Realm.User) => {
-    let currDB = db;
-    if (!currDB) {
-      currDB = new Database(user);
-    }
-    setDB(currDB);
-    return currDB;
-  };
+  const guardDB = useCallback(
+    (user: Realm.User) => {
+      let currDB = db;
+      if (!currDB) {
+        currDB = new Database(user);
+      }
+      setDB(currDB);
+      return currDB;
+    },
+    [db]
+  );
 
-  const fetchUserDoc = async () => {
+  const fetchUserDoc = useCallback(async () => {
     if (user && isAuthenticated) {
       if (!isUserDocLoaded) {
         await loadUserDoc(user, guardDB(user));
@@ -150,90 +158,29 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       setIsUserDocLoaded(true);
       setIsSettingsSettled(true);
     }
-  };
+  }, [user, isAuthenticated, isUserDocLoaded, loadUserDoc, guardDB]);
 
-  const updateUsername = async (newUsername: string) => {
-    if (!isAuthenticated) return;
+  const updateUsername = useCallback(
+    async (newUsername: string) => {
+      if (!isAuthenticated) return;
 
-    const oldUsername = username;
-    setUsername(username);
-
-    try {
-      await guardDB(user).updateUsername(newUsername);
-    } catch (e) {
-      setUsername(oldUsername);
-      console.error(e);
-      throw e;
-    }
-  };
-
-  const signInAnonymously = async (override: boolean = false) => {
-    if (user && !override) return;
-    syncCleanup();
-
-    const credentials = Realm.Credentials.anonymous();
-    const newUser = await realmApp.logIn(credentials);
-    setUser(newUser);
-    setDB(new Database(newUser));
-  };
-
-  // The signIn function takes an email and password and uses the
-  // emailPassword authentication provider to log in.
-  const signInWithEmailPassword = async (email: string, password: string) => {
-    if (user) await signOut();
-    syncCleanup();
-
-    const credentials = Realm.Credentials.emailPassword(email, password);
-    const newUser = await realmApp.logIn(credentials);
-    const newDB = new Database(newUser);
-    await loadUserDoc(newUser, newDB);
-    setUser(newUser);
-    setDB(newDB);
-  };
-
-  // The signUp function takes an email and password and uses the
-  // emailPassword authentication provider to register the user.
-  const signUpWithEmailPassword = async (
-    username: string,
-    email: string,
-    password: string
-  ) => {
-    if (user) await signOut();
-    syncCleanup();
-
-    await realmApp.emailPasswordAuth.registerUser({ email, password });
-    setUsername(username);
-    const credentials = Realm.Credentials.emailPassword(email, password);
-    const newUser = await realmApp.logIn(credentials);
-    const newDB = new Database(newUser);
-    await newDB.createUserDoc(username, settings);
-    setUser(newUser);
-    setDB(newDB);
-  };
-
-  const continueWithGoogle = async (idToken: string, username: string) => {
-    if (user) await signOut();
-    syncCleanup();
-
-    // use Google ID token to sign into Realm
-    const credential = Realm.Credentials.google(idToken);
-    const newUser = await realmApp.logIn(credential);
-    const newDB = new Database(newUser);
-    const upserted = await newDB.createUserDoc(username, settings);
-
-    if (upserted) {
+      const oldUsername = username;
       setUsername(username);
-    } else {
-      await loadUserDoc(newUser, newDB);
-    }
 
-    setUser(newUser);
-    setDB(newDB);
-  };
+      try {
+        await guardDB(user).updateUsername(newUsername);
+      } catch (e) {
+        setUsername(oldUsername);
+        console.error(e);
+        throw e;
+      }
+    },
+    [user, username, isAuthenticated, guardDB]
+  );
 
   // The signOut function calls the logOut function on the currently
   // logged in user
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     if (user === null) {
       console.warn("Not logged in, can't log out!");
       return;
@@ -247,7 +194,79 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     syncCleanup();
     setUser(null);
     setDB(null);
-  };
+  }, [user, dispatch]);
+
+  const signInAnonymously = useCallback(
+    async (override: boolean = false) => {
+      if (user && !override) return;
+      syncCleanup();
+
+      const credentials = Realm.Credentials.anonymous();
+      const newUser = await realmApp.logIn(credentials);
+      setUser(newUser);
+      setDB(new Database(newUser));
+    },
+    [user, syncCleanup]
+  );
+
+  // The signIn function takes an email and password and uses the
+  // emailPassword authentication provider to log in.
+  const signInWithEmailPassword = useCallback(
+    async (email: string, password: string) => {
+      if (user) await signOut();
+      syncCleanup();
+
+      const credentials = Realm.Credentials.emailPassword(email, password);
+      const newUser = await realmApp.logIn(credentials);
+      const newDB = new Database(newUser);
+      await loadUserDoc(newUser, newDB);
+      setUser(newUser);
+      setDB(newDB);
+    },
+    [user, loadUserDoc, syncCleanup, signOut]
+  );
+
+  // The signUp function takes an email and password and uses the
+  // emailPassword authentication provider to register the user.
+  const signUpWithEmailPassword = useCallback(
+    async (username: string, email: string, password: string) => {
+      if (user) await signOut();
+      syncCleanup();
+
+      await realmApp.emailPasswordAuth.registerUser({ email, password });
+      setUsername(username);
+      const credentials = Realm.Credentials.emailPassword(email, password);
+      const newUser = await realmApp.logIn(credentials);
+      const newDB = new Database(newUser);
+      await newDB.createUserDoc(username, settings);
+      setUser(newUser);
+      setDB(newDB);
+    },
+    [user, settings, syncCleanup, signOut]
+  );
+
+  const continueWithGoogle = useCallback(
+    async (idToken: string, username: string) => {
+      if (user) await signOut();
+      syncCleanup();
+
+      // use Google ID token to sign into Realm
+      const credential = Realm.Credentials.google(idToken);
+      const newUser = await realmApp.logIn(credential);
+      const newDB = new Database(newUser);
+      const upserted = await newDB.createUserDoc(username, settings);
+
+      if (upserted) {
+        setUsername(username);
+      } else {
+        await loadUserDoc(newUser, newDB);
+      }
+
+      setUser(newUser);
+      setDB(newDB);
+    },
+    [user, settings, loadUserDoc, syncCleanup, signOut]
+  );
 
   return (
     <Context.Provider

@@ -1,12 +1,12 @@
 // https://github.com/mongodb-university/realm-tutorial-react-native/blob/final/providers/AuthProvider.js
 
 import React, {
+  type ReactNode,
   useContext,
   useState,
-  type ReactNode,
   createContext,
-  useEffect,
   useCallback,
+  useMemo,
 } from "react";
 import { Platform } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,16 +14,13 @@ import Realm from "./Realm";
 
 import realmApp from "./realmApp";
 import Database from "./db";
+import sync from "./sync";
+import type { UserDoc } from "./types";
 import {
   loadReviewedClasses,
   loadSettings,
   loadStarredClasses,
 } from "../redux/actions";
-import {
-  MONGODB_DATABASE_NAME,
-  MONGODB_SERVICE_NAME,
-} from "react-native-dotenv";
-import { Collections, UserDoc } from "./types";
 import { getFullClassCode } from "../libs/utils";
 
 type AuthContext = {
@@ -84,41 +81,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     [dispatch]
   );
 
-  //           Object.keys(updateDescription.updatedFields)
-  //             .concat(updateDescription.removedFields)
-  //             .map((path) => path.split(".")[0])
-  //             .forEach((key) => updatedKeys.add(key as UpdateKey));
-
-  //           const updateActionMap: Record<
-  //             UpdateKey,
-  //             (userDoc: UserDoc) => void
-  //           > = {
-  //             username: ({ username }) => setUsername(username),
-  //             starredClasses: ({ starredClasses }) =>
-  //               loadStarredClasses(dispatch)(starredClasses),
-  //             reviewedClasses: ({ reviewedClasses }) =>
-  //               loadReviewedClasses(dispatch)(reviewedClasses),
-  //             settings: ({ settings }) => loadSettings(dispatch)(settings),
-  //           };
-
-  //           for (let updatedKey of updatedKeys) {
-  //             updateActionMap[updatedKey]?.(fullDocument);
-  //           }
-  //         }
-  //       }
-  //     })();
-
-  //     return () => {
-  //       stream.return(null);
-  //     };
-  //   }
-  // }, [user]);
-
-  // useEffect(() => {
-  //   if (user) {
-  //     return sync(user);
-  //   }
-  // }, [user]);
+  const syncCleanup = useMemo(() => {
+    if (user && isAuthenticated) {
+      return sync(user, updateUserDoc);
+    }
+  }, [user]);
 
   const isAuthenticated = !!user && user.providerType !== "anon-user";
 
@@ -178,6 +145,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signInAnonymously = async (override: boolean = false) => {
     if (user && !override) return;
+    syncCleanup?.();
 
     const credentials = Realm.Credentials.anonymous();
     const newUser = await realmApp.logIn(credentials);
@@ -189,6 +157,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // emailPassword authentication provider to log in.
   const signInWithEmailPassword = async (email: string, password: string) => {
     if (user) await signOut();
+    syncCleanup?.();
 
     const credentials = Realm.Credentials.emailPassword(email, password);
     const newUser = await realmApp.logIn(credentials);
@@ -206,6 +175,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     password: string
   ) => {
     if (user) await signOut();
+    syncCleanup?.();
 
     await realmApp.emailPasswordAuth.registerUser({ email, password });
     setUsername(username);
@@ -219,6 +189,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const continueWithGoogle = async (idToken: string, username: string) => {
     if (user) await signOut();
+    syncCleanup?.();
 
     // use Google ID token to sign into Realm
     const credential = Realm.Credentials.google(idToken);
@@ -249,6 +220,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     await user.logOut();
     loadStarredClasses(dispatch)({});
     loadReviewedClasses(dispatch)({});
+    syncCleanup?.();
     setUser(null);
     setDB(null);
   };

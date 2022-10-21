@@ -70,17 +70,25 @@ export default function sync(
     },
   };
 
+  const realmConfig: Realm.Configuration = {
+    schema: [
+      userSchema,
+      starredSchema,
+      reviewedSchema,
+      settingsSchema,
+      selectedSemesterSchema,
+    ],
+    sync: { user, flexible: true },
+  };
+
   try {
-    const realm = new Realm({
-      schema: [
-        userSchema,
-        starredSchema,
-        reviewedSchema,
-        settingsSchema,
-        selectedSemesterSchema,
-      ],
-      sync: { user, flexible: true },
-    });
+    Realm.deleteFile(realmConfig);
+  } catch (e) {
+    console.error(e);
+  }
+
+  try {
+    const realm = new Realm(realmConfig);
 
     const userObj = realm
       .objects<UserDoc>(Schema.user)
@@ -97,6 +105,7 @@ export default function sync(
 
     return () => {
       try {
+        userObj.removeAllListeners();
         realm.close();
       } catch (e) {
         console.error(e);

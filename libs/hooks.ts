@@ -143,7 +143,7 @@ export function useClassInfoLoader(
   semester: SemesterInfo,
   isSettingsSettled: boolean
 ) {
-  const getInitialClassInfo = useCallback((classCode: ClassCode) => {
+  const [classInfo, setClassInfo] = useState<ClassInfo | null>(() => {
     const name = classCode.name;
     if (typeof name === "string") {
       return {
@@ -153,11 +153,7 @@ export function useClassInfoLoader(
       };
     }
     return null;
-  }, []);
-
-  const [classInfo, setClassInfo] = useState<ClassInfo | null>(() =>
-    getInitialClassInfo(classCode)
-  );
+  });
   const [classInfoError, setClassInfoError] = useState<ErrorType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 

@@ -4,6 +4,7 @@ import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useNetInfo } from "@react-native-community/netinfo";
 import {
   type NavigationAction,
   type NavigationState,
@@ -212,14 +213,29 @@ export function useAppState() {
   const [appState, setAppState] = useState(() => AppState.currentState);
 
   useEffect(() => {
-    const unsubscribe = AppState.addEventListener("change", (appState) =>
+    const sub = AppState.addEventListener("change", (appState) =>
       setAppState(appState)
     );
 
-    return () => unsubscribe.remove();
+    return () => sub.remove();
   }, []);
 
   return appState;
+}
+
+export function useRefresh(
+  callback: ((reason: "AppState" | "NetInfo") => void) | null | undefined
+) {
+  const appState = useAppState();
+  const { isInternetReachable } = useNetInfo();
+
+  useEffect(() => {
+    if (appState === "active") callback?.("AppState");
+  }, [appState]);
+
+  useEffect(() => {
+    if (isInternetReachable) callback?.("NetInfo");
+  }, [isInternetReachable]);
 }
 
 export function useIsCatalyst() {

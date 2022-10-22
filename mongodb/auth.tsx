@@ -59,10 +59,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const appState = useAppState();
   const dispatch = useDispatch();
   const { isInternetReachable } = useNetInfo();
-  const [db, setDB] = useState<Database | null>(() =>
-    user ? new Database(user) : null
-  );
   const isAuthenticated = !!user && user.providerType !== "anon-user";
+  const [db, setDB] = useState<Database | null>(() =>
+    realmApp.currentUser ? new Database(realmApp.currentUser) : null
+  );
 
   const syncCleanup = useCallback(() => {
     if (syncCleanupRef.current) {
@@ -141,11 +141,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     async (reload: boolean) => {
       syncCleanup();
       if (user && isAuthenticated) {
-        try {
-          if (reload) await loadUserDoc(user, guardDB(user));
-        } catch (e) {
-          console.error(e);
+        if (reload) {
+          try {
+            await loadUserDoc(user, guardDB(user));
+          } catch (e) {
+            console.error(e);
+          }
         }
+
         setTimeout(() => {
           syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
         }, 1000);

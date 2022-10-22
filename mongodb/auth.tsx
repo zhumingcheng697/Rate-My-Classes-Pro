@@ -90,6 +90,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         );
 
       if (settings) loadSettings(dispatch)(settings);
+
+      setIsUserDocLoaded(true);
+      setIsSettingsSettled(true);
     },
     [dispatch]
   );
@@ -102,7 +105,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       isInternetReachable &&
       isAuthenticated
     ) {
-      restartSync(true);
+      restartSync(isUserDocLoaded);
     }
   }, [appState, isInternetReachable]);
 

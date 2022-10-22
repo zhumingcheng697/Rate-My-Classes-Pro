@@ -64,6 +64,7 @@ export default function RootNavigation() {
   const auth = useAuth();
   const appState = useAppState();
   const netInfo = useNetInfo();
+  const hasError = schoolError || departmentError || accountError;
 
   const getSchoolAndDepartmentNames = useCallback(
     (
@@ -158,11 +159,11 @@ export default function RootNavigation() {
   );
 
   useEffect(() => {
-    if (appState === "active") fetchInfo();
+    if (appState === "active" && hasError) fetchInfo();
   }, [appState]);
 
   useEffect(() => {
-    if (netInfo.isInternetReachable) fetchInfo(true);
+    if (netInfo.isInternetReachable && hasError) fetchInfo(true);
   }, [netInfo]);
 
   useEffect(() => {

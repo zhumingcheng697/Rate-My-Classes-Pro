@@ -161,6 +161,26 @@ export function useClassInfoLoader(
   const [classInfoError, setClassInfoError] = useState<ErrorType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const loadClass = useCallback(() => {
+    setIsLoading(true);
+    getClass(classCode, semester)
+      .then((classInfo) => {
+        if (classInfo) {
+          setClassInfo(classInfo);
+          setClassInfoError(null);
+        } else {
+          setClassInfo(null);
+          setClassInfoError(ErrorType.noData);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        setClassInfo(null);
+        setClassInfoError(ErrorType.network);
+      })
+      .finally(() => setIsLoading(false));
+  }, [classCode, semester]);
+
   useEffect(() => {
     const name = classInfo?.name ?? classCode.name;
     if (typeof name === "string") {
@@ -172,24 +192,7 @@ export function useClassInfoLoader(
         });
       }
     } else if (isSettingsSettled && !isLoading) {
-      setIsLoading(true);
-
-      getClass(classCode, semester)
-        .then((classInfo) => {
-          if (classInfo) {
-            setClassInfo(classInfo);
-            setClassInfoError(null);
-          } else {
-            setClassInfo(null);
-            setClassInfoError(ErrorType.noData);
-          }
-        })
-        .catch((e) => {
-          console.error(e);
-          setClassInfo(null);
-          setClassInfoError(ErrorType.network);
-        })
-        .finally(() => setIsLoading(false));
+      loadClass();
     }
   }, [
     classCode.schoolCode,
@@ -201,7 +204,12 @@ export function useClassInfoLoader(
     isSettingsSettled,
   ]);
 
-  return { classInfo, classInfoError };
+  const reloadClass =
+    !classInfo && !isLoading && classInfoError === ErrorType.network
+      ? loadClass
+      : () => {};
+
+  return { classInfo, classInfoError, reloadClass };
 }
 
 export function useAppState() {

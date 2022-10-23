@@ -178,9 +178,18 @@ export function useClassInfoLoader(
       .finally(() => setIsLoading(false));
   }, [classCode, semester]);
 
+  const needsReload = useMemo(() => {
+    if (!classInfo) return false;
+    return (
+      classInfo.schoolCode !== classCode.schoolCode ||
+      classInfo.departmentCode !== classCode.departmentCode ||
+      classInfo.classNumber !== classCode.classNumber
+    );
+  }, [classInfo, classCode]);
+
   useEffect(() => {
     const name = classInfo?.name ?? classCode.name;
-    if (typeof name === "string") {
+    if (typeof name === "string" && !needsReload) {
       if (name !== classInfo?.name) {
         setClassInfo({
           ...classCode,
@@ -188,7 +197,7 @@ export function useClassInfoLoader(
           description: classInfo?.description ?? classCode.description ?? "",
         });
       }
-    } else if (isSettingsSettled && !isLoading) {
+    } else if (isSettingsSettled && !isLoading && (!classInfo || needsReload)) {
       loadClass();
     }
   }, [
@@ -201,12 +210,12 @@ export function useClassInfoLoader(
     isSettingsSettled,
   ]);
 
-  const reloadClass =
+  const reloadClassInfo =
     !classInfo && !isLoading && classInfoError === ErrorType.network
       ? loadClass
       : undefined;
 
-  return { classInfo, classInfoError, reloadClass };
+  return { classInfo, classInfoError, reloadClassInfo };
 }
 
 export function useAppState() {

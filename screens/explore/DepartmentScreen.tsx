@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Text, Box } from "native-base";
 import {
   useNavigation,
@@ -21,6 +21,7 @@ import {
   getFullDepartmentCode,
 } from "../../libs/utils";
 import Semester from "../../libs/semester";
+import { useRefresh } from "../../libs/hooks";
 import { getClasses } from "../../libs/schedge";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
@@ -66,24 +67,41 @@ export default function DepartmentScreen() {
     } any classes in ${selectedSemester.toString()}.`;
   };
 
-  useEffect(() => {
-    if (!auth.isSettingsSettled) return;
+  const fetchClasses = useCallback(
+    (failSilently: boolean = false) => {
+      if (!auth.isSettingsSettled) return;
 
-    getClasses(route.params, selectedSemester)
-      .then((classes) => {
-        if (classes && classes.length) {
-          setClasses(classes);
-        } else {
-          setShowAlert(true);
-          setError(ErrorType.noData);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-        setShowAlert(true);
-        setError(ErrorType.network);
-      });
-  }, [route.params, selectedSemester, auth.isSettingsSettled]);
+      getClasses(route.params, selectedSemester)
+        .then((classes) => {
+          if (classes && classes.length) {
+            setClasses(classes);
+            setShowAlert(false);
+            setError(null);
+          } else {
+            if (!failSilently) setShowAlert(true);
+            setError(ErrorType.noData);
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+          if (!failSilently) setShowAlert(true);
+          setError(ErrorType.network);
+        });
+    },
+    [auth.isSettingsSettled, route.params, selectedSemester]
+  );
+
+  useEffect(fetchClasses, [
+    route.params,
+    selectedSemester,
+    auth.isSettingsSettled,
+  ]);
+
+  useRefresh(
+    error !== ErrorType.network
+      ? undefined
+      : (reason) => fetchClasses(reason === "NetInfo")
+  );
 
   return (
     <>

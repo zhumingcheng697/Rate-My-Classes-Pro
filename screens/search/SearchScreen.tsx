@@ -118,7 +118,7 @@ export default function SearchScreen() {
   );
 
   useEffect(() => {
-    if (isSettingsSettled && schoolNames && departmentNames)
+    if (isSettingsSettled)
       search(query, semester, schoolCodes, departmentNames);
   }, [query, semester, schoolCodes, departmentNames, isSettingsSettled]);
 

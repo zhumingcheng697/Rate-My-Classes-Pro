@@ -4,6 +4,7 @@ import React, {
   type ReactElement,
   type MutableRefObject,
   useEffect,
+  useState,
 } from "react";
 import { Keyboard } from "react-native";
 import { Button, AlertDialog, theme } from "native-base";
@@ -38,6 +39,8 @@ export default function AlertPopup({
   const ref = useRef();
   const isFocused = useIsFocused();
   const { globalAlerts, setGlobalAlerts } = useAuth();
+  const [shouldOpen, setShouldOpen] = useState(false);
+  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (isOpen && isFocused) {
@@ -73,10 +76,26 @@ export default function AlertPopup({
     }
   }, [globalAlerts.size]);
 
+  useEffect(() => {
+    if (timeout.current) {
+      clearTimeout(timeout.current);
+    }
+
+    if (isOpen && (global || (isFocused && globalAlerts.size <= 0))) {
+      timeout.current = setTimeout(() => {
+        setShouldOpen(
+          isOpen && (global || (isFocused && globalAlerts.size <= 0))
+        );
+      }, 300);
+    } else {
+      setShouldOpen(false);
+    }
+  }, [isOpen, global, isFocused, globalAlerts.size]);
+
   return (
     <AlertDialog
       leastDestructiveRef={ref}
-      isOpen={isOpen && (global || (isFocused && globalAlerts.size <= 0))}
+      isOpen={shouldOpen}
       onClose={onClose}
     >
       <AlertDialog.Content

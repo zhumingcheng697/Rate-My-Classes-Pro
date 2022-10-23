@@ -14,7 +14,7 @@ import type {
   DepartmentNameRecord,
   SearchNavigationParamList,
 } from "../../libs/types";
-import { useDimensions, useInnerHeight } from "../../libs/hooks";
+import { useDimensions, useInnerHeight, useRefresh } from "../../libs/hooks";
 import { compareClasses, isObjectEmpty } from "../../libs/utils";
 import { searchClasses } from "../../libs/schedge";
 import Semester from "../../libs/semester";
@@ -38,17 +38,18 @@ export default function SearchScreen() {
   const [query, setQuery] = useState(route.params?.query || "");
   const [focused, setFocused] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const [searchFailed, setSearchFailed] = useState(false);
   const [matchedClasses, setMatchedClass] = useState<ClassInfo[]>([]);
-  const settings = useSelector((state) => state.settings);
+  const { selectedSemester } = useSelector((state) => state.settings);
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const innerHeight = useInnerHeight();
-  const auth = useAuth();
+  const { isSettingsSettled } = useAuth();
 
-  const selectedSemester = useMemo(
-    () => new Semester(settings.selectedSemester),
-    [settings.selectedSemester]
+  const semester = useMemo(
+    () => new Semester(selectedSemester),
+    [selectedSemester.semesterCode, selectedSemester.year]
   );
 
   const schoolCodes = useMemo(
@@ -65,7 +66,8 @@ export default function SearchScreen() {
         query: string,
         selectedSemester: Semester,
         schoolCodes: string[],
-        departmentNames: DepartmentNameRecord | null
+        departmentNames: DepartmentNameRecord | null,
+        failSilently: boolean = false
       ) => {
         clearTimeout(timeoutId);
         setMatchedClass([]);
@@ -94,16 +96,21 @@ export default function SearchScreen() {
                 } else {
                   setMatchedClass([]);
                 }
+                setShowAlert(false);
+                setSearchFailed(false);
               })
               .catch((e) => {
                 console.error(e);
                 setMatchedClass([]);
+                if (!failSilently) setShowAlert(true);
                 setSearchFailed(true);
               });
           }, delay);
         } else {
           navigation.setParams({ query: undefined });
           setIsLoaded(true);
+          setShowAlert(false);
+          setSearchFailed(false);
         }
       };
     })(),
@@ -111,24 +118,31 @@ export default function SearchScreen() {
   );
 
   useEffect(() => {
-    if (auth.isSettingsSettled)
-      search(query, selectedSemester, schoolCodes, departmentNames);
-  }, [
-    query,
-    selectedSemester,
-    schoolCodes,
-    departmentNames,
-    auth.isSettingsSettled,
-  ]);
+    if (isSettingsSettled && schoolNames && departmentNames)
+      search(query, semester, schoolCodes, departmentNames);
+  }, [query, semester, schoolCodes, departmentNames, isSettingsSettled]);
+
+  useRefresh(
+    !(searchFailed && isSettingsSettled && schoolNames && departmentNames)
+      ? undefined
+      : (reason) =>
+          search(
+            query,
+            semester,
+            schoolCodes,
+            departmentNames,
+            reason === "NetInfo"
+          )
+  );
 
   const { width } = useDimensions();
 
   return (
     <>
       <AlertPopup
-        isOpen={searchFailed}
+        isOpen={showAlert}
         onClose={() => {
-          setSearchFailed(false);
+          setShowAlert(false);
           setIsLoaded(true);
         }}
       />
@@ -156,18 +170,18 @@ export default function SearchScreen() {
             onBlur={() => setFocused(false)}
             onSubmitEditing={() => {
               if (!matchedClasses.length)
-                search(query, selectedSemester, schoolCodes, departmentNames);
+                search(query, semester, schoolCodes, departmentNames);
             }}
           />
           <Divider minWidth={width} alignSelf={"center"} />
         </Box>
         {focused ||
         matchedClasses.length ||
-        (query && (!isLoaded || !auth.isSettingsSettled)) ? (
+        (query && (!isLoaded || !isSettingsSettled)) ? (
           <ClassesGrid
             query={query}
             marginY={"10px"}
-            isLoaded={isLoaded && auth.isSettingsSettled}
+            isLoaded={isLoaded && isSettingsSettled}
             classes={matchedClasses}
             navigation={navigation}
           />
@@ -193,11 +207,11 @@ export default function SearchScreen() {
               }))}
             >
               {query
-                ? `No Matches Found in ${selectedSemester.toString()}`
+                ? searchFailed
+                  ? "Unable to Load Class Information"
+                  : `No Matches Found in ${semester.toString()}`
                 : `Search${
-                    auth.isSettingsSettled
-                      ? ` ${selectedSemester.toString()} `
-                      : " "
+                    isSettingsSettled ? ` ${semester.toString()} ` : " "
                   }Classes`}
             </Text>
           </Center>

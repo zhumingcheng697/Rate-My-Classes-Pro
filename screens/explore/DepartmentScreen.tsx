@@ -78,7 +78,7 @@ export default function DepartmentScreen() {
             setShowAlert(false);
             setError(null);
           } else {
-            if (!failSilently) setShowAlert(true);
+            setShowAlert(true);
             setError(ErrorType.noData);
           }
         })

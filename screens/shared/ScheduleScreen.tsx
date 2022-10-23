@@ -17,7 +17,7 @@ import {
   type SectionInfo,
   type SharedNavigationParamList,
 } from "../../libs/types";
-import { useClassInfoLoader } from "../../libs/hooks";
+import { useClassInfoLoader, useRefresh } from "../../libs/hooks";
 import { getSections } from "../../libs/schedge";
 import {
   getFullClassCode,
@@ -46,7 +46,7 @@ export default function ScheduleScreen() {
     route.params.sections ?? null
   );
   const [showAlert, setShowAlert] = useState(false);
-  const auth = useAuth();
+  const { isSettingsSettled } = useAuth();
 
   const cleanText = useCallback(
     (text: string) =>
@@ -61,10 +61,10 @@ export default function ScheduleScreen() {
     [settings.selectedSemester]
   );
 
-  const { classInfo, classInfoError } = useClassInfoLoader(
+  const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader(
     classCode,
     settings.selectedSemester,
-    auth.isSettingsSettled
+    isSettingsSettled
   );
 
   const notOffered = !!sections || classInfoError === ErrorType.noData;
@@ -79,31 +79,50 @@ export default function ScheduleScreen() {
     if (!classInfo && classInfoError) {
       setShowAlert(true);
       navigation.setParams({ semester: selectedSemester });
-      return;
     }
   }, [classInfo, classInfoError]);
 
-  useEffect(() => {
-    if (!auth.isSettingsSettled || !classInfo) return;
+  const fetchSections = useCallback(
+    (failSilently: boolean = false) => {
+      if (!isSettingsSettled || !classInfo) return;
 
-    if (
-      !Semester.equals(selectedSemester, new Semester(semester)) ||
-      !sections
-    ) {
-      getSections(classInfo, settings.selectedSemester)
-        .then((sections) => {
-          setSections(sections);
-          if (!sections.length) {
-            setShowAlert(true);
-          }
-        })
-        .catch(() => {
-          setSections(null);
-          setShowAlert(true);
-        })
-        .finally(() => navigation.setParams({ semester: selectedSemester }));
-    }
-  }, [selectedSemester, auth.isSettingsSettled, classInfo]);
+      if (
+        !Semester.equals(selectedSemester, new Semester(semester)) ||
+        !sections
+      ) {
+        getSections(classInfo, settings.selectedSemester)
+          .then((sections) => {
+            setSections(sections);
+            if (!sections.length) {
+              setShowAlert(true);
+            } else {
+              setShowAlert(false);
+            }
+          })
+          .catch(() => {
+            setSections(null);
+            if (!failSilently) setShowAlert(true);
+          })
+          .finally(() => navigation.setParams({ semester: selectedSemester }));
+      }
+    },
+    [
+      isSettingsSettled,
+      classInfo,
+      selectedSemester,
+      semester,
+      settings,
+      navigation,
+    ]
+  );
+
+  useEffect(fetchSections, [selectedSemester, isSettingsSettled, classInfo]);
+
+  useRefresh((reason) => {
+    const failSilently = reason === "NetInfo";
+    reloadClassInfo?.(failSilently);
+    fetchSections(failSilently);
+  });
 
   return (
     <>

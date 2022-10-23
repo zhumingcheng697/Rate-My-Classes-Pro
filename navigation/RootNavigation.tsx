@@ -168,15 +168,16 @@ export default function RootNavigation() {
   return (
     <RootNavigationComponent fetchInfo={fetchInfo}>
       <AlertPopup
+        global
         header={"Unable to Load Class or Account Information"}
         isOpen={showAlert && accountError && !!(schoolError || departmentError)}
         onClose={() => {
           setShowAlert(false);
           fetchInfo(true);
         }}
-        onlyShowWhenFocused={false}
       />
       <AlertPopup
+        global
         isOpen={
           showAlert && !accountError && !!(schoolError || departmentError)
         }
@@ -184,16 +185,15 @@ export default function RootNavigation() {
           setShowAlert(false);
           fetchInfo(true);
         }}
-        onlyShowWhenFocused={false}
       />
       <AlertPopup
+        global
         header={"Unable to Load Account Information"}
         isOpen={showAlert && accountError && !schoolError && !departmentError}
         onClose={() => {
           setShowAlert(false);
           fetchInfo(true);
         }}
-        onlyShowWhenFocused={false}
       />
       <Tab.Navigator
         backBehavior="history"

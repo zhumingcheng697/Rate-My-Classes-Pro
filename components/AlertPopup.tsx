@@ -17,20 +17,20 @@ export type AlertPopupProps = {
   isOpen: boolean;
   header?: string;
   body?: string;
+  global?: boolean;
   footer?: (ref: MutableRefObject<any>) => ReactNode;
   footerPrimaryButton?: ReactElement;
   onClose: () => any;
-  onlyShowWhenFocused?: boolean;
 };
 
 export default function AlertPopup({
   header = "Unable to Load Class Information",
   body = "Please check your network connection or try again later.",
+  global = false,
   isOpen,
   footer,
   footerPrimaryButton,
   onClose,
-  onlyShowWhenFocused = true,
 }: AlertPopupProps) {
   const ref = useRef();
   const isFocused = useIsFocused();
@@ -44,7 +44,7 @@ export default function AlertPopup({
   return (
     <AlertDialog
       leastDestructiveRef={ref}
-      isOpen={isOpen && (!onlyShowWhenFocused || isFocused)}
+      isOpen={isOpen && (global || isFocused)}
       onClose={onClose}
     >
       <AlertDialog.Content

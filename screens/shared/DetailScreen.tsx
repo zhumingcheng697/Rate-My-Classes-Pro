@@ -363,17 +363,19 @@ export default function DetailScreen() {
               })}
             >
               <Text variant={"subtleButton"}>
-                {!sections && !classInfoError
-                  ? `Loading${
+                {sections
+                  ? sections.length
+                    ? `View ${semesterName} Schedule`
+                    : `Not Offered in ${semesterName}`
+                  : error || classInfoError
+                  ? "Unable to Load Schedule"
+                  : `Loading${
                       isSettingsSettled ? ` ${semesterName} ` : " "
-                    }Schedule`
-                  : classInfoError || !sections?.length
-                  ? `Not Offered in ${semesterName}`
-                  : `View ${semesterName} Schedule`}
+                    }Schedule`}
               </Text>
             </SubtleButton>
             <SolidButton
-              isDisabled={!classInfo}
+              isDisabled={!classInfo || !reviewRecord}
               linkTo={
                 user && isAuthenticated
                   ? Route(tabName, "Review", {

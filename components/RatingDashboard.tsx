@@ -7,9 +7,13 @@ import { getRatingTypeIconName } from "../libs/utils";
 import colors from "../styling/colors";
 import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 
-type RatingBlockProps = { ratingType: RatingType; rating: number | null };
+type RatingBlockProps = {
+  loadError: boolean;
+  ratingType: RatingType;
+  rating: number | null;
+};
 
-function RatingBlock({ ratingType, rating }: RatingBlockProps) {
+function RatingBlock({ loadError, ratingType, rating }: RatingBlockProps) {
   return (
     <VStack
       justifyContent={"center"}
@@ -39,17 +43,20 @@ function RatingBlock({ ratingType, rating }: RatingBlockProps) {
         textAlign={"center"}
         opacity={rating === null ? 0.5 : 1}
       >
-        {rating === null
-          ? "Loading"
-          : isNaN(rating)
+        {rating !== null
+          ? isNaN(rating)
+            ? "N/A"
+            : `${rating.toFixed(1)} / ${(5).toFixed(1)}`
+          : loadError
           ? "N/A"
-          : `${rating.toFixed(1)} / ${(5).toFixed(1)}`}
+          : "Loading"}
       </Text>
     </VStack>
   );
 }
 
 type RatingDashboardBaseProps = {
+  loadError: boolean;
   enjoyment: number | null;
   difficulty: number | null;
   workload: number | null;
@@ -60,6 +67,7 @@ export type RatingDashboardProps = RatingDashboardBaseProps &
   Omit<IStackProps, keyof RatingDashboardBaseProps>;
 
 export default function RatingDashboard({
+  loadError,
   enjoyment,
   difficulty,
   workload,
@@ -68,10 +76,26 @@ export default function RatingDashboard({
 }: RatingDashboardProps) {
   return (
     <HStack {...rest} justifyContent={"center"} flexWrap={"wrap"}>
-      <RatingBlock ratingType={RatingType.enjoyment} rating={enjoyment} />
-      <RatingBlock ratingType={RatingType.difficulty} rating={difficulty} />
-      <RatingBlock ratingType={RatingType.workload} rating={workload} />
-      <RatingBlock ratingType={RatingType.value} rating={value} />
+      <RatingBlock
+        loadError={loadError}
+        ratingType={RatingType.enjoyment}
+        rating={enjoyment}
+      />
+      <RatingBlock
+        loadError={loadError}
+        ratingType={RatingType.difficulty}
+        rating={difficulty}
+      />
+      <RatingBlock
+        loadError={loadError}
+        ratingType={RatingType.workload}
+        rating={workload}
+      />
+      <RatingBlock
+        loadError={loadError}
+        ratingType={RatingType.value}
+        rating={value}
+      />
     </HStack>
   );
 }

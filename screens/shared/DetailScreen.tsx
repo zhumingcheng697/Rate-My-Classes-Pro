@@ -346,6 +346,7 @@ export default function DetailScreen() {
           )}
           <RatingDashboard
             margin={"5px"}
+            loadError={!!error || classInfoError === ErrorType.network}
             enjoyment={enjoyment}
             difficulty={difficulty}
             workload={workload}
@@ -367,6 +368,8 @@ export default function DetailScreen() {
                   ? sections.length
                     ? `View ${semesterName} Schedule`
                     : `Not Offered in ${semesterName}`
+                  : classInfoError === ErrorType.noData
+                  ? `Not Offered in ${semesterName}`
                   : error || classInfoError
                   ? "Unable to Load Schedule"
                   : `Loading${

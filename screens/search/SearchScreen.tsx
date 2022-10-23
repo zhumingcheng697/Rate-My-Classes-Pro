@@ -208,7 +208,7 @@ export default function SearchScreen() {
             >
               {query
                 ? searchFailed
-                  ? "Unable to Load Class Information"
+                  ? "Unable to Load Classes"
                   : `No Matches Found in ${semester.toString()}`
                 : `Search${
                     isSettingsSettled ? ` ${semester.toString()} ` : " "

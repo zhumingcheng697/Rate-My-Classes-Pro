@@ -164,25 +164,28 @@ export function useClassInfoLoader(
   const [classInfoError, setClassInfoError] = useState<ErrorType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const loadClass = useCallback(() => {
-    setIsLoading(true);
-    getClass(classCode, semester)
-      .then((classInfo) => {
-        if (classInfo) {
-          setClassInfo(classInfo);
-          setClassInfoError(null);
-        } else {
+  const loadClass = useCallback(
+    (failSilently: boolean = false) => {
+      setIsLoading(true);
+      getClass(classCode, semester)
+        .then((classInfo) => {
+          if (classInfo) {
+            setClassInfo(classInfo);
+            setClassInfoError(null);
+          } else {
+            setClassInfo(null);
+            if (!failSilently) setClassInfoError(ErrorType.noData);
+          }
+        })
+        .catch((e) => {
+          console.error(e);
           setClassInfo(null);
-          setClassInfoError(ErrorType.noData);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-        setClassInfo(null);
-        setClassInfoError(ErrorType.network);
-      })
-      .finally(() => setIsLoading(false));
-  }, [classCode, semester]);
+          if (!failSilently) setClassInfoError(ErrorType.network);
+        })
+        .finally(() => setIsLoading(false));
+    },
+    [classCode, semester]
+  );
 
   const needsReload = useMemo(() => {
     if (!classInfo) return false;

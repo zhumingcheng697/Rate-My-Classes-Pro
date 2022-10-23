@@ -148,7 +148,7 @@ export default function DetailScreen() {
   }, [classInfo?.description]);
 
   useEffect(() => {
-    if (!error) setShowAlert(false);
+    if (!error && !classInfoError) setShowAlert(false);
   }, [error]);
 
   const semester = new Semester(selectedSemester);

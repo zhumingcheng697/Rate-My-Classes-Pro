@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { Box, Button, Input, Text, theme, VStack } from "native-base";
 import {
   useNavigation,
@@ -26,7 +26,7 @@ import {
   hasEditedReview,
   notOfferedMessage,
 } from "../../libs/utils";
-import { useClassInfoLoader } from "../../libs/hooks";
+import { useClassInfoLoader, useRefresh } from "../../libs/hooks";
 import Semester from "../../libs/semester";
 import { useAuth } from "../../mongodb/auth";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
@@ -46,7 +46,8 @@ export default function ReviewScreen() {
   const { classCode, previousReview, newOrEdit } = route.params;
   const [hasEdited, setHasEdited] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const { classInfo, classInfoError } = useClassInfoLoader(
+  const [willDelete, setWillDelete] = useState(false);
+  const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader(
     classCode,
     selectedSemester,
     isSettingsSettled && !!user
@@ -79,40 +80,55 @@ export default function ReviewScreen() {
     [previousReview]
   );
 
-  useEffect(() => {
-    if (classInfo && !previousReview && newOrEdit !== "New" && db) {
-      const loadMyReview = async () => {
-        if (isAuthenticated && user && !previousReview) {
-          try {
-            const reviewRecord: ReviewRecord =
-              (await db.loadReviewDoc(classCode)) ?? {};
-            const review: Review | undefined = reviewRecord[user.id];
-            if (review) {
-              setEnjoyment(review.enjoyment);
-              setDifficulty(review.difficulty);
-              setWorkload(review.workload);
-              setValue(review.value);
-              setSemester(new Semester(review.semester));
-              setInstructor(review.instructor);
-              setComment(review.comment);
-              navigation.setParams({
-                previousReview: review,
-                newOrEdit: "Edit",
-              });
-            } else {
-              navigation.setParams({ newOrEdit: "New" });
+  const fetchMyReview = useCallback(
+    (failSilently: boolean = false) => {
+      if (classInfo && !previousReview && newOrEdit !== "New" && db) {
+        const loadMyReview = async () => {
+          if (isAuthenticated && user && !previousReview) {
+            try {
+              const reviewRecord: ReviewRecord =
+                (await db.loadReviewDoc(classCode)) ?? {};
+              const review: Review | undefined = reviewRecord[user.id];
+              if (review) {
+                setEnjoyment(review.enjoyment);
+                setDifficulty(review.difficulty);
+                setWorkload(review.workload);
+                setValue(review.value);
+                setSemester(new Semester(review.semester));
+                setInstructor(review.instructor);
+                setComment(review.comment);
+                navigation.setParams({
+                  previousReview: review,
+                  newOrEdit: "Edit",
+                });
+              } else {
+                navigation.setParams({ newOrEdit: "New" });
+              }
+            } catch (e) {
+              setReviewError(true);
+              if (!failSilently) setShowAlert(true);
             }
-          } catch (e) {
-            setReviewError(true);
-            setShowAlert(true);
           }
-        }
-      };
-      loadMyReview();
-    } else if (!classInfo && classInfoError) {
-      setShowAlert(true);
-    }
-  }, [classInfo, classInfoError, db]);
+        };
+        loadMyReview();
+      } else if (!classInfo && classInfoError) {
+        setShowAlert(true);
+      }
+    },
+    [
+      db,
+      classInfo,
+      previousReview,
+      newOrEdit,
+      isAuthenticated,
+      user,
+      classCode,
+      navigation,
+      classInfoError,
+    ]
+  );
+
+  useEffect(fetchMyReview, [classInfo, classInfoError, db]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -173,6 +189,18 @@ export default function ReviewScreen() {
     newOrEdit,
   ]);
 
+  useEffect(() => {
+    if (!classInfoError && !reviewError && !willDelete) {
+      setShowAlert(false);
+    }
+  }, [classInfoError, reviewError, willDelete]);
+
+  useRefresh((reason) => {
+    const failSilently = reason === "NetInfo";
+    reloadClassInfo?.(failSilently);
+    fetchMyReview(failSilently);
+  });
+
   return (
     <>
       <AlertPopup
@@ -183,18 +211,16 @@ export default function ReviewScreen() {
             navigation.pop(classInfoError === ErrorType.noData ? 2 : 1);
           }
         }}
-        header={
-          reviewError || classInfoError ? "Unable to Review" : "Delete Review"
-        }
+        header={willDelete ? "Delete Review" : "Unable to Review"}
         body={
-          classInfoError === ErrorType.noData
+          willDelete
+            ? "You are about to delete your review. This action is not reversable."
+            : classInfoError === ErrorType.noData
             ? notOfferedMessage(classCode, classInfo, selectedSemester)
-            : reviewError || classInfoError
-            ? undefined
-            : "You are about to delete your review. This action is not reversable."
+            : undefined
         }
         footerPrimaryButton={
-          reviewError || classInfoError ? undefined : (
+          !willDelete ? undefined : (
             <Button
               {...colorModeResponsiveStyle((selector) => ({
                 background: selector({
@@ -315,7 +341,10 @@ export default function ReviewScreen() {
                     dark: theme.colors.red[500],
                   }),
                 }))}
-                onPress={() => setShowAlert(true)}
+                onPress={() => {
+                  setWillDelete(true);
+                  setShowAlert(true);
+                }}
               />
             )}
           </VStack>

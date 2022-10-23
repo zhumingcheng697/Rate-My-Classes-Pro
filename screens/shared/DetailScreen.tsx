@@ -28,7 +28,11 @@ import {
 } from "../../libs/utils";
 import Semester from "../../libs/semester";
 import { getSections } from "../../libs/schedge";
-import { useClassInfoLoader, useInitialTabName } from "../../libs/hooks";
+import {
+  useClassInfoLoader,
+  useInitialTabName,
+  useRefresh,
+} from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import AlertPopup from "../../components/AlertPopup";
 import ReviewCard from "../../components/ReviewCard";
@@ -131,7 +135,7 @@ export default function DetailScreen() {
     }
   }, [user]);
 
-  const { classInfo, classInfoError } = useClassInfoLoader(
+  const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader(
     classCode,
     selectedSemester,
     isSettingsSettled
@@ -285,6 +289,13 @@ export default function DetailScreen() {
       }
     })();
   }, [isFocused, user]);
+
+  useRefresh((reason) => {
+    const failSilently = reason === "NetInfo";
+    reloadClassInfo?.(failSilently);
+    fetchReviews(failSilently);
+    fetchSections(failSilently);
+  });
 
   return (
     <>

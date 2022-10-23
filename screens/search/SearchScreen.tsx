@@ -140,6 +140,7 @@ export default function SearchScreen() {
   return (
     <>
       <AlertPopup
+        header={"Unable to Load Classes"}
         isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);

@@ -174,7 +174,7 @@ export function useClassInfoLoader(
             setClassInfoError(null);
           } else {
             setClassInfo(null);
-            if (!failSilently) setClassInfoError(ErrorType.noData);
+            setClassInfoError(ErrorType.noData);
           }
         })
         .catch((e) => {

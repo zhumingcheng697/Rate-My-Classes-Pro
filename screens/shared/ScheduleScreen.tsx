@@ -136,6 +136,7 @@ export default function ScheduleScreen() {
         }}
       />
       <AlertPopup
+        autoDismiss
         isOpen={showAlert && !notOffered}
         header={"Unable to Load Schedule"}
         onClose={() => {

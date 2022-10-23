@@ -12,12 +12,14 @@ import { useIsFocused } from "@react-navigation/native";
 import { subtleBorder } from "../styling/colors";
 import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 import { textColorStyle } from "../styling/theme";
+import { useAuth } from "../mongodb/auth";
 
 export type AlertPopupProps = {
   isOpen: boolean;
   header?: string;
   body?: string;
   global?: boolean;
+  autoDismiss?: boolean;
   footer?: (ref: MutableRefObject<any>) => ReactNode;
   footerPrimaryButton?: ReactElement;
   onClose: () => any;
@@ -27,6 +29,7 @@ export default function AlertPopup({
   header = "Unable to Load Class Information",
   body = "Please check your network connection or try again later.",
   global = false,
+  autoDismiss = true,
   isOpen,
   footer,
   footerPrimaryButton,
@@ -57,6 +60,18 @@ export default function AlertPopup({
       });
     }
   }, [isOpen, global]);
+
+  useEffect(() => {
+    if (
+      globalAlerts.size <= 0 &&
+      !global &&
+      autoDismiss &&
+      isOpen &&
+      isFocused
+    ) {
+      onClose();
+    }
+  }, [globalAlerts.size]);
 
   return (
     <AlertDialog

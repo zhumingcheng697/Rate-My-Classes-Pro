@@ -315,20 +315,27 @@ export default function DetailScreen() {
         }}
       />
       <AlertPopup
+        autoDismiss
         isOpen={showAlert && classInfoError === ErrorType.network}
-        onClose={() => setShowAlert(false)}
+        onClose={() => {
+          setShowAlert(false);
+          navigation.goBack();
+        }}
       />
       <AlertPopup
+        autoDismiss
         header={"Unable to Load Schedule or Review"}
         isOpen={showAlert && !classInfoError && scheduleError && reviewError}
         onClose={() => setShowAlert(false)}
       />
       <AlertPopup
+        autoDismiss
         header={"Unable to Load Schedule"}
         isOpen={showAlert && !classInfoError && scheduleError && !reviewError}
         onClose={() => setShowAlert(false)}
       />
       <AlertPopup
+        autoDismiss
         header={"Unable to Load Review"}
         isOpen={showAlert && !classInfoError && !scheduleError && reviewError}
         onClose={() => setShowAlert(false)}

@@ -110,6 +110,7 @@ export default function DepartmentScreen() {
   return (
     <>
       <AlertPopup
+        autoDismiss
         isOpen={showAlert && error === ErrorType.network}
         onClose={() => {
           setShowAlert(false);

@@ -246,6 +246,7 @@ export default function ReviewScreen() {
         body={notOfferedMessage(classCode, classInfo, selectedSemester)}
       />
       <AlertPopup
+        autoDismiss
         isOpen={
           showAlert &&
           !willDelete &&

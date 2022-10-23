@@ -168,23 +168,27 @@ export default function RootNavigation() {
   return (
     <RootNavigationComponent fetchInfo={fetchInfo}>
       <AlertPopup
-        header={
-          accountError
-            ? schoolError || departmentError
-              ? "Unable to Load Class or Account Information"
-              : "Unable to Load Account Information"
-            : schoolError || departmentError
-            ? undefined
-            : "Unable to Load Class or Account Information"
+        header={"Unable to Load Class or Account Information"}
+        isOpen={showAlert && accountError && !!(schoolError || departmentError)}
+        onClose={() => {
+          setShowAlert(false);
+          fetchInfo(true);
+        }}
+        onlyShowWhenFocused={false}
+      />
+      <AlertPopup
+        isOpen={
+          showAlert && !accountError && !!(schoolError || departmentError)
         }
-        body={
-          (schoolError === ErrorType.noData ||
-            departmentError === ErrorType.noData) &&
-          !accountError
-            ? "This might be an issue with Schedge, our API provider for classes."
-            : undefined
-        }
-        isOpen={showAlert}
+        onClose={() => {
+          setShowAlert(false);
+          fetchInfo(true);
+        }}
+        onlyShowWhenFocused={false}
+      />
+      <AlertPopup
+        header={"Unable to Load Account Information"}
+        isOpen={showAlert && accountError && !schoolError && !departmentError}
         onClose={() => {
           setShowAlert(false);
           fetchInfo(true);

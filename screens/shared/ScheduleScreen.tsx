@@ -70,10 +70,10 @@ export default function ScheduleScreen() {
   const notOffered = !!sections || classInfoError === ErrorType.noData;
 
   useEffect(() => {
-    if (!classInfoError && sections && sections.length) {
+    if (!classInfoError && sections && sections.length && showAlert) {
       setShowAlert(false);
     }
-  }, [classInfoError, sections]);
+  }, [classInfoError, sections, showAlert]);
 
   useEffect(() => {
     if (!classInfo && classInfoError) {
@@ -127,16 +127,20 @@ export default function ScheduleScreen() {
   return (
     <>
       <AlertPopup
-        isOpen={showAlert}
-        header={notOffered ? "No Sections Offered" : "Unable to Load Schedule"}
-        body={
-          notOffered
-            ? notOfferedMessage(classCode, classInfo, selectedSemester)
-            : undefined
-        }
+        isOpen={showAlert && notOffered}
+        header={"No Sections Offered"}
+        body={notOfferedMessage(classCode, classInfo, selectedSemester)}
         onClose={() => {
           setShowAlert(false);
           navigation.pop(classInfoError === ErrorType.noData ? 2 : 1);
+        }}
+      />
+      <AlertPopup
+        isOpen={showAlert && !notOffered}
+        header={"Unable to Load Schedule"}
+        onClose={() => {
+          setShowAlert(false);
+          navigation.goBack();
         }}
       />
       <KeyboardAwareSafeAreaScrollView>

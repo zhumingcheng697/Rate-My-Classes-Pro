@@ -190,10 +190,10 @@ export default function ReviewScreen() {
   ]);
 
   useEffect(() => {
-    if (!classInfoError && !reviewError && !willDelete) {
+    if (showAlert && !classInfoError && !reviewError && !willDelete) {
       setShowAlert(false);
     }
-  }, [classInfoError, reviewError, willDelete]);
+  }, [classInfoError, reviewError, willDelete, showAlert]);
 
   useRefresh((reason) => {
     const failSilently = reason === "NetInfo";
@@ -204,42 +204,58 @@ export default function ReviewScreen() {
   return (
     <>
       <AlertPopup
-        isOpen={showAlert}
-        onClose={() => {
-          setShowAlert(false);
-          if (reviewError || classInfoError) {
-            navigation.pop(classInfoError === ErrorType.noData ? 2 : 1);
-          }
-        }}
-        header={willDelete ? "Delete Review" : "Unable to Review"}
+        isOpen={showAlert && willDelete}
+        onClose={() => setShowAlert(false)}
+        header={"Delete Review"}
         body={
-          willDelete
-            ? "You are about to delete your review. This action is not reversable."
-            : classInfoError === ErrorType.noData
-            ? notOfferedMessage(classCode, classInfo, selectedSemester)
-            : undefined
+          "You are about to delete your review. This action is not reversable."
         }
         footerPrimaryButton={
-          !willDelete ? undefined : (
-            <Button
-              {...colorModeResponsiveStyle((selector) => ({
-                background: selector({
-                  light: theme.colors.red[600],
-                  dark: theme.colors.red[500],
-                }),
-              }))}
-              onPress={() => {
-                setShowAlert(false);
-                navigation.navigate("Detail", {
-                  classCode: classInfo ?? classCode,
-                  deleteReview: true,
-                });
-              }}
-            >
-              Delete
-            </Button>
-          )
+          <Button
+            {...colorModeResponsiveStyle((selector) => ({
+              background: selector({
+                light: theme.colors.red[600],
+                dark: theme.colors.red[500],
+              }),
+            }))}
+            onPress={() => {
+              setShowAlert(false);
+              setWillDelete(false);
+              navigation.navigate("Detail", {
+                classCode: classInfo ?? classCode,
+                deleteReview: true,
+              });
+            }}
+          >
+            Delete
+          </Button>
         }
+      />
+      <AlertPopup
+        isOpen={
+          showAlert &&
+          !willDelete &&
+          classInfoError === ErrorType.noData &&
+          !reviewError
+        }
+        onClose={() => {
+          setShowAlert(false);
+          navigation.pop(2);
+        }}
+        header={"Unable to Review"}
+        body={notOfferedMessage(classCode, classInfo, selectedSemester)}
+      />
+      <AlertPopup
+        isOpen={
+          showAlert &&
+          !willDelete &&
+          (classInfoError === ErrorType.network || reviewError)
+        }
+        onClose={() => {
+          setShowAlert(false);
+          navigation.goBack();
+        }}
+        header={"Unable to Review"}
       />
       <KeyboardAwareSafeAreaScrollView>
         <Box marginY={"10px"}>

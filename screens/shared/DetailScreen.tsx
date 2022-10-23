@@ -50,9 +50,7 @@ type DetailScreenNavigationProp = StackNavigationProp<
   "Detail"
 >;
 
-enum DetailScreenErrorType {
-  loadReviews = "Load Reviews",
-  loadSchedule = "Load Schedule",
+enum ReviewErrorType {
   submitReview = "Submit Your Review",
   updateReview = "Update Your Review",
   deleteReview = "Delete Your Review",
@@ -75,7 +73,9 @@ export default function DetailScreen() {
   const tabName = useInitialTabName();
 
   const [showAlert, setShowAlert] = useState(false);
-  const [error, setError] = useState<DetailScreenErrorType | null>(null);
+  const [error, setError] = useState<ReviewErrorType | null>(null);
+  const [scheduleError, setScheduleError] = useState(false);
+  const [reviewError, setReviewError] = useState(false);
 
   const [sections, setSections] = useState<SectionInfo[] | null>(null);
   const [previousSemester, setPreviousSemester] = useState(
@@ -148,8 +148,16 @@ export default function DetailScreen() {
   }, [classInfo?.description]);
 
   useEffect(() => {
-    if (!error && !classInfoError) setShowAlert(false);
-  }, [error]);
+    if (
+      !error &&
+      !classInfoError &&
+      !scheduleError &&
+      !reviewError &&
+      showAlert
+    ) {
+      setShowAlert(false);
+    }
+  }, [error, classInfoError, scheduleError, reviewError, showAlert]);
 
   const semester = new Semester(selectedSemester);
 
@@ -162,11 +170,9 @@ export default function DetailScreen() {
               (await db.loadReviewDoc(classCode)) ?? {};
             delete reviewRecord["_id"];
             setReviewRecord(reviewRecord);
-            setError((error) =>
-              error === DetailScreenErrorType.loadReviews ? null : error
-            );
+            setReviewError(false);
           } catch (e) {
-            setError(DetailScreenErrorType.loadReviews);
+            setReviewError(true);
             if (!failSilently) setShowAlert(true);
           }
         })();
@@ -198,13 +204,11 @@ export default function DetailScreen() {
       getSections(classInfo, selectedSemester)
         .then((sections) => {
           setSections(sections);
-          setError((error) =>
-            error === DetailScreenErrorType.loadSchedule ? null : error
-          );
+          setScheduleError(false);
         })
         .catch(() => {
           setSections(null);
-          setError(DetailScreenErrorType.loadSchedule);
+          setScheduleError(true);
           if (!failSilently) setShowAlert(true);
         });
     },
@@ -260,7 +264,7 @@ export default function DetailScreen() {
               await db.reviewClass(reviewedClass);
               reviewClass(dispatch)(reviewedClass);
             } else {
-              setError(DetailScreenErrorType.submitReview);
+              setError(ReviewErrorType.submitReview);
             }
 
             if (reviewRecord) {
@@ -271,13 +275,15 @@ export default function DetailScreen() {
           }
         } catch (e) {
           if (deleteReview) {
-            setError(DetailScreenErrorType.deleteReview);
+            setError(ReviewErrorType.deleteReview);
           } else if (newReview) {
             if (myReview) {
-              setError(DetailScreenErrorType.updateReview);
+              setError(ReviewErrorType.updateReview);
             } else {
-              setError(DetailScreenErrorType.submitReview);
+              setError(ReviewErrorType.submitReview);
             }
+          } else {
+            return;
           }
           setShowAlert(true);
         } finally {
@@ -300,28 +306,51 @@ export default function DetailScreen() {
   return (
     <>
       <AlertPopup
-        header={
-          classInfoError === ErrorType.noData
-            ? "Not Offered"
-            : `Unable to ${
-                classInfoError === ErrorType.network
-                  ? "Load Class Information"
-                  : error || "Review"
-              }`
-        }
-        body={
-          classInfoError === ErrorType.noData
-            ? notOfferedMessage(classCode, classInfo, semester)
-            : undefined
-        }
-        isOpen={showAlert}
+        header={"Not Offered"}
+        body={notOfferedMessage(classCode, classInfo, semester)}
+        isOpen={showAlert && classInfoError === ErrorType.noData}
         onClose={() => {
           setShowAlert(false);
-          if (classInfoError === ErrorType.noData) {
-            navigation.goBack();
-          }
+          navigation.goBack();
         }}
       />
+      <AlertPopup
+        isOpen={showAlert && classInfoError === ErrorType.network}
+        onClose={() => setShowAlert(false)}
+      />
+      <AlertPopup
+        header={"Unable to Load Schedule or Review"}
+        isOpen={showAlert && !classInfoError && scheduleError && reviewError}
+        onClose={() => setShowAlert(false)}
+      />
+      <AlertPopup
+        header={"Unable to Load Schedule"}
+        isOpen={showAlert && !classInfoError && scheduleError && !reviewError}
+        onClose={() => setShowAlert(false)}
+      />
+      <AlertPopup
+        header={"Unable to Load Review"}
+        isOpen={showAlert && !classInfoError && !scheduleError && reviewError}
+        onClose={() => setShowAlert(false)}
+      />
+      {[
+        ReviewErrorType.submitReview,
+        ReviewErrorType.updateReview,
+        ReviewErrorType.deleteReview,
+      ].map((e) => (
+        <AlertPopup
+          key={e}
+          header={`Unable to ${e}`}
+          isOpen={
+            showAlert &&
+            error === e &&
+            !classInfoError &&
+            !scheduleError &&
+            !reviewError
+          }
+          onClose={() => setShowAlert(false)}
+        />
+      ))}
       <KeyboardAwareSafeAreaScrollView>
         <Box marginY={"10px"}>
           <Text variant={"h1"} opacity={classInfo || classInfoError ? 1 : 0.5}>
@@ -346,7 +375,7 @@ export default function DetailScreen() {
           )}
           <RatingDashboard
             margin={"5px"}
-            loadError={!!error || classInfoError === ErrorType.network}
+            loadError={classInfoError === ErrorType.network || reviewError}
             enjoyment={enjoyment}
             difficulty={difficulty}
             workload={workload}
@@ -370,7 +399,7 @@ export default function DetailScreen() {
                     : `Not Offered in ${semesterName}`
                   : classInfoError === ErrorType.noData
                   ? `Not Offered in ${semesterName}`
-                  : error || classInfoError
+                  : classInfoError === ErrorType.network || scheduleError
                   ? "Unable to Load Schedule"
                   : `Loading${
                       isSettingsSettled ? ` ${semesterName} ` : " "

@@ -52,7 +52,7 @@ export default function DepartmentScreen() {
     [settings.selectedSemester]
   );
 
-  const noDataErrorMessage = () => {
+  const noDataErrorMessage = useMemo(() => {
     const diff = Semester.between(
       Semester.predictCurrentSemester(),
       selectedSemester
@@ -65,7 +65,7 @@ export default function DepartmentScreen() {
         ? "will not be offering"
         : "is not offering"
     } any classes in ${selectedSemester.toString()}.`;
-  };
+  }, [selectedSemester, route.params]);
 
   const fetchClasses = useCallback(
     (failSilently: boolean = false) => {
@@ -78,14 +78,14 @@ export default function DepartmentScreen() {
             setShowAlert(false);
             setError(null);
           } else {
-            setShowAlert(true);
             setError(ErrorType.noData);
+            setShowAlert(true);
           }
         })
         .catch((e) => {
           console.error(e);
-          if (!failSilently) setShowAlert(true);
           setError(ErrorType.network);
+          if (!failSilently) setShowAlert(true);
         });
     },
     [auth.isSettingsSettled, route.params, selectedSemester]
@@ -97,6 +97,10 @@ export default function DepartmentScreen() {
     auth.isSettingsSettled,
   ]);
 
+  useEffect(() => {
+    if (!error && showAlert) setShowAlert(false);
+  }, [error, showAlert]);
+
   useRefresh(
     error !== ErrorType.network
       ? undefined
@@ -106,9 +110,16 @@ export default function DepartmentScreen() {
   return (
     <>
       <AlertPopup
-        header={error === ErrorType.noData ? "No Classes Offered" : undefined}
-        body={error === ErrorType.noData ? noDataErrorMessage() : undefined}
-        isOpen={showAlert}
+        isOpen={showAlert && error === ErrorType.network}
+        onClose={() => {
+          setShowAlert(false);
+          navigation.goBack();
+        }}
+      />
+      <AlertPopup
+        header={"No Classes Offered"}
+        body={noDataErrorMessage}
+        isOpen={showAlert && error === ErrorType.noData}
         onClose={() => {
           setShowAlert(false);
           navigation.goBack();

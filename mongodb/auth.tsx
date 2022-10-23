@@ -2,6 +2,9 @@
 
 import React, {
   type ReactNode,
+  type Dispatch,
+  type SetStateAction,
+  type MutableRefObject,
   useContext,
   useState,
   createContext,
@@ -32,6 +35,8 @@ type AuthContext = {
   isSettingsSettled: boolean;
   isUserDocLoaded: boolean;
   isAuthenticated: boolean;
+  globalAlerts: Set<MutableRefObject<any>>;
+  setGlobalAlerts: Dispatch<SetStateAction<Set<MutableRefObject<any>>>>;
   fetchUserDoc: () => Promise<void>;
   updateUsername: (username: string) => Promise<void>;
   continueWithGoogle: (idToken: string, username: string) => Promise<void>;
@@ -62,6 +67,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const isAuthenticated = !!user && user.providerType !== "anon-user";
   const [db, setDB] = useState<Database | null>(() =>
     realmApp.currentUser ? new Database(realmApp.currentUser) : null
+  );
+  const [globalAlerts, setGlobalAlerts] = useState<Set<MutableRefObject<any>>>(
+    new Set()
   );
 
   const syncCleanup = useCallback(() => {
@@ -295,6 +303,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         isSettingsSettled,
         isUserDocLoaded,
         isAuthenticated,
+        globalAlerts,
+        setGlobalAlerts,
         fetchUserDoc,
         updateUsername,
         continueWithGoogle,

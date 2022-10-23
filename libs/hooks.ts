@@ -204,7 +204,7 @@ export function useClassInfoLoader(
   const reloadClass =
     !classInfo && !isLoading && classInfoError === ErrorType.network
       ? loadClass
-      : () => {};
+      : undefined;
 
   return { classInfo, classInfoError, reloadClass };
 }
@@ -224,17 +224,17 @@ export function useAppState() {
 }
 
 export function useRefresh(
-  callback: ((reason: "AppState" | "NetInfo") => void) | null | undefined
+  callback: ((reason: "AppState" | "NetInfo") => void) | undefined
 ) {
   const appState = useAppState();
   const { isInternetReachable } = useNetInfo();
 
   useEffect(() => {
-    if (appState === "active") callback?.("AppState");
+    if (callback && appState === "active") callback("AppState");
   }, [appState]);
 
   useEffect(() => {
-    if (isInternetReachable) callback?.("NetInfo");
+    if (callback && isInternetReachable) callback("NetInfo");
   }, [isInternetReachable]);
 }
 

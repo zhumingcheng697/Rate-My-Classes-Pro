@@ -8,7 +8,6 @@ import React, {
 import { type Dispatch } from "redux";
 import { useDispatch, useSelector } from "react-redux";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useNetInfo } from "@react-native-community/netinfo";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import ExploreNavigation from "./ExploreNavigation";
@@ -22,7 +21,7 @@ import {
   ErrorType,
 } from "../libs/types";
 import { getDepartmentNames, getSchoolNames } from "../libs/schedge";
-import { useAppState } from "../libs/hooks";
+import { useRefresh } from "../libs/hooks";
 import { isObjectEmpty } from "../libs/utils";
 import { useAuth } from "../mongodb/auth";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "../redux/actions";
@@ -62,8 +61,6 @@ export default function RootNavigation() {
   );
   const dispatch = useDispatch();
   const auth = useAuth();
-  const appState = useAppState();
-  const netInfo = useNetInfo();
   const hasError = schoolError || departmentError || accountError;
 
   const getSchoolAndDepartmentNames = useCallback(
@@ -124,7 +121,7 @@ export default function RootNavigation() {
 
   const fetchInfo = useCallback(
     (failSilently: boolean = false) => {
-      if (!fetchingUserDoc) {
+      if (!auth.isUserDocLoaded && !fetchingUserDoc) {
         setFetchingUserDoc(true);
 
         auth
@@ -158,13 +155,9 @@ export default function RootNavigation() {
     ]
   );
 
-  useEffect(() => {
-    if (appState === "active" && hasError) fetchInfo();
-  }, [appState]);
-
-  useEffect(() => {
-    if (netInfo.isInternetReachable && hasError) fetchInfo(true);
-  }, [netInfo]);
+  useRefresh(
+    !hasError ? undefined : (reason) => fetchInfo(reason === "NetInfo")
+  );
 
   useEffect(() => {
     if (!schoolError && !departmentError && !accountError && showAlert) {

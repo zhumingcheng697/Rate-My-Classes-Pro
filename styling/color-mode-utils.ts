@@ -6,7 +6,7 @@ import colors, { type ColorPair } from "./colors";
 import { useColorScheme } from "../libs/hooks";
 
 export function useDynamicColor({ light, dark }: ColorPair) {
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorModeSynchronizer();
   return colorScheme === "dark" ? dark : light;
 }
 
@@ -18,7 +18,8 @@ export const colorModeResponsiveStyle = (
 });
 
 export function useColorModeSynchronizer() {
-  const colorScheme = useColorScheme();
+  const current = useColorScheme();
+  const [colorScheme, setColorScheme] = useState(current);
 
   const getNavigationTheme = useCallback(
     (colorScheme: ColorSchemeName) => ({
@@ -33,19 +34,20 @@ export function useColorModeSynchronizer() {
   );
 
   const [navigationTheme, setNavigationScheme] = useState(() =>
-    getNavigationTheme(colorScheme)
+    getNavigationTheme(current)
   );
 
   const colorModeManager = useMemo(
     () => ({
       get: async () => {
-        setNavigationScheme(getNavigationTheme(colorScheme));
-        return colorScheme;
+        setNavigationScheme(getNavigationTheme(current));
+        setColorScheme(current);
+        return current;
       },
       set: async () => {},
     }),
-    [colorScheme, getNavigationTheme, setNavigationScheme]
+    [current, getNavigationTheme, setNavigationScheme]
   );
 
-  return { navigationTheme, colorModeManager };
+  return { navigationTheme, colorModeManager, colorScheme };
 }

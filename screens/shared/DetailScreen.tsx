@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Text, Button, Box, VStack, Skeleton } from "native-base";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Text, Box, VStack, Skeleton } from "native-base";
 import {
   useIsFocused,
   useNavigation,
@@ -143,24 +143,35 @@ export default function DetailScreen() {
       : undefined;
   }, [classInfo?.description]);
 
+  useEffect(() => {
+    if (!error) setShowAlert(false);
+  }, [error]);
+
   const semester = new Semester(selectedSemester);
 
-  useEffect(() => {
-    if (!reviewRecord && db) {
-      const loadReviewDoc = async () => {
-        try {
-          const reviewRecord: ReviewRecord =
-            (await db.loadReviewDoc(classCode)) ?? {};
-          delete reviewRecord["_id"];
-          setReviewRecord(reviewRecord);
-        } catch (e) {
-          setError(DetailScreenErrorType.loadReviews);
-          setShowAlert(true);
-        }
-      };
-      loadReviewDoc();
-    }
-  }, [db]);
+  const fetchReviews = useCallback(
+    (failSilently: boolean = false) => {
+      if (!reviewRecord && db) {
+        (async () => {
+          try {
+            const reviewRecord: ReviewRecord =
+              (await db.loadReviewDoc(classCode)) ?? {};
+            delete reviewRecord["_id"];
+            setReviewRecord(reviewRecord);
+            setError((error) =>
+              error === DetailScreenErrorType.loadReviews ? null : error
+            );
+          } catch (e) {
+            setError(DetailScreenErrorType.loadReviews);
+            if (!failSilently) setShowAlert(true);
+          }
+        })();
+      }
+    },
+    [reviewRecord, db, classCode]
+  );
+
+  useEffect(fetchReviews, [db]);
 
   useEffect(() => {
     if (!classInfo && classInfoError) {
@@ -170,23 +181,40 @@ export default function DetailScreen() {
     }
   }, [classInfo, classInfoError]);
 
-  useEffect(() => {
-    if (!isSettingsSettled || !classInfo) return;
+  const fetchSections = useCallback(
+    (failSilently: boolean = false) => {
+      if (!isSettingsSettled || !classInfo) return;
 
-    if (!Semester.equals(semester, previousSemester)) {
-      setPreviousSemester(semester);
-    } else if (sections) {
-      return;
-    }
+      if (!Semester.equals(semester, previousSemester)) {
+        setPreviousSemester(semester);
+      } else if (sections) {
+        return;
+      }
 
-    getSections(classInfo, selectedSemester)
-      .then((sections) => setSections(sections))
-      .catch(() => {
-        setSections(null);
-        setError(DetailScreenErrorType.loadSchedule);
-        setShowAlert(true);
-      });
-  }, [selectedSemester, isSettingsSettled, classInfo]);
+      getSections(classInfo, selectedSemester)
+        .then((sections) => {
+          setSections(sections);
+          setError((error) =>
+            error === DetailScreenErrorType.loadSchedule ? null : error
+          );
+        })
+        .catch(() => {
+          setSections(null);
+          setError(DetailScreenErrorType.loadSchedule);
+          if (!failSilently) setShowAlert(true);
+        });
+    },
+    [
+      isSettingsSettled,
+      classInfo,
+      semester,
+      previousSemester,
+      sections,
+      selectedSemester,
+    ]
+  );
+
+  useEffect(fetchSections, [selectedSemester, isSettingsSettled, classInfo]);
 
   const reviewerIds = useMemo(() => {
     if (!reviewRecord) return [];

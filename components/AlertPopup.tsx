@@ -34,6 +34,7 @@ export default function AlertPopup({
 }: AlertPopupProps) {
   const ref = useRef();
   const isFocused = useIsFocused();
+  const { globalAlerts, setGlobalAlerts } = useAuth();
 
   useEffect(() => {
     if (isOpen && isFocused) {
@@ -41,10 +42,26 @@ export default function AlertPopup({
     }
   }, [isOpen, isFocused]);
 
+  useEffect(() => {
+    if (global) {
+      console.log(globalAlerts);
+
+      setGlobalAlerts((globalAlerts) => {
+        const res = new Set(globalAlerts);
+        if (isOpen) {
+          res.add(ref);
+        } else {
+          res.delete(ref);
+        }
+        return res;
+      });
+    }
+  }, [isOpen, global]);
+
   return (
     <AlertDialog
       leastDestructiveRef={ref}
-      isOpen={isOpen && (global || isFocused)}
+      isOpen={isOpen && (global || (isFocused && globalAlerts.size <= 0))}
       onClose={onClose}
     >
       <AlertDialog.Content

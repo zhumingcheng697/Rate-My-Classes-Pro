@@ -1,5 +1,11 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { useWindowDimensions, Platform, AppState } from "react-native";
+import {
+  useWindowDimensions,
+  Platform,
+  AppState,
+  Appearance,
+  useColorScheme as _useColorScheme,
+} from "react-native";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -245,6 +251,20 @@ export function useRefresh(
   useEffect(() => {
     if (callback && isInternetReachable) callback("NetInfo");
   }, [isInternetReachable]);
+}
+
+export function useColorScheme() {
+  const current = _useColorScheme();
+  const appState = useAppState();
+  const [colorScheme, setColorScheme] = useState(current);
+
+  useEffect(() => setColorScheme(current), [current]);
+
+  useEffect(() => {
+    setColorScheme(Appearance.getColorScheme());
+  }, [appState]);
+
+  return colorScheme;
 }
 
 export function useIsCatalyst() {

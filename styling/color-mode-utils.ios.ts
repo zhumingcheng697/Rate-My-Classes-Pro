@@ -1,12 +1,9 @@
 import { useCallback, useMemo } from "react";
-import {
-  useColorScheme,
-  DynamicColorIOS,
-  type ColorSchemeName,
-} from "react-native";
+import { DynamicColorIOS, type ColorSchemeName } from "react-native";
 import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 
 import colors from "./colors";
+import { useColorScheme } from "../libs/hooks";
 
 export function useDynamicColor(colors: Parameters<typeof DynamicColorIOS>[0]) {
   return DynamicColorIOS(colors);

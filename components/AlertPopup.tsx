@@ -50,8 +50,6 @@ export default function AlertPopup({
 
   useEffect(() => {
     if (global) {
-      console.log(globalAlerts);
-
       setGlobalAlerts((globalAlerts) => {
         const res = new Set(globalAlerts);
         if (isOpen) {

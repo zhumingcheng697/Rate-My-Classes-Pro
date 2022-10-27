@@ -20,7 +20,13 @@ export type LinkTo = {
 };
 
 export type LinkCompatibleButtonBaseProps = {
-  children: ReactNode;
+  children:
+    | ReactNode
+    | ((props: {
+        isPressed: boolean;
+        isHovered: boolean;
+        isFocused: boolean;
+      }) => ReactNode);
 } & LinkTo;
 
 type LinkButtonProps = LinkCompatibleButtonBaseProps & { href?: string } & Omit<
@@ -35,12 +41,13 @@ function LinkButton({
   href,
   ...rest
 }: LinkButtonProps) {
+  const [isPressed, setIsPressed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const handler = useCallback(() => {
     const unsetIsClicked = () => {
-      setIsClicked(false);
+      setIsPressed(false);
       window.removeEventListener("mouseup", unsetIsClicked);
       window.removeEventListener("drop", unsetIsClicked);
       window.removeEventListener("dragend", unsetIsClicked);
@@ -56,7 +63,7 @@ function LinkButton({
   return (
     <View
       justifyContent={"center"}
-      opacity={isDisabled ? 0.5 : isClicked ? 0.5 : isHovered ? 0.72 : 1}
+      opacity={isDisabled ? 0.5 : isPressed ? 0.5 : isHovered ? 0.72 : 1}
       // @ts-ignore
       href={isDisabled ? undefined : href}
       tabIndex={isDisabled ? -1 : 0}
@@ -68,15 +75,19 @@ function LinkButton({
       userSelect={"none"}
       onMouseDown={() => {
         handler();
-        setIsClicked(true);
+        setIsPressed(true);
       }}
-      onMouseUp={() => setIsClicked(false)}
-      onDragEnd={() => setIsClicked(false)}
+      onMouseUp={() => setIsPressed(false)}
+      onDragEnd={() => setIsPressed(false)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
       {...rest}
     >
-      {children}
+      {typeof children === "function"
+        ? children({ isPressed, isFocused, isHovered })
+        : children}
     </View>
   );
 }

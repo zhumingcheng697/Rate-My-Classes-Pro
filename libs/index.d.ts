@@ -1,3 +1,8 @@
+declare module "react-native-change-icon" {
+  export const getIcon: () => Promise<string>;
+  export const changeIcon: (iconName: "VioletIcon" | null) => Promise<string>;
+}
+
 declare module "react-native-dotenv" {
   export const REALM_APP_ID: string;
   export const MONGODB_SERVICE_NAME: string;

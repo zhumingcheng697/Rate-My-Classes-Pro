@@ -119,6 +119,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const loadUserDoc = useCallback(
     async (user: Realm.User, db: Database) => {
+      console.log(user.isLoggedIn, user.state, user.identities);
       if (user.providerType === "anon-user") return;
 
       try {

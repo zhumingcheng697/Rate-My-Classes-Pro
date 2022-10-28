@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Text, HStack, Switch, VStack, Box, theme } from "native-base";
 
 import AlertPopup from "../../components/AlertPopup";
+import AppIconSwitcher from "../../components/AppIconSwitcher";
 import LabeledInput from "../../components/LabeledInput";
 import ClearableInput from "../../components/ClearableInput";
 import { SemesterSelector } from "../../components/Selector";
@@ -46,6 +47,9 @@ export default function SettingsScreen() {
     () => Semester.getSemesterOptions(showPreviousSemesters).reverse(),
     [showPreviousSemesters]
   );
+
+  const isCatalyst = useIsCatalyst();
+  const canSelectAlternativeIcon = Platform.OS !== "web" && !isCatalyst;
 
   useEffect(() => {
     if (isAuthenticated && username) {
@@ -118,6 +122,11 @@ export default function SettingsScreen() {
             }}
           />
         </LabeledInput>
+        {canSelectAlternativeIcon && (
+          <LabeledInput label={"App Icon"}>
+            <AppIconSwitcher />
+          </LabeledInput>
+        )}
         {/* // TODO: uncomment after schedge is back */}
         {/* <HStack
           justifyContent={"space-between"}

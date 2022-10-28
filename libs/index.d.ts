@@ -1,5 +1,5 @@
 declare module "react-native-change-icon" {
-  export const getIcon: () => Promise<string>;
+  export const getIcon: () => Promise<"default" | "VioletIcon">;
   export const changeIcon: (iconName: "VioletIcon" | null) => Promise<string>;
 }
 
@@ -10,4 +10,12 @@ declare module "react-native-dotenv" {
   export const GOOGLE_WEB_CLIENT_ID: string;
   export const GOOGLE_IOS_CLIENT_ID: string;
   export const WEB_DEPLOYMENT_URL: string;
+}
+
+declare module "*.png" {
+  import { ImageSourcePropType } from "react-native";
+
+  const content: ImageSourcePropType;
+
+  export default content;
 }

@@ -2,7 +2,7 @@
 <html lang="%LANG_ISO_CODE%">
   <head>
     <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#57068C" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#57068c" />
     <link
       rel="apple-touch-icon"
       sizes="120x120"
@@ -31,6 +31,8 @@
     <meta charset="utf-8" />
     <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <!-- 
       This viewport works for phones with notches.
       It's optimized for gestures by disabling global zoom.
@@ -97,6 +99,27 @@
         }
       }
     </style>
+    <script>
+      const themeColor = document.querySelector("meta[name=theme-color]");
+
+      const updateThemeColor = (darkMode) =>
+        themeColor.setAttribute("content", darkMode ? "#121212" : "#ffffff");
+
+      if (
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+      ) {
+        updateThemeColor(true);
+      } else {
+        updateThemeColor(false);
+      }
+
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", ({ matches }) => {
+          updateThemeColor(!!matches);
+        });
+    </script>
   </head>
 
   <body>

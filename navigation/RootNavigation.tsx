@@ -22,7 +22,7 @@ import {
 } from "../libs/types";
 import { getDepartmentNames, getSchoolNames } from "../libs/schedge";
 import { useRefresh } from "../libs/hooks";
-import { isObjectEmpty } from "../libs/utils";
+import { composeErrorMessage, isObjectEmpty } from "../libs/utils";
 import { useAuth } from "../mongodb/auth";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "../redux/actions";
 import { subtleBorder } from "../styling/colors";
@@ -190,6 +190,7 @@ export default function RootNavigation() {
         global
         header={"Unable to Load Account Information"}
         isOpen={showAlert && accountError && !schoolError && !departmentError}
+        body={composeErrorMessage(accountError)}
         onClose={() => {
           setShowAlert(false);
           fetchInfo(true);

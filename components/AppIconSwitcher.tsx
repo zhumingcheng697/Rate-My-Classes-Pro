@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { HStack, Icon, Image, Text, VStack } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { changeIcon, getIcon } from "react-native-change-icon";
 
 import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 import colors, { subtleBorder } from "../styling/colors";
-
 import defaultIcon from "./../icons/default.png";
 import violetIcon from "./../icons/violet.png";
-import { changeIcon, getIcon } from "react-native-change-icon";
 import { Pressable } from "./LinkCompatibleButtons";
 
 type AppIconChoiceProps = {
@@ -117,7 +116,7 @@ export default function AppIconSwitcher() {
       </HStack>
       {iconError && (
         <Text marginBottom={"5px"} textAlign={"center"} fontWeight={"medium"}>
-          Alternative App Icon is not supported
+          Alternate App Icon is not supported
         </Text>
       )}
     </VStack>

@@ -50,7 +50,7 @@ export default function RootNavigation() {
   const [departmentError, setDepartmentError] = useState<ErrorType | null>(
     null
   );
-  const [accountError, setAccountError] = useState(false);
+  const [accountError, setAccountError] = useState<any>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [fetchingSchoolNames, setFetchingSchoolNames] = useState(false);
   const [fetchingDepartmentNames, setFetchingDepartmentNames] = useState(false);
@@ -126,10 +126,10 @@ export default function RootNavigation() {
 
         auth
           .fetchUserDoc()
-          .then(() => setAccountError(false))
+          .then(() => setAccountError(null))
           .catch((e) => {
             console.error(e);
-            setAccountError(true);
+            setAccountError(e);
             if (!failSilently) setShowAlert(true);
           })
           .finally(() => setFetchingUserDoc(false));

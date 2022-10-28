@@ -127,11 +127,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         if (userDoc) updateUserDoc(userDoc);
 
         setIsUserDocLoaded(true);
+        setIsSettingsSettled(true);
       } catch (e) {
+        setIsSettingsSettled(true);
         console.error(e);
         throw e;
-      } finally {
-        setIsSettingsSettled(true);
       }
     },
     [updateUserDoc]

@@ -36,7 +36,7 @@ export default function IconHStack({
     _icon
   );
 
-  let icon = <Icon {..._icon} as={<Ionicons name={iconName} />} />;
+  const icon = <Icon {..._icon} as={<Ionicons name={iconName} />} />;
 
   return (
     <HStack {...rest} alignItems={"flex-start"} space={"6px"}>

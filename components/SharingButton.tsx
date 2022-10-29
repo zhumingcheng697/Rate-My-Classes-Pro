@@ -90,7 +90,7 @@ function NativeSharingButton({ url, copyLink }: SharingButtonProps) {
         variant={"unstyled"}
         marginRight={"5px"}
         padding={"5px"}
-        icon={<Icon size={"22px"} as={<Ionicons name={"share-outline"} />} />}
+        icon={<Icon as={<Ionicons name={"share-outline"} />} />}
         onPress={() => {
           if (url) {
             Share.share(
@@ -119,7 +119,7 @@ function WebSharingButton({ url, copyLink }: SharingButtonProps) {
       variant={"unstyled"}
       marginRight={"5px"}
       padding={"5px"}
-      icon={<Icon size={"22px"} as={<Ionicons name={"link-outline"} />} />}
+      icon={<Icon as={<Ionicons name={"link-outline"} />} />}
       onPress={() => {
         if (url) {
           copyLink(url);

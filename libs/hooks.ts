@@ -264,6 +264,17 @@ export function useColorScheme() {
   useEffect(() => setColorScheme(current), [current]);
 
   useEffect(() => {
+    if (Platform.OS === "web") {
+      const updateColorScheme = () =>
+        setColorScheme(Appearance.getColorScheme());
+
+      window.addEventListener("focus", updateColorScheme);
+
+      return () => window.removeEventListener("focus", updateColorScheme);
+    }
+  });
+
+  useEffect(() => {
     setColorScheme(Appearance.getColorScheme());
   }, [appState]);
 

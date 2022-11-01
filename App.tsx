@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
 import { createStore } from "redux";
@@ -38,6 +39,18 @@ export default function App() {
   useEffect(() => {
     if (appState === "active") NetInfo.refresh();
   }, [appState]);
+
+  useEffect(() => {
+    if (Platform.OS === "web") {
+      const cardColor = navigationTheme.colors.card;
+
+      document.documentElement.style.backgroundColor = cardColor;
+
+      const themeColorEl = document.querySelector("meta[name=theme-color]");
+
+      if (themeColorEl) themeColorEl.setAttribute("content", cardColor);
+    }
+  }, [navigationTheme.colors]);
 
   return (
     <Provider store={store}>

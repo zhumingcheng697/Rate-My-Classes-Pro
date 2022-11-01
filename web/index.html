@@ -100,27 +100,6 @@
         }
       }
     </style>
-    <script>
-      const themeColor = document.querySelector("meta[name=theme-color]");
-
-      const updateThemeColor = (darkMode) =>
-        themeColor.setAttribute("content", darkMode ? "#121212" : "#ffffff");
-
-      if (
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-      ) {
-        updateThemeColor(true);
-      } else {
-        updateThemeColor(false);
-      }
-
-      window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .addEventListener("change", ({ matches }) => {
-          updateThemeColor(!!matches);
-        });
-    </script>
   </head>
 
   <body>

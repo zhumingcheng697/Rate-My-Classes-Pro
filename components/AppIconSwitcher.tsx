@@ -88,10 +88,12 @@ export default function AppIconSwitcher() {
       setIsVioletSelected(selectViolet);
       await changeIcon(selectViolet ? "VioletIcon" : null);
       await resolveIcon();
-    } catch (e) {
-      setIsVioletSelected(wasVioletSelected || false);
-      setIconError(true);
-      console.error(e);
+    } catch (e: any) {
+      if (e?.message !== "ICON_ALREADY_USED") {
+        setIsVioletSelected(wasVioletSelected || false);
+        setIconError(true);
+        console.error(e);
+      }
     }
   }, []);
 

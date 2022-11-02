@@ -1,0 +1,30 @@
+diff --git a/node_modules/react-native-change-icon/ios/ChangeIcon.mm b/node_modules/react-native-change-icon/ios/ChangeIcon.mm
+index d5c6b57..4fbfc90 100644
+--- a/node_modules/react-native-change-icon/ios/ChangeIcon.mm
++++ b/node_modules/react-native-change-icon/ios/ChangeIcon.mm
+@@ -34,14 +34,21 @@ + (BOOL)requiresMainQueueSetup {
+         NSString *currentIcon = [[UIApplication sharedApplication] alternateIconName];
+ 
+         if ([iconName isEqualToString:currentIcon]) {
+-            reject(@"Error", @"ICON_ALREADY_USED", error);
++            resolve(iconName);
+             return;
+         }
+ 
+-        resolve(iconName);
+-
+         [[UIApplication sharedApplication] setAlternateIconName:iconName completionHandler:^(NSError * _Nullable error) {
+-            return;
++            if (error) {
++                reject(@"Error", @"ERROR", error);
++            } else {
++                NSString *currentIcon = [[UIApplication sharedApplication] alternateIconName];
++                if (currentIcon) {
++                    resolve(currentIcon);
++                } else {
++                    resolve(@"default");
++                }
++            }
+         }];
+     });
+ }

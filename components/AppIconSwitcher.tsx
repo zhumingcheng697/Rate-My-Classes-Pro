@@ -70,7 +70,6 @@ export default function AppIconSwitcher() {
   const resolveIcon = useCallback(async () => {
     try {
       const iconName = await getIcon();
-      console.log(iconName);
       setIsVioletSelected(iconName === "VioletIcon");
     } catch (e) {
       setIconError(true);
@@ -84,10 +83,13 @@ export default function AppIconSwitcher() {
   }, []);
 
   const selectIcon = useCallback(async (selectViolet: boolean) => {
+    const wasVioletSelected = isVioletSelected;
     try {
+      setIsVioletSelected(selectViolet);
       await changeIcon(selectViolet ? "VioletIcon" : null);
       await resolveIcon();
     } catch (e) {
+      setIsVioletSelected(wasVioletSelected || false);
       setIconError(true);
       console.error(e);
     }

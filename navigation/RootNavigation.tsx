@@ -27,6 +27,7 @@ import { useAuth } from "../mongodb/auth";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "../redux/actions";
 import { subtleBorder } from "../styling/colors";
 import { useDynamicColor } from "../styling/color-mode-utils";
+import { Platform } from "react-native";
 
 const Tab = createBottomTabNavigator<RootNavigationParamList>();
 
@@ -197,7 +198,7 @@ export default function RootNavigation() {
         }}
       />
       <Tab.Navigator
-        backBehavior="history"
+        backBehavior={Platform.OS === "web" ? "history" : undefined}
         screenOptions={({ route }) => ({
           title: route.name.replace(/Tab/gi, ""),
           headerShown: false,

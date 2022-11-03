@@ -39,6 +39,7 @@ type AuthContext = {
   setGlobalAlerts: Dispatch<SetStateAction<Set<MutableRefObject<any>>>>;
   fetchUserDoc: () => Promise<void>;
   updateUsername: (username: string) => Promise<void>;
+  continueWithApple: (idToken: string, username: string) => Promise<void>;
   continueWithGoogle: (idToken: string, username: string) => Promise<void>;
   signInAnonymously: (override?: boolean) => Promise<void>;
   signInWithEmailPassword: (email: string, password: string) => Promise<void>;
@@ -269,13 +270,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     [user, settings, syncCleanup, signOut]
   );
 
-  const continueWithGoogle = useCallback(
-    async (idToken: string, username: string) => {
+  const signInWithOAuth = useCallback(
+    async (idToken: string, username: string, provider: "Apple" | "Google") => {
       if (user) await signOut();
       syncCleanup();
 
-      // use Google ID token to sign into Realm
-      const credential = Realm.Credentials.google(idToken);
+      const credential =
+        provider === "Apple"
+          ? Realm.Credentials.apple(idToken)
+          : Realm.Credentials.google(idToken);
       const newUser = await realmApp.logIn(credential);
       const newDB = new Database(newUser);
       const upserted = await newDB.createUserDoc(username, settings);
@@ -295,6 +298,18 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     [user, settings, loadUserDoc, syncCleanup, signOut]
   );
 
+  const continueWithApple = useCallback(
+    async (idToken: string, username: string) =>
+      await signInWithOAuth(idToken, username, "Apple"),
+    [signInWithOAuth]
+  );
+
+  const continueWithGoogle = useCallback(
+    async (idToken: string, username: string) =>
+      await signInWithOAuth(idToken, username, "Google"),
+    [signInWithOAuth]
+  );
+
   return (
     <Context.Provider
       value={{
@@ -308,6 +323,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         setGlobalAlerts,
         fetchUserDoc,
         updateUsername,
+        continueWithApple,
         continueWithGoogle,
         signInAnonymously,
         signInWithEmailPassword,

@@ -27,14 +27,14 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 - Upvote or downvote reviews from other users
 - Order reviews by review time, semester taken, or helpfulness
 
-### Miscellaneous
+### Few More Things…
 
 - Generate links to share schools, departments, or classes with others
 - System dark mode support
 - Auto-reload when reconnects online
 - Sign in with Google
-- Alternate icon on iOS
 - Deep linking with custom URL scheme on iOS and macOS
+- Alternate icon on iOS
 - Fullscreen web app on iOS
 - Multiple-tab support on web
 - `mask-icon` on Safari for Mac

@@ -1,6 +1,6 @@
 <h1><picture>
-  <source valign="middle" height="55px" srcset="./icons/violet.png" media="(prefers-color-scheme: dark)">
-  <img valign="middle" height="55px" src="./icons/default.png">
+  <source valign="middle" height="55px" srcset="https://github.com/zhumingcheng697/Rate-My-Classes-Pro/raw/main/icons/violet.png" media="(prefers-color-scheme: dark)">
+  <img valign="middle" height="55px" src="https://github.com/zhumingcheng697/Rate-My-Classes-Pro/raw/main/icons/default.png">
 </picture>&nbsp;Rate My Classes Pro</h1>
 
 Streamline your NYU course selection process with Rate My Classes!

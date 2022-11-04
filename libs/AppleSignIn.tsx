@@ -52,6 +52,7 @@ export function AppleSignInButton({
 
             await auth.continueWithApple(res.identityToken, username);
           } else {
+            console.error(state);
             setError(new Error("Unable to authorize"));
           }
         } catch (error: any) {

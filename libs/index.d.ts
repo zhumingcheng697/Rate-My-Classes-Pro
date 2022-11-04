@@ -1,3 +1,38 @@
+declare module "react-apple-signin-auth" {
+  export namespace appleAuthHelpers {
+    type AppleSignInResponse = {
+      authorization?: {
+        state?: string;
+        code?: string;
+        id_token?: string;
+      };
+      user?: {
+        email?: string;
+        name?: {
+          firstName?: string;
+          lastName?: string;
+        };
+      };
+    };
+
+    const APPLE_SCRIPT_SRC: string;
+    const signIn: (config: {
+      authOptions: {
+        clientId: string;
+        scope: "name" | "email" | "name email" | "";
+        redirectURI: string;
+        state?: string;
+        nonce?: string;
+        usePopup: boolean;
+      };
+      onSuccess?: (response?: AppleSignInResponse) => void;
+      onError: (error?: { error?: string }) => void;
+    }) => Promise<AppleSignInResponse>;
+  }
+
+  export const useScript: (src: string) => void;
+}
+
 declare module "react-native-change-icon" {
   export const getIcon: () => Promise<"default" | "VioletIcon">;
   export const changeIcon: (iconName: "VioletIcon" | null) => Promise<string>;

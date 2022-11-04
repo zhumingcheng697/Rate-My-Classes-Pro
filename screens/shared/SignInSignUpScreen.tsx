@@ -123,7 +123,7 @@ export default function SignInSignUpScreen() {
               />
             </LabeledInput>
           )}
-          <VStack marginY={"15px"} space={"10px"}>
+          <VStack marginY={"15px"} space={"12px"}>
             <SolidButton
               isDisabled={
                 isLoading ||
@@ -156,11 +156,11 @@ export default function SignInSignUpScreen() {
               }}
             >
               <Text variant={"button"}>
-                {isSigningUp ? "Sign Up" : "Sign In"}
+                {isSigningUp ? "Sign Up with Email" : "Sign In with Email"}
               </Text>
             </SolidButton>
             <HStack
-              marginY={"10px"}
+              marginY={"8px"}
               space={"15px"}
               justifyContent={"space-between"}
               alignContent={"center"}

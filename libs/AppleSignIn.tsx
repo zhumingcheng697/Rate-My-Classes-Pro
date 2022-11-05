@@ -47,13 +47,20 @@ export function AppleSignInButton({
           const state = await appleAuth.getCredentialStateForUser(res.user);
 
           if (state === appleAuth.State.AUTHORIZED && res.identityToken) {
-            const username =
-              res.fullName?.givenName || res.fullName?.nickname || "User";
+            const { givenName, middleName, familyName, nickname } =
+              res.fullName || {};
+
+            const nameComponents = givenName
+              ? familyName
+                ? [givenName, middleName, familyName]
+                : [givenName]
+              : [nickname];
+
+            const username = nameComponents.filter(Boolean).join(" ") || "User";
 
             await auth.continueWithApple(res.identityToken, username);
           } else {
-            console.error(state);
-            setError(new Error("Unable to authorize"));
+            throw new Error("Unable to authorize");
           }
         } catch (error: any) {
           if (

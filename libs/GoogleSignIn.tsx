@@ -37,10 +37,21 @@ export function GoogleSignInButton({
 
           await GoogleSignin.hasPlayServices();
 
-          const user = await GoogleSignin.signIn();
-          const username = user.user.name || user.user.givenName || "User";
+          const { user, idToken } = await GoogleSignin.signIn();
 
-          await auth.continueWithGoogle(user.idToken!, username);
+          if (!idToken) throw new Error("Unable to retrieve id token");
+
+          const { name, givenName, familyName } = user;
+
+          const nameComponents = name
+            ? [name]
+            : givenName
+            ? [givenName, familyName]
+            : [];
+
+          const username = nameComponents.filter(Boolean).join(" ") || "User";
+
+          await auth.continueWithGoogle(idToken, username);
         } catch (error: any) {
           console.error(error);
 

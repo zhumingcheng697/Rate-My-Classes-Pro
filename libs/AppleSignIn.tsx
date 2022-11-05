@@ -56,9 +56,14 @@ export function AppleSignInButton({
             setError(new Error("Unable to authorize"));
           }
         } catch (error: any) {
-          console.error(error);
-
-          setError(error);
+          if (
+            `${error?.code}` !== "1001" &&
+            !/com\.apple\.AuthenticationServices\.AuthorizationError error 1001/.test(
+              `${error?.message}` || ""
+            )
+          ) {
+            setError(error);
+          }
         } finally {
           setIsLoading(false);
         }

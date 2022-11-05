@@ -9,12 +9,12 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import linking from "./navigation/linking";
 import RootNavigation from "./navigation/RootNavigation";
+import OAuthProvider from "./containers/OAuthProvider";
 import { AuthProvider } from "./mongodb/auth";
 import reducer from "./redux/reducers";
 import { useColorModeSynchronizer } from "./styling/color-mode-utils";
 import nativeBaseTheme from "./styling/theme";
 import { useAppState } from "./libs/hooks";
-import "./libs/GoogleSignIn";
 
 Ionicons.loadFont();
 
@@ -53,26 +53,28 @@ export default function App() {
   }, [navigationTheme.colors]);
 
   return (
-    <Provider store={store}>
-      <AuthProvider>
-        <NativeBaseProvider
-          theme={nativeBaseTheme}
-          colorModeManager={colorModeManager}
-        >
-          <NavigationContainer
-            linking={linking}
-            theme={navigationTheme}
-            documentTitle={{
-              formatter: (options, route) =>
-                options?.title ?? route?.name
-                  ? `${options?.title ?? route?.name} | Rate My Classes Pro`
-                  : "Rate My Classes Pro",
-            }}
+    <OAuthProvider>
+      <Provider store={store}>
+        <AuthProvider>
+          <NativeBaseProvider
+            theme={nativeBaseTheme}
+            colorModeManager={colorModeManager}
           >
-            <RootNavigation />
-          </NavigationContainer>
-        </NativeBaseProvider>
-      </AuthProvider>
-    </Provider>
+            <NavigationContainer
+              linking={linking}
+              theme={navigationTheme}
+              documentTitle={{
+                formatter: (options, route) =>
+                  options?.title ?? route?.name
+                    ? `${options?.title ?? route?.name} | Rate My Classes Pro`
+                    : "Rate My Classes Pro",
+              }}
+            >
+              <RootNavigation />
+            </NavigationContainer>
+          </NativeBaseProvider>
+        </AuthProvider>
+      </Provider>
+    </OAuthProvider>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { useScript, appleAuthHelpers } from "react-apple-signin-auth";
+import { appleAuthHelpers } from "react-apple-signin-auth";
 import type { IButtonProps } from "native-base";
 import { APPLE_WEB_CLIENT_ID } from "react-native-dotenv";
 
@@ -26,7 +26,6 @@ export function AppleSignInButton({
   isDisabled = false,
   ...rest
 }: AppleSignInButtonProps) {
-  useScript(appleAuthHelpers.APPLE_SCRIPT_SRC);
   const auth = useAuth();
 
   return (

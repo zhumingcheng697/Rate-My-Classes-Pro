@@ -4,18 +4,9 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 import type { IButtonProps } from "native-base";
-import {
-  GOOGLE_WEB_CLIENT_ID,
-  GOOGLE_IOS_CLIENT_ID,
-} from "react-native-dotenv";
 
 import OAuthSignInButton from "../components/OAuthSignInButton";
 import { useAuth } from "../mongodb/auth";
-
-GoogleSignin.configure({
-  webClientId: GOOGLE_WEB_CLIENT_ID,
-  iosClientId: GOOGLE_IOS_CLIENT_ID,
-});
 
 type GoogleSignInButtonBaseProps = {
   isLoading: boolean;

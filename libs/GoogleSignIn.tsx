@@ -53,8 +53,6 @@ export function GoogleSignInButton({
 
           await auth.continueWithGoogle(idToken, username);
         } catch (error: any) {
-          console.error(error);
-
           // handle errors
           if (error.code === statusCodes.SIGN_IN_CANCELLED) {
             return;
@@ -65,6 +63,7 @@ export function GoogleSignInButton({
           } else {
             setError(error);
           }
+          console.error(error);
         } finally {
           setIsLoading(false);
         }

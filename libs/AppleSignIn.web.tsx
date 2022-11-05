@@ -57,9 +57,8 @@ export function AppleSignInButton({
             setError(new Error("Unable to retrieve id token"));
           }
         } catch (error: any) {
-          console.error(error);
-
           if (error?.error !== "popup_closed_by_user") {
+            console.error(error);
             setError(error?.error || error);
           }
         } finally {

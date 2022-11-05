@@ -31,6 +31,7 @@ export default function AccountScreen() {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [signOutError, setSignOutError] = useState<any>(null);
+  const [showSignOutAlert, setShowSignOutAlert] = useState(false);
   const innerHeight = useInnerHeight();
   const auth = useAuth();
 
@@ -79,6 +80,7 @@ export default function AccountScreen() {
                   await auth.signOut();
                 } catch (e) {
                   setSignOutError(e);
+                  setShowSignOutAlert(true);
                   console.error(e);
                 } finally {
                   setIsSigningOut(false);
@@ -91,8 +93,8 @@ export default function AccountScreen() {
         />
       )}
       <AlertPopup
-        isOpen={!showAlert && signOutError}
-        onClose={() => setSignOutError(null)}
+        isOpen={!showAlert && showSignOutAlert}
+        onClose={() => setShowSignOutAlert(false)}
         header={"Unable to Sign Out"}
         body={composeErrorMessage(signOutError)}
       />

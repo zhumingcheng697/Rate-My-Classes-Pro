@@ -1,0 +1,30 @@
+diff --git a/node_modules/@react-oauth/google/dist/index.esm.js b/node_modules/@react-oauth/google/dist/index.esm.js
+index d3c4679..ebc3c56 100644
+--- a/node_modules/@react-oauth/google/dist/index.esm.js
++++ b/node_modules/@react-oauth/google/dist/index.esm.js
+@@ -141,6 +141,10 @@ function useGoogleLogin({ flow = 'implicit', scope = '', onSuccess, onError, ...
+         const client = (_a = window.google) === null || _a === void 0 ? void 0 : _a.accounts.oauth2[clientMethod]({
+             client_id: clientId,
+             scope: `openid profile email ${scope}`,
++            error_callback: (error) => {
++                var _a;
++                (_a = onErrorRef.current) === null || _a === void 0 ? void 0 : _a.call(onErrorRef, error);
++            },
+             callback: (response) => {
+                 var _a, _b;
+                 if (response.error)
+diff --git a/node_modules/@react-oauth/google/dist/index.js b/node_modules/@react-oauth/google/dist/index.js
+index cd4369b..f806de3 100644
+--- a/node_modules/@react-oauth/google/dist/index.js
++++ b/node_modules/@react-oauth/google/dist/index.js
+@@ -149,6 +149,10 @@ function useGoogleLogin({ flow = 'implicit', scope = '', onSuccess, onError, ...
+         const client = (_a = window.google) === null || _a === void 0 ? void 0 : _a.accounts.oauth2[clientMethod]({
+             client_id: clientId,
+             scope: `openid profile email ${scope}`,
++            error_callback: (error) => {
++                var _a;
++                (_a = onErrorRef.current) === null || _a === void 0 ? void 0 : _a.call(onErrorRef, error);
++            },
+             callback: (response) => {
+                 var _a, _b;
+                 if (response.error)

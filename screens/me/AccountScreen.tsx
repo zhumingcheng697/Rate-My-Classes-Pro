@@ -13,7 +13,7 @@ import LeftAlignedButton from "../../components/LeftAlignedButton";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { type MeNavigationParamList } from "../../libs/types";
 import { useInnerHeight } from "../../libs/hooks";
-import { Route } from "../../libs/utils";
+import { composeErrorMessage, Route } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
@@ -30,6 +30,7 @@ export default function AccountScreen() {
   const isFocused = useIsFocused();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [signOutError, setSignOutError] = useState<any>(null);
   const innerHeight = useInnerHeight();
   const auth = useAuth();
 
@@ -77,6 +78,7 @@ export default function AccountScreen() {
                 try {
                   await auth.signOut();
                 } catch (e) {
+                  setSignOutError(e);
                   console.error(e);
                 } finally {
                   setIsSigningOut(false);
@@ -88,6 +90,12 @@ export default function AccountScreen() {
           }
         />
       )}
+      <AlertPopup
+        isOpen={!showAlert && signOutError}
+        onClose={() => setSignOutError(null)}
+        header={"Unable to Sign Out"}
+        body={composeErrorMessage(signOutError)}
+      />
       <KeyboardAwareSafeAreaScrollView>
         <VStack
           marginY={"10px"}

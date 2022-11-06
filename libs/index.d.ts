@@ -1,22 +1,22 @@
 declare module "react-apple-signin-auth" {
-  export namespace appleAuthHelpers {
-    type AppleSignInResponse = {
-      authorization?: {
-        state?: string;
-        code?: string;
-        id_token?: string;
-      };
-      user?: {
-        email?: string;
-        name?: {
-          firstName?: string;
-          lastName?: string;
-        };
+  type AppleSignInResponse = {
+    authorization?: {
+      state?: string;
+      code?: string;
+      id_token?: string;
+    };
+    user?: {
+      email?: string;
+      name?: {
+        firstName?: string;
+        lastName?: string;
       };
     };
+  };
 
-    const APPLE_SCRIPT_SRC: string;
-    const signIn: (config: {
+  export const appleAuthHelpers: {
+    APPLE_SCRIPT_SRC: string;
+    signIn: (config: {
       authOptions: {
         clientId: string;
         scope: "name" | "email" | "name email" | "";
@@ -28,7 +28,7 @@ declare module "react-apple-signin-auth" {
       onSuccess?: (response?: AppleSignInResponse) => void;
       onError: (error?: { error?: string }) => void;
     }) => Promise<AppleSignInResponse>;
-  }
+  };
 
   export const useScript: (src: string) => void;
 }

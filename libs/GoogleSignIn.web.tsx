@@ -1,5 +1,4 @@
-import React, { useCallback } from "react";
-import axios from "axios";
+import React from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import type { IButtonProps } from "native-base";
 import { GOOGLE_OAUTH_ENDPOINT } from "react-native-dotenv";
@@ -30,13 +29,14 @@ export function GoogleSignInButton({
       try {
         if (!code) throw new Error("Unable to retrieve authorization code");
 
-        const { data } = await axios.get<{ id_token?: string }>(
+        const res = await fetch(
           `${GOOGLE_OAUTH_ENDPOINT}?code=${encodeURIComponent(code)}`
         );
+        const json: { id_token?: string } = await res.json();
 
-        if (!data?.id_token) throw new Error("Unable to retrieve id token");
+        if (!json?.id_token) throw new Error("Unable to retrieve id token");
 
-        await auth.continueWithGoogle(data.id_token, null);
+        await auth.continueWithGoogle(json.id_token, null);
       } catch (error: any) {
         console.error(error);
         setError(error);

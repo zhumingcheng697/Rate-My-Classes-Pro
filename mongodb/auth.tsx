@@ -25,7 +25,7 @@ import {
   loadSettings,
   loadStarredClasses,
 } from "../redux/actions";
-import { getFullClassCode } from "../libs/utils";
+import { composeUsername, getFullClassCode } from "../libs/utils";
 import { useAppState } from "../libs/hooks";
 
 type AuthContext = {
@@ -39,8 +39,14 @@ type AuthContext = {
   setGlobalAlerts: Dispatch<SetStateAction<Set<MutableRefObject<any>>>>;
   fetchUserDoc: () => Promise<void>;
   updateUsername: (username: string) => Promise<void>;
-  continueWithApple: (idToken: string, username: string) => Promise<void>;
-  continueWithGoogle: (idToken: string, username: string) => Promise<void>;
+  continueWithApple: (
+    idToken: string,
+    username: string | null
+  ) => Promise<void>;
+  continueWithGoogle: (
+    idToken: string,
+    username: string | null
+  ) => Promise<void>;
   signInAnonymously: (override?: boolean) => Promise<void>;
   signInWithEmailPassword: (email: string, password: string) => Promise<void>;
   signUpWithEmailPassword: (
@@ -271,7 +277,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   const signInWithOAuth = useCallback(
-    async (idToken: string, username: string, provider: "Apple" | "Google") => {
+    async (
+      idToken: string,
+      username: string | null,
+      provider: "Apple" | "Google"
+    ) => {
       if (user) await signOut();
       syncCleanup();
 
@@ -281,6 +291,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           : Realm.Credentials.google(idToken);
       const newUser = await realmApp.logIn(credential);
       const newDB = new Database(newUser);
+
+      username =
+        username ||
+        composeUsername({
+          fullName: newUser.profile.name,
+          givenName: newUser.profile.firstName,
+          familyName: newUser.profile.lastName,
+        }) ||
+        "User";
+
       const upserted = await newDB.createUserDoc(username, settings);
 
       if (upserted) {
@@ -299,13 +319,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   const continueWithApple = useCallback(
-    async (idToken: string, username: string) =>
+    async (idToken: string, username: string | null) =>
       await signInWithOAuth(idToken, username, "Apple"),
     [signInWithOAuth]
   );
 
   const continueWithGoogle = useCallback(
-    async (idToken: string, username: string) =>
+    async (idToken: string, username: string | null) =>
       await signInWithOAuth(idToken, username, "Google"),
     [signInWithOAuth]
   );

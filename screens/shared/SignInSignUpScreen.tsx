@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Keyboard } from "react-native";
-import { Text, Button, Input, VStack, Box, HStack, Divider } from "native-base";
+import { Text, Input, VStack, Box, HStack, Divider } from "native-base";
 import {
   CommonActions,
   useNavigation,
@@ -11,6 +11,10 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { Route, composeErrorMessage } from "../../libs/utils";
 import { type SharedNavigationParamList } from "../../libs/types";
+import {
+  AppleSignInButton,
+  isAppleSignInSupported,
+} from "../../libs/AppleSignIn";
 import { GoogleSignInButton } from "../../libs/GoogleSignIn";
 import { useInitialTabName } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
@@ -46,6 +50,9 @@ export default function SignInSignUpScreen() {
   const [showAlert, setShowAlert] = useState(false);
   const [error, setError] = useState<any>(null);
 
+  const [showAppleAlert, setShowAppleAlert] = useState(false);
+  const [appleError, setAppleError] = useState<any>(null);
+
   const [showGoogleAlert, setShowGoogleAlert] = useState(false);
   const [googleError, setGoogleError] = useState<any>(null);
 
@@ -78,9 +85,15 @@ export default function SignInSignUpScreen() {
         onClose={() => setShowAlert(false)}
       />
       <AlertPopup
+        header={`Unable to ${isSigningUp ? "Sign Up" : "Sign In"} with Apple`}
+        body={composeErrorMessage(appleError)}
+        isOpen={showAppleAlert && !showAlert}
+        onClose={() => setShowAppleAlert(false)}
+      />
+      <AlertPopup
         header={`Unable to ${isSigningUp ? "Sign Up" : "Sign In"} with Google`}
         body={composeErrorMessage(googleError)}
-        isOpen={showGoogleAlert}
+        isOpen={showGoogleAlert && !showAlert && !showAppleAlert}
         onClose={() => setShowGoogleAlert(false)}
       />
       <KeyboardAwareSafeAreaScrollView>
@@ -178,6 +191,16 @@ export default function SignInSignUpScreen() {
               </Text>
               <Divider minW={0} flexShrink={1} />
             </HStack>
+            {isAppleSignInSupported() && (
+              <AppleSignInButton
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+                setError={(error) => {
+                  setAppleError(error);
+                  setShowAppleAlert(true);
+                }}
+              />
+            )}
             <GoogleSignInButton
               isLoading={isLoading}
               setIsLoading={setIsLoading}

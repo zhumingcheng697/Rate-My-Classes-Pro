@@ -115,6 +115,30 @@ export function composeErrorMessage(
   return fallback;
 }
 
+export function composeUsername({
+  fullName,
+  givenName,
+  middleName,
+  familyName,
+  nickname,
+}: {
+  fullName?: string | null;
+  givenName?: string | null;
+  middleName?: string | null;
+  familyName?: string | null;
+  nickname?: string | null;
+}) {
+  if (fullName) return fullName;
+
+  const nameComponents = givenName
+    ? familyName
+      ? [givenName, middleName, familyName]
+      : [givenName]
+    : [nickname];
+
+  return nameComponents.filter(Boolean).join(" ") || "User";
+}
+
 export function isObjectEmpty(obj: object) {
   return Object.keys(obj).length === 0;
 }

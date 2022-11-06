@@ -186,10 +186,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       if (!isAuthenticated) return;
 
       const oldUsername = username;
-      setUsername(username);
 
       try {
         await guardDB(user).updateUsername(newUsername);
+        setUsername(newUsername);
       } catch (e) {
         setUsername(oldUsername);
         console.error(e);

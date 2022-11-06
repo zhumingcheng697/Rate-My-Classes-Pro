@@ -30,9 +30,8 @@ export function GoogleSignInButton({
       try {
         if (!code) throw new Error("Unable to retrieve authorization code");
 
-        const { data } = await axios.post<{ id_token?: string }>(
-          GOOGLE_OAUTH_ENDPOINT,
-          { code }
+        const { data } = await axios.get<{ id_token?: string }>(
+          `${GOOGLE_OAUTH_ENDPOINT}?code=${encodeURIComponent(code)}`
         );
 
         if (!data?.id_token) throw new Error("Unable to retrieve id token");

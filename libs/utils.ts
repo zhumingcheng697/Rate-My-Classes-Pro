@@ -136,7 +136,7 @@ export function composeUsername({
       : [givenName]
     : [nickname];
 
-  return nameComponents.filter(Boolean).join(" ") || "User";
+  return nameComponents.filter(Boolean).join(" ") || null;
 }
 
 export function isObjectEmpty(obj: object) {

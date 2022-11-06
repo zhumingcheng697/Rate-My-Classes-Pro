@@ -6,23 +6,11 @@ import { GOOGLE_OAUTH_ENDPOINT } from "react-native-dotenv";
 
 import OAuthSignInButton from "../components/OAuthSignInButton";
 import { useAuth } from "../mongodb/auth";
-import { composeUsername } from "./utils";
 
 type GoogleSignInButtonBaseProps = {
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
   setError: (error: any) => void;
-};
-
-type GoogleOAuthResponse = {
-  access_token?: string;
-  id_token?: string;
-};
-
-type GoogleUserInfo = {
-  given_name?: string;
-  family_name?: string;
-  name?: string;
 };
 
 export type GoogleSignInButtonProps = GoogleSignInButtonBaseProps &
@@ -37,41 +25,19 @@ export function GoogleSignInButton({
 }: GoogleSignInButtonProps) {
   const auth = useAuth();
 
-  const getUserInfo = useCallback(async (accessToken: string) => {
-    try {
-      const { data } = await axios.get<GoogleUserInfo>(
-        "https://www.googleapis.com/oauth2/v3/userinfo",
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
-
   const login = useGoogleLogin({
     onSuccess: async ({ code }) => {
       try {
         if (!code) throw new Error("Unable to retrieve authorization code");
 
-        const { data } = await axios.post<GoogleOAuthResponse>(
+        const { data } = await axios.post<{ id_token?: string }>(
           GOOGLE_OAUTH_ENDPOINT,
           { code }
         );
 
-        const { access_token, id_token } = data;
+        if (!data?.id_token) throw new Error("Unable to retrieve id token");
 
-        if (!id_token) throw new Error("Unable to retrieve id token");
-
-        const userInfo = access_token ? await getUserInfo(access_token) : null;
-
-        const username = composeUsername({
-          fullName: userInfo?.name,
-          givenName: userInfo?.given_name,
-          familyName: userInfo?.family_name,
-        });
-
-        await auth.continueWithGoogle(id_token, username);
+        await auth.continueWithGoogle(data.id_token, null);
       } catch (error: any) {
         console.error(error);
         setError(error);

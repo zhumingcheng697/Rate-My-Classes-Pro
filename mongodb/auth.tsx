@@ -277,7 +277,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
       const credential =
         provider === "Apple"
-          ? Realm.Credentials.apple(idToken)
+          ? Realm.Credentials.jwt(idToken)
           : Realm.Credentials.google(idToken);
       const newUser = await realmApp.logIn(credential);
       const newDB = new Database(newUser);

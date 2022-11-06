@@ -6,6 +6,7 @@ import { GOOGLE_OAUTH_ENDPOINT } from "react-native-dotenv";
 
 import OAuthSignInButton from "../components/OAuthSignInButton";
 import { useAuth } from "../mongodb/auth";
+import { composeUsername } from "./utils";
 
 type GoogleSignInButtonBaseProps = {
   isLoading: boolean;
@@ -20,6 +21,7 @@ type GoogleOAuthResponse = {
 
 type GoogleUserInfo = {
   given_name?: string;
+  family_name?: string;
   name?: string;
 };
 
@@ -61,10 +63,13 @@ export function GoogleSignInButton({
 
         if (!id_token) throw new Error("Unable to retrieve id token");
 
-        const userInfo = access_token && (await getUserInfo(access_token));
+        const userInfo = access_token ? await getUserInfo(access_token) : null;
 
-        const username =
-          (userInfo && (userInfo?.name || userInfo?.given_name)) || "User";
+        const username = composeUsername({
+          fullName: userInfo?.name,
+          givenName: userInfo?.given_name,
+          familyName: userInfo?.family_name,
+        });
 
         await auth.continueWithGoogle(id_token, username);
       } catch (error: any) {

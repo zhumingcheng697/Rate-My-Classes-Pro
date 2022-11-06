@@ -7,6 +7,7 @@ import type { IButtonProps } from "native-base";
 
 import OAuthSignInButton from "../components/OAuthSignInButton";
 import { useAuth } from "../mongodb/auth";
+import { composeUsername } from "./utils";
 
 type GoogleSignInButtonBaseProps = {
   isLoading: boolean;
@@ -41,15 +42,11 @@ export function GoogleSignInButton({
 
           if (!idToken) throw new Error("Unable to retrieve id token");
 
-          const { name, givenName, familyName } = user;
-
-          const nameComponents = name
-            ? [name]
-            : givenName
-            ? [givenName, familyName]
-            : [];
-
-          const username = nameComponents.filter(Boolean).join(" ") || "User";
+          const username = composeUsername({
+            fullName: user.name,
+            givenName: user.givenName,
+            familyName: user.familyName,
+          });
 
           await auth.continueWithGoogle(idToken, username);
         } catch (error: any) {

@@ -5,6 +5,7 @@ import type { IButtonProps } from "native-base";
 
 import OAuthSignInButton from "../components/OAuthSignInButton";
 import { useAuth } from "../mongodb/auth";
+import { composeUsername } from "./utils";
 
 export function isAppleSignInSupported() {
   return !(
@@ -39,26 +40,23 @@ export function AppleSignInButton({
         try {
           setIsLoading(true);
 
-          const res = await appleAuth.performRequest({
-            requestedOperation: appleAuth.Operation.LOGIN,
-            requestedScopes: [appleAuth.Scope.FULL_NAME],
-          });
+          const { user, fullName, identityToken } =
+            await appleAuth.performRequest({
+              requestedOperation: appleAuth.Operation.LOGIN,
+              requestedScopes: [appleAuth.Scope.FULL_NAME],
+            });
 
-          const state = await appleAuth.getCredentialStateForUser(res.user);
+          const state = await appleAuth.getCredentialStateForUser(user);
 
-          if (state === appleAuth.State.AUTHORIZED && res.identityToken) {
-            const { givenName, middleName, familyName, nickname } =
-              res.fullName || {};
+          if (state === appleAuth.State.AUTHORIZED && identityToken) {
+            const username = composeUsername({
+              givenName: fullName?.givenName,
+              middleName: fullName?.middleName,
+              familyName: fullName?.familyName,
+              nickname: fullName?.nickname,
+            });
 
-            const nameComponents = givenName
-              ? familyName
-                ? [givenName, middleName, familyName]
-                : [givenName]
-              : [nickname];
-
-            const username = nameComponents.filter(Boolean).join(" ") || "User";
-
-            await auth.continueWithApple(res.identityToken, username);
+            await auth.continueWithApple(identityToken, username);
           } else {
             throw new Error("Unable to authorize");
           }

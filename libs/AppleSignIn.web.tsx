@@ -1,10 +1,14 @@
 import React from "react";
 import { appleAuthHelpers } from "react-apple-signin-auth";
 import type { IButtonProps } from "native-base";
-import { APPLE_WEB_CLIENT_ID } from "react-native-dotenv";
+import {
+  APPLE_SIGN_IN_SERVICE_ID,
+  WEB_DEPLOYMENT_URL,
+} from "react-native-dotenv";
 
 import OAuthSignInButton from "../components/OAuthSignInButton";
 import { useAuth } from "../mongodb/auth";
+import { composeUsername } from "./utils";
 
 export function isAppleSignInSupported() {
   return true;
@@ -37,11 +41,11 @@ export function AppleSignInButton({
         try {
           setIsLoading(true);
 
-          const res = await appleAuthHelpers.signIn({
+          const { user, authorization } = await appleAuthHelpers.signIn({
             authOptions: {
-              clientId: APPLE_WEB_CLIENT_ID,
+              clientId: APPLE_SIGN_IN_SERVICE_ID,
               scope: "name",
-              redirectURI: window.location.href,
+              redirectURI: WEB_DEPLOYMENT_URL,
               usePopup: true,
             },
             onError: (error) => {
@@ -49,10 +53,13 @@ export function AppleSignInButton({
             },
           });
 
-          if (res?.authorization?.id_token) {
-            const username = res?.user?.name?.firstName || "User";
+          if (authorization?.id_token) {
+            const username = composeUsername({
+              givenName: user?.name?.firstName,
+              familyName: user?.name?.lastName,
+            });
 
-            await auth.continueWithApple(res.authorization.id_token, username);
+            await auth.continueWithApple(authorization.id_token, username);
           } else {
             setError(new Error("Unable to retrieve id token"));
           }

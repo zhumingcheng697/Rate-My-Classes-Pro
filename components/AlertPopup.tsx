@@ -30,7 +30,7 @@ export default function AlertPopup({
   header = "Unable to Load Class Information",
   body = "Please check your network connection or try again later.",
   global = false,
-  autoDismiss = true,
+  autoDismiss = false,
   isOpen,
   footer,
   footerPrimaryButton,

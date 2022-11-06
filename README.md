@@ -32,6 +32,7 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 - Generate links to share schools, departments, or classes with others
 - System dark mode support
 - Auto-reload when reconnects online
+- Sign in with Apple
 - Sign in with Google
 - Deep linking with custom URL scheme on iOS and macOS
 - Alternate icon on iOS

@@ -1,11 +1,9 @@
 import React, { useMemo, useCallback } from "react";
 import { Text, Box } from "native-base";
-import { useNavigation } from "@react-navigation/native";
-import { type StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
 
 import Semester from "../../libs/semester";
-import type { ExploreNavigationParamList, SchoolInfo } from "../../libs/types";
+import type { SchoolInfo } from "../../libs/types";
 import {
   isSchoolGrad,
   isObjectEmpty,
@@ -16,11 +14,6 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import Grid, { type GridRenderItemInfo } from "../../containers/Grid";
 import TieredTextButton from "../../components/TieredTextButton";
 import { useAuth } from "../../mongodb/auth";
-
-type UniversityScreenNavigationProp = StackNavigationProp<
-  ExploreNavigationParamList,
-  "University"
->;
 
 export default function UniversityScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);

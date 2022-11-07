@@ -46,7 +46,7 @@ export default function Grid({
   childrenCount,
   ...rest
 }: GridProps) {
-  const insets = useSafeAreaInsets();
+  const { left, right } = useSafeAreaInsets();
   const { width } = useDimensions();
   const heightProps = useMemo(
     () => ({
@@ -64,7 +64,7 @@ export default function Grid({
     const acutalMargin = Math.max(spacing, 2);
     const actualChildWidth = Math.max(minChildWidth, 60);
 
-    const realWindowWidth = width - insets.left - insets.right;
+    const realWindowWidth = width - left - right;
     const roundedWindowWidth = Math.floor(realWindowWidth / 4) * 4;
     const ratio =
       (roundedWindowWidth - acutalMargin * 2) /
@@ -85,7 +85,7 @@ export default function Grid({
     };
 
     return { columns, containerMarginX, renderItemInfo };
-  }, [spacing, minChildWidth, width, insets, heightProps]);
+  }, [spacing, minChildWidth, width, left, right, heightProps]);
 
   const skeletonChildren = useCallback(
     (info: GridRenderItemInfo) =>

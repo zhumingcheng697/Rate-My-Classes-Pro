@@ -248,9 +248,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       const newDB = new Database(newUser);
       setIsSettingsSettled(false);
       setIsUserDocLoaded(false);
-      await loadUserDoc(newUser, newDB);
       setUser(newUser);
       setDB(newDB);
+      await loadUserDoc(newUser, newDB);
       restartSync(newUser, false);
     },
     [user, loadUserDoc, syncCleanup, signOut]
@@ -268,9 +268,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       const credentials = Realm.Credentials.emailPassword(email, password);
       const newUser = await realmApp.logIn(credentials);
       const newDB = new Database(newUser);
-      await newDB.guardUserDoc(username, settings);
       setUser(newUser);
       setDB(newDB);
+      setIsSettingsSettled(true);
+      setIsUserDocLoaded(true);
+      await newDB.guardUserDoc(username, settings);
       restartSync(newUser, false);
     },
     [user, settings, syncCleanup, signOut]
@@ -292,6 +294,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       const newUser = await realmApp.logIn(credential);
       const newDB = new Database(newUser);
 
+      setIsSettingsSettled(false);
+      setIsUserDocLoaded(false);
+      setUser(newUser);
+      setDB(newDB);
+
       username =
         username ||
         composeUsername({
@@ -306,13 +313,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       if (existingUserDoc) {
         updateUserDoc(existingUserDoc);
       } else {
-        setIsUserDocLoaded(true);
-        setIsSettingsSettled(true);
         setUsername(username);
+        setIsSettingsSettled(true);
+        setIsUserDocLoaded(true);
       }
 
-      setUser(newUser);
-      setDB(newDB);
       restartSync(newUser, false);
     },
     [user, settings, loadUserDoc, syncCleanup, signOut]

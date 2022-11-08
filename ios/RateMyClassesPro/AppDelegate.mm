@@ -41,31 +41,35 @@
   [builder removeMenuForIdentifier:UIMenuToolbar];
 }
 
+- (BOOL)setTimeout:(nonnull BOOL (^)(void))callback secondsAfterLaunch:(NSTimeInterval)delay {
+  NSTimeInterval diff = [[NSDate date] timeIntervalSinceDate:self.launchTime];
+  
+  if (diff < delay) {
+    dispatch_time_t dispatchTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)((delay - diff) * NSEC_PER_SEC));
+    dispatch_after(dispatchTime, dispatch_get_main_queue(), ^(void){ callback(); });
+    return NO;
+  }
+  
+  return callback();
+}
+
 - (BOOL)application:(UIApplication *)application
    openURL:(NSURL *)url
    options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-  return [RCTLinkingManager application:application openURL:url options:options];
+  return [self setTimeout:^(void){ return [RCTLinkingManager application:application  
+                                                                 openURL:url  
+                                                                 options:options]; } 
+       secondsAfterLaunch:1.5];
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
  restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
-  NSTimeInterval diff = [[NSDate date] timeIntervalSinceDate:self.launchTime];
-  
-  if (diff < 1.5) {
-    dispatch_time_t dispatchTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)((1.5 - diff) * NSEC_PER_SEC));
-    dispatch_after(dispatchTime, dispatch_get_main_queue(), ^(void){
-      [RCTLinkingManager application:application
-                continueUserActivity:userActivity
-                  restorationHandler:^(NSArray<id<UIUserActivityRestoring>> *){}];
-    });
-    return NO;
-  }
-  
-  return [RCTLinkingManager application:application
-                   continueUserActivity:userActivity
-                     restorationHandler:restorationHandler];
+  return [self setTimeout:^(void){ return [RCTLinkingManager application:application  
+                                                    continueUserActivity:userActivity  
+                                                      restorationHandler:restorationHandler]; } 
+       secondsAfterLaunch:1.5];
 }
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)launchOptions {

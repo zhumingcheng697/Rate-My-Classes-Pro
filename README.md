@@ -34,6 +34,7 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 - Auto-reload when reconnects online
 - Sign in with Apple
 - Sign in with Google
+- Universal link on iOS, macOS, and web
 - Deep linking with custom URL scheme on iOS and macOS
 - Alternate icon on iOS
 - Fullscreen web app on iOS

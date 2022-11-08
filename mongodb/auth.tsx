@@ -120,7 +120,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       isInternetReachable &&
       isAuthenticated
     ) {
-      restartSync(isUserDocLoaded);
+      restartSync(user, isUserDocLoaded);
     }
   }, [appState, isInternetReachable]);
 
@@ -157,23 +157,23 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   const restartSync = useCallback(
-    async (reload: boolean) => {
+    async (user: Realm.User, reload: boolean) => {
       syncCleanup();
-      if (user && isAuthenticated) {
-        if (reload) {
-          try {
-            await loadUserDoc(user, guardDB(user));
-          } catch (e) {
-            console.error(e);
-          }
-        }
+      if (user.providerType === "anon-user") return;
 
-        setTimeout(() => {
-          syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
-        }, 1000);
+      if (reload) {
+        try {
+          await loadUserDoc(user, guardDB(user));
+        } catch (e) {
+          console.error(e);
+        }
       }
+
+      setTimeout(() => {
+        syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
+      }, 1000);
     },
-    [user, isAuthenticated, syncCleanup, updateUserDoc, guardDB, loadUserDoc]
+    [syncCleanup, updateUserDoc, guardDB, loadUserDoc]
   );
 
   const fetchUserDoc = useCallback(async () => {
@@ -251,7 +251,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       await loadUserDoc(newUser, newDB);
       setUser(newUser);
       setDB(newDB);
-      restartSync(false);
+      restartSync(newUser, false);
     },
     [user, loadUserDoc, syncCleanup, signOut]
   );
@@ -271,7 +271,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       await newDB.createUserDoc(username, settings);
       setUser(newUser);
       setDB(newDB);
-      restartSync(false);
+      restartSync(newUser, false);
     },
     [user, settings, syncCleanup, signOut]
   );
@@ -313,7 +313,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
       setUser(newUser);
       setDB(newDB);
-      restartSync(false);
+      restartSync(newUser, false);
     },
     [user, settings, loadUserDoc, syncCleanup, signOut]
   );

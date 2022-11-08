@@ -66,6 +66,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isSettingsSettled, setIsSettingsSettled] = useState(false);
   const [isUserDocLoaded, setIsUserDocLoaded] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
+  const [userDocError, setUserDocError] = useState<any>(null);
   const syncCleanupRef = useRef<(() => void) | null>(null);
   const settings = useSelector((state) => state.settings);
   const appState = useAppState();
@@ -125,7 +126,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [appState, isInternetReachable]);
 
   const loadUserDoc = useCallback(
-    async (user: Realm.User, db: Database) => {
+    async (user: Realm.User, db: Database, throws: boolean = false) => {
       console.log(user.isLoggedIn, user.state, user.identities);
       if (user.providerType === "anon-user") return;
 
@@ -135,10 +136,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
         setIsUserDocLoaded(true);
         setIsSettingsSettled(true);
+        setUserDocError(null);
       } catch (e) {
         setIsSettingsSettled(true);
         console.error(e);
-        throw e;
+        if (throws) {
+          throw e;
+        } else {
+          setUserDocError(e);
+        }
       }
     },
     [updateUserDoc]
@@ -147,9 +153,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const guardDB = useCallback(
     (user: Realm.User) => {
       let currDB = db;
-      if (!currDB) {
-        currDB = new Database(user);
-      }
+      if (!currDB) currDB = new Database(user);
       setDB(currDB);
       return currDB;
     },
@@ -161,13 +165,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       syncCleanup();
       if (user.providerType === "anon-user") return;
 
-      if (reload) {
-        try {
-          await loadUserDoc(user, guardDB(user));
-        } catch (e) {
-          console.error(e);
-        }
-      }
+      if (reload) await loadUserDoc(user, guardDB(user));
 
       setTimeout(() => {
         syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
@@ -178,9 +176,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const fetchUserDoc = useCallback(async () => {
     if (user && isAuthenticated) {
-      if (!isUserDocLoaded) {
-        await loadUserDoc(user, guardDB(user));
-      }
+      if (!isUserDocLoaded) await loadUserDoc(user, guardDB(user), true);
     } else {
       setIsUserDocLoaded(true);
       setIsSettingsSettled(true);
@@ -209,7 +205,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // logged in user
   const signOut = useCallback(async () => {
     if (user === null) {
-      console.warn("Not logged in, can't log out!");
+      console.error("Not logged in, can't log out!");
       return;
     }
 

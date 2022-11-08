@@ -62,7 +62,9 @@ export default function RootNavigation() {
   );
   const dispatch = useDispatch();
   const auth = useAuth();
-  const hasError = schoolError || departmentError || accountError;
+  const userDocError = auth.userDocError;
+  const hasError =
+    schoolError || departmentError || accountError || userDocError;
 
   const getSchoolAndDepartmentNames = useCallback(
     (
@@ -161,17 +163,27 @@ export default function RootNavigation() {
   );
 
   useEffect(() => {
-    if (!schoolError && !departmentError && !accountError && showAlert) {
+    if (
+      !schoolError &&
+      !departmentError &&
+      !accountError &&
+      !userDocError &&
+      showAlert
+    ) {
       setShowAlert(false);
     }
-  }, [schoolError, departmentError, accountError, showAlert]);
+  }, [schoolError, departmentError, accountError, userDocError, showAlert]);
 
   return (
     <RootNavigationComponent fetchInfo={fetchInfo}>
       <AlertPopup
         global
         header={"Unable to Load Class or Account Information"}
-        isOpen={showAlert && accountError && !!(schoolError || departmentError)}
+        isOpen={
+          showAlert &&
+          (accountError || userDocError) &&
+          (schoolError || departmentError)
+        }
         onClose={() => {
           setShowAlert(false);
           fetchInfo(true);
@@ -180,7 +192,10 @@ export default function RootNavigation() {
       <AlertPopup
         global
         isOpen={
-          showAlert && !accountError && !!(schoolError || departmentError)
+          showAlert &&
+          !accountError &&
+          !userDocError &&
+          !!(schoolError || departmentError)
         }
         onClose={() => {
           setShowAlert(false);
@@ -190,8 +205,13 @@ export default function RootNavigation() {
       <AlertPopup
         global
         header={"Unable to Load Account Information"}
-        isOpen={showAlert && accountError && !schoolError && !departmentError}
-        body={composeErrorMessage(accountError)}
+        isOpen={
+          showAlert &&
+          (accountError || userDocError) &&
+          !schoolError &&
+          !departmentError
+        }
+        body={composeErrorMessage(accountError || userDocError)}
         onClose={() => {
           setShowAlert(false);
           fetchInfo(true);

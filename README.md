@@ -41,11 +41,7 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 - Multiple-tab support on web
 - `mask-icon` on Safari for Mac
 
-## Privacy
-
-Rate My Classes stores the user’s random user id, username, stars, reviews, and settings in the database. If the user is signed up by email, their email address will also be collected for authentication purposes only. No additional data is collected by Rate My Classes.
-
-## Supported Platforms
+## Platforms
 
 - iOS
 - macOS
@@ -63,3 +59,11 @@ Rate My Classes stores the user’s random user id, username, stars, reviews, an
 - [React Native Web](https://necolas.github.io/react-native-web/)
 - [Mac Catalyst](https://developer.apple.com/mac-catalyst/)
 - [Netlify](https://www.netlify.com)
+
+## Privacy
+
+Rate My Classes stores the user’s random user id, username, stars, reviews, and settings in the database. If the user is signed up by email, their email address will also be collected for authentication purposes only. No additional data is collected by Rate My Classes.
+
+## Support
+
+If there’s any issue with the app that you are having, or if you have any feature requests, please create an issue on [GitHub](https://github.com/zhumingcheng697/Rate-My-Classes-Pro/issues) or reach me through [email](mailto:zhumingcheng697@icloud.com).

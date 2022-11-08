@@ -1,0 +1,24 @@
+{
+  "activitycontinuation": {
+    "apps": [
+      "MGM7CAKZL4.com.mingcheng-mccoy-zhu.RateMyClassesPro"
+    ]
+  },
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "MGM7CAKZL4.com.mingcheng-mccoy-zhu.RateMyClassesPro"
+        ],
+        "paths": [
+          "*"
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "MGM7CAKZL4.com.mingcheng-mccoy-zhu.RateMyClassesPro"
+    ]
+  }
+}

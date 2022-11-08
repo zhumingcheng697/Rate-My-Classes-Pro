@@ -8,7 +8,12 @@
 	</array>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>https://rate-my-classes-pro.netlify.app</string>
+		<string>applinks:ratemyclasses.netlify.app</string>
+		<string>applinks:rate-my-classes-pro.netlify.app</string>
+		<string>webcredentials:ratemyclasses.netlify.app</string>
+		<string>webcredentials:rate-my-classes-pro.netlify.app</string>
+		<string>activitycontinuation:ratemyclasses.netlify.app</string>
+		<string>activitycontinuation:rate-my-classes-pro.netlify.app</string>
 	</array>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>

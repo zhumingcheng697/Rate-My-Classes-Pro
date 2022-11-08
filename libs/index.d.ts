@@ -25,9 +25,9 @@ declare module "react-apple-signin-auth" {
         nonce?: string;
         usePopup: boolean;
       };
-      onSuccess?: (response?: AppleSignInResponse) => void;
+      onSuccess?: (response?: AppleSignInResponse | null) => void;
       onError: (error?: { error?: string }) => void;
-    }) => Promise<AppleSignInResponse>;
+    }) => Promise<AppleSignInResponse | null>;
   };
 
   export const useScript: (src: string) => void;

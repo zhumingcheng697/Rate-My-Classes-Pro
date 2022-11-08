@@ -268,7 +268,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       const credentials = Realm.Credentials.emailPassword(email, password);
       const newUser = await realmApp.logIn(credentials);
       const newDB = new Database(newUser);
-      await newDB.createUserDoc(username, settings);
+      await newDB.guardUserDoc(username, settings);
       setUser(newUser);
       setDB(newDB);
       restartSync(newUser, false);
@@ -301,14 +301,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         }) ||
         "User";
 
-      const upserted = await newDB.createUserDoc(username, settings);
+      const existingUserDoc = await newDB.guardUserDoc(username, settings);
 
-      if (upserted) {
-        setUsername(username);
+      if (existingUserDoc) {
+        updateUserDoc(existingUserDoc);
       } else {
-        setIsSettingsSettled(false);
-        setIsUserDocLoaded(false);
-        await loadUserDoc(newUser, newDB);
+        setIsUserDocLoaded(true);
+        setIsSettingsSettled(true);
+        setUsername(username);
       }
 
       setUser(newUser);

@@ -36,12 +36,12 @@ export default class Database {
   private readonly isAuthenticated: boolean;
   private readonly db: Realm.Services.MongoDBDatabase;
 
-  async createUserDoc(username: string, settings: Settings) {
+  async guardUserDoc(username: string, settings: Settings) {
     if (!this.isAuthenticated) return;
 
-    const result = await this.db
+    return await this.db
       .collection<UserDoc>(Collections.users)
-      .updateOne(
+      .findOneAndUpdate(
         { _id: this.user.id },
         {
           $setOnInsert: {
@@ -53,8 +53,6 @@ export default class Database {
         },
         { upsert: true }
       );
-
-    return !!result.upsertedId;
   }
 
   async loadUserDoc() {

@@ -60,9 +60,7 @@ export function AppleSignInButton({
             onError,
           });
 
-          if (hasError) return;
-
-          if (!res) throw new Error();
+          if (hasError || !res) return;
 
           const { user, authorization } = res;
 

@@ -16,7 +16,7 @@ import {
   isAppleSignInSupported,
 } from "../../libs/AppleSignIn";
 import { GoogleSignInButton } from "../../libs/GoogleSignIn";
-import { useInitialTabName } from "../../libs/hooks";
+import { useInitialTabName, useIsCatalyst } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LabeledInput from "../../components/LabeledInput";
 import PlainTextButton from "../../components/PlainTextButton";
@@ -39,6 +39,7 @@ export default function SignInSignUpScreen() {
   const route = useRoute<SignInSignUpScreenRouteProp>();
   const auth = useAuth();
   const tabName = useInitialTabName();
+  const isCatalyst = useIsCatalyst();
 
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState("");
@@ -119,7 +120,7 @@ export default function SignInSignUpScreen() {
           </LabeledInput>
           <LabeledInput label={"Password"} usePlainLabel>
             <Input
-              key={`${key}`}
+              {...(isCatalyst && { key: `${key}` })}
               value={password}
               onChangeText={setPassword}
               textContentType={"oneTimeCode"}

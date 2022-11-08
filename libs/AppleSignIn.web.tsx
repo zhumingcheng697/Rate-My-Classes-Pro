@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { appleAuthHelpers } from "react-apple-signin-auth";
 import type { IButtonProps } from "native-base";
 import {
@@ -31,6 +31,14 @@ export function AppleSignInButton({
   ...rest
 }: AppleSignInButtonProps) {
   const auth = useAuth();
+  const [hasError, setHasError] = useState(false);
+  const onError = useCallback((error) => {
+    if (error?.error !== "popup_closed_by_user") {
+      setHasError(true);
+      console.error(error);
+      setError(error?.error || error);
+    }
+  }, []);
 
   return (
     <OAuthSignInButton
@@ -40,34 +48,35 @@ export function AppleSignInButton({
       onPress={async () => {
         try {
           setIsLoading(true);
+          setHasError(false);
 
-          const { user, authorization } = await appleAuthHelpers.signIn({
+          const res = await appleAuthHelpers.signIn({
             authOptions: {
               clientId: APPLE_SIGN_IN_SERVICE_ID,
               scope: "name",
               redirectURI: WEB_DEPLOYMENT_URL,
               usePopup: true,
             },
-            onError: (error) => {
-              throw error;
-            },
+            onError,
           });
 
-          if (authorization?.id_token) {
-            const username = composeUsername({
-              givenName: user?.name?.firstName,
-              familyName: user?.name?.lastName,
-            });
+          if (hasError) return;
 
-            await auth.continueWithApple(authorization.id_token, username);
-          } else {
-            setError(new Error("Unable to retrieve id token"));
-          }
+          if (!res) throw new Error();
+
+          const { user, authorization } = res;
+
+          if (!authorization?.id_token)
+            throw new Error("Unable to retrieve id token");
+
+          const username = composeUsername({
+            givenName: user?.name?.firstName,
+            familyName: user?.name?.lastName,
+          });
+
+          await auth.continueWithApple(authorization.id_token, username);
         } catch (error: any) {
-          if (error?.error !== "popup_closed_by_user") {
-            console.error(error);
-            setError(error?.error || error);
-          }
+          onError(error);
         } finally {
           setIsLoading(false);
         }

@@ -35,6 +35,7 @@ type AuthContext = {
   isSettingsSettled: boolean;
   isUserDocLoaded: boolean;
   isAuthenticated: boolean;
+  userDocError: any;
   globalAlerts: Set<MutableRefObject<any>>;
   setGlobalAlerts: Dispatch<SetStateAction<Set<MutableRefObject<any>>>>;
   fetchUserDoc: () => Promise<void>;
@@ -340,6 +341,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         isSettingsSettled,
         isUserDocLoaded,
         isAuthenticated,
+        userDocError,
         globalAlerts,
         setGlobalAlerts,
         fetchUserDoc,

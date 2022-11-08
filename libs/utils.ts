@@ -104,7 +104,7 @@ export function composeErrorMessage(
     if (!isObjectEmpty(error) && error.message) {
       return formSentence(error.message);
     }
-    if (!/\[object [a-z0-9_]+\]/i.test(`${error}`)) {
+    if (!/^(?:\[object [a-z0-9_]+\]|Error)$/i.test(`${error}`)) {
       return formSentence(`${error}`);
     }
     const stringified = JSON.stringify(error);

@@ -120,7 +120,7 @@ export default function SignInSignUpScreen() {
           </LabeledInput>
           <LabeledInput label={"Password"} usePlainLabel>
             <Input
-              {...(isCatalyst && { key: `${key}` })}
+              key={`${key}`}
               value={password}
               onChangeText={setPassword}
               textContentType={"oneTimeCode"}

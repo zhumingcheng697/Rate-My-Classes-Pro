@@ -48,7 +48,6 @@ export default class Database {
             username,
             starred: [],
             reviewed: [],
-            voted: {},
             settings,
           } as Omit<UserDoc, "_id">,
         },
@@ -190,12 +189,6 @@ export default class Database {
     }
 
     await this.updateReviewDoc(classCode, update);
-    await this.updateUserDoc({
-      [vote ? "$set" : "$unset"]: {
-        [`voted.${getFullClassCode(classCode)}.${userId}`]:
-          vote === Vote.upvote,
-      },
-    });
   }
 
   async deleteReview(classCode: ClassCode) {

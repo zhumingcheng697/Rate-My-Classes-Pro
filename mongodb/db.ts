@@ -192,19 +192,31 @@ export default class Database {
   async deleteAccount() {
     if (!this.isAuthenticated) return;
 
-    const latestUserDoc = await this.loadUserDoc();
+    const latestUserDoc = await this.db
+      .collection<UserDoc>(Collections.users)
+      .findOne(
+        { _id: this.user.id },
+        {
+          projection: {
+            _id: 0,
+            "reviewed.schoolCode": 1,
+            "reviewed.departmentCode": 1,
+            "reviewed.classNumber": 1,
+          },
+        }
+      );
 
-    if (latestUserDoc) {
+    if (latestUserDoc?.reviewed.length) {
       await this.db
         .collection<ReviewDoc>(Collections.reviews)
         .updateMany(
           { _id: { $in: latestUserDoc.reviewed.map(getFullClassCode) } },
           { $unset: { [this.user.id]: null } }
         );
-
-      await this.db
-        .collection<UserDoc>(Collections.users)
-        .deleteOne({ _id: this.user.id });
     }
+
+    await this.db
+      .collection<UserDoc>(Collections.users)
+      .deleteOne({ _id: this.user.id });
   }
 }

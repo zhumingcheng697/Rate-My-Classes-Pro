@@ -188,4 +188,23 @@ export default class Database {
       $unset: { [this.user.id]: null },
     });
   }
+
+  async deleteAccount() {
+    if (!this.isAuthenticated) return;
+
+    const latestUserDoc = await this.loadUserDoc();
+
+    if (latestUserDoc) {
+      await this.db
+        .collection<ReviewDoc>(Collections.reviews)
+        .updateMany(
+          { _id: { $in: latestUserDoc.reviewed.map(getFullClassCode) } },
+          { $unset: { [this.user.id]: null } }
+        );
+
+      await this.db
+        .collection<UserDoc>(Collections.users)
+        .deleteOne({ _id: this.user.id });
+    }
+  }
 }

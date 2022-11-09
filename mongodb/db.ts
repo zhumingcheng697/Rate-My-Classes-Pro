@@ -64,7 +64,7 @@ export default class Database {
       .findOne({ _id: this.user.id });
   }
 
-  async updateUserDoc(update: Update<UserDoc>) {
+  private async updateUserDoc(update: Update<UserDoc>) {
     if (!this.isAuthenticated) return;
 
     await this.db
@@ -110,7 +110,7 @@ export default class Database {
       .findOne({ _id: getFullClassCode(classCode) });
   }
 
-  async updateReviewDoc(
+  private async updateReviewDoc(
     classCode: ClassCode,
     update: Update<ReviewDoc>,
     options?: UpdateOptions<ReviewDoc>
@@ -190,12 +190,12 @@ export default class Database {
     }
 
     await this.updateReviewDoc(classCode, update);
-
-    if (vote) {
-      await this.updateUserDoc({
-        $set: { [`voted.${getFullClassCode(classCode)}`]: true },
-      });
-    }
+    await this.updateUserDoc({
+      [vote ? "$set" : "$unset"]: {
+        [`voted.${getFullClassCode(classCode)}.${userId}`]:
+          vote === Vote.upvote,
+      },
+    });
   }
 
   async deleteReview(classCode: ClassCode) {

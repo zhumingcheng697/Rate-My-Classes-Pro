@@ -15,6 +15,7 @@ export type UserDoc = {
   username: string;
   starred: StarredClassInfo[];
   reviewed: ReviewedClassInfo[];
+  voted: Record<string, true>;
   settings: Settings;
 };
 

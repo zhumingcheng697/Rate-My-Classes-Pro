@@ -46,10 +46,10 @@ export default class Database {
         {
           $setOnInsert: {
             username,
-            starredClasses: [],
-            reviewedClasses: [],
+            starred: [],
+            reviewed: [],
             settings,
-          },
+          } as Omit<UserDoc, "_id">,
         },
         { upsert: true }
       );

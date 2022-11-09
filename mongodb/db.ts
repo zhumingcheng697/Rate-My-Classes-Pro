@@ -17,6 +17,11 @@ import { getFullClassCode, extractClassCode } from "../libs/utils";
 
 type MongoDoc = Realm.Services.MongoDB.Document;
 
+type FindOneParams<Doc extends MongoDoc> = Parameters<
+  Realm.Services.MongoDB.MongoDBCollection<Doc>["findOne"]
+>;
+type FindOneOptions<Doc extends MongoDoc> = FindOneParams<Doc>[1];
+
 type UpdateOneParams<Doc extends MongoDoc> = Parameters<
   Realm.Services.MongoDB.MongoDBCollection<Doc>["updateOne"]
 >;
@@ -55,12 +60,12 @@ export default class Database {
       );
   }
 
-  async loadUserDoc() {
+  async loadUserDoc(options?: FindOneOptions<UserDoc>) {
     if (!this.isAuthenticated) return;
 
     return await this.db
       .collection<UserDoc>(Collections.users)
-      .findOne({ _id: this.user.id });
+      .findOne({ _id: this.user.id }, options);
   }
 
   private async updateUserDoc(update: Update<UserDoc>) {
@@ -192,19 +197,14 @@ export default class Database {
   async deleteAccount() {
     if (!this.isAuthenticated) return;
 
-    const latestUserDoc = await this.db
-      .collection<UserDoc>(Collections.users)
-      .findOne(
-        { _id: this.user.id },
-        {
-          projection: {
-            _id: 0,
-            "reviewed.schoolCode": 1,
-            "reviewed.departmentCode": 1,
-            "reviewed.classNumber": 1,
-          },
-        }
-      );
+    const latestUserDoc = await this.loadUserDoc({
+      projection: {
+        _id: 0,
+        "reviewed.schoolCode": 1,
+        "reviewed.departmentCode": 1,
+        "reviewed.classNumber": 1,
+      },
+    });
 
     if (latestUserDoc?.reviewed.length) {
       await this.db

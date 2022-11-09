@@ -127,17 +127,17 @@ export default class Database {
       classCode,
       {
         $set: {
-          [`${[id]}.enjoyment`]: review.enjoyment,
-          [`${[id]}.difficulty`]: review.difficulty,
-          [`${[id]}.workload`]: review.workload,
-          [`${[id]}.value`]: review.value,
-          [`${[id]}.comment`]: review.comment,
-          [`${[id]}.userId`]: review.userId,
-          [`${[id]}.upvotes`]: review.upvotes,
-          [`${[id]}.downvotes`]: review.downvotes,
-          [`${[id]}.reviewedDate`]: review.reviewedDate,
-          [`${[id]}.semester`]: review.semester,
-          [`${[id]}.instructor`]: review.instructor,
+          [`${id}.enjoyment`]: review.enjoyment,
+          [`${id}.difficulty`]: review.difficulty,
+          [`${id}.workload`]: review.workload,
+          [`${id}.value`]: review.value,
+          [`${id}.comment`]: review.comment,
+          [`${id}.userId`]: review.userId,
+          [`${id}.upvotes`]: review.upvotes,
+          [`${id}.downvotes`]: review.downvotes,
+          [`${id}.reviewedDate`]: review.reviewedDate,
+          [`${id}.semester`]: review.semester,
+          [`${id}.instructor`]: review.instructor,
         },
       },
       { upsert: true }
@@ -148,11 +148,11 @@ export default class Database {
     const id = this.user.id;
     await this.updateReviewDoc(classCode, {
       $set: {
-        [`${[id]}.enjoyment`]: review.enjoyment,
-        [`${[id]}.difficulty`]: review.difficulty,
-        [`${[id]}.workload`]: review.workload,
-        [`${[id]}.value`]: review.value,
-        [`${[id]}.comment`]: review.comment,
+        [`${id}.enjoyment`]: review.enjoyment,
+        [`${id}.difficulty`]: review.difficulty,
+        [`${id}.workload`]: review.workload,
+        [`${id}.value`]: review.value,
+        [`${id}.comment`]: review.comment,
       },
     });
   }
@@ -163,27 +163,19 @@ export default class Database {
 
     if (vote === Vote.upvote) {
       update = {
-        $set: {
-          [`${[userId]}.upvotes.${id}`]: true,
-        },
-        $unset: {
-          [`${[userId]}.downvotes.${id}`]: null,
-        },
+        $set: { [`${userId}.upvotes.${id}`]: true },
+        $unset: { [`${userId}.downvotes.${id}`]: null },
       };
     } else if (vote === Vote.downvote) {
       update = {
-        $set: {
-          [`${[userId]}.downvotes.${id}`]: true,
-        },
-        $unset: {
-          [`${[userId]}.upvotes.${id}`]: null,
-        },
+        $set: { [`${userId}.downvotes.${id}`]: true },
+        $unset: { [`${userId}.upvotes.${id}`]: null },
       };
     } else {
       update = {
         $unset: {
-          [`${[userId]}.upvotes.${id}`]: null,
-          [`${[userId]}.downvotes.${id}`]: null,
+          [`${userId}.upvotes.${id}`]: null,
+          [`${userId}.downvotes.${id}`]: null,
         },
       };
     }
@@ -193,9 +185,7 @@ export default class Database {
 
   async deleteReview(classCode: ClassCode) {
     await this.updateReviewDoc(classCode, {
-      $unset: {
-        [`${[this.user.id]}`]: null,
-      },
+      $unset: { [this.user.id]: null },
     });
   }
 }

@@ -34,11 +34,10 @@ export function AppleSignInButton({
 
           const res = await AppleOAuth.signIn(setError);
 
-          if (res) {
-            await auth.continueWithApple(res.idToken, res.username);
-          }
+          if (res) await auth.continueWithApple(res.idToken, res.username);
         } catch (error: any) {
           setError(error);
+          console.error(error);
         } finally {
           setIsLoading(false);
         }

@@ -1,13 +1,9 @@
 import React from "react";
-import {
-  GoogleSignin,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
 import type { IButtonProps } from "native-base";
 
 import OAuthSignInButton from "../components/OAuthSignInButton";
 import { useAuth } from "../mongodb/auth";
-import { composeUsername } from "./utils";
+import { GoogleOAuth } from "./OAuth";
 
 type GoogleSignInButtonBaseProps = {
   isLoading: boolean;
@@ -36,30 +32,11 @@ export function GoogleSignInButton({
         try {
           setIsLoading(true);
 
-          await GoogleSignin.hasPlayServices();
+          const res = await GoogleOAuth.signIn(setError);
 
-          const { user, idToken } = await GoogleSignin.signIn();
-
-          if (!idToken) throw new Error("Unable to retrieve id token");
-
-          const username = composeUsername({
-            fullName: user.name,
-            givenName: user.givenName,
-            familyName: user.familyName,
-          });
-
-          await auth.continueWithGoogle(idToken, username);
+          if (res) await auth.continueWithGoogle(res.idToken, res.username);
         } catch (error: any) {
-          // handle errors
-          if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-            return;
-          } else if (error.code === statusCodes.IN_PROGRESS) {
-            return;
-          } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-            setError("Google Play services not available or outdated");
-          } else {
-            setError(error);
-          }
+          setError(error);
           console.error(error);
         } finally {
           setIsLoading(false);

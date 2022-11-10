@@ -1,7 +1,10 @@
 import React, { type ReactNode } from "react";
 import { Platform } from "react-native";
 import appleAuth from "@invertase/react-native-apple-authentication";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import {
+  GoogleSignin,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
 import {
   GOOGLE_WEB_CLIENT_ID,
   GOOGLE_IOS_CLIENT_ID,
@@ -58,12 +61,44 @@ export namespace AppleOAuth {
         )
       ) {
         onError(error);
+        console.error(error);
       }
     }
   }
 }
 
 export namespace GoogleOAuth {
+  export async function signIn(onError: (error: any) => void) {
+    try {
+      await GoogleSignin.hasPlayServices();
+
+      const { user, idToken } = await GoogleSignin.signIn();
+
+      if (idToken) {
+        const username = composeUsername({
+          fullName: user.name,
+          givenName: user.givenName,
+          familyName: user.familyName,
+        });
+
+        return { idToken, username };
+      } else {
+        onError(new Error("Unable to retrieve id token"));
+      }
+    } catch (error: any) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        return;
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        return;
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        onError("Google Play services not available or outdated");
+      } else {
+        onError(error);
+      }
+      console.error(error);
+    }
+  }
+
   export async function signOut() {
     await GoogleSignin.signOut();
   }

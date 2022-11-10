@@ -1,5 +1,5 @@
 import React from "react";
-import { useGoogleLogin } from "@react-oauth/google";
+import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import type { IButtonProps } from "native-base";
 import { GOOGLE_OAUTH_ENDPOINT } from "react-native-dotenv";
 
@@ -65,4 +65,8 @@ export function GoogleSignInButton({
       }}
     />
   );
+}
+
+export async function googleSignOut() {
+  googleLogout();
 }

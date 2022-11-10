@@ -1,11 +1,10 @@
 import React from "react";
 import { Platform } from "react-native";
-import { appleAuth } from "@invertase/react-native-apple-authentication";
 import type { IButtonProps } from "native-base";
 
 import OAuthSignInButton from "../components/OAuthSignInButton";
 import { useAuth } from "../mongodb/auth";
-import { composeUsername } from "./utils";
+import { AppleOAuth } from "./OAuth";
 
 export function isAppleSignInSupported() {
   return !(
@@ -40,35 +39,13 @@ export function AppleSignInButton({
         try {
           setIsLoading(true);
 
-          const { user, fullName, identityToken } =
-            await appleAuth.performRequest({
-              requestedOperation: appleAuth.Operation.LOGIN,
-              requestedScopes: [appleAuth.Scope.FULL_NAME],
-            });
+          const res = await AppleOAuth.signIn(setError);
 
-          const state = await appleAuth.getCredentialStateForUser(user);
-
-          if (state === appleAuth.State.AUTHORIZED && identityToken) {
-            const username = composeUsername({
-              givenName: fullName?.givenName,
-              middleName: fullName?.middleName,
-              familyName: fullName?.familyName,
-              nickname: fullName?.nickname,
-            });
-
-            await auth.continueWithApple(identityToken, username);
-          } else {
-            throw new Error("Unable to authorize");
+          if (res) {
+            await auth.continueWithApple(res.idToken, res.username);
           }
         } catch (error: any) {
-          if (
-            `${error?.code}` !== "1001" &&
-            !/com\.apple\.AuthenticationServices\.AuthorizationError error 1001/.test(
-              `${error?.message}` || ""
-            )
-          ) {
-            setError(error);
-          }
+          setError(error);
         } finally {
           setIsLoading(false);
         }

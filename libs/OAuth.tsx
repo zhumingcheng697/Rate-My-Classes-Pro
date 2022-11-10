@@ -1,4 +1,5 @@
 import React, { type ReactNode } from "react";
+import { Platform } from "react-native";
 import appleAuth from "@invertase/react-native-apple-authentication";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import {
@@ -22,6 +23,12 @@ export function OAuthProvider({ children }: OAuthProviderProps) {
 }
 
 export namespace AppleOAuth {
+  export function isSupported() {
+    return !(
+      Platform.OS === "ios" && parseInt(Platform.Version.split(".")[0]) < 13
+    );
+  }
+
   export async function signIn(onError: (error: any) => void) {
     try {
       const { user, fullName, identityToken } = await appleAuth.performRequest({

@@ -5,10 +5,6 @@ import OAuthSignInButton from "../components/OAuthSignInButton";
 import { useAuth } from "../mongodb/auth";
 import { AppleOAuth } from "./OAuth";
 
-export function isAppleSignInSupported() {
-  return true;
-}
-
 type AppleSignInButtonBaseProps = {
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
@@ -35,6 +31,7 @@ export function AppleSignInButton({
       onPress={async () => {
         try {
           setIsLoading(true);
+
           const res = await AppleOAuth.signIn(setError);
 
           if (res) {

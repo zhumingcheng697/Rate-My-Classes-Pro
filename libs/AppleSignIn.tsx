@@ -1,16 +1,9 @@
 import React from "react";
-import { Platform } from "react-native";
 import type { IButtonProps } from "native-base";
 
 import OAuthSignInButton from "../components/OAuthSignInButton";
 import { useAuth } from "../mongodb/auth";
 import { AppleOAuth } from "./OAuth";
-
-export function isAppleSignInSupported() {
-  return !(
-    Platform.OS === "ios" && parseInt(Platform.Version.split(".")[0]) < 13
-  );
-}
 
 type AppleSignInButtonBaseProps = {
   isLoading: boolean;

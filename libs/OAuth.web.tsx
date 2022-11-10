@@ -24,6 +24,10 @@ export function OAuthProvider({ children }: OAuthProviderProps) {
 }
 
 export namespace AppleOAuth {
+  export function isSupported() {
+    return true;
+  }
+
   export async function signIn(onError: (error: any) => void) {
     let hasError = false;
 

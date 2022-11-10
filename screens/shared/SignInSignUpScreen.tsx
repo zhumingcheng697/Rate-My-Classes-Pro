@@ -11,10 +11,8 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { Route, composeErrorMessage } from "../../libs/utils";
 import { type SharedNavigationParamList } from "../../libs/types";
-import {
-  AppleSignInButton,
-  isAppleSignInSupported,
-} from "../../libs/AppleSignIn";
+import { AppleOAuth } from "../../libs/OAuth";
+import { AppleSignInButton } from "../../libs/AppleSignIn";
 import { GoogleSignInButton } from "../../libs/GoogleSignIn";
 import { useInitialTabName, useIsCatalyst } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
@@ -194,7 +192,7 @@ export default function SignInSignUpScreen() {
               </Text>
               <Divider minW={0} flexShrink={1} />
             </HStack>
-            {isAppleSignInSupported() && (
+            {AppleOAuth.isSupported() && (
               <AppleSignInButton
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}

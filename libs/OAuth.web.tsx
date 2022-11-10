@@ -128,13 +128,13 @@ export namespace GoogleOAuth {
       | [(res?: OAuthTokenResponse) => void, (error: any) => void, "idToken"]
       | [(res?: OAuthCodeResponse) => void, (error: any) => void, "authCode"]
   ) {
-    const [callback, onError, intent] = args;
+    const [callback, _onError, intent] = args;
 
-    return useGoogleLogin({
-      onSuccess: async ({ code }) => {
+    const onSuccess = useCallback(
+      async ({ code }: { code: string }) => {
         try {
           if (!code)
-            return onError(new Error("Unable to retrieve authorization code"));
+            return _onError(new Error("Unable to retrieve authorization code"));
 
           if (intent === "authCode") return callback({ authCode: code });
 
@@ -145,7 +145,7 @@ export namespace GoogleOAuth {
             await res.json();
 
           if (!json?.id_token)
-            return onError(new Error("Unable to retrieve id token"));
+            return _onError(new Error("Unable to retrieve id token"));
 
           return callback({
             idToken: json.id_token,
@@ -153,19 +153,25 @@ export namespace GoogleOAuth {
           });
         } catch (error: any) {
           console.error(error);
-          onError(error);
+          _onError(error);
         }
       },
-      onError: (error: any) => {
+      [callback, _onError, intent]
+    );
+
+    const onError = useCallback(
+      (error: any) => {
         if (error.type !== "popup_closed") {
           console.error(error);
-          return onError(error);
+          return _onError(error);
         } else {
           return callback();
         }
       },
-      flow: "auth-code",
-    });
+      [callback, _onError]
+    );
+
+    return useGoogleLogin({ onSuccess, onError, flow: "auth-code" });
   }
 
   export async function signOut() {

@@ -1,24 +1,72 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { Button, type IButtonProps, Icon, Text } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import colors, { subtleBorder } from "../styling/colors";
 import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
+import { useAuth } from "../mongodb/auth";
+import { AppleOAuth, GoogleOAuth, OAuthTokenResponse } from "../libs/OAuth";
 
 type OAuthSignInButtonBaseProps = {
-  provider: string;
+  provider: "Apple" | "Google";
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+  setError: (error: any) => void;
 };
 
-export type OAuthSignInButtonProps = OAuthSignInButtonBaseProps &
-  Omit<IButtonProps, keyof OAuthSignInButtonBaseProps>;
+type OAuthSignInButtonProps = OAuthSignInButtonBaseProps &
+  Omit<IButtonProps, keyof OAuthSignInButtonBaseProps | "onPress">;
 
-export default function OAuthSignInButton({
+function OAuthSignInButton({
   provider,
+  isLoading,
+  setIsLoading,
+  setError,
+  isDisabled = false,
   ...rest
 }: OAuthSignInButtonProps) {
+  const auth = useAuth();
+
+  const useTokenSignIn = useMemo(
+    () =>
+      provider === "Apple"
+        ? AppleOAuth.useTokenSignIn
+        : GoogleOAuth.useTokenSignIn,
+    []
+  );
+
+  const callback = useCallback(async (res?: OAuthTokenResponse) => {
+    try {
+      if (res) {
+        if (provider === "Apple") {
+          await auth.continueWithApple(res.idToken, res.username);
+        } else {
+          await auth.continueWithGoogle(res.idToken, res.username);
+        }
+      }
+    } catch (error: any) {
+      setError(error);
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const onError = useCallback((error) => {
+    setError(error);
+    setIsLoading(false);
+  }, []);
+
+  const signIn = useTokenSignIn(callback, onError);
+
   return (
     <Button
+      isDisabled={isDisabled || isLoading}
       borderWidth={"1px"}
+      onPress={async () => {
+        setIsLoading(true);
+        await signIn();
+      }}
       {...colorModeResponsiveStyle((selector) => ({
         background: selector({
           light: "#ffffff",
@@ -48,4 +96,30 @@ export default function OAuthSignInButton({
       </Text>
     </Button>
   );
+}
+
+type AppleSignInButtonBaseProps = {
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+  setError: (error: any) => void;
+};
+
+export type AppleSignInButtonProps = AppleSignInButtonBaseProps &
+  Omit<IButtonProps, keyof AppleSignInButtonBaseProps | "onPress">;
+
+export function AppleSignInButton(props: AppleSignInButtonProps) {
+  return <OAuthSignInButton {...props} provider={"Apple"} />;
+}
+
+type GoogleSignInButtonBaseProps = {
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+  setError: (error: any) => void;
+};
+
+export type GoogleSignInButtonProps = GoogleSignInButtonBaseProps &
+  Omit<IButtonProps, keyof GoogleSignInButtonBaseProps | "onPress">;
+
+export function GoogleSignInButton(props: GoogleSignInButtonProps) {
+  return <OAuthSignInButton {...props} provider={"Google"} />;
 }

@@ -12,8 +12,10 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 import { Route, composeErrorMessage } from "../../libs/utils";
 import { type SharedNavigationParamList } from "../../libs/types";
 import { AppleOAuth } from "../../libs/OAuth";
-import { AppleSignInButton } from "../../libs/AppleSignIn";
-import { GoogleSignInButton } from "../../libs/GoogleSignIn";
+import {
+  AppleSignInButton,
+  GoogleSignInButton,
+} from "../../components/OAuthSignInButton";
 import { useInitialTabName, useIsCatalyst } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LabeledInput from "../../components/LabeledInput";

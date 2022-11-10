@@ -1,5 +1,5 @@
 import React, { type ReactNode } from "react";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleOAuthProvider, googleLogout } from "@react-oauth/google";
 import { useScript, appleAuthHelpers } from "react-apple-signin-auth";
 import { GOOGLE_WEB_CLIENT_ID } from "react-native-dotenv";
 
@@ -15,4 +15,8 @@ export function OAuthProvider({ children }: OAuthProviderProps) {
       {children}
     </GoogleOAuthProvider>
   );
+}
+
+export async function googleSignOut() {
+  googleLogout();
 }

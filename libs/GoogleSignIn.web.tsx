@@ -66,7 +66,3 @@ export function GoogleSignInButton({
     />
   );
 }
-
-export async function googleSignOut() {
-  googleLogout();
-}

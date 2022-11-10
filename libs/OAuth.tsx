@@ -17,3 +17,7 @@ export type OAuthProviderProps = {
 export function OAuthProvider({ children }: OAuthProviderProps) {
   return <>{children}</>;
 }
+
+export async function googleSignOut() {
+  await GoogleSignin.signOut();
+}

@@ -31,7 +31,7 @@ import {
   getFullClassCode,
 } from "../libs/utils";
 import { useAppState } from "../libs/hooks";
-import { googleSignOut } from "../libs/GoogleSignIn";
+import { googleSignOut } from "../libs/OAuth";
 
 type AuthContext = {
   db: Database | null;

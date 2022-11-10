@@ -1,33 +1,8 @@
-diff --git a/node_modules/@react-oauth/google/dist/index.d.ts b/node_modules/@react-oauth/google/dist/index.d.ts
-index eb4cb85..d17ebc1 100644
---- a/node_modules/@react-oauth/google/dist/index.d.ts
-+++ b/node_modules/@react-oauth/google/dist/index.d.ts
-@@ -292,6 +292,8 @@ declare type GoogleLoginProps = {
- } & Omit<IdConfiguration, 'client_id' | 'callback'> & GsiButtonConfiguration;
- declare function GoogleLogin({ onSuccess, onError, useOneTap, promptMomentNotification, type, theme, size, text, shape, logo_alignment, width, locale, ...props }: GoogleLoginProps): JSX.Element;
- 
-+declare function googleRevokeAccess(hint: string): void;
-+
- declare function googleLogout(): void;
- 
- interface ImplicitFlowOptions extends Omit<TokenClientConfig, 'client_id' | 'scope' | 'callback'> {
 diff --git a/node_modules/@react-oauth/google/dist/index.esm.js b/node_modules/@react-oauth/google/dist/index.esm.js
-index d3c4679..98775cb 100644
+index d3c4679..ebc3c56 100644
 --- a/node_modules/@react-oauth/google/dist/index.esm.js
 +++ b/node_modules/@react-oauth/google/dist/index.esm.js
-@@ -125,6 +125,11 @@ function googleLogout() {
-     (_a = window.google) === null || _a === void 0 ? void 0 : _a.accounts.id.disableAutoSelect();
- }
- 
-+function googleRevokeAccess(hint) {
-+    var _a;
-+    (_a = window.google) === null || !hint || _a === void 0 ? void 0 : _a.accounts.id.revoke(hint);
-+}
-+
- /* eslint-disable import/export */
- function useGoogleLogin({ flow = 'implicit', scope = '', onSuccess, onError, ...props }) {
-     const { clientId, scriptLoadedSuccessfully } = useGoogleOAuth();
-@@ -141,6 +146,10 @@ function useGoogleLogin({ flow = 'implicit', scope = '', onSuccess, onError, ...
+@@ -141,6 +141,10 @@ function useGoogleLogin({ flow = 'implicit', scope = '', onSuccess, onError, ...
          const client = (_a = window.google) === null || _a === void 0 ? void 0 : _a.accounts.oauth2[clientMethod]({
              client_id: clientId,
              scope: `openid profile email ${scope}`,
@@ -38,29 +13,11 @@ index d3c4679..98775cb 100644
              callback: (response) => {
                  var _a, _b;
                  if (response.error)
-@@ -219,4 +228,4 @@ function hasGrantedAnyScopeGoogle(tokenResponse, firstScope, ...restScopes) {
-     return window.google.accounts.oauth2.hasGrantedAnyScope(tokenResponse, firstScope, ...restScopes);
- }
- 
--export { GoogleLogin, GoogleOAuthProvider, googleLogout, hasGrantedAllScopesGoogle, hasGrantedAnyScopeGoogle, useGoogleLogin, useGoogleOneTapLogin };
-+export { GoogleLogin, GoogleOAuthProvider, googleLogout, googleRevokeAccess, hasGrantedAllScopesGoogle, hasGrantedAnyScopeGoogle, useGoogleLogin, useGoogleOneTapLogin };
 diff --git a/node_modules/@react-oauth/google/dist/index.js b/node_modules/@react-oauth/google/dist/index.js
-index cd4369b..7de0b1d 100644
+index cd4369b..f806de3 100644
 --- a/node_modules/@react-oauth/google/dist/index.js
 +++ b/node_modules/@react-oauth/google/dist/index.js
-@@ -133,6 +133,11 @@ function googleLogout() {
-     (_a = window.google) === null || _a === void 0 ? void 0 : _a.accounts.id.disableAutoSelect();
- }
- 
-+function googleRevokeAccess(hint) {
-+    var _a;
-+    (_a = window.google) === null || !hint || _a === void 0 ? void 0 : _a.accounts.id.revoke(hint);
-+}
-+
- /* eslint-disable import/export */
- function useGoogleLogin({ flow = 'implicit', scope = '', onSuccess, onError, ...props }) {
-     const { clientId, scriptLoadedSuccessfully } = useGoogleOAuth();
-@@ -149,6 +154,10 @@ function useGoogleLogin({ flow = 'implicit', scope = '', onSuccess, onError, ...
+@@ -149,6 +149,10 @@ function useGoogleLogin({ flow = 'implicit', scope = '', onSuccess, onError, ...
          const client = (_a = window.google) === null || _a === void 0 ? void 0 : _a.accounts.oauth2[clientMethod]({
              client_id: clientId,
              scope: `openid profile email ${scope}`,
@@ -71,11 +28,3 @@ index cd4369b..7de0b1d 100644
              callback: (response) => {
                  var _a, _b;
                  if (response.error)
-@@ -230,6 +239,7 @@ function hasGrantedAnyScopeGoogle(tokenResponse, firstScope, ...restScopes) {
- exports.GoogleLogin = GoogleLogin;
- exports.GoogleOAuthProvider = GoogleOAuthProvider;
- exports.googleLogout = googleLogout;
-+exports.googleRevokeAccess = googleRevokeAccess;
- exports.hasGrantedAllScopesGoogle = hasGrantedAllScopesGoogle;
- exports.hasGrantedAnyScopeGoogle = hasGrantedAnyScopeGoogle;
- exports.useGoogleLogin = useGoogleLogin;

@@ -63,6 +63,8 @@ export namespace AppleOAuth {
   }
 }
 
-export async function googleSignOut() {
-  await GoogleSignin.signOut();
+export namespace GoogleOAuth {
+  export async function signOut() {
+    await GoogleSignin.signOut();
+  }
 }

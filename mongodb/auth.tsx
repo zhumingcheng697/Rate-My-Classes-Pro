@@ -31,7 +31,7 @@ import {
   getFullClassCode,
 } from "../libs/utils";
 import { useAppState } from "../libs/hooks";
-import { googleSignOut } from "../libs/OAuth";
+import { GoogleOAuth } from "../libs/OAuth";
 
 type AuthContext = {
   db: Database | null;
@@ -221,7 +221,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       asyncTryCatch(async () => await realmApp.deleteUser(user));
     } else {
       if (user.providerType === "oauth2-google")
-        asyncTryCatch(async () => await googleSignOut());
+        asyncTryCatch(async () => await GoogleOAuth.signOut());
       asyncTryCatch(async () => await realmApp.removeUser(user));
     }
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, type ReactNode } from "react";
+import React, { useCallback, type ReactNode } from "react";
 import { useScript, appleAuthHelpers } from "react-apple-signin-auth";
 import {
   GoogleOAuthProvider,
@@ -130,48 +130,42 @@ export namespace GoogleOAuth {
   ) {
     const [callback, onError, intent] = args;
 
-    return useMemo(
-      () =>
-        useGoogleLogin({
-          onSuccess: async ({ code }) => {
-            try {
-              if (!code)
-                return onError(
-                  new Error("Unable to retrieve authorization code")
-                );
+    return useGoogleLogin({
+      onSuccess: async ({ code }) => {
+        try {
+          if (!code)
+            return onError(new Error("Unable to retrieve authorization code"));
 
-              if (intent === "authCode") return callback({ authCode: code });
+          if (intent === "authCode") return callback({ authCode: code });
 
-              const res = await fetch(
-                `${GOOGLE_OAUTH_ENDPOINT}?code=${encodeURIComponent(code)}`
-              );
-              const json: { id_token?: string; access_token?: string } =
-                await res.json();
+          const res = await fetch(
+            `${GOOGLE_OAUTH_ENDPOINT}?code=${encodeURIComponent(code)}`
+          );
+          const json: { id_token?: string; access_token?: string } =
+            await res.json();
 
-              if (!json?.id_token)
-                return onError(new Error("Unable to retrieve id token"));
+          if (!json?.id_token)
+            return onError(new Error("Unable to retrieve id token"));
 
-              return callback({
-                idToken: json.id_token,
-                username: null,
-              });
-            } catch (error: any) {
-              console.error(error);
-              onError(error);
-            }
-          },
-          onError: (error: any) => {
-            if (error.type !== "popup_closed") {
-              console.error(error);
-              return onError(error);
-            } else {
-              return callback();
-            }
-          },
-          flow: "auth-code",
-        }),
-      [callback, onError, intent]
-    );
+          return callback({
+            idToken: json.id_token,
+            username: null,
+          });
+        } catch (error: any) {
+          console.error(error);
+          onError(error);
+        }
+      },
+      onError: (error: any) => {
+        if (error.type !== "popup_closed") {
+          console.error(error);
+          return onError(error);
+        } else {
+          return callback();
+        }
+      },
+      flow: "auth-code",
+    });
   }
 
   export async function signOut() {

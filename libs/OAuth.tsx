@@ -14,6 +14,6 @@ export type OAuthProviderProps = {
   children: ReactNode;
 };
 
-export default function OAuthProvider({ children }: OAuthProviderProps) {
+export function OAuthProvider({ children }: OAuthProviderProps) {
   return <>{children}</>;
 }

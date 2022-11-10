@@ -9,12 +9,12 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import linking from "./navigation/linking";
 import RootNavigation from "./navigation/RootNavigation";
-import OAuthProvider from "./containers/OAuthProvider";
 import { AuthProvider } from "./mongodb/auth";
 import reducer from "./redux/reducers";
 import { useColorModeSynchronizer } from "./styling/color-mode-utils";
 import nativeBaseTheme from "./styling/theme";
 import { useAppState } from "./libs/hooks";
+import { OAuthProvider } from "./libs/OAuth";
 
 Ionicons.loadFont();
 

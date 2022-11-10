@@ -7,7 +7,7 @@ export type OAuthProviderProps = {
   children: ReactNode;
 };
 
-export default function OAuthProvider({ children }: OAuthProviderProps) {
+export function OAuthProvider({ children }: OAuthProviderProps) {
   useScript(appleAuthHelpers.APPLE_SCRIPT_SRC);
 
   return (

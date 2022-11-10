@@ -86,7 +86,7 @@ export default function sync(
     if (Realm.exists(realmConfig)) Realm.deleteFile(realmConfig);
   });
 
-  tryCatch(() => {
+  return tryCatch(() => {
     const realm = new Realm(realmConfig);
 
     const userObj = realm
@@ -105,11 +105,10 @@ export default function sync(
       }
     });
 
-    return () => {
+    return () =>
       tryCatch(() => {
         userObj.removeAllListeners();
         realm.close();
       });
-    };
   });
 }

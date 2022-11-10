@@ -25,8 +25,13 @@ import {
   loadSettings,
   loadStarredClasses,
 } from "../redux/actions";
-import { composeUsername, getFullClassCode } from "../libs/utils";
+import {
+  asyncTryCatch,
+  composeUsername,
+  getFullClassCode,
+} from "../libs/utils";
 import { useAppState } from "../libs/hooks";
+import { googleSignOut } from "../libs/GoogleSignIn";
 
 type AuthContext = {
   db: Database | null;
@@ -210,7 +215,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    if (user.providerType === "anon-user") await realmApp.deleteUser(user);
+    if (user.providerType === "anon-user")
+      asyncTryCatch(async () => await realmApp.deleteUser(user));
+    else if (user.providerType === "oauth2-google")
+      asyncTryCatch(async () => await googleSignOut());
 
     await user.logOut();
     loadStarredClasses(dispatch)({});

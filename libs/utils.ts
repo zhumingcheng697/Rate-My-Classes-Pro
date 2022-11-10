@@ -24,6 +24,14 @@ export function tryCatch<T>(callback: () => T) {
   }
 }
 
+export async function asyncTryCatch<T>(callback: () => Promise<T>) {
+  try {
+    return await callback();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export function getFullDepartmentCode({
   schoolCode,
   departmentCode,

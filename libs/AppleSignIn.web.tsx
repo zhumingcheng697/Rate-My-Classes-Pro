@@ -22,7 +22,7 @@ export function AppleSignInButton({
   ...rest
 }: AppleSignInButtonProps) {
   const auth = useAuth();
-  const signIn = AppleOAuth.useSignIn(
+  const signIn = AppleOAuth.useTokenSignIn(
     async (res) => {
       try {
         if (res) await auth.continueWithApple(res.idToken, res.username);

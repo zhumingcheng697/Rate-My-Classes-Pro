@@ -15,6 +15,7 @@ import { composeUsername } from "./utils";
 GoogleSignin.configure({
   webClientId: GOOGLE_WEB_CLIENT_ID,
   iosClientId: GOOGLE_IOS_CLIENT_ID,
+  offlineAccess: true,
 });
 
 export type OAuthProviderProps = {
@@ -25,7 +26,14 @@ export function OAuthProvider({ children }: OAuthProviderProps) {
   return <>{children}</>;
 }
 
-export type OAuthResponse = { idToken: string; username: string | null };
+export type OAuthTokenResponse = {
+  idToken: string;
+  username: string | null;
+};
+
+export type OAuthCodeResponse = {
+  authCode: string;
+};
 
 export namespace AppleOAuth {
   export function isSupported() {
@@ -34,13 +42,30 @@ export namespace AppleOAuth {
     );
   }
 
-  export function useSignIn(
-    callback: (res?: OAuthResponse) => void,
+  export function useTokenSignIn(
+    callback: (res?: OAuthTokenResponse) => void,
     onError: (error: any) => void
   ) {
+    return useSignIn(callback, onError, "idToken");
+  }
+
+  export function useCodeSignIn(
+    callback: (res?: OAuthCodeResponse) => void,
+    onError: (error: any) => void
+  ) {
+    return useSignIn(callback, onError, "authCode");
+  }
+
+  function useSignIn(
+    ...args:
+      | [(res?: OAuthTokenResponse) => void, (error: any) => void, "idToken"]
+      | [(res?: OAuthCodeResponse) => void, (error: any) => void, "authCode"]
+  ) {
+    const [callback, onError, intent] = args;
+
     return useCallback(async () => {
       try {
-        const { user, fullName, identityToken } =
+        const { user, fullName, identityToken, authorizationCode } =
           await appleAuth.performRequest({
             requestedOperation: appleAuth.Operation.LOGIN,
             requestedScopes: [appleAuth.Scope.FULL_NAME],
@@ -48,8 +73,14 @@ export namespace AppleOAuth {
 
         const state = await appleAuth.getCredentialStateForUser(user);
 
-        if (state !== appleAuth.State.AUTHORIZED || !identityToken)
+        if (state !== appleAuth.State.AUTHORIZED)
           return onError(new Error("Unable to authorize"));
+
+        if (!identityToken || !authorizationCode)
+          return onError(new Error("Unable to retrieve id token or auth code"));
+
+        if (intent === "authCode")
+          return callback({ authCode: authorizationCode });
 
         const username = composeUsername({
           givenName: fullName?.givenName,
@@ -58,7 +89,10 @@ export namespace AppleOAuth {
           nickname: fullName?.nickname,
         });
 
-        return callback({ idToken: identityToken, username });
+        return callback({
+          idToken: identityToken,
+          username,
+        });
       } catch (error: any) {
         if (
           `${error?.code}` !== "1001" &&
@@ -72,22 +106,43 @@ export namespace AppleOAuth {
 
         return callback();
       }
-    }, [callback, onError]);
+    }, [callback, onError, intent]);
   }
 }
 
 export namespace GoogleOAuth {
-  export function useSignIn(
-    callback: (res?: OAuthResponse) => void,
+  export function useTokenSignIn(
+    callback: (res?: OAuthTokenResponse) => void,
     onError: (error: any) => void
   ) {
+    return useSignIn(callback, onError, "idToken");
+  }
+
+  export function useCodeSignIn(
+    callback: (res?: OAuthCodeResponse) => void,
+    onError: (error: any) => void
+  ) {
+    return useSignIn(callback, onError, "authCode");
+  }
+
+  function useSignIn(
+    ...args:
+      | [(res?: OAuthTokenResponse) => void, (error: any) => void, "idToken"]
+      | [(res?: OAuthCodeResponse) => void, (error: any) => void, "authCode"]
+  ) {
+    const [callback, onError, intent] = args;
+
     return useCallback(async () => {
       try {
         await GoogleSignin.hasPlayServices();
 
-        const { user, idToken } = await GoogleSignin.signIn();
+        const { user, idToken, serverAuthCode } = await GoogleSignin.signIn();
 
-        if (!idToken) return onError(new Error("Unable to retrieve id token"));
+        if (!idToken || !serverAuthCode)
+          return onError(new Error("Unable to retrieve id token or auth code"));
+
+        if (intent === "authCode")
+          return callback({ authCode: serverAuthCode });
 
         const username = composeUsername({
           fullName: user.name,
@@ -108,7 +163,7 @@ export namespace GoogleOAuth {
         }
         console.error(error);
       }
-    }, [callback, onError]);
+    }, [callback, onError, intent]);
   }
 
   export async function signOut() {

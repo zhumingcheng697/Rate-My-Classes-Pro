@@ -22,7 +22,7 @@ export function GoogleSignInButton({
   ...rest
 }: GoogleSignInButtonProps) {
   const auth = useAuth();
-  const signIn = GoogleOAuth.useSignIn(
+  const signIn = GoogleOAuth.useTokenSignIn(
     async (res) => {
       try {
         if (res) await auth.continueWithGoogle(res.idToken, res.username);

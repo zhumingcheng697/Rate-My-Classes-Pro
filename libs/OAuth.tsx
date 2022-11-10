@@ -48,18 +48,17 @@ export namespace AppleOAuth {
 
         const state = await appleAuth.getCredentialStateForUser(user);
 
-        if (state === appleAuth.State.AUTHORIZED && identityToken) {
-          const username = composeUsername({
-            givenName: fullName?.givenName,
-            middleName: fullName?.middleName,
-            familyName: fullName?.familyName,
-            nickname: fullName?.nickname,
-          });
+        if (state !== appleAuth.State.AUTHORIZED || !identityToken)
+          return onError(new Error("Unable to authorize"));
 
-          callback({ idToken: identityToken, username });
-        } else {
-          onError(new Error("Unable to authorize"));
-        }
+        const username = composeUsername({
+          givenName: fullName?.givenName,
+          middleName: fullName?.middleName,
+          familyName: fullName?.familyName,
+          nickname: fullName?.nickname,
+        });
+
+        return callback({ idToken: identityToken, username });
       } catch (error: any) {
         if (
           `${error?.code}` !== "1001" &&
@@ -67,11 +66,11 @@ export namespace AppleOAuth {
             `${error?.message}` || ""
           )
         ) {
-          onError(error);
           console.error(error);
-        } else {
-          callback();
+          return onError(error);
         }
+
+        return callback();
       }
     }, [callback, onError]);
   }
@@ -88,17 +87,15 @@ export namespace GoogleOAuth {
 
         const { user, idToken } = await GoogleSignin.signIn();
 
-        if (idToken) {
-          const username = composeUsername({
-            fullName: user.name,
-            givenName: user.givenName,
-            familyName: user.familyName,
-          });
+        if (!idToken) return onError(new Error("Unable to retrieve id token"));
 
-          callback({ idToken, username });
-        } else {
-          onError(new Error("Unable to retrieve id token"));
-        }
+        const username = composeUsername({
+          fullName: user.name,
+          givenName: user.givenName,
+          familyName: user.familyName,
+        });
+
+        return callback({ idToken, username });
       } catch (error: any) {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
           return callback();

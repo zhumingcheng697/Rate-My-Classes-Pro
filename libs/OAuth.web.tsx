@@ -53,7 +53,7 @@ export namespace AppleOAuth {
           onError: (error) => {
             if (error?.error !== "popup_closed_by_user") {
               hasError = true;
-              onError(error?.error || error);
+              return onError(error?.error || error);
             }
           },
         });
@@ -62,18 +62,17 @@ export namespace AppleOAuth {
 
         const { user, authorization } = res;
 
-        if (authorization?.id_token) {
-          const username = composeUsername({
-            givenName: user?.name?.firstName,
-            familyName: user?.name?.lastName,
-          });
+        if (!authorization?.id_token)
+          return onError(new Error("Unable to retrieve id token"));
 
-          callback({ idToken: authorization.id_token, username });
-        } else {
-          onError(new Error("Unable to retrieve id token"));
-        }
+        const username = composeUsername({
+          givenName: user?.name?.firstName,
+          familyName: user?.name?.lastName,
+        });
+
+        return callback({ idToken: authorization.id_token, username });
       } catch (error: any) {
-        onError(error);
+        return onError(error);
       }
     }, [callback, onError]);
   }
@@ -99,11 +98,10 @@ export namespace GoogleOAuth {
               );
               const json: { id_token?: string } = await res.json();
 
-              if (json?.id_token) {
-                callback({ idToken: json.id_token, username: null });
-              } else {
-                onError(new Error("Unable to retrieve id token"));
-              }
+              if (!json?.id_token)
+                return onError(new Error("Unable to retrieve id token"));
+
+              return callback({ idToken: json.id_token, username: null });
             } catch (error: any) {
               console.error(error);
               onError(error);
@@ -112,9 +110,9 @@ export namespace GoogleOAuth {
           onError: (error: any) => {
             if (error.type !== "popup_closed") {
               console.error(error);
-              onError(error);
+              return onError(error);
             } else {
-              callback();
+              return callback();
             }
           },
           flow: "auth-code",

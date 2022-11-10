@@ -1,10 +1,9 @@
 import React from "react";
-import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import type { IButtonProps } from "native-base";
-import { GOOGLE_OAUTH_ENDPOINT } from "react-native-dotenv";
 
 import OAuthSignInButton from "../components/OAuthSignInButton";
 import { useAuth } from "../mongodb/auth";
+import { GoogleOAuth } from "./OAuth";
 
 type GoogleSignInButtonBaseProps = {
   isLoading: boolean;
@@ -23,20 +22,10 @@ export function GoogleSignInButton({
   ...rest
 }: GoogleSignInButtonProps) {
   const auth = useAuth();
-
-  const login = useGoogleLogin({
-    onSuccess: async ({ code }) => {
+  const signIn = GoogleOAuth.useSignIn(
+    async (res) => {
       try {
-        if (!code) throw new Error("Unable to retrieve authorization code");
-
-        const res = await fetch(
-          `${GOOGLE_OAUTH_ENDPOINT}?code=${encodeURIComponent(code)}`
-        );
-        const json: { id_token?: string } = await res.json();
-
-        if (!json?.id_token) throw new Error("Unable to retrieve id token");
-
-        await auth.continueWithGoogle(json.id_token, null);
+        if (res) await auth.continueWithGoogle(res.idToken, res.username);
       } catch (error: any) {
         console.error(error);
         setError(error);
@@ -44,24 +33,20 @@ export function GoogleSignInButton({
         setIsLoading(false);
       }
     },
-    onError: (error: any) => {
-      if (error.type !== "popup_closed") {
-        console.error(error);
-        setError(error);
-      }
+    (error) => {
+      setError(error);
       setIsLoading(false);
-    },
-    flow: "auth-code",
-  });
+    }
+  );
 
   return (
     <OAuthSignInButton
       {...rest}
       provider={"Google"}
       isDisabled={isLoading || isDisabled}
-      onPress={() => {
+      onPress={async () => {
         setIsLoading(true);
-        login();
+        await signIn();
       }}
     />
   );

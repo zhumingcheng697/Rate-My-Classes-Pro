@@ -1,4 +1,4 @@
-import React, { useCallback, type ReactNode } from "react";
+import React, { useCallback, useMemo, type ReactNode } from "react";
 import { useScript, appleAuthHelpers } from "react-apple-signin-auth";
 import {
   GoogleOAuthProvider,
@@ -80,6 +80,49 @@ export namespace AppleOAuth {
 }
 
 export namespace GoogleOAuth {
+  export function useSignIn(
+    callback: (res?: OAuthResponse) => void,
+    onError: (error: any) => void
+  ) {
+    return useMemo(
+      () =>
+        useGoogleLogin({
+          onSuccess: async ({ code }) => {
+            try {
+              if (!code)
+                return onError(
+                  new Error("Unable to retrieve authorization code")
+                );
+
+              const res = await fetch(
+                `${GOOGLE_OAUTH_ENDPOINT}?code=${encodeURIComponent(code)}`
+              );
+              const json: { id_token?: string } = await res.json();
+
+              if (json?.id_token) {
+                callback({ idToken: json.id_token, username: null });
+              } else {
+                onError(new Error("Unable to retrieve id token"));
+              }
+            } catch (error: any) {
+              console.error(error);
+              onError(error);
+            }
+          },
+          onError: (error: any) => {
+            if (error.type !== "popup_closed") {
+              console.error(error);
+              onError(error);
+            } else {
+              callback();
+            }
+          },
+          flow: "auth-code",
+        }),
+      [callback, onError]
+    );
+  }
+
   export async function signOut() {
     googleLogout();
   }

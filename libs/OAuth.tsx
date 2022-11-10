@@ -78,35 +78,40 @@ export namespace AppleOAuth {
 }
 
 export namespace GoogleOAuth {
-  export async function signIn(onError: (error: any) => void) {
-    try {
-      await GoogleSignin.hasPlayServices();
+  export function useSignIn(
+    callback: (res?: OAuthResponse) => void,
+    onError: (error: any) => void
+  ) {
+    return useCallback(async () => {
+      try {
+        await GoogleSignin.hasPlayServices();
 
-      const { user, idToken } = await GoogleSignin.signIn();
+        const { user, idToken } = await GoogleSignin.signIn();
 
-      if (idToken) {
-        const username = composeUsername({
-          fullName: user.name,
-          givenName: user.givenName,
-          familyName: user.familyName,
-        });
+        if (idToken) {
+          const username = composeUsername({
+            fullName: user.name,
+            givenName: user.givenName,
+            familyName: user.familyName,
+          });
 
-        return { idToken, username };
-      } else {
-        onError(new Error("Unable to retrieve id token"));
+          callback({ idToken, username });
+        } else {
+          onError(new Error("Unable to retrieve id token"));
+        }
+      } catch (error: any) {
+        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+          return callback();
+        } else if (error.code === statusCodes.IN_PROGRESS) {
+          return callback();
+        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+          onError("Google Play services not available or outdated");
+        } else {
+          onError(error);
+        }
+        console.error(error);
       }
-    } catch (error: any) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        return;
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        return;
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        onError("Google Play services not available or outdated");
-      } else {
-        onError(error);
-      }
-      console.error(error);
-    }
+    }, [callback, onError]);
   }
 
   export async function signOut() {

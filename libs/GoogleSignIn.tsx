@@ -22,6 +22,22 @@ export function GoogleSignInButton({
   ...rest
 }: GoogleSignInButtonProps) {
   const auth = useAuth();
+  const signIn = GoogleOAuth.useSignIn(
+    async (res) => {
+      try {
+        if (res) await auth.continueWithGoogle(res.idToken, res.username);
+      } catch (error: any) {
+        setError(error);
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    (error) => {
+      setError(error);
+      setIsLoading(false);
+    }
+  );
 
   return (
     <OAuthSignInButton
@@ -29,18 +45,8 @@ export function GoogleSignInButton({
       provider={"Google"}
       isDisabled={isLoading || isDisabled}
       onPress={async () => {
-        try {
-          setIsLoading(true);
-
-          const res = await GoogleOAuth.signIn(setError);
-
-          if (res) await auth.continueWithGoogle(res.idToken, res.username);
-        } catch (error: any) {
-          setError(error);
-          console.error(error);
-        } finally {
-          setIsLoading(false);
-        }
+        setIsLoading(true);
+        await signIn();
       }}
     />
   );

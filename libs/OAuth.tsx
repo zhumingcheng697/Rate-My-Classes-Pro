@@ -1,4 +1,4 @@
-import React, { type ReactNode } from "react";
+import React, { useCallback, type ReactNode } from "react";
 import { Platform } from "react-native";
 import appleAuth from "@invertase/react-native-apple-authentication";
 import {
@@ -25,6 +25,8 @@ export function OAuthProvider({ children }: OAuthProviderProps) {
   return <>{children}</>;
 }
 
+export type OAuthResponse = { idToken: string; username: string | null };
+
 export namespace AppleOAuth {
   export function isSupported() {
     return !(
@@ -32,38 +34,46 @@ export namespace AppleOAuth {
     );
   }
 
-  export async function signIn(onError: (error: any) => void) {
-    try {
-      const { user, fullName, identityToken } = await appleAuth.performRequest({
-        requestedOperation: appleAuth.Operation.LOGIN,
-        requestedScopes: [appleAuth.Scope.FULL_NAME],
-      });
+  export function useSignIn(
+    callback: (res?: OAuthResponse) => void,
+    onError: (error: any) => void
+  ) {
+    return useCallback(async () => {
+      try {
+        const { user, fullName, identityToken } =
+          await appleAuth.performRequest({
+            requestedOperation: appleAuth.Operation.LOGIN,
+            requestedScopes: [appleAuth.Scope.FULL_NAME],
+          });
 
-      const state = await appleAuth.getCredentialStateForUser(user);
+        const state = await appleAuth.getCredentialStateForUser(user);
 
-      if (state === appleAuth.State.AUTHORIZED && identityToken) {
-        const username = composeUsername({
-          givenName: fullName?.givenName,
-          middleName: fullName?.middleName,
-          familyName: fullName?.familyName,
-          nickname: fullName?.nickname,
-        });
+        if (state === appleAuth.State.AUTHORIZED && identityToken) {
+          const username = composeUsername({
+            givenName: fullName?.givenName,
+            middleName: fullName?.middleName,
+            familyName: fullName?.familyName,
+            nickname: fullName?.nickname,
+          });
 
-        return { idToken: identityToken, username };
-      } else {
-        onError(new Error("Unable to authorize"));
+          callback({ idToken: identityToken, username });
+        } else {
+          onError(new Error("Unable to authorize"));
+        }
+      } catch (error: any) {
+        if (
+          `${error?.code}` !== "1001" &&
+          !/com\.apple\.AuthenticationServices\.AuthorizationError error 1001/.test(
+            `${error?.message}` || ""
+          )
+        ) {
+          onError(error);
+          console.error(error);
+        } else {
+          callback();
+        }
       }
-    } catch (error: any) {
-      if (
-        `${error?.code}` !== "1001" &&
-        !/com\.apple\.AuthenticationServices\.AuthorizationError error 1001/.test(
-          `${error?.message}` || ""
-        )
-      ) {
-        onError(error);
-        console.error(error);
-      }
-    }
+    }, [callback, onError]);
   }
 }
 

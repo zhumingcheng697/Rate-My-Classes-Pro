@@ -22,6 +22,22 @@ export function AppleSignInButton({
   ...rest
 }: AppleSignInButtonProps) {
   const auth = useAuth();
+  const signIn = AppleOAuth.useSignIn(
+    async (res) => {
+      try {
+        if (res) await auth.continueWithApple(res.idToken, res.username);
+      } catch (error: any) {
+        setError(error);
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    (error) => {
+      setError(error);
+      setIsLoading(false);
+    }
+  );
 
   return (
     <OAuthSignInButton
@@ -29,18 +45,8 @@ export function AppleSignInButton({
       provider={"Apple"}
       isDisabled={isLoading || isDisabled}
       onPress={async () => {
-        try {
-          setIsLoading(true);
-
-          const res = await AppleOAuth.signIn(setError);
-
-          if (res) await auth.continueWithApple(res.idToken, res.username);
-        } catch (error: any) {
-          setError(error);
-          console.error(error);
-        } finally {
-          setIsLoading(false);
-        }
+        setIsLoading(true);
+        await signIn();
       }}
     />
   );

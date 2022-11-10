@@ -1,10 +1,15 @@
-import React, { type ReactNode } from "react";
+import React, { useCallback, type ReactNode } from "react";
 import { useScript, appleAuthHelpers } from "react-apple-signin-auth";
-import { GoogleOAuthProvider, googleLogout } from "@react-oauth/google";
+import {
+  GoogleOAuthProvider,
+  googleLogout,
+  useGoogleLogin,
+} from "@react-oauth/google";
 import {
   APPLE_SIGN_IN_SERVICE_ID,
-  WEB_DEPLOYMENT_URL,
   GOOGLE_WEB_CLIENT_ID,
+  GOOGLE_OAUTH_ENDPOINT,
+  WEB_DEPLOYMENT_URL,
 } from "react-native-dotenv";
 
 import { composeUsername } from "./utils";
@@ -23,47 +28,54 @@ export function OAuthProvider({ children }: OAuthProviderProps) {
   );
 }
 
+export type OAuthResponse = { idToken: string; username: string | null };
+
 export namespace AppleOAuth {
   export function isSupported() {
     return true;
   }
 
-  export async function signIn(onError: (error: any) => void) {
-    let hasError = false;
+  export function useSignIn(
+    callback: (res?: OAuthResponse) => void,
+    onError: (error: any) => void
+  ) {
+    return useCallback(async () => {
+      let hasError = false;
 
-    try {
-      const res = await appleAuthHelpers.signIn({
-        authOptions: {
-          clientId: APPLE_SIGN_IN_SERVICE_ID,
-          scope: "name",
-          redirectURI: WEB_DEPLOYMENT_URL,
-          usePopup: true,
-        },
-        onError: (error) => {
-          if (error?.error !== "popup_closed_by_user") {
-            hasError = true;
-            onError(error?.error || error);
-          }
-        },
-      });
-
-      if (hasError || !res) return;
-
-      const { user, authorization } = res;
-
-      if (authorization?.id_token) {
-        const username = composeUsername({
-          givenName: user?.name?.firstName,
-          familyName: user?.name?.lastName,
+      try {
+        const res = await appleAuthHelpers.signIn({
+          authOptions: {
+            clientId: APPLE_SIGN_IN_SERVICE_ID,
+            scope: "name",
+            redirectURI: WEB_DEPLOYMENT_URL,
+            usePopup: true,
+          },
+          onError: (error) => {
+            if (error?.error !== "popup_closed_by_user") {
+              hasError = true;
+              onError(error?.error || error);
+            }
+          },
         });
 
-        return { idToken: authorization.id_token, username };
-      } else {
-        onError(new Error("Unable to retrieve id token"));
+        if (hasError || !res) return callback();
+
+        const { user, authorization } = res;
+
+        if (authorization?.id_token) {
+          const username = composeUsername({
+            givenName: user?.name?.firstName,
+            familyName: user?.name?.lastName,
+          });
+
+          callback({ idToken: authorization.id_token, username });
+        } else {
+          onError(new Error("Unable to retrieve id token"));
+        }
+      } catch (error: any) {
+        onError(error);
       }
-    } catch (error: any) {
-      onError(error);
-    }
+    }, [callback, onError]);
   }
 }
 

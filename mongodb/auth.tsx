@@ -215,12 +215,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    if (user.providerType === "anon-user")
-      asyncTryCatch(async () => await realmApp.deleteUser(user));
-    else if (user.providerType === "oauth2-google")
-      asyncTryCatch(async () => await googleSignOut());
-
     await user.logOut();
+
+    if (user.providerType === "anon-user") {
+      asyncTryCatch(async () => await realmApp.deleteUser(user));
+    } else {
+      if (user.providerType === "oauth2-google")
+        asyncTryCatch(async () => await googleSignOut());
+      asyncTryCatch(async () => await realmApp.removeUser(user));
+    }
+
     loadStarredClasses(dispatch)({});
     loadReviewedClasses(dispatch)({});
     syncCleanup();

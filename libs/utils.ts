@@ -16,6 +16,14 @@ import {
   Settings,
 } from "./types";
 
+export function tryCatch<T>(callback: () => T) {
+  try {
+    return callback();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export function getFullDepartmentCode({
   schoolCode,
   departmentCode,

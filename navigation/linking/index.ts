@@ -4,6 +4,7 @@ import { WEB_DEPLOYMENT_URL } from "react-native-dotenv";
 import parse from "./parse";
 import stringnify from "./stringify";
 import type { RootNavigationParamList } from "../../libs/types";
+import { tryCatch } from "../../libs/utils";
 
 const linking: LinkingOptions<RootNavigationParamList> = {
   prefixes: [
@@ -13,19 +14,14 @@ const linking: LinkingOptions<RootNavigationParamList> = {
     WEB_DEPLOYMENT_URL,
   ],
   getPathFromState(state) {
-    try {
-      return stringnify(state as NavigationState<RootNavigationParamList>);
-    } catch (e) {
-      console.error(state, e);
-      return "";
-    }
+    return (
+      tryCatch(() =>
+        stringnify(state as NavigationState<RootNavigationParamList>)
+      ) || ""
+    );
   },
   getStateFromPath(path) {
-    try {
-      return parse(path);
-    } catch (e) {
-      console.error(path, e);
-    }
+    return tryCatch(() => parse(path));
   },
 };
 

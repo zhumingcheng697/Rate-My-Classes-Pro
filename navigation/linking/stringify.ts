@@ -12,6 +12,7 @@ import type {
   RouteParamsFor,
   ValueOf,
 } from "../../libs/types";
+import { tryCatch } from "../../libs/utils";
 
 type RouteToPathMap<ParamList extends ParamListBase> = {
   [Screen in keyof ParamList]: (param: ParamList[Screen]) => string;
@@ -157,14 +158,12 @@ export function stringifyRoute<
     MeTab: stringifyMeRoute,
   };
 
-  try {
-    return rootRouteToPathMap[tabName](
+  return tryCatch(() =>
+    rootRouteToPathMap[tabName](
       screenName as keyof NavigationParamListFor<Tab>,
       params as ValueOf<NavigationParamListFor<Tab>>
-    );
-  } catch (e) {
-    console.error(e);
-  }
+    )
+  );
 }
 
 export default function stringify(

@@ -1,6 +1,7 @@
 import Realm from "./Realm";
 
 import type { UserDoc } from "./types";
+import { tryCatch } from "../libs/utils";
 
 enum Schema {
   user = "user",
@@ -81,13 +82,11 @@ export default function sync(
     sync: { user, flexible: true },
   };
 
-  try {
+  tryCatch(() => {
     if (Realm.exists(realmConfig)) Realm.deleteFile(realmConfig);
-  } catch (e) {
-    console.error(e);
-  }
+  });
 
-  try {
+  tryCatch(() => {
     const realm = new Realm(realmConfig);
 
     const userObj = realm
@@ -107,14 +106,10 @@ export default function sync(
     });
 
     return () => {
-      try {
+      tryCatch(() => {
         userObj.removeAllListeners();
         realm.close();
-      } catch (e) {
-        console.error(e);
-      }
+      });
     };
-  } catch (e) {
-    console.error(e);
-  }
+  });
 }

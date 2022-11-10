@@ -40,7 +40,7 @@ import RatingDashboard from "../../components/RatingDashboard";
 import {
   SolidButton,
   SubtleButton,
-} from "../../components/LinkCompatibleButtons";
+} from "../../components/LinkCompatibleButton";
 import { ReviewOrderSelector } from "../../components/Selector";
 import { useAuth } from "../../mongodb/auth";
 import { reviewClass, unreviewClass } from "../../redux/actions";

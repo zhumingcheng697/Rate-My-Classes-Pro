@@ -9,7 +9,7 @@ import {
 } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { Pressable } from "../../components/LinkCompatibleButtons";
+import { Pressable } from "../../components/LinkCompatibleButton";
 import colors, { subtleBorder } from "../../styling/colors";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 import { useInitialPreviousRoute, useInitialTabName } from "../../libs/hooks";

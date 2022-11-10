@@ -9,7 +9,7 @@ import type {
 import { getFullClassCode, Route } from "../libs/utils";
 import { useInitialTabName } from "../libs/hooks";
 import Grid, { type GridProps } from "../containers/Grid";
-import { TieredTextButton } from "./LinkCompatibleButtons";
+import { TieredTextButton } from "./LinkCompatibleButton";
 
 type ClassesGridNavigationProp = StackNavigationProp<SharedNavigationParamList>;
 

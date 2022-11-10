@@ -22,7 +22,7 @@ import LabeledInput from "../../components/LabeledInput";
 import {
   SolidButton,
   PlainTextButton,
-} from "../../components/LinkCompatibleButtons";
+} from "../../components/LinkCompatibleButton";
 import AlertPopup from "../../components/AlertPopup";
 import { useAuth } from "../../mongodb/auth";
 

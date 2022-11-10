@@ -7,7 +7,7 @@ import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 import colors, { subtleBorder } from "../styling/colors";
 import defaultIcon from "./../icons/default.png";
 import violetIcon from "./../icons/violet.png";
-import { Pressable } from "./LinkCompatibleButtons";
+import { Pressable } from "./LinkCompatibleButton";
 
 type AppIconChoiceProps = {
   iconError: boolean;

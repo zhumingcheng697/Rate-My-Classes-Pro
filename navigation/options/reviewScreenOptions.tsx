@@ -7,7 +7,7 @@ import {
   TransitionPresets,
 } from "@react-navigation/stack";
 
-import { PlainTextButton } from "../../components/LinkCompatibleButtons";
+import { PlainTextButton } from "../../components/LinkCompatibleButton";
 import { type SharedNavigationParamList } from "../../libs/types";
 
 type ReviewScreenNavigationProp = StackNavigationProp<

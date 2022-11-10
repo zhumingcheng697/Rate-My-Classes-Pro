@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 
 import LabeledInput from "../../components/LabeledInput";
 import { RatingSelector, SemesterSelector } from "../../components/Selector";
-import { LeftAlignedButton } from "../../components/LinkCompatibleButtons";
+import { LeftAlignedButton } from "../../components/LinkCompatibleButton";
 import AlertPopup from "../../components/AlertPopup";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import {

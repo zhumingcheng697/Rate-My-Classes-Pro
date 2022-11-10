@@ -12,7 +12,7 @@ import {
 } from "../../libs/utils";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid, { type GridRenderItemInfo } from "../../containers/Grid";
-import TieredTextButton from "../../components/TieredTextButton";
+import { TieredTextButton } from "../../components/LinkCompatibleButtons";
 import { useAuth } from "../../mongodb/auth";
 
 export default function UniversityScreen() {

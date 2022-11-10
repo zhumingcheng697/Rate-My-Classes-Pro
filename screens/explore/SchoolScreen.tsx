@@ -21,7 +21,7 @@ import {
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import AlertPopup from "../../components/AlertPopup";
-import TieredTextButton from "../../components/TieredTextButton";
+import { TieredTextButton } from "../../components/LinkCompatibleButtons";
 
 type SchoolScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,

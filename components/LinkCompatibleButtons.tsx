@@ -1,19 +1,32 @@
-import React, { type ReactNode, useState, useCallback } from "react";
+import React, {
+  type ReactNode,
+  type ReactText,
+  useState,
+  useCallback,
+} from "react";
 import { Platform } from "react-native";
 import {
   Button,
   type IButtonProps,
   type IPressableProps,
+  type ITextProps,
   View,
   Pressable as _Pressable,
+  Flex,
+  Text,
+  Icon,
 } from "native-base";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { useLinkProps } from "../libs/hooks";
 import {
+  buttonBaseStyle,
   pressableBaseStyle,
   solidButtonStyle,
   subtleButtonStyle,
 } from "../styling/theme";
+import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
+import colors from "../styling/colors";
 
 export type LinkTo = {
   linkTo?: Parameters<typeof useLinkProps>[0];
@@ -160,5 +173,124 @@ export function Pressable({
     >
       {children}
     </_Pressable>
+  );
+}
+
+type LeftAlignedButtonBaseProps = {
+  title?: string;
+  _text?: ITextProps;
+  showChevron?: boolean;
+  children?: ReactText;
+} & LinkTo;
+
+export type LeftAlignedButtonProps = LeftAlignedButtonBaseProps &
+  Omit<IPressableProps, keyof LeftAlignedButtonBaseProps>;
+
+export function LeftAlignedButton({
+  title,
+  _text,
+  showChevron = true,
+  children,
+  ...rest
+}: LeftAlignedButtonProps) {
+  return (
+    <Pressable {...pressableBaseStyle} {...rest}>
+      <Flex
+        {...buttonBaseStyle}
+        justifyContent={"space-between"}
+        flexDirection={"row"}
+        alignItems={"center"}
+        alignContent={"center"}
+        {...colorModeResponsiveStyle((selector) => ({
+          background: selector(colors.background.secondary),
+        }))}
+      >
+        <Text {..._text} variant={"subtleButton"}>
+          {title ?? children ?? "Button"}
+        </Text>
+        {showChevron && (
+          <Icon
+            marginRight={"-5px"}
+            size={"18px"}
+            as={<Ionicons name={"chevron-forward"} />}
+          />
+        )}
+      </Flex>
+    </Pressable>
+  );
+}
+
+type PlainTextButtonBaseProps = {
+  title?: string;
+  _text?: ITextProps;
+  children?: ReactText;
+} & LinkTo;
+
+export type PlainTextButtonProps = PlainTextButtonBaseProps &
+  Omit<IPressableProps, keyof PlainTextButtonBaseProps>;
+
+export function PlainTextButton({
+  title,
+  _text,
+  children,
+  ...rest
+}: PlainTextButtonProps) {
+  _text = Object.assign(
+    {
+      fontWeight: "semibold",
+      textAlign: "center",
+      ...colorModeResponsiveStyle((selector) => ({
+        color: selector(colors.nyu),
+      })),
+    },
+    _text
+  );
+
+  return (
+    <Pressable {...pressableBaseStyle} {...rest}>
+      <Text {..._text}>{title ?? children ?? "Button"}</Text>
+    </Pressable>
+  );
+}
+
+type TieredTextButtonBaseProps = {
+  primaryText: string;
+  secondaryText?: string;
+} & LinkTo;
+
+export type TieredTextButtonProps = TieredTextButtonBaseProps &
+  Omit<IButtonProps, keyof TieredTextButtonBaseProps>;
+
+export function TieredTextButton({
+  primaryText,
+  secondaryText,
+  ...rest
+}: TieredTextButtonProps) {
+  const { width } = rest;
+
+  return (
+    <SubtleButton {...rest}>
+      <Text
+        width={width}
+        paddingX={"8px"}
+        variant={"subtleButton"}
+        fontWeight={"medium"}
+        lineHeight={"sm"}
+        numberOfLines={2}
+      >
+        {primaryText}
+      </Text>
+      {!!secondaryText && (
+        <Text
+          width={width}
+          paddingX={"8px"}
+          fontSize={"sm"}
+          textAlign={"center"}
+          numberOfLines={2}
+        >
+          {secondaryText}
+        </Text>
+      )}
+    </SubtleButton>
   );
 }

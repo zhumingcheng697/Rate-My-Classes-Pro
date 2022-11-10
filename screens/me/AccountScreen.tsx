@@ -9,7 +9,7 @@ import {
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import AlertPopup from "../../components/AlertPopup";
-import LeftAlignedButton from "../../components/LeftAlignedButton";
+import { LeftAlignedButton } from "../../components/LinkCompatibleButtons";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { type MeNavigationParamList } from "../../libs/types";
 import { useInnerHeight } from "../../libs/hooks";

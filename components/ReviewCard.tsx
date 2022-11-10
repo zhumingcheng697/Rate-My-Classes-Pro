@@ -17,7 +17,7 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import PlainTextButton from "./PlainTextButton";
+import { PlainTextButton } from "./LinkCompatibleButtons";
 import AlertPopup from "./AlertPopup";
 import IconHStack from "./IconHStack";
 import {

@@ -19,8 +19,10 @@ import { GoogleSignInButton } from "../../libs/GoogleSignIn";
 import { useInitialTabName, useIsCatalyst } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LabeledInput from "../../components/LabeledInput";
-import PlainTextButton from "../../components/PlainTextButton";
-import { SolidButton } from "../../components/LinkCompatibleButtons";
+import {
+  SolidButton,
+  PlainTextButton,
+} from "../../components/LinkCompatibleButtons";
 import AlertPopup from "../../components/AlertPopup";
 import { useAuth } from "../../mongodb/auth";
 

@@ -53,9 +53,9 @@ export default function App() {
   }, [navigationTheme.colors]);
 
   return (
-    <OAuthProvider>
-      <Provider store={store}>
-        <AuthProvider>
+    <Provider store={store}>
+      <AuthProvider>
+        <OAuthProvider>
           <NativeBaseProvider
             theme={nativeBaseTheme}
             colorModeManager={colorModeManager}
@@ -73,8 +73,8 @@ export default function App() {
               <RootNavigation />
             </NavigationContainer>
           </NativeBaseProvider>
-        </AuthProvider>
-      </Provider>
-    </OAuthProvider>
+        </OAuthProvider>
+      </AuthProvider>
+    </Provider>
   );
 }

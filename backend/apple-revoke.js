@@ -4,7 +4,9 @@ exports = async function ({ token, platform }) {
   const appleSignin = require("apple-signin-auth");
 
   const clientID = context.values.get(
-    platform === "web" ? "apple-service-id" : "apple-app-id"
+    platform !== "ios" && platform !== "macos"
+      ? "apple-service-id"
+      : "apple-app-id"
   );
 
   const clientSecret = appleSignin.getClientSecret({

@@ -4,7 +4,9 @@ exports = async function ({ query }) {
   const appleSignin = require("apple-signin-auth");
 
   const clientID = context.values.get(
-    platform === "web" ? "apple-service-id" : "apple-app-id"
+    query.platform !== "ios" && query.platform !== "macos"
+      ? "apple-service-id"
+      : "apple-app-id"
   );
 
   const clientSecret = appleSignin.getClientSecret({
@@ -14,7 +16,7 @@ exports = async function ({ query }) {
     keyIdentifier: context.values.get("apple-private-key-id"),
   });
 
-  return await appleSignin.getAuthorizationToken(code, {
+  return await appleSignin.getAuthorizationToken(query.code, {
     clientID,
     redirectUri: context.values.get("web-deployment-url"),
     clientSecret,

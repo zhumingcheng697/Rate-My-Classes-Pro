@@ -55,6 +55,7 @@
     "@types/react-test-renderer": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
+    "apple-signin-auth": "^1.7.4",
     "babel-jest": "^26.6.3",
     "eslint": "^7.32.0",
     "google-auth-library": "^8.7.0",

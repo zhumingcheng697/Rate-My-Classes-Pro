@@ -31,7 +31,7 @@ import {
   getFullClassCode,
 } from "../libs/utils";
 import { useAppState } from "../libs/hooks";
-import { GoogleOAuth } from "../libs/OAuth";
+import { GoogleOAuth } from "../libs/oauth";
 
 type AuthContext = {
   db: Database | null;

@@ -14,7 +14,7 @@ import reducer from "./redux/reducers";
 import { useColorModeSynchronizer } from "./styling/color-mode-utils";
 import nativeBaseTheme from "./styling/theme";
 import { useAppState } from "./libs/hooks";
-import { OAuthProvider } from "./libs/OAuth";
+import { OAuthProvider } from "./libs/oauth";
 
 Ionicons.loadFont();
 

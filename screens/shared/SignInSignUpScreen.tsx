@@ -11,7 +11,7 @@ import { type StackNavigationProp } from "@react-navigation/stack";
 
 import { Route, composeErrorMessage } from "../../libs/utils";
 import { type SharedNavigationParamList } from "../../libs/types";
-import { AppleOAuth } from "../../libs/OAuth";
+import { AppleOAuth } from "../../libs/oauth";
 import {
   AppleSignInButton,
   GoogleSignInButton,

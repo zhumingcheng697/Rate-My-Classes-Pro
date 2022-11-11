@@ -5,7 +5,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import colors, { subtleBorder } from "../styling/colors";
 import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 import { useAuth } from "../mongodb/auth";
-import { AppleOAuth, GoogleOAuth, OAuthTokenResponse } from "../libs/OAuth";
+import { AppleOAuth, GoogleOAuth, OAuthTokenResponse } from "../libs/oauth";
 
 type OAuthSignInButtonBaseProps = {
   provider: "Apple" | "Google";

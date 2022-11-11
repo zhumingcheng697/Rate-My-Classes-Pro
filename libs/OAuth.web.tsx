@@ -37,32 +37,24 @@ export type OAuthCodeResponse = {
   authCode: string;
 };
 
+export type OAuthSignInOptions =
+  | {
+      callback: (res?: OAuthTokenResponse) => void;
+      onError: (error: any) => void;
+      flow?: "idToken";
+    }
+  | {
+      callback: (res?: OAuthCodeResponse) => void;
+      onError: (error: any) => void;
+      flow: "authCode";
+    };
+
 export namespace AppleOAuth {
   export function isSupported() {
     return true;
   }
 
-  export function useTokenSignIn(
-    callback: (res?: OAuthTokenResponse) => void,
-    onError: (error: any) => void
-  ) {
-    return useSignIn(callback, onError, "idToken");
-  }
-
-  export function useCodeSignIn(
-    callback: (res?: OAuthCodeResponse) => void,
-    onError: (error: any) => void
-  ) {
-    return useSignIn(callback, onError, "authCode");
-  }
-
-  function useSignIn(
-    ...args:
-      | [(res?: OAuthTokenResponse) => void, (error: any) => void, "idToken"]
-      | [(res?: OAuthCodeResponse) => void, (error: any) => void, "authCode"]
-  ) {
-    const [callback, onError, intent] = args;
-
+  export function useSignIn({ callback, onError, flow }: OAuthSignInOptions) {
     return useCallback(async () => {
       let hasError = false;
 
@@ -89,7 +81,7 @@ export namespace AppleOAuth {
         if (!authorization?.id_token || !authorization?.code)
           return onError(new Error("Unable to retrieve id token or auth code"));
 
-        if (intent === "authCode")
+        if (flow === "authCode")
           return callback({ authCode: authorization.code });
 
         const username = composeUsername({
@@ -104,48 +96,27 @@ export namespace AppleOAuth {
       } catch (error: any) {
         return onError(error);
       }
-    }, [callback, onError, intent]);
+    }, [callback, onError, flow]);
   }
 }
 
 export namespace GoogleOAuth {
-  export function useTokenSignIn(
-    callback: (res?: OAuthTokenResponse) => void,
-    onError: (error: any) => void
-  ) {
-    return useSignIn(callback, onError, "idToken");
-  }
-
-  export function useCodeSignIn(
-    callback: (res?: OAuthCodeResponse) => void,
-    onError: (error: any) => void
-  ) {
-    return useSignIn(callback, onError, "authCode");
-  }
-
-  function useSignIn(
-    ...args:
-      | [(res?: OAuthTokenResponse) => void, (error: any) => void, "idToken"]
-      | [(res?: OAuthCodeResponse) => void, (error: any) => void, "authCode"]
-  ) {
-    const [callback, _onError, intent] = args;
-
+  export function useSignIn({ callback, onError, flow }: OAuthSignInOptions) {
     const onSuccess = useCallback(
       async ({ code }: { code: string }) => {
         try {
           if (!code)
-            return _onError(new Error("Unable to retrieve authorization code"));
+            return onError(new Error("Unable to retrieve authorization code"));
 
-          if (intent === "authCode") return callback({ authCode: code });
+          if (flow === "authCode") return callback({ authCode: code });
 
           const res = await fetch(
             `${GOOGLE_OAUTH_ENDPOINT}?code=${encodeURIComponent(code)}`
           );
-          const json: { id_token?: string; access_token?: string } =
-            await res.json();
+          const json: { id_token?: string } = await res.json();
 
           if (!json?.id_token)
-            return _onError(new Error("Unable to retrieve id token"));
+            return onError(new Error("Unable to retrieve id token"));
 
           return callback({
             idToken: json.id_token,
@@ -153,25 +124,25 @@ export namespace GoogleOAuth {
           });
         } catch (error: any) {
           console.error(error);
-          _onError(error);
+          onError(error);
         }
       },
-      [callback, _onError, intent]
+      [callback, onError, flow]
     );
 
-    const onError = useCallback(
+    const _onError = useCallback(
       (error: any) => {
         if (error.type !== "popup_closed") {
           console.error(error);
-          return _onError(error);
+          return onError(error);
         } else {
           return callback();
         }
       },
-      [callback, _onError]
+      [callback, onError]
     );
 
-    return useGoogleLogin({ onSuccess, onError, flow: "auth-code" });
+    return useGoogleLogin({ onSuccess, onError: _onError, flow: "auth-code" });
   }
 
   export async function signOut() {

@@ -27,11 +27,8 @@ function OAuthSignInButton({
 }: OAuthSignInButtonProps) {
   const auth = useAuth();
 
-  const useTokenSignIn = useMemo(
-    () =>
-      provider === "Apple"
-        ? AppleOAuth.useTokenSignIn
-        : GoogleOAuth.useTokenSignIn,
+  const useSignIn = useMemo(
+    () => (provider === "Apple" ? AppleOAuth.useSignIn : GoogleOAuth.useSignIn),
     []
   );
 
@@ -57,7 +54,7 @@ function OAuthSignInButton({
     setIsLoading(false);
   }, []);
 
-  const signIn = useTokenSignIn(callback, onError);
+  const signIn = useSignIn({ callback, onError });
 
   return (
     <Button

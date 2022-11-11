@@ -35,6 +35,18 @@ export type OAuthCodeResponse = {
   authCode: string;
 };
 
+export type OAuthSignInOptions =
+  | {
+      callback: (res?: OAuthTokenResponse) => void;
+      onError: (error: any) => void;
+      flow?: "idToken";
+    }
+  | {
+      callback: (res?: OAuthCodeResponse) => void;
+      onError: (error: any) => void;
+      flow: "authCode";
+    };
+
 export namespace AppleOAuth {
   export function isSupported() {
     return !(
@@ -42,27 +54,7 @@ export namespace AppleOAuth {
     );
   }
 
-  export function useTokenSignIn(
-    callback: (res?: OAuthTokenResponse) => void,
-    onError: (error: any) => void
-  ) {
-    return useSignIn(callback, onError, "idToken");
-  }
-
-  export function useCodeSignIn(
-    callback: (res?: OAuthCodeResponse) => void,
-    onError: (error: any) => void
-  ) {
-    return useSignIn(callback, onError, "authCode");
-  }
-
-  function useSignIn(
-    ...args:
-      | [(res?: OAuthTokenResponse) => void, (error: any) => void, "idToken"]
-      | [(res?: OAuthCodeResponse) => void, (error: any) => void, "authCode"]
-  ) {
-    const [callback, onError, intent] = args;
-
+  export function useSignIn({ callback, onError, flow }: OAuthSignInOptions) {
     return useCallback(async () => {
       try {
         const { user, fullName, identityToken, authorizationCode } =
@@ -79,7 +71,7 @@ export namespace AppleOAuth {
         if (!identityToken || !authorizationCode)
           return onError(new Error("Unable to retrieve id token or auth code"));
 
-        if (intent === "authCode")
+        if (flow === "authCode")
           return callback({ authCode: authorizationCode });
 
         const username = composeUsername({
@@ -106,32 +98,12 @@ export namespace AppleOAuth {
 
         return callback();
       }
-    }, [callback, onError, intent]);
+    }, [callback, onError, flow]);
   }
 }
 
 export namespace GoogleOAuth {
-  export function useTokenSignIn(
-    callback: (res?: OAuthTokenResponse) => void,
-    onError: (error: any) => void
-  ) {
-    return useSignIn(callback, onError, "idToken");
-  }
-
-  export function useCodeSignIn(
-    callback: (res?: OAuthCodeResponse) => void,
-    onError: (error: any) => void
-  ) {
-    return useSignIn(callback, onError, "authCode");
-  }
-
-  function useSignIn(
-    ...args:
-      | [(res?: OAuthTokenResponse) => void, (error: any) => void, "idToken"]
-      | [(res?: OAuthCodeResponse) => void, (error: any) => void, "authCode"]
-  ) {
-    const [callback, onError, intent] = args;
-
+  export function useSignIn({ callback, onError, flow }: OAuthSignInOptions) {
     return useCallback(async () => {
       try {
         await GoogleSignin.hasPlayServices();
@@ -141,8 +113,7 @@ export namespace GoogleOAuth {
         if (!idToken || !serverAuthCode)
           return onError(new Error("Unable to retrieve id token or auth code"));
 
-        if (intent === "authCode")
-          return callback({ authCode: serverAuthCode });
+        if (flow === "authCode") return callback({ authCode: serverAuthCode });
 
         const username = composeUsername({
           fullName: user.name,
@@ -163,7 +134,7 @@ export namespace GoogleOAuth {
         }
         console.error(error);
       }
-    }, [callback, onError, intent]);
+    }, [callback, onError, flow]);
   }
 
   export async function signOut() {

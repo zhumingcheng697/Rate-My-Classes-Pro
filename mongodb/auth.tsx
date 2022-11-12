@@ -321,13 +321,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
               { token: token.refresh_token, platform: Platform.OS }
             );
             await realmApp.deleteUser(newUser);
+          } else {
+            await realmApp.removeUser(newUser);
           }
 
-          if (user) {
-            realmApp.switchUser(user);
-          } else {
-            await newUser.logOut();
-          }
+          if (user) realmApp.switchUser(user);
+
+          await newUser.logOut();
         });
         throw new Error("Please sign in to your original account.");
       }

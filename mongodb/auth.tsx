@@ -129,11 +129,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     } else if (
       appState === "active" &&
       isInternetReachable &&
-      isAuthenticated
+      isAuthenticated &&
+      isUserDocLoaded
     ) {
-      restartSync(user, isUserDocLoaded);
+      restartSync(user, true);
     }
-  }, [appState, isInternetReachable]);
+  }, [appState, isInternetReachable, isUserDocLoaded]);
 
   const loadUserDoc = useCallback(
     async (user: Realm.User, db: Database, throws: boolean = false) => {

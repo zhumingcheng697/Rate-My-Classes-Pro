@@ -227,8 +227,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    await user.logOut();
-
     if (user.providerType === "anon-user") {
       await asyncTryCatch(async () => await realmApp.deleteUser(user));
     } else {
@@ -237,6 +235,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       await asyncTryCatch(async () => await realmApp.removeUser(user));
     }
 
+    await user.logOut();
     cleanupLocalProfile();
   }, [user, dispatch]);
 
@@ -321,13 +320,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
               provider === "Apple" ? "apple_revoke" : "google_revoke",
               { token: token.refresh_token, platform: Platform.OS }
             );
-            await newUser.logOut();
             await realmApp.deleteUser(newUser);
-          } else {
-            await newUser.logOut();
           }
+
           if (user) {
             realmApp.switchUser(user);
+          } else {
+            await newUser.logOut();
           }
         });
         throw new Error("Please sign in to your original account.");
@@ -339,8 +338,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         provider === "Apple" ? "apple_revoke" : "google_revoke",
         { token: token.refresh_token, platform: Platform.OS }
       );
-      await newUser.logOut();
       await realmApp.deleteUser(newUser);
+      await newUser.logOut();
       cleanupLocalProfile();
       return;
     },
@@ -363,8 +362,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
 
     await db.deleteAccount();
-    await user.logOut();
     await realmApp.deleteUser(user);
+    await user.logOut();
     cleanupLocalProfile();
   }, [user]);
 

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Switch as NativeSwitch, Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Text, HStack, Switch, VStack, Box, theme } from "native-base";
-import { type NavigationProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 import AlertPopup from "../../components/AlertPopup";
 import AppIconSwitcher from "../../components/AppIconSwitcher";
@@ -13,11 +13,10 @@ import { LeftAlignedButton } from "../../components/LinkCompatibleButton";
 import { SemesterSelector } from "../../components/Selector";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { useIsCatalyst } from "../../libs/hooks";
-import { type MeNavigationParamList } from "../../libs/types";
 import { composeErrorMessage, validateSettings } from "../../libs/utils";
 import Semester from "../../libs/semester";
 import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
-import { type AuthContext, useAuth } from "../../mongodb/auth";
+import { useAuth } from "../../mongodb/auth";
 import colors from "../../styling/colors";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
@@ -31,8 +30,7 @@ export default function SettingsScreen() {
     updateUsername,
     db,
   } = auth;
-  const navigation =
-    useNavigation<NavigationProp<MeNavigationParamList, "Settings">>();
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const [accountDeleted, setAccountDeleted] = useState(false);
   const [showSettingsAlert, setShowSettingsAlert] = useState(false);

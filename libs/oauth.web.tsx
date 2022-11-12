@@ -1,4 +1,4 @@
-import React, { useCallback, type ReactNode } from "react";
+import React, { useCallback } from "react";
 import { useScript, appleAuthHelpers } from "react-apple-signin-auth";
 import {
   GoogleOAuthProvider,
@@ -13,10 +13,10 @@ import {
 } from "react-native-dotenv";
 
 import { composeUsername } from "./utils";
-
-export type OAuthProviderProps = {
-  children: ReactNode;
-};
+import {
+  type OAuthProviderProps,
+  type OAuthSignInOptions,
+} from "./oauth.shared";
 
 export function OAuthProvider({ children }: OAuthProviderProps) {
   useScript(appleAuthHelpers.APPLE_SCRIPT_SRC);
@@ -27,27 +27,6 @@ export function OAuthProvider({ children }: OAuthProviderProps) {
     </GoogleOAuthProvider>
   );
 }
-
-export type OAuthTokenResponse = {
-  idToken: string;
-  username: string | null;
-};
-
-export type OAuthCodeResponse = {
-  authCode: string;
-};
-
-export type OAuthSignInOptions =
-  | {
-      callback: (res?: OAuthTokenResponse) => void;
-      onError: (error: any) => void;
-      flow?: "idToken";
-    }
-  | {
-      callback: (res?: OAuthCodeResponse) => void;
-      onError: (error: any) => void;
-      flow: "authCode";
-    };
 
 export namespace AppleOAuth {
   export function isSupported() {
@@ -148,4 +127,10 @@ export namespace GoogleOAuth {
   export async function signOut() {
     googleLogout();
   }
-}
+
+export type {
+  OAuthProviderProps,
+  OAuthTokenResponse,
+  OAuthCodeResponse,
+  OAuthSignInOptions,
+} from "./oauth.shared";

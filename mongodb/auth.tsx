@@ -107,8 +107,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // The signOut function calls the logOut function on the currently
   // logged in user
   const signOut = useCallback(async () => {
-    if (user === null) {
-      console.error("Not logged in, can't log out!");
+    if (user === null || !user.isLoggedIn) {
       return;
     }
 
@@ -151,7 +150,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       setIsUserDocLoaded(true);
       setIsSettingsSettled(true);
     },
-    [dispatch]
+    [user, dispatch, signOut]
   );
 
   useEffect(() => {
@@ -169,7 +168,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const loadUserDoc = useCallback(
     async (user: Realm.User, db: Database, throws: boolean = false) => {
-      console.log(user.isLoggedIn, user.state, user.identities);
       if (user.providerType === "anon-user") return;
 
       try {
@@ -189,7 +187,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         }
       }
     },
-    [updateUserDoc]
+    [updateUserDoc, signOut]
   );
 
   const guardDB = useCallback(
@@ -273,7 +271,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       await loadUserDoc(newUser, newDB);
       restartSync(newUser, false);
     },
-    [user, loadUserDoc, syncCleanup, signOut]
+    [user, loadUserDoc, syncCleanup, signOut, restartSync]
   );
 
   // The signUp function takes an email and password and uses the
@@ -295,7 +293,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       await newDB.guardUserDoc(username, settings);
       restartSync(newUser, false);
     },
-    [user, settings, syncCleanup, signOut]
+    [user, settings, syncCleanup, signOut, restartSync]
   );
 
   const deleteOAuthAccount = useCallback(
@@ -343,7 +341,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       cleanupLocalProfile();
       return;
     },
-    [user]
+    [user, cleanupLocalProfile, restartSync, syncCleanup]
   );
 
   const deleteAppleAccount = useCallback(
@@ -365,7 +363,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     await realmApp.deleteUser(user);
     await user.logOut();
     cleanupLocalProfile();
-  }, [user]);
+  }, [user, cleanupLocalProfile]);
 
   const signInWithOAuth = useCallback(
     async (
@@ -409,7 +407,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
       restartSync(newUser, false);
     },
-    [user, settings, loadUserDoc, syncCleanup, signOut]
+    [
+      user,
+      settings,
+      loadUserDoc,
+      syncCleanup,
+      signOut,
+      updateUserDoc,
+      restartSync,
+    ]
   );
 
   const continueWithApple = useCallback(

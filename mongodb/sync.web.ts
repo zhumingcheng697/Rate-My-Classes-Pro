@@ -8,12 +8,12 @@ import { Collections, UserDoc } from "./types";
 
 export default function sync(
   user: Realm.User,
-  callback: (userDoc: Partial<UserDoc>) => void
+  callback: (userDoc?: Partial<UserDoc>) => void
 ) {
   const db = user.mongoClient(MONGODB_SERVICE_NAME).db(MONGODB_DATABASE_NAME);
 
   const stream = db.collection<UserDoc>(Collections.users).watch(
-    [{ $match: { $and: [{ _id: user.id }, { operationType: "update" }] } }],
+    [{ $match: { _id: user.id } }],
     // @ts-ignore
     { fullDocument: "updateLookup" }
   );
@@ -21,11 +21,9 @@ export default function sync(
   (async () => {
     for await (const event of stream) {
       if (event.operationType === "update") {
-        const { fullDocument } = event;
-
-        if (fullDocument) {
-          callback(fullDocument);
-        }
+        callback(event.fullDocument);
+      } else if (event.operationType === "delete") {
+        callback();
       }
     }
   })();

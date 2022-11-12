@@ -13,7 +13,7 @@ enum Schema {
 
 export default function sync(
   user: Realm.User,
-  callback: (userDoc: Partial<UserDoc>) => void
+  callback: (userDoc?: Partial<UserDoc>) => void
 ) {
   const userSchema: Realm.ObjectSchema = {
     name: Schema.user,
@@ -98,11 +98,11 @@ export default function sync(
       sub.add(userObj);
     });
 
-    userObj.addListener((user) => {
+    userObj.addListener((user, { deletions, newModifications }) => {
+      if (!deletions.length && !newModifications.length) return;
+
       const userDoc = user.isValid() && user[0]?.toJSON();
-      if (userDoc) {
-        callback(userDoc);
-      }
+      callback(userDoc);
     });
 
     return () =>

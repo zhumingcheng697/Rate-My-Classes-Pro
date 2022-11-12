@@ -98,7 +98,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [syncCleanupRef.current]);
 
   const updateUserDoc = useCallback(
-    ({ username, starred, reviewed, settings }: Partial<UserDoc>) => {
+    (userDoc?: Partial<UserDoc>) => {
+      if (!userDoc) return;
+
+      const { username, starred, reviewed, settings } = userDoc;
+
       if (username) setUsername(username);
 
       if (starred)

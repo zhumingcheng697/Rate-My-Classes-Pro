@@ -62,7 +62,7 @@ function OAuthSignInButton({
       borderWidth={"1px"}
       onPress={async () => {
         setIsLoading(true);
-        await signIn();
+        signIn();
       }}
       {...colorModeResponsiveStyle((selector) => ({
         background: selector({

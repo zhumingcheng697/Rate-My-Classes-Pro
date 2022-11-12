@@ -34,7 +34,7 @@ import {
 import { useAppState } from "../libs/hooks";
 import { AppleOAuth, GoogleOAuth } from "../libs/oauth";
 
-type AuthContext = {
+export type AuthContext = {
   db: Database | null;
   user: Realm.User | null;
   username: string | null;

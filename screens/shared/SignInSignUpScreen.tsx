@@ -16,7 +16,7 @@ import {
   AppleSignInButton,
   GoogleSignInButton,
 } from "../../components/OAuthSignInButton";
-import { useInitialTabName, useIsCatalyst } from "../../libs/hooks";
+import { useInitialTabName } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LabeledInput from "../../components/LabeledInput";
 import {
@@ -41,7 +41,6 @@ export default function SignInSignUpScreen() {
   const route = useRoute<SignInSignUpScreenRouteProp>();
   const auth = useAuth();
   const tabName = useInitialTabName();
-  const isCatalyst = useIsCatalyst();
 
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState("");

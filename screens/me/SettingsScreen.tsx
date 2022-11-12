@@ -47,6 +47,7 @@ export default function SettingsScreen() {
   );
   const settings = useSelector((state) => state.settings);
   const showPreviousSemesters = settings.showPreviousSemesters;
+  const signInProvider = user?.providerType;
 
   const semester = useMemo(
     () => new Semester(settings.selectedSemester),
@@ -75,10 +76,10 @@ export default function SettingsScreen() {
   }, [navigation, isDeletingAccount]);
 
   useEffect(() => {
-    if (accountDeleted && !isDeletingAccount) {
+    if (accountDeleted && !isDeletingAccount && !isAuthenticated) {
       navigation.goBack();
     }
-  }, [navigation, accountDeleted, isDeletingAccount]);
+  }, [navigation, accountDeleted, isDeletingAccount, isAuthenticated]);
 
   return (
     <KeyboardAwareSafeAreaScrollView>
@@ -103,9 +104,11 @@ export default function SettingsScreen() {
         onClose={() => setShowDeleteAccountAlert(false)}
         header={"Delete Account"}
         body={`You are about to permanently delete your account. This action is not reversible!${
-          auth.user?.providerType === "custom-token" ||
-          auth.user?.providerType === "oauth2-google"
-            ? " Your account will be deleted immediately after you reauthenticate."
+          signInProvider === "custom-token" ||
+          signInProvider === "oauth2-google"
+            ? ` Your account will be deleted immediately after you reauthenticate with ${
+                signInProvider === "custom-token" ? "Apple" : "Google"
+              }.`
             : ""
         }`}
         footerPrimaryButton={
@@ -189,7 +192,7 @@ export default function SettingsScreen() {
         )}
         {isAuthenticated && (
           <LeftAlignedButton
-            title={"Delete Account"}
+            title={isDeletingAccount ? "Deleting Account…" : "Delete Account"}
             showChevron={false}
             marginTop={"20px"}
             isDisabled={isDeletingAccount}

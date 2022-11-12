@@ -1,21 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Switch as NativeSwitch, Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Text,
-  HStack,
-  Switch,
-  VStack,
-  Box,
-  theme,
-  Button,
-  type IButtonProps,
-} from "native-base";
+import { Text, HStack, Switch, VStack, Box, theme } from "native-base";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 
 import AlertPopup from "../../components/AlertPopup";
 import AppIconSwitcher from "../../components/AppIconSwitcher";
 import ClearableInput from "../../components/ClearableInput";
+import { DeleteAccountButton } from "../../components/DeleteAccountButton";
 import LabeledInput from "../../components/LabeledInput";
 import { LeftAlignedButton } from "../../components/LinkCompatibleButton";
 import { SemesterSelector } from "../../components/Selector";
@@ -23,182 +15,11 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import { useIsCatalyst } from "../../libs/hooks";
 import { type MeNavigationParamList } from "../../libs/types";
 import { composeErrorMessage, validateSettings } from "../../libs/utils";
-import { AppleOAuth, GoogleOAuth, OAuthSignInOptions } from "../../libs/oauth";
 import Semester from "../../libs/semester";
 import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
 import { type AuthContext, useAuth } from "../../mongodb/auth";
 import colors from "../../styling/colors";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
-
-type DeleteAccountButtonBaseProps = {
-  auth: AuthContext;
-  onSetup: () => void;
-  callback: (success: boolean) => void;
-  onError: (error: any) => void;
-};
-
-type DeleteAccountButtonProps = DeleteAccountButtonBaseProps &
-  Omit<IButtonProps, keyof DeleteAccountButtonBaseProps | "onPress">;
-
-function DeleteOAuthAccountButton({
-  auth,
-  onSetup,
-  callback,
-  onError,
-  provider,
-  ...rest
-}: DeleteAccountButtonProps & { provider: "Apple" | "Google" }) {
-  const useSignIn = useMemo(
-    () => (provider === "Apple" ? AppleOAuth.useSignIn : GoogleOAuth.useSignIn),
-    []
-  );
-
-  const signInOptions: OAuthSignInOptions = useMemo(
-    () => ({
-      callback: async (res) => {
-        try {
-          if (!res) {
-            return callback(false);
-          }
-
-          // if (provider === "Apple") {
-          //   await auth.deleteAppleAccount(res.authCode);
-          // } else {
-          //   await auth.deleteGoogleAccount(res.authCode);
-          // }
-          callback(true);
-        } catch (error: any) {
-          onError(error);
-        }
-      },
-      onError,
-      flow: "authCode",
-    }),
-    [auth, callback, onError]
-  );
-
-  const deleteAccount = useSignIn(signInOptions);
-
-  return (
-    <Button
-      {...rest}
-      onPress={async () => {
-        onSetup();
-        deleteAccount();
-      }}
-    >
-      Delete
-    </Button>
-  );
-}
-
-function DeleteAppleAccountButton(props: DeleteAccountButtonProps) {
-  return <DeleteOAuthAccountButton {...props} provider={"Apple"} />;
-}
-
-function DeleteGoogleAccountButton(props: DeleteAccountButtonProps) {
-  return <DeleteOAuthAccountButton {...props} provider={"Google"} />;
-}
-
-function DeleteEmailPasswordAccountButton({
-  auth,
-  onSetup,
-  callback,
-  onError,
-  ...rest
-}: DeleteAccountButtonProps) {
-  return (
-    <Button
-      {...rest}
-      onPress={async () => {
-        try {
-          onSetup();
-          // await auth.deleteEmailPasswordAccount();
-          callback(true);
-        } catch (error: any) {
-          onError(error);
-        }
-      }}
-    >
-      Delete
-    </Button>
-  );
-}
-
-type DeleteAccountButtonSelectorBaseProps = {
-  auth: AuthContext;
-  navigation: NavigationProp<MeNavigationParamList, "Settings">;
-  setIsDeletingAccount: (isDeletingAlert: boolean) => void;
-  setDeleteAccountError: (error: any) => void;
-  setShowDeleteAccountAlert: (showAlert: boolean) => void;
-  setShowDeleteAccountError: (showAlert: boolean) => void;
-};
-
-type DeleteAccountButtonSelectorProps = DeleteAccountButtonSelectorBaseProps &
-  Omit<IButtonProps, keyof DeleteAccountButtonSelectorBaseProps | "onPress">;
-
-function DeleteAccountButton({
-  auth,
-  navigation,
-  setIsDeletingAccount,
-  setDeleteAccountError,
-  setShowDeleteAccountAlert,
-  setShowDeleteAccountError,
-  ...rest
-}: DeleteAccountButtonSelectorProps) {
-  const provider = auth.user?.providerType;
-  const onSetup = useCallback(() => {
-    setIsDeletingAccount(true);
-    setShowDeleteAccountAlert(false);
-  }, []);
-  const onSuccess = useCallback((success) => {
-    setDeleteAccountError(null);
-    setShowDeleteAccountError(false);
-    setIsDeletingAccount(false);
-    if (success) navigation.goBack();
-  }, []);
-  const onError = useCallback((error: any) => {
-    console.error(error);
-    setDeleteAccountError(error);
-    setShowDeleteAccountError(true);
-    setIsDeletingAccount(false);
-  }, []);
-  const props = useMemo(
-    () => ({ auth, onSetup, onSuccess, onError, ...rest }),
-    [auth, onSetup, onSuccess, onError, rest]
-  );
-
-  if (provider === "custom-token")
-    return (
-      <DeleteAppleAccountButton
-        auth={auth}
-        onSetup={onSetup}
-        callback={onSuccess}
-        onError={onError}
-        {...rest}
-      />
-    );
-  else if (provider === "oauth2-google")
-    return (
-      <DeleteGoogleAccountButton
-        auth={auth}
-        onSetup={onSetup}
-        callback={onSuccess}
-        onError={onError}
-        {...rest}
-      />
-    );
-  else
-    return (
-      <DeleteEmailPasswordAccountButton
-        auth={auth}
-        onSetup={onSetup}
-        callback={onSuccess}
-        onError={onError}
-        {...rest}
-      />
-    );
-}
 
 export default function SettingsScreen() {
   const auth = useAuth();
@@ -213,6 +34,7 @@ export default function SettingsScreen() {
   const navigation =
     useNavigation<NavigationProp<MeNavigationParamList, "Settings">>();
   const dispatch = useDispatch();
+  const [accountDeleted, setAccountDeleted] = useState(false);
   const [showSettingsAlert, setShowSettingsAlert] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [showDeleteAccountAlert, setShowDeleteAccountAlert] = useState(false);
@@ -248,6 +70,18 @@ export default function SettingsScreen() {
     }
   }, [user, isAuthenticated, username]);
 
+  useEffect(() => {
+    return navigation.addListener("beforeRemove", (e) => {
+      if (isDeletingAccount) e.preventDefault();
+    });
+  }, [navigation, isDeletingAccount]);
+
+  useEffect(() => {
+    if (accountDeleted && !isDeletingAccount) {
+      navigation.goBack();
+    }
+  }, [navigation, accountDeleted, isDeletingAccount]);
+
   return (
     <KeyboardAwareSafeAreaScrollView>
       <AlertPopup
@@ -279,7 +113,7 @@ export default function SettingsScreen() {
         footerPrimaryButton={
           <DeleteAccountButton
             auth={auth}
-            navigation={navigation}
+            setAccountDeleted={setAccountDeleted}
             setIsDeletingAccount={setIsDeletingAccount}
             setDeleteAccountError={setDeleteAccountError}
             setShowDeleteAccountAlert={setShowDeleteAccountAlert}

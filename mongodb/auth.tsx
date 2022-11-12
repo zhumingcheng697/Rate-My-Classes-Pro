@@ -296,18 +296,18 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const deleteOAuthAccount = useCallback(
     async (authCode: string, provider: "Apple" | "Google") => {
-      const token = await (provider === "Apple"
-        ? AppleOAuth
-        : GoogleOAuth
-      ).getToken(authCode);
+      const OAuth = provider === "Apple" ? AppleOAuth : GoogleOAuth;
+      const token = await OAuth.getToken(authCode);
 
       if (!token || !token.id_token || !token.refresh_token)
         throw new Error("Unable to retrieve id token or refresh token");
 
+      const { id_token, refresh_token } = token;
+
       const credential =
         provider === "Apple"
-          ? Realm.Credentials.jwt(token.id_token)
-          : Realm.Credentials.google(token.id_token);
+          ? Realm.Credentials.jwt(id_token)
+          : Realm.Credentials.google(id_token);
       const newUser = await realmApp.logIn(credential);
       const newDB = new Database(newUser);
       const existingUserDoc = await newDB.loadUserDoc();
@@ -316,10 +316,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       if (!user || user.id !== newUser.id) {
         await asyncTryCatch(async () => {
           if (!existingUserDoc) {
-            await newUser.callFunction(
-              provider === "Apple" ? "apple_revoke" : "google_revoke",
-              { token: token.refresh_token, platform: Platform.OS }
-            );
+            await OAuth.revokeToken(refresh_token);
             await realmApp.deleteUser(newUser);
           } else {
             await realmApp.removeUser(newUser);
@@ -329,15 +326,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
           await newUser.logOut();
         });
-        throw new Error("Please sign in to your original account.");
+        throw new Error(
+          "Please authenticate using the same account you signed in with."
+        );
       }
 
       // same user
       await newDB.deleteAccount();
-      await newUser.callFunction(
-        provider === "Apple" ? "apple_revoke" : "google_revoke",
-        { token: token.refresh_token, platform: Platform.OS }
-      );
+      await OAuth.revokeToken(refresh_token);
       await realmApp.deleteUser(newUser);
       await newUser.logOut();
       cleanupLocalProfile();

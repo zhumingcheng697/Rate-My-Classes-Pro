@@ -6,7 +6,9 @@ exports = async function ({ query }) {
   const client = new OAuth2Client(
     context.values.get("google-client-id"),
     context.values.get("google-secret"),
-    "postmessage"
+    query.platform === "web"
+      ? "postmessage"
+      : context.values.get("realm-backend-url")
   );
 
   const { tokens } = await client.getToken(query.code);

@@ -1,10 +1,10 @@
-exports = async function ({ token, platform }) {
-  if (!token) return;
+exports = async function ({ query }) {
+  if (!query || !query.token) return {};
 
   const appleSignin = require("apple-signin-auth");
 
   const clientID = context.values.get(
-    platform !== "ios" && platform !== "macos"
+    query.platform !== "ios" && query.platform !== "macos"
       ? "apple-service-id"
       : "apple-app-id"
   );
@@ -16,7 +16,7 @@ exports = async function ({ token, platform }) {
     keyIdentifier: context.values.get("apple-private-key-id"),
   });
 
-  return await appleSignin.revokeAuthorizationToken(token, {
+  return await appleSignin.revokeAuthorizationToken(query.token, {
     clientID,
     clientSecret,
     tokenTypeHint: "refresh_token",

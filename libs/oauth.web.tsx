@@ -16,6 +16,7 @@ import {
   type OAuthProviderProps,
   type OAuthSignInOptions,
   getOAuthToken,
+  revokeOAuthToken,
 } from "./oauth.shared";
 
 export function OAuthProvider({ children }: OAuthProviderProps) {
@@ -78,6 +79,10 @@ export namespace AppleOAuth {
   export async function getToken(authCode: string) {
     return await getOAuthToken(authCode, "Apple");
   }
+
+  export async function revokeToken(refreshToken: string) {
+    return await revokeOAuthToken(refreshToken, "Apple");
+  }
 }
 
 export namespace GoogleOAuth {
@@ -125,6 +130,10 @@ export namespace GoogleOAuth {
 
   export async function getToken(authCode: string) {
     return await getOAuthToken(authCode, "Google");
+  }
+
+  export async function revokeToken(refreshToken: string) {
+    return await revokeOAuthToken(refreshToken, "Google");
   }
 }
 

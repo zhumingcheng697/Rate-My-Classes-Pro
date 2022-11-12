@@ -39,11 +39,11 @@ function DeleteOAuthAccountButton({
             return callback(false);
           }
 
-          // if (provider === "Apple") {
-          //   await auth.deleteAppleAccount(res.authCode);
-          // } else {
-          //   await auth.deleteGoogleAccount(res.authCode);
-          // }
+          if (provider === "Apple") {
+            await auth.deleteAppleAccount(res.authCode);
+          } else {
+            await auth.deleteGoogleAccount(res.authCode);
+          }
           callback(true);
         } catch (error: any) {
           onError(error);
@@ -91,7 +91,7 @@ function DeleteEmailPasswordAccountButton({
       onPress={async () => {
         try {
           onSetup();
-          // await auth.deleteEmailPasswordAccount();
+          await auth.deleteEmailPasswordAccount();
           callback(true);
         } catch (error: any) {
           onError(error);
@@ -131,7 +131,7 @@ export function DeleteAccountButton({
     setShowDeleteAccountAlert(false);
   }, []);
 
-  const onSuccess = useCallback((success) => {
+  const callback = useCallback((success) => {
     setDeleteAccountError(null);
     setShowDeleteAccountError(false);
     setIsDeletingAccount(false);
@@ -156,7 +156,7 @@ export function DeleteAccountButton({
     <Button
       auth={auth}
       onSetup={onSetup}
-      callback={onSuccess}
+      callback={callback}
       onError={onError}
       {...rest}
     />

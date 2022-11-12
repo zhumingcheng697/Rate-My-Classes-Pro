@@ -270,9 +270,12 @@ export default function SettingsScreen() {
         }
         onClose={() => setShowDeleteAccountAlert(false)}
         header={"Delete Account"}
-        body={
-          "You are about to permanently delete your account. This action is irreversible! You might need to reauthenticate depending on how you signed up."
-        }
+        body={`You are about to permanently delete your account. This action is irreversible!${
+          auth.user?.providerType === "custom-token" ||
+          auth.user?.providerType === "oauth2-google"
+            ? " Your account will be deleted immediately after you reauthenticate."
+            : ""
+        }`}
         footerPrimaryButton={
           <DeleteAccountButton
             auth={auth}

@@ -2,9 +2,7 @@ import type { ReactNode } from "react";
 import { Platform } from "react-native";
 import {
   APPLE_OAUTH_ENDPOINT,
-  APPLE_REVOKE_ENDPOINT,
   GOOGLE_OAUTH_ENDPOINT,
-  GOOGLE_REVOKE_ENDPOINT,
 } from "react-native-dotenv";
 
 export type OAuthProviderProps = {
@@ -51,11 +49,11 @@ export async function revokeOAuthToken(
   provider: "Apple" | "Google"
 ) {
   const endpoint =
-    provider === "Apple" ? APPLE_REVOKE_ENDPOINT : GOOGLE_REVOKE_ENDPOINT;
+    provider === "Apple" ? APPLE_OAUTH_ENDPOINT : GOOGLE_OAUTH_ENDPOINT;
 
   await fetch(
-    `${endpoint}?platform=${Platform.OS}&token=${encodeURIComponent(
-      refreshToken
-    )}`
+    `${endpoint}?action=revoke&platform=${
+      Platform.OS
+    }&token=${encodeURIComponent(refreshToken)}`
   );
 }

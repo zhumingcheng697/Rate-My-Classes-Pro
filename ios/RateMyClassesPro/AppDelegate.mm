@@ -100,6 +100,7 @@
   }
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+//  self.window.windowScene.sizeRestrictions.minimumSize = CGSizeMake(1280, 800);
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;

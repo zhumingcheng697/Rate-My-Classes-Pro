@@ -1,5 +1,6 @@
 exports = async function ({ query }) {
-  if (!query || !query.code) return {};
+  if (!query || (query.action === "revoke" ? !query.token : !query.code))
+    return {};
 
   const { OAuth2Client } = require("google-auth-library");
 
@@ -10,6 +11,10 @@ exports = async function ({ query }) {
       ? "postmessage"
       : context.values.get("realm-backend-url")
   );
+
+  if (query.action === "revoke") {
+    return await client.revokeToken(query.token);
+  }
 
   const { tokens } = await client.getToken(query.code);
 

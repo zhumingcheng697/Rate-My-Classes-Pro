@@ -44,11 +44,9 @@ declare module "react-native-dotenv" {
   export const MONGODB_DATABASE_NAME: string;
   export const APPLE_SIGN_IN_SERVICE_ID: string;
   export const APPLE_OAUTH_ENDPOINT: string;
-  export const APPLE_REVOKE_ENDPOINT: string;
   export const GOOGLE_WEB_CLIENT_ID: string;
   export const GOOGLE_IOS_CLIENT_ID: string;
   export const GOOGLE_OAUTH_ENDPOINT: string;
-  export const GOOGLE_REVOKE_ENDPOINT: string;
   export const WEB_DEPLOYMENT_URL: string;
 }
 

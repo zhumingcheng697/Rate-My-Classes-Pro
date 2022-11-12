@@ -1,5 +1,6 @@
 exports = async function ({ query }) {
-  if (!query || !query.code) return {};
+  if (!query || (query.action === "revoke" ? !query.token : !query.code))
+    return {};
 
   const appleSignin = require("apple-signin-auth");
 
@@ -15,6 +16,14 @@ exports = async function ({ query }) {
     privateKey: context.values.get("apple-private-key"),
     keyIdentifier: context.values.get("apple-private-key-id"),
   });
+
+  if (query.action === "revoke") {
+    return await appleSignin.revokeAuthorizationToken(query.token, {
+      clientID,
+      clientSecret,
+      tokenTypeHint: "refresh_token",
+    });
+  }
 
   return await appleSignin.getAuthorizationToken(query.code, {
     clientID,

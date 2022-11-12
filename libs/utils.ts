@@ -117,8 +117,9 @@ export function composeErrorMessage(
     if (typeof error === "string") {
       return formSentence(error);
     }
-    if (!isObjectEmpty(error) && error.message) {
-      return formSentence(error.message);
+    if (!isObjectEmpty(error)) {
+      const err = error.message || error.error || error.type;
+      if (err) return formSentence(err);
     }
     if (!/^(?:\[object [a-z0-9_]+\]|Error)$/i.test(`${error}`)) {
       return formSentence(`${error}`);

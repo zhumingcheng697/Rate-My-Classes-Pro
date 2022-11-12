@@ -47,10 +47,10 @@ export default function AccountScreen() {
 
   useEffect(() => {
     if (wasAuthenticated !== isAuthenticated) {
-      if (!wasAuthenticated) {
-        navigation.setParams({ isAuthenticated });
-      } else if (isFocused) {
+      if (isFocused && wasAuthenticated) {
         navigation.replace("Account", { isAuthenticated });
+      } else {
+        navigation.setParams({ isAuthenticated });
       }
     }
   }, [isFocused, wasAuthenticated, isAuthenticated]);

@@ -103,7 +103,7 @@ export default function SettingsScreen() {
         }
         onClose={() => setShowDeleteAccountAlert(false)}
         header={"Delete Account"}
-        body={`You are about to permanently delete your account. This action is not reversible!${
+        body={`You are about to permanently delete your account and lose all your stars and reviews. This action is not reversible!${
           signInProvider === "custom-token" ||
           signInProvider === "oauth2-google"
             ? ` Your account will be deleted immediately after you reauthenticate with ${

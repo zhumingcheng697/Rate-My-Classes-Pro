@@ -208,7 +208,7 @@ export default function ReviewScreen() {
         onClose={() => setShowAlert(false)}
         header={"Delete Review"}
         body={
-          "You are about to delete your review. This action is not reversable."
+          "You are about to delete your review. This action is not reversable!"
         }
         footerPrimaryButton={
           <Button
@@ -351,7 +351,7 @@ export default function ReviewScreen() {
               <LeftAlignedButton
                 title={"Delete"}
                 showChevron={false}
-                marginTop={"15px"}
+                marginTop={"20px"}
                 _text={colorModeResponsiveStyle((selector) => ({
                   color: selector({
                     light: theme.colors.red[600],

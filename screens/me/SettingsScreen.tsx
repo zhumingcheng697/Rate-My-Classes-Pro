@@ -102,7 +102,7 @@ export default function SettingsScreen() {
         }
         onClose={() => setShowDeleteAccountAlert(false)}
         header={"Delete Account"}
-        body={`You are about to permanently delete your account. This action is irreversible!${
+        body={`You are about to permanently delete your account. This action is not reversible!${
           auth.user?.providerType === "custom-token" ||
           auth.user?.providerType === "oauth2-google"
             ? " Your account will be deleted immediately after you reauthenticate."
@@ -191,7 +191,7 @@ export default function SettingsScreen() {
           <LeftAlignedButton
             title={"Delete Account"}
             showChevron={false}
-            marginTop={"15px"}
+            marginTop={"20px"}
             isDisabled={isDeletingAccount}
             _text={colorModeResponsiveStyle((selector) => ({
               color: selector({

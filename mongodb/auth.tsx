@@ -12,7 +12,6 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { Platform } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { useNetInfo } from "@react-native-community/netinfo";
 import Realm from "./Realm";
@@ -96,6 +95,34 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       syncCleanupRef.current = null;
     }
   }, [syncCleanupRef.current]);
+
+  const cleanupLocalProfile = useCallback(() => {
+    loadStarredClasses(dispatch)({});
+    loadReviewedClasses(dispatch)({});
+    syncCleanup();
+    setUser(null);
+    setDB(null);
+  }, [syncCleanup]);
+
+  // The signOut function calls the logOut function on the currently
+  // logged in user
+  const signOut = useCallback(async () => {
+    if (user === null) {
+      console.error("Not logged in, can't log out!");
+      return;
+    }
+
+    if (user.providerType === "anon-user") {
+      await asyncTryCatch(async () => await realmApp.deleteUser(user));
+    } else {
+      if (user.providerType === "oauth2-google")
+        await asyncTryCatch(async () => await GoogleOAuth.signOut());
+      await asyncTryCatch(async () => await realmApp.removeUser(user));
+    }
+
+    await user.logOut();
+    cleanupLocalProfile();
+  }, [user, dispatch, cleanupLocalProfile]);
 
   const updateUserDoc = useCallback(
     (userDoc?: Partial<UserDoc>) => {
@@ -215,34 +242,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     },
     [user, username, isAuthenticated, guardDB]
   );
-
-  const cleanupLocalProfile = useCallback(() => {
-    loadStarredClasses(dispatch)({});
-    loadReviewedClasses(dispatch)({});
-    syncCleanup();
-    setUser(null);
-    setDB(null);
-  }, []);
-
-  // The signOut function calls the logOut function on the currently
-  // logged in user
-  const signOut = useCallback(async () => {
-    if (user === null) {
-      console.error("Not logged in, can't log out!");
-      return;
-    }
-
-    if (user.providerType === "anon-user") {
-      await asyncTryCatch(async () => await realmApp.deleteUser(user));
-    } else {
-      if (user.providerType === "oauth2-google")
-        await asyncTryCatch(async () => await GoogleOAuth.signOut());
-      await asyncTryCatch(async () => await realmApp.removeUser(user));
-    }
-
-    await user.logOut();
-    cleanupLocalProfile();
-  }, [user, dispatch]);
 
   const signInAnonymously = useCallback(
     async (override: boolean = false) => {

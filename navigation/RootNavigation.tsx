@@ -163,6 +163,10 @@ export default function RootNavigation() {
   );
 
   useEffect(() => {
+    if (userDocError && !showAlert) setShowAlert(true);
+  }, [userDocError]);
+
+  useEffect(() => {
     if (
       !schoolError &&
       !departmentError &&

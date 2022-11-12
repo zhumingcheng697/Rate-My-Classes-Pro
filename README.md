@@ -62,7 +62,7 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 
 ## Privacy
 
-Rate My Classes stores the user’s random user id, username, stars, reviews, and settings in the database. If the user is signed up by email, their email address will also be collected for authentication purposes only. No additional data is collected by Rate My Classes. You can easily delete your account and remove all your data directly in the app with a single tap.
+Rate My Classes stores the user’s random user id, username, stars, reviews, and settings in the database. If the user is signed up by email, their email address will also be collected for authentication purposes only. No additional data is collected by Rate My Classes. Users can easily delete their account and remove all their data directly in the app with a single tap. If the user used Sign in with Apple or Sign in with Google, their Apple ID or Google account will also be unlinked when they delete their Rate My Classes account in the app.
 
 ## Support
 

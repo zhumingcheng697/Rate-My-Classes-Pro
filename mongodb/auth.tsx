@@ -12,6 +12,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
+import { Platform } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { useNetInfo } from "@react-native-community/netinfo";
 import Realm from "./Realm";
@@ -31,7 +32,7 @@ import {
   getFullClassCode,
 } from "../libs/utils";
 import { useAppState } from "../libs/hooks";
-import { GoogleOAuth } from "../libs/oauth";
+import { AppleOAuth, GoogleOAuth } from "../libs/oauth";
 
 type AuthContext = {
   db: Database | null;
@@ -60,6 +61,9 @@ type AuthContext = {
     email: string,
     password: string
   ) => Promise<void>;
+  deleteAppleAccount: (authCode: string) => Promise<void>;
+  deleteGoogleAccount: (authCode: string) => Promise<void>;
+  deleteEmailPasswordAccount: () => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -207,6 +211,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     [user, username, isAuthenticated, guardDB]
   );
 
+  const cleanupLocalProfile = useCallback(() => {
+    loadStarredClasses(dispatch)({});
+    loadReviewedClasses(dispatch)({});
+    syncCleanup();
+    setUser(null);
+    setDB(null);
+  }, []);
+
   // The signOut function calls the logOut function on the currently
   // logged in user
   const signOut = useCallback(async () => {
@@ -218,18 +230,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     await user.logOut();
 
     if (user.providerType === "anon-user") {
-      asyncTryCatch(async () => await realmApp.deleteUser(user));
+      await asyncTryCatch(async () => await realmApp.deleteUser(user));
     } else {
       if (user.providerType === "oauth2-google")
-        asyncTryCatch(async () => await GoogleOAuth.signOut());
-      asyncTryCatch(async () => await realmApp.removeUser(user));
+        await asyncTryCatch(async () => await GoogleOAuth.signOut());
+      await asyncTryCatch(async () => await realmApp.removeUser(user));
     }
 
-    loadStarredClasses(dispatch)({});
-    loadReviewedClasses(dispatch)({});
-    syncCleanup();
-    setUser(null);
-    setDB(null);
+    cleanupLocalProfile();
   }, [user, dispatch]);
 
   const signInAnonymously = useCallback(
@@ -286,6 +294,79 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     },
     [user, settings, syncCleanup, signOut]
   );
+
+  const deleteOAuthAccount = useCallback(
+    async (authCode: string, provider: "Apple" | "Google") => {
+      const token = await (provider === "Apple"
+        ? AppleOAuth
+        : GoogleOAuth
+      ).getToken(authCode);
+
+      if (!token || !token.id_token || !token.refresh_token)
+        throw new Error("Unable to retrieve id token or refresh token");
+
+      const credential =
+        provider === "Apple"
+          ? Realm.Credentials.jwt(token.id_token)
+          : Realm.Credentials.google(token.id_token);
+      const newUser = await realmApp.logIn(credential);
+      const newDB = new Database(newUser);
+      const existingUserDoc = await newDB.loadUserDoc();
+
+      // not the same user
+      if (!user || user.id !== newUser.id) {
+        await asyncTryCatch(async () => {
+          if (!existingUserDoc) {
+            await newUser.callFunction(
+              provider === "Apple" ? "apple_revoke" : "google_revoke",
+              { token: token.refresh_token, platform: Platform.OS }
+            );
+            await newUser.logOut();
+            await realmApp.deleteUser(newUser);
+          } else {
+            await newUser.logOut();
+          }
+          if (user) {
+            realmApp.switchUser(user);
+          }
+        });
+        throw new Error("Please sign in to your original account.");
+      }
+
+      // same user
+      await newDB.deleteAccount();
+      await newUser.callFunction(
+        provider === "Apple" ? "apple_revoke" : "google_revoke",
+        { token: token.refresh_token, platform: Platform.OS }
+      );
+      await newUser.logOut();
+      await realmApp.deleteUser(newUser);
+      cleanupLocalProfile();
+      return;
+    },
+    [user]
+  );
+
+  const deleteAppleAccount = useCallback(
+    async (authCode: string) => await deleteOAuthAccount(authCode, "Apple"),
+    [deleteOAuthAccount]
+  );
+
+  const deleteGoogleAccount = useCallback(
+    async (authCode: string) => await deleteOAuthAccount(authCode, "Google"),
+    [deleteOAuthAccount]
+  );
+
+  const deleteEmailPasswordAccount = useCallback(async () => {
+    if (!user || !db || user.providerType !== "local-userpass") {
+      return;
+    }
+
+    await db.deleteAccount();
+    await user.logOut();
+    await realmApp.deleteUser(user);
+    cleanupLocalProfile();
+  }, [user]);
 
   const signInWithOAuth = useCallback(
     async (
@@ -364,6 +445,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         signInWithEmailPassword,
         signUpWithEmailPassword,
         signOut,
+        deleteAppleAccount,
+        deleteGoogleAccount,
+        deleteEmailPasswordAccount,
       }}
     >
       {children}

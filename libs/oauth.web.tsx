@@ -68,10 +68,7 @@ export namespace AppleOAuth {
           familyName: user?.name?.lastName,
         });
 
-        return callback({
-          idToken: authorization.id_token,
-          username,
-        });
+        return callback({ idToken: authorization.id_token, username });
       } catch (error: any) {
         return onError(error);
       }

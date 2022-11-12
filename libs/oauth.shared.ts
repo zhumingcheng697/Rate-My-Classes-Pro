@@ -29,3 +29,17 @@ export type OAuthSignInOptions =
       onError: (error: any) => void;
       flow: "authCode";
     };
+
+export async function getOAuthToken(
+  authCode: string,
+  provider: "Apple" | "Google"
+) {
+  const endpoint =
+    provider === "Apple" ? APPLE_OAUTH_ENDPOINT : GOOGLE_OAUTH_ENDPOINT;
+
+  const res = await fetch(
+    `${endpoint}?platform=${Platform.OS}&code=${encodeURIComponent(authCode)}`
+  );
+
+  return (await res.json()) as { id_token?: string; refresh_token?: string };
+}

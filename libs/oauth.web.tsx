@@ -8,7 +8,6 @@ import {
 import {
   APPLE_SIGN_IN_SERVICE_ID,
   GOOGLE_WEB_CLIENT_ID,
-  GOOGLE_OAUTH_ENDPOINT,
   WEB_DEPLOYMENT_URL,
 } from "react-native-dotenv";
 
@@ -16,6 +15,7 @@ import { composeUsername } from "./utils";
 import {
   type OAuthProviderProps,
   type OAuthSignInOptions,
+  getOAuthToken,
 } from "./oauth.shared";
 
 export function OAuthProvider({ children }: OAuthProviderProps) {
@@ -77,6 +77,10 @@ export namespace AppleOAuth {
       }
     }, [callback, onError, flow]);
   }
+
+  export async function getToken(authCode: string) {
+    return await getOAuthToken(authCode, "Apple");
+  }
 }
 
 export namespace GoogleOAuth {
@@ -89,18 +93,12 @@ export namespace GoogleOAuth {
 
           if (flow === "authCode") return callback({ authCode: code });
 
-          const res = await fetch(
-            `${GOOGLE_OAUTH_ENDPOINT}?code=${encodeURIComponent(code)}`
-          );
-          const json: { id_token?: string } = await res.json();
+          const { id_token } = await getToken(code);
 
-          if (!json?.id_token)
+          if (!id_token)
             return onError(new Error("Unable to retrieve id token"));
 
-          return callback({
-            idToken: json.id_token,
-            username: null,
-          });
+          return callback({ idToken: id_token, username: null });
         } catch (error: any) {
           console.error(error);
           onError(error);
@@ -127,6 +125,11 @@ export namespace GoogleOAuth {
   export async function signOut() {
     googleLogout();
   }
+
+  export async function getToken(authCode: string) {
+    return await getOAuthToken(authCode, "Google");
+  }
+}
 
 export type {
   OAuthProviderProps,

@@ -14,6 +14,7 @@ import { composeUsername } from "./utils";
 import {
   type OAuthProviderProps,
   type OAuthSignInOptions,
+  getOAuthToken,
 } from "./oauth.shared";
 
 GoogleSignin.configure({
@@ -79,6 +80,10 @@ export namespace AppleOAuth {
       }
     }, [callback, onError, flow]);
   }
+
+  export async function getToken(authCode: string) {
+    return await getOAuthToken(authCode, "Apple");
+  }
 }
 
 export namespace GoogleOAuth {
@@ -119,6 +124,11 @@ export namespace GoogleOAuth {
   export async function signOut() {
     await GoogleSignin.signOut();
   }
+
+  export async function getToken(authCode: string) {
+    return await getOAuthToken(authCode, "Google");
+  }
+}
 
 export type {
   OAuthProviderProps,

@@ -87,6 +87,8 @@ export default function sync(
   });
 
   return tryCatch(() => {
+    let syncing = true;
+
     const realm = new Realm(realmConfig);
 
     const userObj = realm
@@ -99,7 +101,7 @@ export default function sync(
     });
 
     userObj.addListener((user, { deletions, newModifications }) => {
-      if (!deletions.length && !newModifications.length) return;
+      if ((!deletions.length && !newModifications.length) || !syncing) return;
 
       const userDoc = user.isValid() && user[0]?.toJSON();
       callback(userDoc);
@@ -107,6 +109,7 @@ export default function sync(
 
     return () =>
       tryCatch(() => {
+        syncing = false;
         userObj.removeAllListeners();
         realm.close();
       });

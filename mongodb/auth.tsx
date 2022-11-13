@@ -300,6 +300,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const deleteOAuthAccount = useCallback(
     async (authCode: string, provider: "Apple" | "Google") => {
+      syncCleanup();
+      syncCleanup();
+
       const OAuth = provider === "Apple" ? AppleOAuth : GoogleOAuth;
       const token = await OAuth.getToken(authCode);
 
@@ -326,12 +329,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             await realmApp.removeUser(newUser);
           }
 
-          if (user) realmApp.switchUser(user);
+          if (user) {
+            realmApp.switchUser(user);
+            restartSync(user, true);
+          }
 
           await newUser.logOut();
         });
+
         throw new Error(
-          "Please authenticate using the same account you signed in with."
+          "Please authenticate using the same account you signed in with"
         );
       }
 
@@ -341,7 +348,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       await realmApp.deleteUser(newUser);
       await newUser.logOut();
       cleanupLocalProfile();
-      return;
     },
     [user, cleanupLocalProfile, restartSync, syncCleanup]
   );
@@ -361,11 +367,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
+    syncCleanup();
+    syncCleanup();
+
     await db.deleteAccount();
     await realmApp.deleteUser(user);
     await user.logOut();
     cleanupLocalProfile();
-  }, [user, cleanupLocalProfile]);
+  }, [user, db, syncCleanup, cleanupLocalProfile]);
 
   const signInWithOAuth = useCallback(
     async (

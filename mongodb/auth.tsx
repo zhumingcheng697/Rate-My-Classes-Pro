@@ -107,19 +107,21 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // The signOut function calls the logOut function on the currently
   // logged in user
   const signOut = useCallback(async () => {
-    if (user === null || !user.isLoggedIn) {
+    if (!user) {
+      cleanupLocalProfile();
       return;
     }
 
-    if (user.providerType === "anon-user") {
-      await asyncTryCatch(async () => await realmApp.deleteUser(user));
-    } else {
-      if (user.providerType === "oauth2-google")
-        await asyncTryCatch(async () => await GoogleOAuth.signOut());
-      await asyncTryCatch(async () => await realmApp.removeUser(user));
-    }
+    asyncTryCatch(async () => {
+      if (user.providerType === "anon-user") {
+        await realmApp.deleteUser(user);
+      } else {
+        if (user.providerType === "oauth2-google") await GoogleOAuth.signOut();
+        await realmApp.removeUser(user);
+      }
+    });
 
-    await user.logOut();
+    if (!user.isLoggedIn) await user.logOut();
     cleanupLocalProfile();
   }, [user, dispatch, cleanupLocalProfile]);
 

@@ -8,7 +8,7 @@ import type {
   ClassCode,
   Settings,
 } from "../libs/types";
-import type Semester from "../libs/semester";
+import type { SemesterInfo } from "../libs/semester";
 
 export enum ActionType {
   setSchoolNameRecord = "SET_SCHOOL_NAME_RECORD_ACTION",
@@ -35,7 +35,7 @@ export type DepartmentNameAction = {
 
 export type SettingsAction =
   | { type: ActionType.loadSettings; payload?: Settings }
-  | { type: ActionType.selectSemester; payload?: Semester };
+  | { type: ActionType.selectSemester; payload?: SemesterInfo };
 
 export type StarClassAction =
   | { type: ActionType.loadStarredClasses; payload?: StarredClassRecord }

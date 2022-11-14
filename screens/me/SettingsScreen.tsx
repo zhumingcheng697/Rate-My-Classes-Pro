@@ -15,7 +15,7 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import { useIsCatalyst } from "../../libs/hooks";
 import { composeErrorMessage, validateSettings } from "../../libs/utils";
 import Semester from "../../libs/semester";
-import { selectSemester } from "../../redux/actions";
+import { loadSettings, selectSemester } from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
@@ -168,8 +168,8 @@ export default function SettingsScreen() {
                 selectedSemester: newSemester.toJSON(),
               };
 
-              const oldSemester = semester;
-              selectSemester(dispatch)(newSemester);
+              const oldSemester = semester.toJSON();
+              loadSettings(dispatch)(newSettings);
 
               if (isAuthenticated && db) {
                 try {

@@ -18,7 +18,7 @@ import {
   type SettingsAction,
   ActionType,
 } from "./types";
-import type Semester from "../libs/semester";
+import type { SemesterInfo } from "../libs/semester";
 
 export const setSchoolNameRecord =
   (dispath: Dispatch<SchoolNameAction>) =>
@@ -44,7 +44,7 @@ export const loadSettings =
     });
 
 export const selectSemester =
-  (dispath: Dispatch<SettingsAction>) => (semester: Semester) =>
+  (dispath: Dispatch<SettingsAction>) => (semester: SemesterInfo) =>
     dispath({
       type: ActionType.selectSemester,
       payload: semester,

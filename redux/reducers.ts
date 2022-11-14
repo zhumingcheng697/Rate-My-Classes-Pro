@@ -52,7 +52,7 @@ function settingsReducer(
   } else if (action.type === ActionType.selectSemester) {
     if (action.payload) {
       const newState = { ...state };
-      newState.selectedSemester = action.payload.toJSON();
+      newState.selectedSemester = action.payload;
       return validateSettings(newState);
     }
   }

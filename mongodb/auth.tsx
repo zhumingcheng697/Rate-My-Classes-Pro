@@ -14,6 +14,7 @@ import React, {
 } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNetInfo } from "@react-native-community/netinfo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Realm from "./Realm";
 
 import realmApp from "./realmApp";
@@ -24,14 +25,19 @@ import {
   loadReviewedClasses,
   loadSettings,
   loadStarredClasses,
+  selectSemester,
 } from "../redux/actions";
 import {
   asyncTryCatch,
   composeUsername,
   getFullClassCode,
+  getFullSemesterCode,
 } from "../libs/utils";
 import { useAppState } from "../libs/hooks";
 import { AppleOAuth, GoogleOAuth } from "../libs/oauth";
+import Semester from "../libs/semester";
+
+const selectedSemesterKey = "SELECTED_SEMESTER";
 
 export type AuthContext = {
   db: Database | null;
@@ -89,6 +95,17 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [globalAlerts, setGlobalAlerts] = useState<Set<MutableRefObject<any>>>(
     new Set()
   );
+
+  const loadSelectedSemester = useCallback(async () => {
+    const selectedSemester = Semester.fromCode(
+      await asyncTryCatch(
+        async () => await AsyncStorage.getItem(selectedSemesterKey)
+      )
+    );
+    if (selectedSemester) {
+      selectSemester(dispatch)(selectedSemester.toJSON());
+    }
+  }, [dispatch]);
 
   const syncCleanup = useCallback(() => {
     let count = 0;
@@ -173,6 +190,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   useEffect(() => {
+    asyncTryCatch(async () =>
+      AsyncStorage.setItem(
+        selectedSemesterKey,
+        getFullSemesterCode(settings.selectedSemester)
+      )
+    );
+  }, [settings.selectedSemester.semesterCode, settings.selectedSemester.year]);
+
+  useEffect(() => {
     if (appState === "background" || !isInternetReachable || !isAuthenticated) {
       syncCleanup();
       setResyncPending(false);
@@ -215,6 +241,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           throw new Error("Your account might have been deleted");
         }
       } catch (e: any) {
+        await loadSelectedSemester();
         setIsSettingsSettled(true);
         if (
           /invalid.*(?:refresh|access|session|token|user)/i.test(
@@ -266,6 +293,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     if (user && isAuthenticated) {
       if (!isUserDocLoaded) await loadUserDoc(user, guardDB(user), true);
     } else {
+      await loadSelectedSemester();
       setIsUserDocLoaded(true);
       setIsSettingsSettled(true);
     }

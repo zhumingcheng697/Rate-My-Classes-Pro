@@ -68,7 +68,7 @@ export default class Semester {
       }
     }
 
-    return Semester.predictCurrentSemester();
+    return undefined;
   }
 
   static predictCurrentSemester() {
@@ -129,19 +129,11 @@ export default class Semester {
     return semesterOptions;
   }
 
-  static earlier(lhs: Semester, rhs: Semester) {
-    return Semester.between(lhs, rhs) < 0 ? lhs : rhs;
-  }
-
-  static later(lhs: Semester, rhs: Semester) {
-    return Semester.between(lhs, rhs) > 0 ? lhs : rhs;
-  }
-
-  static equals(lhs: Semester, rhs: Semester) {
+  static equals(lhs: SemesterInfo, rhs: SemesterInfo) {
     return lhs.semesterCode === rhs.semesterCode && lhs.year === rhs.year;
   }
 
-  static between(lhs: Semester, rhs: Semester) {
+  static between(lhs: SemesterInfo, rhs: SemesterInfo) {
     return (
       (lhs.year - rhs.year) * Semester.numOfSemesters +
       Semester.semesterCodes.indexOf(lhs.semesterCode) -

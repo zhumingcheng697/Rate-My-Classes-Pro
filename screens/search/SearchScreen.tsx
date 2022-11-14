@@ -42,6 +42,7 @@ export default function SearchScreen() {
   const [searchFailed, setSearchFailed] = useState(false);
   const [matchedClasses, setMatchedClass] = useState<ClassInfo[]>([]);
   const { selectedSemester } = useSelector((state) => state.settings);
+  const [searchPending, setIsSearchPending] = useState(false);
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const innerHeight = useInnerHeight();
@@ -60,7 +61,7 @@ export default function SearchScreen() {
   const search = useCallback(
     (() => {
       let timeoutId: ReturnType<typeof setTimeout>;
-      let shouldDiscard = true;
+      let id = {};
 
       return (
         query: string,
@@ -70,18 +71,20 @@ export default function SearchScreen() {
         failSilently: boolean = false
       ) => {
         clearTimeout(timeoutId);
+        setIsLoaded(false);
         setMatchedClass([]);
-        shouldDiscard = true;
+        id = {};
 
         if (query) {
           navigation.setParams({ query });
           setIsLoaded(false);
           timeoutId = setTimeout(() => {
-            shouldDiscard = false;
+            const myId = {};
+            id = myId;
 
             searchClasses(query, selectedSemester)
               .then((matches) => {
-                if (!shouldDiscard) {
+                if (id === myId) {
                   if (
                     schoolCodes.length &&
                     departmentNames &&
@@ -94,7 +97,7 @@ export default function SearchScreen() {
                   setMatchedClass(matches);
                   setIsLoaded(true);
                 } else {
-                  setMatchedClass([]);
+                  setIsSearchPending(true);
                 }
                 setShowAlert(false);
                 setSearchFailed(false);
@@ -118,21 +121,32 @@ export default function SearchScreen() {
   );
 
   useEffect(() => {
-    if (isSettingsSettled)
+    if (schoolNames && departmentNames && isSettingsSettled) {
       search(query, semester, schoolCodes, departmentNames);
+      setIsSearchPending(false);
+    }
   }, [query, semester, schoolCodes, departmentNames, isSettingsSettled]);
+
+  useEffect(() => {
+    if (searchPending) {
+      search(query, semester, schoolCodes, departmentNames);
+      setIsSearchPending(false);
+    }
+  }, [searchPending]);
 
   useRefresh(
     !(searchFailed && isSettingsSettled && schoolNames && departmentNames)
       ? undefined
-      : (reason) =>
+      : (reason) => {
           search(
             query,
             semester,
             schoolCodes,
             departmentNames,
             reason === "NetInfo"
-          )
+          );
+          setIsSearchPending(false);
+        }
   );
 
   const { width } = useDimensions();

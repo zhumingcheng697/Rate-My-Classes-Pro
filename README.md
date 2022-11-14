@@ -44,7 +44,7 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 ## Platforms
 
 - iOS
-- macOS
+- [macOS](https://apple.co/3AduK8G)
 - [Web](https://rate-my-classes-pro.netlify.app/)
 
 ## Tech Stack

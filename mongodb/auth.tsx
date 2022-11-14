@@ -76,7 +76,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isUserDocLoaded, setIsUserDocLoaded] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
   const [userDocError, setUserDocError] = useState<any>(null);
-  const syncCleanupRef = useRef<(() => void) | null>(null);
+  const syncCleanupRef = useRef<Set<() => void>>(new Set());
   const settings = useSelector((state) => state.settings);
   const appState = useAppState();
   const dispatch = useDispatch();
@@ -90,10 +90,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   const syncCleanup = useCallback(() => {
-    if (syncCleanupRef.current) {
-      syncCleanupRef.current();
-      syncCleanupRef.current = null;
-    }
+    [...syncCleanupRef.current].forEach((f) => {
+      f();
+      syncCleanupRef.current.delete(f);
+    });
   }, [syncCleanupRef.current]);
 
   const cleanupLocalProfile = useCallback(() => {
@@ -210,7 +210,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       if (reload) await loadUserDoc(user, guardDB(user));
 
       setTimeout(() => {
-        syncCleanupRef.current = sync(user, updateUserDoc) ?? null;
+        const unsync = sync(user, updateUserDoc);
+        if (unsync) syncCleanupRef.current.add(unsync);
       }, 1000);
     },
     [syncCleanup, updateUserDoc, guardDB, loadUserDoc]

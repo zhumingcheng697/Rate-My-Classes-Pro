@@ -82,6 +82,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const dispatch = useDispatch();
   const { isInternetReachable } = useNetInfo();
   const isAuthenticated = !!user && user.providerType !== "anon-user";
+  const [resyncPending, setResyncPending] = useState(false);
   const [db, setDB] = useState<Database | null>(() =>
     realmApp.currentUser ? new Database(realmApp.currentUser) : null
   );
@@ -90,10 +91,22 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   const syncCleanup = useCallback(() => {
-    [...syncCleanupRef.current].forEach((f) => {
-      f();
-      syncCleanupRef.current.delete(f);
-    });
+    let count = 0;
+
+    while (++count <= 3 && syncCleanupRef.current.size) {
+      if (count >= 2 || syncCleanupRef.current.size > 1) {
+        console.error(
+          syncCleanupRef.current.size +
+            " unsync callbacks found at run " +
+            count
+        );
+      }
+
+      [...syncCleanupRef.current].forEach((f) => {
+        f();
+        syncCleanupRef.current.delete(f);
+      });
+    }
   }, [syncCleanupRef.current]);
 
   const cleanupLocalProfile = useCallback(() => {
@@ -158,15 +171,29 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     if (appState === "background" || !isInternetReachable || !isAuthenticated) {
       syncCleanup();
+      setResyncPending(false);
     } else if (
       appState === "active" &&
       isInternetReachable &&
-      isAuthenticated &&
-      isUserDocLoaded
+      isAuthenticated
     ) {
-      restartSync(user, true);
+      if (isUserDocLoaded) {
+        restartSync(user, true);
+        setResyncPending(false);
+      } else {
+        setResyncPending(true);
+      }
     }
-  }, [appState, isInternetReachable, isUserDocLoaded]);
+  }, [appState, isInternetReachable]);
+
+  useEffect(() => setResyncPending(false), [user]);
+
+  useEffect(() => {
+    if (isAuthenticated && isUserDocLoaded && resyncPending) {
+      restartSync(user, false);
+    }
+    setResyncPending(false);
+  }, [isUserDocLoaded]);
 
   const loadUserDoc = useCallback(
     async (user: Realm.User, db: Database, throws: boolean = false) => {

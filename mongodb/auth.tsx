@@ -254,6 +254,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       if (reload) await loadUserDoc(user, guardDB(user));
 
       setTimeout(() => {
+        syncCleanup();
         const unsync = sync(user, updateUserDoc);
         if (unsync) syncCleanupRef.current.add(unsync);
       }, 1000);

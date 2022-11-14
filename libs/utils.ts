@@ -42,11 +42,15 @@ export function getFullDepartmentCode({
   );
 }
 
+export function getFullSemesterCode({ semesterCode, year }: SemesterInfo) {
+  return `${semesterCode}${year}`;
+}
+
 export function getFullClassCode({
   schoolCode,
   departmentCode,
   classNumber,
-}: ClassCode): string {
+}: ClassCode) {
   return `${getFullDepartmentCode({
     schoolCode,
     departmentCode,
@@ -89,11 +93,8 @@ export function extractClassInfo({
 }
 
 export function validateSettings(settings: Settings) {
-  if (
-    !Semester.getSemesterOptions().some((semester) =>
-      Semester.equals(semester, new Semester(settings.selectedSemester))
-    )
-  ) {
+  const semester = new Semester(settings.selectedSemester);
+  if (!semester.validate()) {
     settings.selectedSemester = Semester.predictCurrentSemester().toJSON();
   }
 

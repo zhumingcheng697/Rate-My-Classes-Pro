@@ -39,12 +39,36 @@ export default class Semester {
     }[this.semesterCode];
   }
 
+  toCode() {
+    return `${this.semesterCode}${this.year}`;
+  }
+
   toString() {
     return `${this.getSemesterName()} ${this.year}`;
   }
 
   toJSON() {
     return { semesterCode: this.semesterCode, year: this.year };
+  }
+
+  validate() {
+    return Semester.getSemesterOptions().some((semester) =>
+      Semester.equals(semester, this)
+    );
+  }
+
+  static fromCode(code: string) {
+    const semesterCode = code.slice(0, 2)?.toLowerCase() as SemesterCode;
+    const year = parseInt(code.slice(2));
+
+    if (year && this.semesterCodes.includes(semesterCode)) {
+      const semester = new Semester({ semesterCode, year });
+      if (semester.validate()) {
+        return semester;
+      }
+    }
+
+    return Semester.predictCurrentSemester();
   }
 
   static predictCurrentSemester() {

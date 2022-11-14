@@ -7,7 +7,11 @@ import type {
   SectionInfo,
 } from "./types";
 import { SemesterInfo } from "./semester";
-import { getFullDepartmentCode, isSchoolGrad } from "./utils";
+import {
+  getFullDepartmentCode,
+  getFullSemesterCode,
+  isSchoolGrad,
+} from "./utils";
 
 type URLParams = Record<string, string | number | boolean>;
 
@@ -95,11 +99,11 @@ export async function getDepartmentNames() {
 
 export async function getClasses(
   { schoolCode, departmentCode }: DepartmentInfo,
-  { semesterCode, year }: SemesterInfo
+  semesterInfo: SemesterInfo
 ): Promise<ClassInfo[]> {
   const res = await fetch(
     composeV2Url(
-      `/courses/${semesterCode}${year}/${getFullDepartmentCode({
+      `/courses/${getFullSemesterCode(semesterInfo)}/${getFullDepartmentCode({
         schoolCode,
         departmentCode,
       })}`
@@ -132,10 +136,10 @@ export async function getClass(
 
 export async function searchClasses(
   query: string,
-  { semesterCode, year }: SemesterInfo
+  semesterInfo: SemesterInfo
 ): Promise<ClassInfo[]> {
   const res = await fetch(
-    composeV2Url(`/search/${semesterCode}${year}`, {
+    composeV2Url(`/search/${getFullSemesterCode(semesterInfo)}`, {
       query,
       limit: 50,
     })
@@ -157,11 +161,11 @@ export async function searchClasses(
 
 export async function getSections(
   { name, schoolCode, departmentCode, classNumber }: ClassInfo,
-  { semesterCode, year }: SemesterInfo
+  semesterInfo: SemesterInfo
 ): Promise<SectionInfo[]> {
   const res = await fetch(
     composeV2Url(
-      `/courses/${semesterCode}${year}/${getFullDepartmentCode({
+      `/courses/${getFullSemesterCode(semesterInfo)}/${getFullDepartmentCode({
         schoolCode,
         departmentCode,
       })}`

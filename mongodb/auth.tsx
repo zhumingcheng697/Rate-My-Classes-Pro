@@ -140,7 +140,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const updateUserDoc = useCallback(
     (userDoc?: Partial<UserDoc>) => {
-      if (!userDoc) return;
+      if (!userDoc) {
+        setUserDocError(new Error("Your account might have been deleted"));
+        signOut();
+        return;
+      }
 
       const { username, starred, reviewed, settings } = userDoc;
 
@@ -201,14 +205,26 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
       try {
         const userDoc = await db.loadUserDoc();
-        if (userDoc) updateUserDoc(userDoc);
+        if (userDoc) {
+          updateUserDoc(userDoc);
+          setIsUserDocLoaded(true);
+          setIsSettingsSettled(true);
+          setUserDocError(null);
+        } else {
+          await signOut();
+          throw new Error("Your account might have been deleted");
+        }
+      } catch (e: any) {
+        setIsSettingsSettled(true);
+        if (
+          /invalid.*(?:refresh|access|session|token|user)/i.test(
+            e?.error || e?.message || ""
+          )
+        ) {
+          e = new Error("Your account might have been deleted");
+          await signOut();
+        }
 
-        setIsUserDocLoaded(true);
-        setIsSettingsSettled(true);
-        setUserDocError(null);
-      } catch (e) {
-        setIsSettingsSettled(true);
-        console.error(e);
         if (throws) {
           throw e;
         } else {
@@ -232,6 +248,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const restartSync = useCallback(
     async (user: Realm.User, reload: boolean) => {
       syncCleanup();
+
       if (user.providerType === "anon-user") return;
 
       if (reload) await loadUserDoc(user, guardDB(user));
@@ -329,7 +346,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const deleteOAuthAccount = useCallback(
     async (authCode: string, provider: "Apple" | "Google") => {
       syncCleanup();
-      syncCleanup();
 
       const OAuth = provider === "Apple" ? AppleOAuth : GoogleOAuth;
       const token = await OAuth.getToken(authCode);
@@ -395,7 +411,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    syncCleanup();
     syncCleanup();
 
     await db.deleteAccount();

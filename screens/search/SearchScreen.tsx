@@ -181,7 +181,9 @@ export default function SearchScreen() {
             isSearchBar
             margin={`${searchBarMargin}px`}
             value={query}
-            onChangeText={setQuery}
+            onChangeText={(text) => {
+              setQuery(text.slice(0, 50));
+            }}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             onSubmitEditing={() => {

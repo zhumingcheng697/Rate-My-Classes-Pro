@@ -90,16 +90,12 @@ export function extractClassInfo({
 
 export function validateSettings(settings: Settings) {
   if (
-    !Semester.getSemesterOptions(settings.showPreviousSemesters).some(
-      (semester) =>
-        Semester.equals(semester, new Semester(settings.selectedSemester))
+    !Semester.getSemesterOptions().some((semester) =>
+      Semester.equals(semester, new Semester(settings.selectedSemester))
     )
   ) {
     settings.selectedSemester = Semester.predictCurrentSemester().toJSON();
   }
-
-  // TODO: remove after schedge is back
-  settings.showPreviousSemesters = true;
 
   return settings;
 }

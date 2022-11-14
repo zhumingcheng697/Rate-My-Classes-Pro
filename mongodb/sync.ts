@@ -58,7 +58,6 @@ export default function sync(
     embedded: true,
     properties: {
       selectedSemester: Schema.selectedSemester,
-      showPreviousSemesters: "bool?",
     },
   };
 

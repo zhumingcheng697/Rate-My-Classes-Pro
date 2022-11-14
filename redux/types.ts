@@ -15,7 +15,6 @@ export enum ActionType {
   setDepartmentNameRecord = "SET_DEPARTMENT_NAME_RECORD_ACTION",
   loadSettings = "LOAD_SETTINGS_ACTION",
   selectSemester = "SELECT_SEMESTER_ACTION",
-  setShowPreviousSemesters = "SET_SHOW_PREVIOUS_SEMESTERS_ACTION",
   loadStarredClasses = "LOAD_STARRED_CLASSES_ACTION",
   starClass = "STAR_CLASS_ACTION",
   unstarClass = "UNSTAR_CLASS_ACTION",
@@ -36,8 +35,7 @@ export type DepartmentNameAction = {
 
 export type SettingsAction =
   | { type: ActionType.loadSettings; payload?: Settings }
-  | { type: ActionType.selectSemester; payload?: Semester }
-  | { type: ActionType.setShowPreviousSemesters; payload?: boolean };
+  | { type: ActionType.selectSemester; payload?: Semester };
 
 export type StarClassAction =
   | { type: ActionType.loadStarredClasses; payload?: StarredClassRecord }

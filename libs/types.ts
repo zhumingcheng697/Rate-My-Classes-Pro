@@ -87,7 +87,6 @@ export type SectionInfo = {
 
 export type Settings = {
   selectedSemester: SemesterInfo;
-  showPreviousSemesters: boolean;
 };
 
 export type RootNavigationParamList = {

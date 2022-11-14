@@ -42,14 +42,9 @@ function departmentNameReducer(
 function settingsReducer(
   state: Settings = {
     selectedSemester: Semester.predictCurrentSemester().toJSON(),
-    // TODO: change after schedge is back
-    showPreviousSemesters: true,
   },
   action: SettingsAction
 ) {
-  // TODO: remove after schedge is back
-  state.showPreviousSemesters = true;
-
   if (action.type === ActionType.loadSettings) {
     if (action.payload) {
       return validateSettings(action.payload);
@@ -58,12 +53,6 @@ function settingsReducer(
     if (action.payload) {
       const newState = { ...state };
       newState.selectedSemester = action.payload.toJSON();
-      return validateSettings(newState);
-    }
-  } else if (action.type === ActionType.setShowPreviousSemesters) {
-    if (typeof action.payload !== "undefined") {
-      const newState = { ...state };
-      newState.showPreviousSemesters = action.payload;
       return validateSettings(newState);
     }
   }

@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Switch as NativeSwitch, Platform } from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import { Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Text, HStack, Switch, VStack, Box, theme } from "native-base";
+import { VStack, theme } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 
 import AlertPopup from "../../components/AlertPopup";
@@ -15,9 +15,8 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import { useIsCatalyst } from "../../libs/hooks";
 import { composeErrorMessage, validateSettings } from "../../libs/utils";
 import Semester from "../../libs/semester";
-import { selectSemester, setShowPreviousSemesters } from "../../redux/actions";
+import { selectSemester } from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";
-import colors from "../../styling/colors";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
 export default function SettingsScreen() {
@@ -46,7 +45,6 @@ export default function SettingsScreen() {
     (isAuthenticated && username) || ""
   );
   const settings = useSelector((state) => state.settings);
-  const showPreviousSemesters = settings.showPreviousSemesters;
   const signInProvider = user?.providerType;
 
   const semester = useMemo(
@@ -55,8 +53,8 @@ export default function SettingsScreen() {
   );
 
   const semesterOptions = useMemo(
-    () => Semester.getSemesterOptions(showPreviousSemesters).reverse(),
-    [showPreviousSemesters]
+    () => Semester.getSemesterOptions().reverse(),
+    []
   );
 
   const isCatalyst = useIsCatalyst();
@@ -205,50 +203,6 @@ export default function SettingsScreen() {
             onPress={() => setShowDeleteAccountAlert(true)}
           />
         )}
-        {/* // TODO: uncomment after schedge is back */}
-        {/* <HStack
-          justifyContent={"space-between"}
-          alignContent={"center"}
-          alignItems={"center"}
-          marginTop={"10px"}
-        >
-          <Text
-            fontSize={"17px"}
-            fontWeight={"semibold"}
-            flexShrink={1}
-            {...colorModeResponsiveStyle((selector) => ({
-              color: selector(colors.nyu),
-            }))}
-          >
-            Show Previous Semesters
-          </Text>
-          {Platform.OS === "macos" || useIsCatalyst() ? (
-            <Box marginRight={"-35px"}>
-              <NativeSwitch
-                value={showPreviousSemesters}
-                onValueChange={setShowPreviousSemesters(dispatch)}
-              />
-            </Box>
-          ) : (
-            <Switch
-              isChecked={showPreviousSemesters}
-              onValueChange={setShowPreviousSemesters(dispatch)}
-            />
-          )}
-        </HStack>
-        <Text
-          lineHeight={"sm"}
-          {...colorModeResponsiveStyle((selector) => ({
-            color: selector({
-              light: theme.colors.gray[500],
-              dark: theme.colors.gray[400],
-            }),
-          }))}
-        >
-          {showPreviousSemesters
-            ? "Future and current semesters as well as the previous 4 semesters are shown."
-            : "Hide previous semesters for clarity. Only future and current semesters are shown."}
-        </Text> */}
       </VStack>
     </KeyboardAwareSafeAreaScrollView>
   );

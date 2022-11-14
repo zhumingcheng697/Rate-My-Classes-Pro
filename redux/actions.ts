@@ -50,13 +50,6 @@ export const selectSemester =
       payload: semester,
     });
 
-export const setShowPreviousSemesters =
-  (dispath: Dispatch<SettingsAction>) => (showPreviousSemesters: boolean) =>
-    dispath({
-      type: ActionType.setShowPreviousSemesters,
-      payload: showPreviousSemesters,
-    });
-
 export const loadStarredClasses =
   (dispath: Dispatch<StarClassAction>) =>
   (starredClasses: StarredClassRecord) =>

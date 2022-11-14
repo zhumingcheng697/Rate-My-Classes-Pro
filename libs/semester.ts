@@ -17,11 +17,6 @@ export default class Semester {
 
   private static readonly numOfSemesters = Semester.semesterCodes.length;
 
-  public static readonly lastAvailableSemester = new Semester({
-    semesterCode: SemesterCode.fall,
-    year: 2022,
-  });
-
   readonly semesterCode: SemesterCode;
   readonly year: number;
 
@@ -93,26 +88,13 @@ export default class Semester {
     return new Semester({ semesterCode, year });
   }
 
-  static getSemesterOptions(
-    showPrev: boolean = false,
-    showNext: boolean = true,
-    prevCount: number = 4
-  ) {
+  static getSemesterOptions(showNext: boolean = true, prevCount: number = 4) {
     const semesterOptions = [];
     const current = Semester.predictCurrentSemester();
-    let start = showPrev ? current.prev(Math.max(0, prevCount)) : current;
-
-    if (showNext) {
-      start = Semester.earlier(start, Semester.lastAvailableSemester);
-    }
+    let start = current.prev(Math.max(0, prevCount));
 
     const end = (
-      showNext
-        ? Semester.earlier(
-            Semester.predictFurthestSemester(),
-            Semester.lastAvailableSemester
-          )
-        : current
+      showNext ? Semester.predictFurthestSemester() : current
     ).next();
 
     while (!Semester.equals(start, end)) {

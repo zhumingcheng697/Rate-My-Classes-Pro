@@ -16,6 +16,7 @@ export type UserDoc = {
   starred: StarredClassInfo[];
   reviewed: ReviewedClassInfo[];
   settings: Settings;
+  verified?: boolean;
 };
 
 export type ReviewDoc = { _id: string } & ReviewRecord;

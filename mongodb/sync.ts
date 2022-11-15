@@ -23,6 +23,7 @@ export default function sync(
       starred: Schema.starred + "[]",
       reviewed: Schema.reviewed + "[]",
       settings: Schema.settings,
+      verified: "bool?",
     },
     primaryKey: "_id",
   };

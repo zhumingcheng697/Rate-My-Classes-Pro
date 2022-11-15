@@ -46,6 +46,7 @@ export type AuthContext = {
   isSettingsSettled: boolean;
   isUserDocLoaded: boolean;
   isAuthenticated: boolean;
+  isVerified: boolean;
   userDocError: any;
   globalAlerts: Set<MutableRefObject<any>>;
   setGlobalAlerts: Dispatch<SetStateAction<Set<MutableRefObject<any>>>>;
@@ -86,6 +87,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState(realmApp.currentUser);
   const [isSettingsSettled, setIsSettingsSettled] = useState(false);
   const [isUserDocLoaded, setIsUserDocLoaded] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
   const [userDocError, setUserDocError] = useState<any>(null);
   const syncCleanupRef = useRef<Set<() => void>>(new Set());
@@ -136,6 +138,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     loadStarredClasses(dispatch)({});
     loadReviewedClasses(dispatch)({});
     syncCleanup();
+    setIsVerified(false);
     setUser(null);
     setDB(null);
   }, [syncCleanup]);
@@ -169,7 +172,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         return;
       }
 
-      const { username, starred, reviewed, settings } = userDoc;
+      const { username, starred, reviewed, settings, verified } = userDoc;
 
       if (username) setUsername(username);
 
@@ -188,6 +191,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         );
 
       if (settings) loadSettings(dispatch)(settings);
+
+      if (verified) setIsVerified(true);
 
       setIsUserDocLoaded(true);
       setIsSettingsSettled(true);
@@ -539,6 +544,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         isSettingsSettled,
         isUserDocLoaded,
         isAuthenticated,
+        isVerified,
         userDocError,
         globalAlerts,
         setGlobalAlerts,

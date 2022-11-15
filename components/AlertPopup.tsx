@@ -5,6 +5,7 @@ import React, {
   type MutableRefObject,
   useEffect,
   useState,
+  useMemo,
 } from "react";
 import { Keyboard } from "react-native";
 import { Button, AlertDialog, theme } from "native-base";
@@ -18,9 +19,11 @@ import { useAuth } from "../mongodb/auth";
 export type AlertPopupProps = {
   isOpen: boolean;
   header?: string;
-  body?: string;
+  body?: ReactNode;
   global?: boolean;
   autoDismiss?: boolean;
+  avoidKeyboard?: boolean;
+  dismissKeyboard?: boolean;
   footer?: (ref: MutableRefObject<any>) => ReactNode;
   footerPrimaryButton?: ReactElement;
   onClose: () => any;
@@ -31,6 +34,8 @@ export default function AlertPopup({
   body = "Please check your network connection or try again later.",
   global = false,
   autoDismiss = false,
+  avoidKeyboard = false,
+  dismissKeyboard = false,
   isOpen,
   footer,
   footerPrimaryButton,
@@ -90,11 +95,23 @@ export default function AlertPopup({
     }
   }, [isOpen, global, isFocused, globalAlerts.size]);
 
+  const _onClose = useMemo(
+    () =>
+      dismissKeyboard
+        ? () => {
+            onClose();
+            Keyboard.dismiss();
+          }
+        : onClose,
+    [onClose, dismissKeyboard]
+  );
+
   return (
     <AlertDialog
+      avoidKeyboard={avoidKeyboard}
       leastDestructiveRef={ref}
       isOpen={shouldOpen}
-      onClose={onClose}
+      onClose={_onClose}
     >
       <AlertDialog.Content
         {...colorModeResponsiveStyle((selector) => ({
@@ -133,7 +150,7 @@ export default function AlertPopup({
                 variant="unstyled"
                 _pressed={{ opacity: 0.5 }}
                 _hover={{ opacity: 0.72 }}
-                onPress={onClose}
+                onPress={_onClose}
                 ref={ref}
               >
                 Cancel
@@ -141,7 +158,7 @@ export default function AlertPopup({
               {footerPrimaryButton}
             </Button.Group>
           ) : (
-            <Button ref={ref} onPress={onClose}>
+            <Button ref={ref} onPress={_onClose}>
               OK
             </Button>
           )}

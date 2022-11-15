@@ -115,7 +115,7 @@ export default function SignInSignUpScreen() {
               <Input
                 value={username}
                 onChangeText={setUsername}
-                autoCompleteType={"username"}
+                textContentType={"username"}
               />
             </LabeledInput>
           )}
@@ -123,7 +123,7 @@ export default function SignInSignUpScreen() {
             <Input
               value={email}
               onChangeText={setEmail}
-              autoCompleteType={"email"}
+              textContentType={"emailAddress"}
               autoCorrect={false}
               autoCapitalize={"none"}
               keyboardType={"email-address"}

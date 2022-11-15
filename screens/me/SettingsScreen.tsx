@@ -38,6 +38,7 @@ export default function SettingsScreen() {
   const [deleteAccountError, setDeleteAccountError] = useState<any>(null);
   const [showDeleteAccountError, setShowDeleteAccountError] = useState(false);
   const [canClear, setCanClear] = useState(false);
+  const [deleteReviews, setDeleteReviews] = useState(false);
   const [previousUsername, setPreviousUsername] = useState(
     isAuthenticated ? username : ""
   );
@@ -49,7 +50,7 @@ export default function SettingsScreen() {
 
   const semester = useMemo(
     () => new Semester(settings.selectedSemester),
-    [settings.selectedSemester]
+    [settings.selectedSemester.semesterCode, settings.selectedSemester.year]
   );
 
   const semesterOptions = useMemo(
@@ -100,11 +101,21 @@ export default function SettingsScreen() {
           showDeleteAccountAlert
         }
         onClose={() => setShowDeleteAccountAlert(false)}
-        header={"Delete Account"}
-        body={`You are about to permanently delete your account and lose all your stars and reviews. This action is not reversible!${
+        header={
+          deleteReviews
+            ? "Delete Account and All Reviews"
+            : "Delete Account Only"
+        }
+        body={`You are about to permanently delete your account${
+          deleteReviews
+            ? " and all your reviews. All your data will be erased."
+            : ". Your reviews will remain available anonymously."
+        } This action is not reversible!${
           signInProvider === "custom-token" ||
           signInProvider === "oauth2-google"
-            ? ` Your account will be deleted immediately after you reauthenticate with ${
+            ? ` Your account${
+                deleteReviews ? " and all your reviews " : " "
+              }will be deleted immediately after you reauthenticate with ${
                 signInProvider === "custom-token" ? "Apple" : "Google"
               }.`
             : ""
@@ -112,6 +123,7 @@ export default function SettingsScreen() {
         footerPrimaryButton={
           <DeleteAccountButton
             auth={auth}
+            deleteReviews={deleteReviews}
             setAccountDeleted={setAccountDeleted}
             setIsDeletingAccount={setIsDeletingAccount}
             setDeleteAccountError={setDeleteAccountError}
@@ -189,19 +201,46 @@ export default function SettingsScreen() {
           </LabeledInput>
         )}
         {isAuthenticated && (
-          <LeftAlignedButton
-            title={isDeletingAccount ? "Deleting Account…" : "Delete Account"}
-            showChevron={false}
-            marginTop={"20px"}
-            isDisabled={isDeletingAccount}
-            _text={colorModeResponsiveStyle((selector) => ({
-              color: selector({
-                light: theme.colors.red[600],
-                dark: theme.colors.red[500],
-              }),
-            }))}
-            onPress={() => setShowDeleteAccountAlert(true)}
-          />
+          <VStack space={"12px"} marginTop={"20px"}>
+            <LeftAlignedButton
+              title={
+                isDeletingAccount && !deleteReviews
+                  ? "Deleting Account…"
+                  : "Delete Account Only"
+              }
+              showChevron={false}
+              isDisabled={isDeletingAccount}
+              _text={colorModeResponsiveStyle((selector) => ({
+                color: selector({
+                  light: theme.colors.red[600],
+                  dark: theme.colors.red[500],
+                }),
+              }))}
+              onPress={() => {
+                setDeleteReviews(false);
+                setShowDeleteAccountAlert(true);
+              }}
+            />
+            <LeftAlignedButton
+              title={
+                isDeletingAccount && deleteReviews
+                  ? "Deleting Account and Reviews…"
+                  : "Delete Account and All Reviews"
+              }
+              showChevron={false}
+              isDisabled={isDeletingAccount}
+              _text={colorModeResponsiveStyle((selector) => ({
+                color: selector({
+                  light: theme.colors.red[600],
+                  dark: theme.colors.red[500],
+                }),
+              }))}
+              onPress={() => {
+                setDeleteReviews(true);
+                setShowDeleteAccountAlert(true);
+              }}
+            />
+          </VStack>
         )}
       </VStack>
     </KeyboardAwareSafeAreaScrollView>

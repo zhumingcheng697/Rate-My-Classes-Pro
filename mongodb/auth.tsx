@@ -66,9 +66,15 @@ export type AuthContext = {
     email: string,
     password: string
   ) => Promise<void>;
-  deleteAppleAccount: (authCode: string) => Promise<void>;
-  deleteGoogleAccount: (authCode: string) => Promise<void>;
-  deleteEmailPasswordAccount: () => Promise<void>;
+  deleteAppleAccount: (
+    authCode: string,
+    deleteReviews: boolean
+  ) => Promise<void>;
+  deleteGoogleAccount: (
+    authCode: string,
+    deleteReviews: boolean
+  ) => Promise<void>;
+  deleteEmailPasswordAccount: (deleteReviews: boolean) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -373,7 +379,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   const deleteOAuthAccount = useCallback(
-    async (authCode: string, provider: "Apple" | "Google") => {
+    async (
+      authCode: string,
+      deleteReviews: boolean,
+      provider: "Apple" | "Google"
+    ) => {
       syncCleanup();
 
       const OAuth = provider === "Apple" ? AppleOAuth : GoogleOAuth;
@@ -416,7 +426,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       }
 
       // same user
-      await newDB.deleteAccount();
+      await newDB.deleteAccount(deleteReviews);
       await OAuth.revokeToken(refresh_token);
       await realmApp.deleteUser(newUser);
       await newUser.logOut();
@@ -426,27 +436,32 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   const deleteAppleAccount = useCallback(
-    async (authCode: string) => await deleteOAuthAccount(authCode, "Apple"),
+    async (authCode: string, deleteReviews: boolean) =>
+      await deleteOAuthAccount(authCode, deleteReviews, "Apple"),
     [deleteOAuthAccount]
   );
 
   const deleteGoogleAccount = useCallback(
-    async (authCode: string) => await deleteOAuthAccount(authCode, "Google"),
+    async (authCode: string, deleteReviews: boolean) =>
+      await deleteOAuthAccount(authCode, deleteReviews, "Google"),
     [deleteOAuthAccount]
   );
 
-  const deleteEmailPasswordAccount = useCallback(async () => {
-    if (!user || !db || user.providerType !== "local-userpass") {
-      return;
-    }
+  const deleteEmailPasswordAccount = useCallback(
+    async (deleteReviews: boolean) => {
+      if (!user || !db || user.providerType !== "local-userpass") {
+        return;
+      }
 
-    syncCleanup();
+      syncCleanup();
 
-    await db.deleteAccount();
-    await realmApp.deleteUser(user);
-    await user.logOut();
-    cleanupLocalProfile();
-  }, [user, db, syncCleanup, cleanupLocalProfile]);
+      await db.deleteAccount(deleteReviews);
+      await realmApp.deleteUser(user);
+      await user.logOut();
+      cleanupLocalProfile();
+    },
+    [user, db, syncCleanup, cleanupLocalProfile]
+  );
 
   const signInWithOAuth = useCallback(
     async (

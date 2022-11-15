@@ -194,7 +194,7 @@ export default class Database {
     });
   }
 
-  async deleteAccount() {
+  async deleteAccount(deleteReviews: boolean) {
     if (!this.isAuthenticated) return;
 
     const latestUserDoc = await this.loadUserDoc({
@@ -206,7 +206,7 @@ export default class Database {
       },
     });
 
-    if (latestUserDoc?.reviewed.length) {
+    if (deleteReviews && latestUserDoc?.reviewed.length) {
       await this.db
         .collection<ReviewDoc>(Collections.reviews)
         .updateMany(

@@ -57,9 +57,11 @@ export default class Semester {
     );
   }
 
-  static fromCode(code?: string) {
-    const semesterCode = code?.slice(0, 2)?.toLowerCase() as SemesterCode;
-    const year = parseInt(code?.slice(2) || "");
+  static fromCode(code?: string | null) {
+    if (!code) return undefined;
+
+    const semesterCode = code.slice(0, 2)?.toLowerCase() as SemesterCode;
+    const year = parseInt(code.slice(2) || "");
 
     if (year && this.semesterCodes.includes(semesterCode)) {
       const semester = new Semester({ semesterCode, year });

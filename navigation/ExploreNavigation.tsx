@@ -39,7 +39,7 @@ export default function ExploreNavigation() {
         name={"Department"}
         component={DepartmentScreen}
         options={({ route }) => ({
-          title: getFullDepartmentCode(route.params),
+          title: getFullDepartmentCode(route.params.departmentInfo),
           headerRight: () => <SharingButton />,
         })}
       />

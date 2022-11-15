@@ -6,6 +6,7 @@ import {
   Appearance,
   useColorScheme as _useColorScheme,
 } from "react-native";
+import { useDispatch } from "react-redux";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -19,6 +20,7 @@ import {
   CommonActions,
   useNavigation,
   useNavigationState,
+  type RouteProp,
 } from "@react-navigation/native";
 
 import {
@@ -27,14 +29,18 @@ import {
   type ClassInfo,
   type RootNavigationParamList,
   type ExploreNavigationParamList,
+  type SharedNavigationParamList,
   type SearchNavigationParamList,
   type MeNavigationParamList,
   type RouteNameFor,
   type RouteParamsFor,
 } from "./types";
-import type { SemesterInfo } from "./semester";
+import Semester, { type SemesterInfo } from "./semester";
+import { asyncTryCatch, validateSettings } from "./utils";
 import { getClass } from "./schedge";
+import Database from "../mongodb/db";
 import { stringifyRoute } from "../navigation/linking/stringify";
+import { selectSemester } from "../redux/actions";
 
 export function useInitialTabName() {
   const tabNavigation = useNavigation<
@@ -82,6 +88,60 @@ export function useInitialPreviousRoute() {
   }, [current]);
 
   return route;
+}
+
+export function useSemester({
+  db,
+  navigation,
+  params,
+  selectedSemester,
+  isSettingsSettled,
+}: {
+  db?: Database | null;
+  navigation?: StackNavigationProp<SharedNavigationParamList>;
+  params: RouteProp<SharedNavigationParamList>["params"];
+  selectedSemester: SemesterInfo;
+  isSettingsSettled: boolean;
+}) {
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (
+      navigation &&
+      isSettingsSettled &&
+      (!params.semester || !Semester.equals(params.semester, selectedSemester))
+    ) {
+      navigation.setParams({ semester: selectedSemester });
+    }
+  }, [selectedSemester.semesterCode, selectedSemester.year]);
+
+  useEffect(() => {
+    if (
+      isSettingsSettled &&
+      isFocused &&
+      params.semester &&
+      !Semester.equals(params.semester, selectedSemester)
+    ) {
+      selectSemester(dispatch)(params.semester);
+
+      asyncTryCatch(async () => {
+        if (db && params.semester) {
+          await db.updateSettings(
+            validateSettings({ selectedSemester: params.semester })
+          );
+        }
+      });
+    }
+  }, [isSettingsSettled, isFocused]);
+
+  useEffect(() => {
+    if (isSettingsSettled && navigation && !params.semester) {
+      navigation.setParams({ semester: selectedSemester });
+    }
+  }, [isSettingsSettled]);
+
+  return params.semester || selectedSemester;
 }
 
 export function useLinkProps<

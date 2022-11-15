@@ -14,12 +14,17 @@ import type {
   DepartmentNameRecord,
   SearchNavigationParamList,
 } from "../../libs/types";
-import { useDimensions, useInnerHeight, useRefresh } from "../../libs/hooks";
+import {
+  useDimensions,
+  useInnerHeight,
+  useRefresh,
+  useSemester,
+} from "../../libs/hooks";
 import { compareClasses, isObjectEmpty } from "../../libs/utils";
 import { searchClasses } from "../../libs/schedge";
 import Semester from "../../libs/semester";
 import { useAuth } from "../../mongodb/auth";
-import colors, { subtleBorder } from "../../styling/colors";
+import colors from "../../styling/colors";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 import { inputSelectHeight } from "../../styling/theme";
 
@@ -34,8 +39,8 @@ const delay = 300; // only make API call if idle for at least this amount of tim
 
 export default function SearchScreen() {
   const navigation = useNavigation<SearchScreenNavigationProp>();
-  const route = useRoute<SearchScreenRouteProp>();
-  const [query, setQuery] = useState(route.params?.query || "");
+  const { params } = useRoute<SearchScreenRouteProp>();
+  const [query, setQuery] = useState(params?.query || "");
   const [focused, setFocused] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -46,12 +51,16 @@ export default function SearchScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const innerHeight = useInnerHeight();
-  const { isSettingsSettled } = useAuth();
+  const { isSettingsSettled, db } = useAuth();
+  const semesterInfo = useSemester({
+    db,
+    navigation,
+    params,
+    selectedSemester,
+    isSettingsSettled,
+  });
 
-  const semester = useMemo(
-    () => new Semester(selectedSemester),
-    [selectedSemester.semesterCode, selectedSemester.year]
-  );
+  const semester = useMemo(() => new Semester(semesterInfo), [semesterInfo]);
 
   const schoolCodes = useMemo(
     () => Object.keys(schoolNames ?? {}),
@@ -202,6 +211,7 @@ export default function SearchScreen() {
             isLoaded={isLoaded && isSettingsSettled}
             classes={matchedClasses}
             navigation={navigation}
+            semesterInfo={semesterInfo}
           />
         ) : (
           <Center

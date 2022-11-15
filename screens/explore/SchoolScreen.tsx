@@ -34,6 +34,7 @@ export default function SchoolScreen() {
   const navigation = useNavigation<SchoolScreenNavigationProp>();
   const route = useRoute<SchoolScreenRouteProp>();
   const { schoolCode } = route.params;
+  const { selectedSemester } = useSelector((state) => state.settings);
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const isLoaded = !!departmentNames && !isObjectEmpty(departmentNames);
@@ -90,7 +91,10 @@ export default function SchoolScreen() {
                       departmentNames
                     )}
                     secondaryText={`${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`}
-                    linkTo={Route("ExploreTab", "Department", departmentInfo)}
+                    linkTo={Route("ExploreTab", "Department", {
+                      departmentInfo,
+                      semester: selectedSemester,
+                    })}
                   />
                 );
               })

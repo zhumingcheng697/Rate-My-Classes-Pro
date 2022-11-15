@@ -17,7 +17,7 @@ import {
   type SectionInfo,
   type SharedNavigationParamList,
 } from "../../libs/types";
-import { useClassInfoLoader, useRefresh } from "../../libs/hooks";
+import { useClassInfoLoader, useRefresh, useSemester } from "../../libs/hooks";
 import { getSections } from "../../libs/schedge";
 import {
   getFullClassCode,
@@ -39,14 +39,14 @@ type ScheduleScreenRouteProp = RouteProp<SharedNavigationParamList, "Schedule">;
 
 export default function ScheduleScreen() {
   const navigation = useNavigation<ScheduleScreenNavigationProp>();
-  const route = useRoute<ScheduleScreenRouteProp>();
-  const { semester, classCode } = route.params;
-  const settings = useSelector((state) => state.settings);
+  const { params } = useRoute<ScheduleScreenRouteProp>();
+  const { classCode } = params;
+  const { selectedSemester } = useSelector((state) => state.settings);
   const [sections, setSections] = useState<SectionInfo[] | null>(
-    route.params.sections ?? null
+    params.sections ?? null
   );
   const [showAlert, setShowAlert] = useState(false);
-  const { isSettingsSettled } = useAuth();
+  const { db, isSettingsSettled } = useAuth();
 
   const cleanText = useCallback(
     (text: string) =>
@@ -56,15 +56,23 @@ export default function ScheduleScreen() {
     [classCode]
   );
 
-  const selectedSemester = useMemo(
-    () => new Semester(settings.selectedSemester),
-    [settings.selectedSemester]
+  const semesterInfo = useSemester({
+    db,
+    navigation,
+    params,
+    selectedSemester,
+    isSettingsSettled,
+  });
+
+  const semester = useMemo(
+    () => new Semester(semesterInfo),
+    [semesterInfo.semesterCode, semesterInfo.year]
   );
 
   const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader(
     classCode,
-    settings.selectedSemester,
-    isSettingsSettled
+    semesterInfo,
+    isSettingsSettled || !!params.semester || !!params.semester
   );
 
   const notOffered = !!sections || classInfoError === ErrorType.noData;
@@ -75,53 +83,36 @@ export default function ScheduleScreen() {
     }
   }, [classInfoError, sections, showAlert]);
 
-  useEffect(() => {
-    if (!classInfo && classInfoError) {
-      setShowAlert(true);
-      navigation.setParams({ semester: selectedSemester });
-    }
-  }, [classInfo, classInfoError]);
-
   const fetchSections = useCallback(
     (failSilently: boolean = false) => {
-      if (!isSettingsSettled || !classInfo) return;
+      if (!(isSettingsSettled || params.semester) || !classInfo) return;
 
-      if (
-        !Semester.equals(selectedSemester, new Semester(semester)) ||
-        !sections
-      ) {
-        getSections(classInfo, settings.selectedSemester)
-          .then((sections) => {
-            setSections(sections);
-            if (!sections.length) {
-              setShowAlert(true);
-            } else {
-              setShowAlert(false);
-            }
-          })
-          .catch(() => {
-            setSections(null);
-            if (!failSilently) setShowAlert(true);
-          })
-          .finally(() => navigation.setParams({ semester: selectedSemester }));
-      }
+      getSections(classInfo, semesterInfo)
+        .then((sections) => {
+          setSections(sections);
+          if (!sections.length) {
+            setShowAlert(true);
+          } else {
+            setShowAlert(false);
+          }
+        })
+        .catch(() => {
+          setSections(null);
+          if (!failSilently) setShowAlert(true);
+        });
     },
-    [
-      isSettingsSettled,
-      classInfo,
-      selectedSemester,
-      semester,
-      settings,
-      navigation,
-    ]
+    [isSettingsSettled, classInfo, semester, navigation]
   );
 
-  useEffect(fetchSections, [selectedSemester, isSettingsSettled, classInfo]);
+  useEffect(fetchSections, [semester, isSettingsSettled, classInfo]);
 
   useRefresh((reason) => {
     const failSilently = reason === "NetInfo";
-    reloadClassInfo?.(failSilently);
-    fetchSections(failSilently);
+    if (reloadClassInfo) {
+      reloadClassInfo?.(failSilently);
+    } else if (classInfo && !sections) {
+      fetchSections(failSilently);
+    }
   });
 
   return (
@@ -129,7 +120,7 @@ export default function ScheduleScreen() {
       <AlertPopup
         isOpen={showAlert && notOffered}
         header={"No Sections Offered"}
-        body={notOfferedMessage(classCode, classInfo, selectedSemester)}
+        body={notOfferedMessage(classCode, classInfo, semester)}
         onClose={() => {
           setShowAlert(false);
           navigation.pop(classInfoError === ErrorType.noData ? 2 : 1);

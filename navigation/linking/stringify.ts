@@ -12,7 +12,8 @@ import type {
   RouteParamsFor,
   ValueOf,
 } from "../../libs/types";
-import { tryCatch } from "../../libs/utils";
+import type { SemesterInfo } from "../../libs/semester";
+import { getFullSemesterCode, tryCatch } from "../../libs/utils";
 
 type RouteToPathMap<ParamList extends ParamListBase> = {
   [Screen in keyof ParamList]: (param: ParamList[Screen]) => string;
@@ -25,8 +26,22 @@ const getPathForClass = (classCode: ClassCode) =>
     classCode.departmentCode.toUpperCase()
   )}/${encodeURIComponent(classCode.classNumber.toUpperCase())}`;
 
-const addQueryParam = (query: string | undefined) =>
-  query ? `?query=${encodeURIComponent(query)}` : "";
+const addQueryParam = ({
+  query,
+  semester,
+}: {
+  query?: string;
+  semester?: SemesterInfo;
+}) => {
+  const queryStr = query && `query=${encodeURIComponent(query)}`;
+  const semesterStr = semester && `semester=${getFullSemesterCode(semester)}`;
+
+  if (queryStr || semesterStr) {
+    return "?" + [queryStr, semesterStr].filter(Boolean).join("&");
+  }
+
+  return "";
+};
 
 const checkIsSigningUp = (isSigningUp?: boolean) =>
   isSigningUp ? "sign-up" : "sign-in";
@@ -42,17 +57,22 @@ function stringifyExploreRoute<Screen extends keyof ExploreNavigationParamList>(
   const exploreRouteToPathMap: RouteToPathMap<ExploreNavigationParamList> = {
     University: () => "/explore",
     School: ({ schoolCode }) => `/explore/${schoolCode.toUpperCase()}`,
-    Department: ({ schoolCode, departmentCode }) =>
-      `/explore/${schoolCode.toUpperCase()}/${departmentCode.toUpperCase()}`,
-    Detail: ({ classCode }) => `/explore/${getPathForClass(classCode)}`,
-    Review: ({ classCode }) => `/explore/${getPathForClass(classCode)}/review`,
-    Schedule: ({ classCode }) =>
-      `/explore/${getPathForClass(classCode)}/schedule`,
-    SignInSignUp: ({ classCode, isSigningUp }) =>
+    Department: ({ departmentInfo, semester }) =>
+      `/explore/${departmentInfo.schoolCode.toUpperCase()}/${departmentInfo.departmentCode.toUpperCase()}` +
+      addQueryParam({ semester }),
+    Detail: ({ classCode, semester }) =>
+      `/explore/${getPathForClass(classCode)}` + addQueryParam({ semester }),
+    Review: ({ classCode, semester }) =>
+      `/explore/${getPathForClass(classCode)}/review` +
+      addQueryParam({ semester }),
+    Schedule: ({ classCode, semester }) =>
+      `/explore/${getPathForClass(classCode)}/schedule` +
+      addQueryParam({ semester }),
+    SignInSignUp: ({ classCode, isSigningUp, semester }) =>
       classCode
         ? `/explore/${getPathForClass(classCode)}/${checkIsSigningUp(
             isSigningUp
-          )}`
+          )}` + addQueryParam({ semester })
         : `/${checkIsSigningUp(isSigningUp)}`,
   };
 
@@ -64,18 +84,22 @@ function stringifySearchRoute<Screen extends keyof SearchNavigationParamList>(
   params: SearchNavigationParamList[Screen]
 ) {
   const searchRouteToPathMap: RouteToPathMap<SearchNavigationParamList> = {
-    Search: ({ query }) => "/search" + addQueryParam(query),
-    Detail: ({ classCode, query }) =>
-      `/search/${getPathForClass(classCode)}` + addQueryParam(query),
-    Review: ({ classCode, query }) =>
-      `/search/${getPathForClass(classCode)}/review` + addQueryParam(query),
-    Schedule: ({ classCode, query }) =>
-      `/search/${getPathForClass(classCode)}/schedule` + addQueryParam(query),
-    SignInSignUp: ({ classCode, isSigningUp, query }) =>
+    Search: ({ query, semester }) =>
+      "/search" + (query ? addQueryParam({ query, semester }) : ""),
+    Detail: ({ classCode, query, semester }) =>
+      `/search/${getPathForClass(classCode)}` +
+      addQueryParam({ query, semester }),
+    Review: ({ classCode, query, semester }) =>
+      `/search/${getPathForClass(classCode)}/review` +
+      addQueryParam({ query, semester }),
+    Schedule: ({ classCode, query, semester }) =>
+      `/search/${getPathForClass(classCode)}/schedule` +
+      addQueryParam({ query, semester }),
+    SignInSignUp: ({ classCode, isSigningUp, query, semester }) =>
       classCode
         ? `/search/${getPathForClass(classCode)}/${checkIsSigningUp(
             isSigningUp
-          )}` + addQueryParam(query)
+          )}` + addQueryParam({ query, semester })
         : `/${checkIsSigningUp(isSigningUp)}`,
   };
 
@@ -91,23 +115,23 @@ function stringifyMeRoute<Screen extends keyof MeNavigationParamList>(
     Starred: () => "/starred",
     Reviewed: () => "/reviewed",
     Settings: () => "/settings",
-    Detail: ({ classCode, starredOrReviewed }) =>
+    Detail: ({ classCode, starredOrReviewed, semester }) =>
       `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
         classCode
-      )}`,
-    Review: ({ classCode, starredOrReviewed }) =>
+      )}` + addQueryParam({ semester }),
+    Review: ({ classCode, starredOrReviewed, semester }) =>
       `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
         classCode
-      )}/review`,
-    Schedule: ({ classCode, starredOrReviewed }) =>
+      )}/review` + addQueryParam({ semester }),
+    Schedule: ({ classCode, starredOrReviewed, semester }) =>
       `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
         classCode
-      )}/schedule`,
-    SignInSignUp: ({ classCode, isSigningUp, starredOrReviewed }) =>
+      )}/schedule` + addQueryParam({ semester }),
+    SignInSignUp: ({ classCode, isSigningUp, starredOrReviewed, semester }) =>
       classCode
         ? `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
             classCode
-          )}/${checkIsSigningUp(isSigningUp)}`
+          )}/${checkIsSigningUp(isSigningUp)}` + addQueryParam({ semester })
         : `/${checkIsSigningUp(isSigningUp)}`,
   };
 

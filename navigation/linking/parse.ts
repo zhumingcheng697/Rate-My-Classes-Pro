@@ -5,6 +5,7 @@ import type {
   PartialState,
   Route,
 } from "@react-navigation/native";
+import Semester from "../../libs/semester";
 
 import type {
   ClassCode,
@@ -58,6 +59,9 @@ const lastPathToScreenNameMap: Record<string, keyof SharedNavigationParamList> =
     ["sign-in"]: "SignInSignUp",
   };
 
+const parseSemester = (semester: string) =>
+  Semester.fromCode(semester)?.toJSON();
+
 const getClassFromPaths = (paths: string[]): ClassCode => ({
   schoolCode: paths[1].toUpperCase(),
   departmentCode: paths[2].toUpperCase(),
@@ -80,32 +84,43 @@ function parseExplorePath(
       name: "School",
       params: { schoolCode: paths[1].toUpperCase() },
     }),
-    Department: (paths) => ({
+    Department: (paths, { semester }) => ({
       name: "Department",
       params: {
-        schoolCode: paths[1].toUpperCase(),
-        departmentCode: paths[2].toUpperCase(),
+        departmentInfo: {
+          schoolCode: paths[1].toUpperCase(),
+          departmentCode: paths[2].toUpperCase(),
+        },
+        semester: parseSemester(semester),
       },
     }),
-    Detail: (paths) => ({
+    Detail: (paths, { semester }) => ({
       name: "Detail",
-      params: { classCode: getClassFromPaths(paths) },
+      params: {
+        classCode: getClassFromPaths(paths),
+        semester: parseSemester(semester),
+      },
     }),
-    Review: (paths) => ({
+    Review: (paths, { semester }) => ({
       name: "Review",
-      params: { classCode: getClassFromPaths(paths) },
+      params: {
+        classCode: getClassFromPaths(paths),
+        semester: parseSemester(semester),
+      },
     }),
-    Schedule: (paths) => ({
+    Schedule: (paths, { semester }) => ({
       name: "Schedule",
       params: {
         classCode: getClassFromPaths(paths),
+        semester: parseSemester(semester),
       },
     }),
-    SignInSignUp: (paths) => ({
+    SignInSignUp: (paths, { semester }) => ({
       name: "SignInSignUp",
       params: {
         classCode: getClassFromPaths(paths),
         isSigningUp: checkIsSigningUp(paths),
+        semester: parseSemester(semester),
       },
     }),
   };
@@ -143,28 +158,44 @@ function parseSearchPath(
   params: Record<string, string>
 ): ResultRoute<SearchNavigationParamList>[] {
   const searchPathtoRouteMap: PathToRouteMap<SearchNavigationParamList> = {
-    Search: (_, { query }) => ({ name: "Search", params: { query } }),
-    Detail: (paths, { query }) => ({
+    Search: (_, { query, semester }) => ({
+      name: "Search",
+      params: {
+        query,
+        semester: parseSemester(semester),
+      },
+    }),
+    Detail: (paths, { query, semester }) => ({
       name: "Detail",
-      params: { classCode: getClassFromPaths(paths), query },
+      params: {
+        classCode: getClassFromPaths(paths),
+        query,
+        semester: parseSemester(semester),
+      },
     }),
-    Review: (paths, { query }) => ({
+    Review: (paths, { query, semester }) => ({
       name: "Review",
-      params: { classCode: getClassFromPaths(paths), query },
+      params: {
+        classCode: getClassFromPaths(paths),
+        query,
+        semester: parseSemester(semester),
+      },
     }),
-    Schedule: (paths, { query }) => ({
+    Schedule: (paths, { query, semester }) => ({
       name: "Schedule",
       params: {
         classCode: getClassFromPaths(paths),
         query,
+        semester: parseSemester(semester),
       },
     }),
-    SignInSignUp: (paths, { query }) => ({
+    SignInSignUp: (paths, { query, semester }) => ({
       name: "SignInSignUp",
       params: {
         classCode: getClassFromPaths(paths),
         query,
         isSigningUp: checkIsSigningUp(paths),
+        semester: parseSemester(semester),
       },
     }),
   };
@@ -194,34 +225,38 @@ function parseMePath(
     Starred: () => ({ name: "Starred" }),
     Reviewed: () => ({ name: "Reviewed" }),
     Settings: () => ({ name: "Settings" }),
-    Detail: (paths) => ({
+    Detail: (paths, { semester }) => ({
       name: "Detail",
       params: {
         classCode: getClassFromPaths(paths),
         starredOrReviewed: checkStarredOrReviewed(paths),
+        semester: parseSemester(semester),
       },
     }),
-    Review: (paths) => ({
+    Review: (paths, { semester }) => ({
       name: "Review",
       params: {
         classCode: getClassFromPaths(paths),
         starredOrReviewed: checkStarredOrReviewed(paths),
+        semester: parseSemester(semester),
       },
     }),
-    Schedule: (paths) => ({
+    Schedule: (paths, { semester }) => ({
       name: "Schedule",
       params: {
         classCode: getClassFromPaths(paths),
         starredOrReviewed: checkStarredOrReviewed(paths),
+        semester: parseSemester(semester),
       },
     }),
-    SignInSignUp: (paths) => ({
+    SignInSignUp: (paths, { semester }) => ({
       name: "SignInSignUp",
       params: {
         classCode: paths.length > 4 ? getClassFromPaths(paths) : undefined,
         starredOrReviewed:
           paths.length > 4 ? checkStarredOrReviewed(paths) : undefined,
         isSigningUp: checkIsSigningUp(paths),
+        semester: parseSemester(semester),
       },
     }),
   };

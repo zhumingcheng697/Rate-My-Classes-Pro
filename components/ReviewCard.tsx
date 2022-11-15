@@ -30,7 +30,7 @@ import {
   type ClassCode,
   type ClassInfo,
 } from "../libs/types";
-import Semester from "../libs/semester";
+import Semester, { type SemesterInfo } from "../libs/semester";
 import {
   getRatingDescription,
   getRatingTypeIconName,
@@ -258,6 +258,7 @@ type ReviewCardBaseProps = {
   classInfo?: ClassInfo;
   review: Review;
   setReview: (review: Review) => void;
+  semesterInfo: SemesterInfo;
 };
 
 export type ReviewCardProps = ReviewCardBaseProps &
@@ -267,6 +268,7 @@ export default function ReviewCard({
   classInfo,
   review,
   setReview,
+  semesterInfo,
   ...rest
 }: ReviewCardProps) {
   const {
@@ -336,6 +338,7 @@ export default function ReviewCard({
               classCode: classInfo ?? classCode,
               previousReview: review,
               newOrEdit: "Edit",
+              semester: semesterInfo,
             })}
           />
         )}

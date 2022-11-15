@@ -32,6 +32,7 @@ import {
   useClassInfoLoader,
   useInitialTabName,
   useRefresh,
+  useSemester,
 } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import AlertPopup from "../../components/AlertPopup";
@@ -60,9 +61,9 @@ type DetailScreenRouteProp = RouteProp<SharedNavigationParamList, "Detail">;
 
 export default function DetailScreen() {
   const navigation = useNavigation<DetailScreenNavigationProp>();
-  const route = useRoute<DetailScreenRouteProp>();
+  const { params } = useRoute<DetailScreenRouteProp>();
   const { classCode, deleteReview, newReview, starredOrReviewed, query } =
-    route.params;
+    params;
   const dispatch = useDispatch();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
@@ -70,6 +71,13 @@ export default function DetailScreen() {
     useAuth();
   const isFocused = useIsFocused();
   const { selectedSemester } = useSelector((state) => state.settings);
+  const semesterInfo = useSemester({
+    db,
+    navigation,
+    params,
+    selectedSemester,
+    isSettingsSettled,
+  });
   const tabName = useInitialTabName();
 
   const [showAlert, setShowAlert] = useState(false);
@@ -79,7 +87,7 @@ export default function DetailScreen() {
 
   const [sections, setSections] = useState<SectionInfo[] | null>(null);
   const [previousSemester, setPreviousSemester] = useState(
-    new Semester(selectedSemester)
+    new Semester(semesterInfo)
   );
   const [reviewRecord, setReviewRecord] = useState<ReviewRecord | null>(null);
 
@@ -88,8 +96,8 @@ export default function DetailScreen() {
   );
 
   const semesterName = useMemo(
-    () => new Semester(selectedSemester).toString(),
-    [selectedSemester]
+    () => new Semester(semesterInfo).toString(),
+    [semesterInfo]
   );
 
   const myReview = useMemo(() => {
@@ -137,8 +145,8 @@ export default function DetailScreen() {
 
   const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader(
     classCode,
-    selectedSemester,
-    isSettingsSettled
+    semesterInfo,
+    isSettingsSettled || !!params.semester
   );
 
   const description = useMemo(() => {
@@ -159,7 +167,10 @@ export default function DetailScreen() {
     }
   }, [error, classInfoError, scheduleError, reviewError, showAlert]);
 
-  const semester = new Semester(selectedSemester);
+  const semester = useMemo(
+    () => new Semester(semesterInfo),
+    [semesterInfo.semesterCode, semesterInfo.year]
+  );
 
   const fetchReviews = useCallback(
     (failSilently: boolean = false) => {
@@ -193,7 +204,7 @@ export default function DetailScreen() {
 
   const fetchSections = useCallback(
     (failSilently: boolean = false) => {
-      if (!isSettingsSettled || !classInfo) return;
+      if (!(isSettingsSettled || params.semester) || !classInfo) return;
 
       if (!Semester.equals(semester, previousSemester)) {
         setPreviousSemester(semester);
@@ -201,7 +212,7 @@ export default function DetailScreen() {
         return;
       }
 
-      getSections(classInfo, selectedSemester)
+      getSections(classInfo, semesterInfo)
         .then((sections) => {
           setSections(sections);
           setScheduleError(false);
@@ -218,11 +229,11 @@ export default function DetailScreen() {
       semester,
       previousSemester,
       sections,
-      selectedSemester,
+      semesterInfo,
     ]
   );
 
-  useEffect(fetchSections, [selectedSemester, isSettingsSettled, classInfo]);
+  useEffect(fetchSections, [semesterInfo, isSettingsSettled, classInfo]);
 
   const reviewerIds = useMemo(() => {
     if (!reviewRecord) return [];
@@ -392,7 +403,7 @@ export default function DetailScreen() {
             <SubtleButton
               isDisabled={!sections || !sections.length}
               linkTo={Route(tabName, "Schedule", {
-                semester: selectedSemester,
+                semester: semesterInfo,
                 sections: sections ?? undefined,
                 classCode: classInfo ?? classCode,
                 starredOrReviewed,
@@ -409,7 +420,9 @@ export default function DetailScreen() {
                   : classInfoError === ErrorType.network || scheduleError
                   ? "Unable to Load Schedule"
                   : `Loading${
-                      isSettingsSettled ? ` ${semesterName} ` : " "
+                      isSettingsSettled || params.semester
+                        ? ` ${semesterName} `
+                        : " "
                     }Schedule`}
               </Text>
             </SubtleButton>
@@ -423,6 +436,7 @@ export default function DetailScreen() {
                       starredOrReviewed,
                       newOrEdit: myReview ? "Edit" : "New",
                       query,
+                      semester: semesterInfo,
                     })
                   : Route(tabName, "SignInSignUp", {
                       classCode: classInfo ?? classCode,
@@ -453,6 +467,7 @@ export default function DetailScreen() {
                     <ReviewCard
                       key={id}
                       classInfo={classInfo ?? undefined}
+                      semesterInfo={semesterInfo}
                       review={reviewRecord[id]}
                       setReview={(newReview) => {
                         const newReviewRecord = { ...reviewRecord };

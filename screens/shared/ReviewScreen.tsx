@@ -26,7 +26,7 @@ import {
   hasEditedReview,
   notOfferedMessage,
 } from "../../libs/utils";
-import { useClassInfoLoader, useRefresh } from "../../libs/hooks";
+import { useClassInfoLoader, useRefresh, useSemester } from "../../libs/hooks";
 import Semester from "../../libs/semester";
 import { useAuth } from "../../mongodb/auth";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
@@ -41,16 +41,23 @@ type ReviewScreenRouteProp = RouteProp<SharedNavigationParamList, "Review">;
 export default function ReviewScreen() {
   const { user, isSettingsSettled, isAuthenticated, db } = useAuth();
   const navigation = useNavigation<ReviewScreenNavigationProp>();
-  const route = useRoute<ReviewScreenRouteProp>();
+  const { params } = useRoute<ReviewScreenRouteProp>();
   const { selectedSemester } = useSelector((state) => state.settings);
-  const { classCode, previousReview, newOrEdit } = route.params;
+  const { classCode, previousReview, newOrEdit } = params;
   const [hasEdited, setHasEdited] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [willDelete, setWillDelete] = useState(false);
+  const semesterInfo = useSemester({
+    db,
+    navigation,
+    params,
+    selectedSemester,
+    isSettingsSettled,
+  });
   const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader(
     classCode,
-    selectedSemester,
-    isSettingsSettled && !!user
+    semesterInfo,
+    (isSettingsSettled || !!params.semester) && !!user
   );
 
   const [enjoyment, setEnjoyment] = useState<Rating | undefined>(
@@ -174,7 +181,7 @@ export default function ReviewScreen() {
           },
         });
       }
-    } else if (route.params.newReview) {
+    } else if (params.newReview) {
       navigation.setParams({ newReview: undefined });
     }
   }, [
@@ -219,6 +226,7 @@ export default function ReviewScreen() {
               navigation.navigate("Detail", {
                 classCode: classInfo ?? classCode,
                 deleteReview: true,
+                semester: semesterInfo,
               });
             }}
           >
@@ -238,7 +246,7 @@ export default function ReviewScreen() {
           navigation.pop(2);
         }}
         header={"Unable to Review"}
-        body={notOfferedMessage(classCode, classInfo, selectedSemester)}
+        body={notOfferedMessage(classCode, classInfo, semesterInfo)}
       />
       <AlertPopup
         autoDismiss

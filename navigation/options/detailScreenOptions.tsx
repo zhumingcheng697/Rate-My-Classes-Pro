@@ -13,7 +13,7 @@ import type {
   StarredClassInfo,
   SharedNavigationParamList,
 } from "../../libs/types";
-import { useClassInfoLoader } from "../../libs/hooks";
+import { useClassInfoLoader, useSemester } from "../../libs/hooks";
 import { getFullClassCode, extractClassInfo } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
 import { starClass, unstarClass } from "../../redux/actions";
@@ -40,14 +40,19 @@ export default ({
   headerRight: (props) => {
     const { classCode } = route.params;
     const { selectedSemester } = useSelector((state) => state.settings);
+    const { user, isAuthenticated, db, isSettingsSettled } = useAuth();
+    const semesterInfo = useSemester({
+      params: route.params,
+      selectedSemester,
+      isSettingsSettled,
+    });
     const { classInfo } = useClassInfoLoader(
       classCode,
-      selectedSemester,
-      false
+      semesterInfo,
+      !!route.params.semester
     );
     const starredClasses = useSelector((state) => state.starredClassRecord);
     const dispatch = useDispatch();
-    const { user, isAuthenticated, db } = useAuth();
     const [showAlert, setShowAlert] = useState(false);
     const isStarred =
       isAuthenticated &&

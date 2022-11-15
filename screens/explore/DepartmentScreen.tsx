@@ -21,7 +21,7 @@ import {
   getFullDepartmentCode,
 } from "../../libs/utils";
 import Semester from "../../libs/semester";
-import { useRefresh } from "../../libs/hooks";
+import { useRefresh, useSemester } from "../../libs/hooks";
 import { getClasses } from "../../libs/schedge";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
@@ -40,38 +40,40 @@ export default function DepartmentScreen() {
   const route = useRoute<DepartmentScreenRouteProp>();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-  const settings = useSelector((state) => state.settings);
-  const auth = useAuth();
+  const { selectedSemester } = useSelector((state) => state.settings);
+  const { departmentInfo } = route.params;
+  const { db, isSettingsSettled } = useAuth();
+  const semesterInfo = useSemester({
+    db,
+    navigation,
+    params: route.params,
+    selectedSemester,
+    isSettingsSettled,
+  });
 
   const [classes, setClasses] = useState<ClassInfo[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   const [error, setError] = useState<ErrorType | null>(null);
 
-  const selectedSemester = useMemo(
-    () => new Semester(settings.selectedSemester),
-    [settings.selectedSemester]
-  );
+  const semester = useMemo(() => new Semester(semesterInfo), [semesterInfo]);
 
   const noDataErrorMessage = useMemo(() => {
-    const diff = Semester.between(
-      Semester.predictCurrentSemester(),
-      selectedSemester
-    );
+    const diff = Semester.between(Semester.predictCurrentSemester(), semester);
 
-    return `The ${getFullDepartmentCode(route.params)} department ${
+    return `The ${getFullDepartmentCode(departmentInfo)} department ${
       diff > 0
         ? "did not offer"
         : diff < 0
         ? "will not be offering"
         : "is not offering"
-    } any classes in ${selectedSemester.toString()}.`;
-  }, [selectedSemester, route.params]);
+    } any classes in ${semester.toString()}.`;
+  }, [semester, route.params]);
 
   const fetchClasses = useCallback(
     (failSilently: boolean = false) => {
-      if (!auth.isSettingsSettled) return;
+      if (!isSettingsSettled) return;
 
-      getClasses(route.params, selectedSemester)
+      getClasses(departmentInfo, semester)
         .then((classes) => {
           if (classes && classes.length) {
             setClasses(classes);
@@ -88,14 +90,10 @@ export default function DepartmentScreen() {
           if (!failSilently) setShowAlert(true);
         });
     },
-    [auth.isSettingsSettled, route.params, selectedSemester]
+    [isSettingsSettled, route.params, semester]
   );
 
-  useEffect(fetchClasses, [
-    route.params,
-    selectedSemester,
-    auth.isSettingsSettled,
-  ]);
+  useEffect(fetchClasses, [route.params, semester, isSettingsSettled]);
 
   useEffect(() => {
     if (!error && showAlert) setShowAlert(false);
@@ -129,15 +127,16 @@ export default function DepartmentScreen() {
       <KeyboardAwareSafeAreaScrollView>
         <Box marginY={"10px"}>
           <Text variant={"h1"} opacity={departmentNames ? 1 : 0.5}>
-            {getDepartmentName(route.params, departmentNames)}
+            {getDepartmentName(departmentInfo, departmentNames)}
           </Text>
           <Text variant={"h2"} opacity={schoolNames ? 1 : 0.5}>
-            {getSchoolName(route.params, schoolNames)}
+            {getSchoolName(departmentInfo, schoolNames)}
           </Text>
           <ClassesGrid
             isLoaded={!!classes.length && !error}
             classes={classes}
             navigation={navigation}
+            semesterInfo={semesterInfo}
           />
         </Box>
       </KeyboardAwareSafeAreaScrollView>

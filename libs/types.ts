@@ -102,6 +102,7 @@ export type NewOrEdit = "New" | "Edit";
 export type SharedNavigationParamList = {
   Detail: {
     classCode: ClassCode;
+    semester?: SemesterInfo;
     deleteReview?: true;
     newReview?: Review;
     query?: string;
@@ -109,6 +110,7 @@ export type SharedNavigationParamList = {
   };
   Review: {
     classCode: ClassCode;
+    semester?: SemesterInfo;
     previousReview?: Review;
     newReview?: Review;
     query?: string;
@@ -124,6 +126,7 @@ export type SharedNavigationParamList = {
   };
   SignInSignUp: {
     classCode?: ClassCode;
+    semester?: SemesterInfo;
     isSigningUp?: boolean;
     query?: string;
     starredOrReviewed?: StarredOrReviewed;
@@ -133,11 +136,11 @@ export type SharedNavigationParamList = {
 export type ExploreNavigationParamList = {
   University: undefined;
   School: SchoolInfo;
-  Department: DepartmentInfo;
+  Department: { departmentInfo: DepartmentInfo; semester?: SemesterInfo };
 } & SharedNavigationParamList;
 
 export type SearchNavigationParamList = {
-  Search: { query?: string };
+  Search: { query?: string; semester?: SemesterInfo };
 } & SharedNavigationParamList;
 
 export type MeNavigationParamList = {

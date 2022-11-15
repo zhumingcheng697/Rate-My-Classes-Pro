@@ -40,7 +40,7 @@ export default ({
     />
   ),
   headerRight: (props) => {
-    const { classCode, newReview, newOrEdit } = route.params;
+    const { classCode, newReview, newOrEdit, semester } = route.params;
     return (
       <PlainTextButton
         isDisabled={!newReview || !newOrEdit}
@@ -48,7 +48,9 @@ export default ({
         padding={"5px"}
         title={newOrEdit === "Edit" ? "Update" : "Submit"}
         _text={{ fontSize: "md", fontWeight: "semibold" }}
-        onPress={() => navigation.navigate("Detail", { classCode, newReview })}
+        onPress={() =>
+          navigation.navigate("Detail", { classCode, newReview, semester })
+        }
         {...props}
       />
     );

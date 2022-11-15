@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Keyboard } from "react-native";
+import { useSelector } from "react-redux";
 import { Text, Input, VStack, Box, HStack, Divider } from "native-base";
 import {
   CommonActions,
@@ -16,7 +17,7 @@ import {
   AppleSignInButton,
   GoogleSignInButton,
 } from "../../components/OAuthSignInButton";
-import { useInitialTabName } from "../../libs/hooks";
+import { useInitialTabName, useSemester } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LabeledInput from "../../components/LabeledInput";
 import {
@@ -38,7 +39,8 @@ type SignInSignUpScreenRouteProp = RouteProp<
 
 export default function SignInSignUpScreen() {
   const navigation = useNavigation<SignInSignUpScreenNavigationProp>();
-  const route = useRoute<SignInSignUpScreenRouteProp>();
+  const { params } = useRoute<SignInSignUpScreenRouteProp>();
+  const { selectedSemester } = useSelector((state) => state.settings);
   const auth = useAuth();
   const tabName = useInitialTabName();
 
@@ -58,7 +60,7 @@ export default function SignInSignUpScreen() {
   const [showGoogleAlert, setShowGoogleAlert] = useState(false);
   const [googleError, setGoogleError] = useState<any>(null);
 
-  const isSigningUp = route.params?.isSigningUp ?? false;
+  const isSigningUp = params?.isSigningUp ?? false;
 
   const isAuthenticated = auth.isAuthenticated;
 
@@ -77,6 +79,14 @@ export default function SignInSignUpScreen() {
   useEffect(() => {
     setKey(Math.random());
   }, [username, email, confirmPassword, isSigningUp]);
+
+  useSemester({
+    db: auth.db,
+    navigation,
+    params,
+    selectedSemester,
+    isSettingsSettled: auth.isSettingsSettled,
+  });
 
   return (
     <>
@@ -225,7 +235,7 @@ export default function SignInSignUpScreen() {
                 title={isSigningUp ? "Sign In" : "Sign Up"}
                 linkTo={{
                   ...Route(tabName, "SignInSignUp", {
-                    ...route.params,
+                    ...params,
                     isSigningUp: !isSigningUp,
                   }),
                   action: CommonActions.setParams({

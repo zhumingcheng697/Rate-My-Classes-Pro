@@ -18,16 +18,16 @@ import { useAuth } from "../../mongodb/auth";
 export default function UniversityScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-  const settings = useSelector((state) => state.settings);
+  const { selectedSemester } = useSelector((state) => state.settings);
   const auth = useAuth();
 
   const isSchoolNameLoaded = !!schoolNames && !isObjectEmpty(schoolNames);
   const isDepartmentNameLoaded =
     !!departmentNames && !isObjectEmpty(departmentNames);
 
-  const selectedSemester = useMemo(
-    () => new Semester(settings.selectedSemester),
-    [settings.selectedSemester]
+  const semesterName = useMemo(
+    () => new Semester(selectedSemester).toString(),
+    [selectedSemester.semesterCode, selectedSemester.year]
   );
 
   const [undergradCodes, gradCodes] = useMemo(() => {
@@ -71,7 +71,7 @@ export default function UniversityScreen() {
     <KeyboardAwareSafeAreaScrollView>
       <Box marginY={"10px"}>
         <Text variant={"h1"} opacity={auth.isSettingsSettled ? 1 : 0.5}>
-          {auth.isSettingsSettled ? selectedSemester.toString() : "Explore"}
+          {auth.isSettingsSettled ? semesterName : "Explore"}
         </Text>
         <Text variant={"h2"}>Undergraduate</Text>
         <Grid

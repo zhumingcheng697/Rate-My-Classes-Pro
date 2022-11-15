@@ -123,18 +123,13 @@ export default function SettingsScreen() {
         footerPrimaryButton={
           <DeleteAccountButton
             auth={auth}
+            variant={"dangerous"}
             deleteReviews={deleteReviews}
             setAccountDeleted={setAccountDeleted}
             setIsDeletingAccount={setIsDeletingAccount}
             setDeleteAccountError={setDeleteAccountError}
             setShowDeleteAccountAlert={setShowDeleteAccountAlert}
             setShowDeleteAccountError={setShowDeleteAccountError}
-            {...colorModeResponsiveStyle((selector) => ({
-              background: selector({
-                light: theme.colors.red[600],
-                dark: theme.colors.red[500],
-              }),
-            }))}
           />
         }
       />
@@ -210,12 +205,7 @@ export default function SettingsScreen() {
               }
               showChevron={false}
               isDisabled={isDeletingAccount}
-              _text={colorModeResponsiveStyle((selector) => ({
-                color: selector({
-                  light: theme.colors.red[600],
-                  dark: theme.colors.red[500],
-                }),
-              }))}
+              _text={{ variant: "dangerousSubtleButton" }}
               onPress={() => {
                 setDeleteReviews(false);
                 setShowDeleteAccountAlert(true);
@@ -229,12 +219,7 @@ export default function SettingsScreen() {
               }
               showChevron={false}
               isDisabled={isDeletingAccount}
-              _text={colorModeResponsiveStyle((selector) => ({
-                color: selector({
-                  light: theme.colors.red[600],
-                  dark: theme.colors.red[500],
-                }),
-              }))}
+              _text={{ variant: "dangerousSubtleButton" }}
               onPress={() => {
                 setDeleteReviews(true);
                 setShowDeleteAccountAlert(true);

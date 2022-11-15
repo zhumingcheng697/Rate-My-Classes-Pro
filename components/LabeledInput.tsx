@@ -43,15 +43,9 @@ export default function LabeledInput({
         </Text>
         {showRequiredIcon && (
           <Text
-            variant={"label"}
+            variant={"dangerousLabel"}
             marginLeft={"1px"}
             fontWeight={"bold"}
-            {...colorModeResponsiveStyle((selector) => ({
-              color: selector({
-                light: theme.colors.red[500],
-                dark: theme.colors.red[500],
-              }),
-            }))}
           >
             *
           </Text>

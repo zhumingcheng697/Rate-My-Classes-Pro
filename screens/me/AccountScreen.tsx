@@ -67,12 +67,7 @@ export default function AccountScreen() {
           }
           footerPrimaryButton={
             <Button
-              {...colorModeResponsiveStyle((selector) => ({
-                background: selector({
-                  light: theme.colors.red[600],
-                  dark: theme.colors.red[500],
-                }),
-              }))}
+              variant={"dangerous"}
               onPress={async () => {
                 setIsSigningOut(true);
                 setShowAlert(false);
@@ -152,12 +147,7 @@ export default function AccountScreen() {
                   showChevron={false}
                   marginTop={"15px"}
                   isDisabled={isSigningOut}
-                  _text={colorModeResponsiveStyle((selector) => ({
-                    color: selector({
-                      light: theme.colors.red[600],
-                      dark: theme.colors.red[500],
-                    }),
-                  }))}
+                  _text={{ variant: "dangerousSubtleButton" }}
                   onPress={() => setShowAlert(true)}
                 />
               )}

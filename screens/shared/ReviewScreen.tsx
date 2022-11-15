@@ -212,12 +212,7 @@ export default function ReviewScreen() {
         }
         footerPrimaryButton={
           <Button
-            {...colorModeResponsiveStyle((selector) => ({
-              background: selector({
-                light: theme.colors.red[600],
-                dark: theme.colors.red[500],
-              }),
-            }))}
+            variant={"dangerous"}
             onPress={() => {
               setShowAlert(false);
               setWillDelete(false);
@@ -352,12 +347,7 @@ export default function ReviewScreen() {
                 title={"Delete"}
                 showChevron={false}
                 marginTop={"20px"}
-                _text={colorModeResponsiveStyle((selector) => ({
-                  color: selector({
-                    light: theme.colors.red[600],
-                    dark: theme.colors.red[500],
-                  }),
-                }))}
+                _text={{ variant: "dangerousSubtleButton" }}
                 onPress={() => {
                   setWillDelete(true);
                   setShowAlert(true);

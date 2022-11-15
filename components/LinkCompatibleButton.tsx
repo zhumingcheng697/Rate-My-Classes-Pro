@@ -205,7 +205,7 @@ export function LeftAlignedButton({
           background: selector(colors.background.secondary),
         }))}
       >
-        <Text {..._text} variant={"subtleButton"}>
+        <Text textAlign={"left"} variant={"subtleButton"} {..._text}>
           {title ?? children ?? "Button"}
         </Text>
         {showChevron && (

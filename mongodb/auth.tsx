@@ -196,12 +196,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   useEffect(() => {
-    asyncTryCatch(async () =>
-      AsyncStorage.setItem(
+    if (!isUserDocLoaded) return;
+
+    asyncTryCatch(async () => {
+      await AsyncStorage.setItem(
         selectedSemesterKey,
         getFullSemesterCode(settings.selectedSemester)
-      )
-    );
+      );
+    });
   }, [settings.selectedSemester.semesterCode, settings.selectedSemester.year]);
 
   useEffect(() => {

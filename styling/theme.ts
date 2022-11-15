@@ -74,6 +74,20 @@ export const solidButtonStyle = {
   },
 };
 
+export const dangerousSolidButtonStyle = {
+  ...buttonBaseStyle,
+  ...colorModeResponsiveStyle((selector) => ({
+    background: selector({
+      light: theme.colors.red[600],
+      dark: theme.colors.red[500],
+    }),
+  })),
+  _text: {
+    color: "#ffffff",
+    ...buttonTextBaseStyle,
+  },
+};
+
 export const subtleButtonStyle = {
   ...buttonBaseStyle,
   ...colorModeResponsiveStyle((selector) => ({
@@ -90,6 +104,7 @@ const componentsStyle = {
     variants: {
       solid: solidButtonStyle,
       subtle: subtleButtonStyle,
+      dangerous: dangerousSolidButtonStyle,
     },
   },
   Divider: {
@@ -213,6 +228,15 @@ const componentsStyle = {
       label: {
         marginBottom: "2px",
       },
+      dangerousLabel: {
+        marginBottom: "2px",
+        ...colorModeResponsiveStyle((selector) => ({
+          color: selector({
+            light: theme.colors.red[600],
+            dark: theme.colors.red[500],
+          }),
+        })),
+      },
       button: {
         color: "#ffffff",
         ...buttonTextBaseStyle,
@@ -220,6 +244,15 @@ const componentsStyle = {
       subtleButton: {
         ...colorModeResponsiveStyle((selector) => ({
           color: selector(colors.nyu),
+        })),
+        ...buttonTextBaseStyle,
+      },
+      dangerousSubtleButton: {
+        ...colorModeResponsiveStyle((selector) => ({
+          color: selector({
+            light: theme.colors.red[600],
+            dark: theme.colors.red[500],
+          }),
         })),
         ...buttonTextBaseStyle,
       },

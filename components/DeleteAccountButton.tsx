@@ -13,6 +13,7 @@ type DeleteSpecificAccountButtonBaseProps = {
   onSetup: () => void;
   callback: (success: boolean) => void;
   onError: (error: any) => void;
+  deleteReviews: boolean;
 };
 
 type DeleteSpecificAccountButtonProps = DeleteSpecificAccountButtonBaseProps &
@@ -24,6 +25,7 @@ function DeleteOAuthAccountButton({
   callback,
   onError,
   provider,
+  deleteReviews,
   ...rest
 }: DeleteSpecificAccountButtonProps & { provider: "Apple" | "Google" }) {
   const useSignIn = useMemo(
@@ -40,9 +42,9 @@ function DeleteOAuthAccountButton({
           }
 
           if (provider === "Apple") {
-            await auth.deleteAppleAccount(res.authCode);
+            await auth.deleteAppleAccount(res.authCode, deleteReviews);
           } else {
-            await auth.deleteGoogleAccount(res.authCode);
+            await auth.deleteGoogleAccount(res.authCode, deleteReviews);
           }
           callback(true);
         } catch (error: any) {
@@ -83,6 +85,7 @@ function DeleteEmailPasswordAccountButton({
   onSetup,
   callback,
   onError,
+  deleteReviews,
   ...rest
 }: DeleteSpecificAccountButtonProps) {
   return (
@@ -91,7 +94,7 @@ function DeleteEmailPasswordAccountButton({
       onPress={async () => {
         try {
           onSetup();
-          await auth.deleteEmailPasswordAccount();
+          await auth.deleteEmailPasswordAccount(deleteReviews);
           callback(true);
         } catch (error: any) {
           onError(error);
@@ -105,6 +108,7 @@ function DeleteEmailPasswordAccountButton({
 
 type DeleteAccountButtonBaseProps = {
   auth: AuthContext;
+  deleteReviews: boolean;
   setAccountDeleted: (accountDeleted: boolean) => void;
   setIsDeletingAccount: (isDeletingAlert: boolean) => void;
   setDeleteAccountError: (error: any) => void;
@@ -117,6 +121,7 @@ export type DeleteAccountButtonProps = DeleteAccountButtonBaseProps &
 
 export function DeleteAccountButton({
   auth,
+  deleteReviews,
   setAccountDeleted,
   setIsDeletingAccount,
   setDeleteAccountError,
@@ -158,6 +163,7 @@ export function DeleteAccountButton({
       onSetup={onSetup}
       callback={callback}
       onError={onError}
+      deleteReviews={deleteReviews}
       {...rest}
     />
   );

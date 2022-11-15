@@ -40,14 +40,14 @@ export default function DepartmentScreen() {
   const route = useRoute<DepartmentScreenRouteProp>();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-  const { selectedSemester } = useSelector((state) => state.settings);
+  const settings = useSelector((state) => state.settings);
   const { departmentInfo } = route.params;
   const { db, isSettingsSettled } = useAuth();
   const semesterInfo = useSemester({
     db,
     navigation,
     params: route.params,
-    selectedSemester,
+    settings,
     isSettingsSettled,
   });
 

@@ -42,7 +42,7 @@ export default function ReviewScreen() {
   const { user, isSettingsSettled, isAuthenticated, db } = useAuth();
   const navigation = useNavigation<ReviewScreenNavigationProp>();
   const { params } = useRoute<ReviewScreenRouteProp>();
-  const { selectedSemester } = useSelector((state) => state.settings);
+  const settings = useSelector((state) => state.settings);
   const { classCode, previousReview, newOrEdit } = params;
   const [hasEdited, setHasEdited] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -51,7 +51,7 @@ export default function ReviewScreen() {
     db,
     navigation,
     params,
-    selectedSemester,
+    settings,
     isSettingsSettled,
   });
   const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader(

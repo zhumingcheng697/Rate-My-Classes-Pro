@@ -37,7 +37,7 @@ import { useAppState } from "../libs/hooks";
 import { AppleOAuth, GoogleOAuth } from "../libs/oauth";
 import Semester from "../libs/semester";
 
-const selectedSemesterKey = "SELECTED_SEMESTER";
+const selectedSemesterKey = "RATE_MY_CLASSES_PRO:SELECTED_SEMESTER";
 
 export type AuthContext = {
   db: Database | null;
@@ -196,7 +196,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   useEffect(() => {
-    if (!isUserDocLoaded) return;
+    if (!isSettingsSettled) return;
 
     asyncTryCatch(async () => {
       await AsyncStorage.setItem(

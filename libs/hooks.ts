@@ -34,6 +34,7 @@ import {
   type MeNavigationParamList,
   type RouteNameFor,
   type RouteParamsFor,
+  type Settings,
 } from "./types";
 import Semester, { type SemesterInfo } from "./semester";
 import { asyncTryCatch, validateSettings } from "./utils";
@@ -94,13 +95,13 @@ export function useSemester({
   db,
   navigation,
   params,
-  selectedSemester,
+  settings,
   isSettingsSettled,
 }: {
   db?: Database | null;
   navigation?: StackNavigationProp<SharedNavigationParamList>;
   params: RouteProp<SharedNavigationParamList>["params"];
-  selectedSemester: SemesterInfo;
+  settings: Settings;
   isSettingsSettled: boolean;
 }) {
   const isFocused = useIsFocused();
@@ -110,25 +111,26 @@ export function useSemester({
     if (
       navigation &&
       isSettingsSettled &&
-      (!params.semester || !Semester.equals(params.semester, selectedSemester))
+      (!params.semester ||
+        !Semester.equals(params.semester, settings.selectedSemester))
     ) {
-      navigation.setParams({ semester: selectedSemester });
+      navigation.setParams({ semester: settings.selectedSemester });
     }
-  }, [selectedSemester.semesterCode, selectedSemester.year]);
+  }, [settings.selectedSemester.semesterCode, settings.selectedSemester.year]);
 
   useEffect(() => {
     if (
       isSettingsSettled &&
       isFocused &&
       params.semester &&
-      !Semester.equals(params.semester, selectedSemester)
+      !Semester.equals(params.semester, settings.selectedSemester)
     ) {
       selectSemester(dispatch)(params.semester);
 
       asyncTryCatch(async () => {
         if (db && params.semester) {
           await db.updateSettings(
-            validateSettings({ selectedSemester: params.semester })
+            validateSettings({ ...settings, selectedSemester: params.semester })
           );
         }
       });
@@ -137,11 +139,13 @@ export function useSemester({
 
   useEffect(() => {
     if (isSettingsSettled && navigation && !params.semester) {
-      navigation.setParams({ semester: selectedSemester });
+      navigation.setParams({
+        semester: settings.selectedSemester,
+      });
     }
   }, [isSettingsSettled]);
 
-  return params.semester || selectedSemester;
+  return params.semester || settings.selectedSemester;
 }
 
 export function useLinkProps<

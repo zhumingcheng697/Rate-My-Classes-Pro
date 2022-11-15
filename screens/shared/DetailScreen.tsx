@@ -70,12 +70,12 @@ export default function DetailScreen() {
   const { user, isAuthenticated, isSettingsSettled, db, signInAnonymously } =
     useAuth();
   const isFocused = useIsFocused();
-  const { selectedSemester } = useSelector((state) => state.settings);
+  const settings = useSelector((state) => state.settings);
   const semesterInfo = useSemester({
     db,
     navigation,
     params,
-    selectedSemester,
+    settings,
     isSettingsSettled,
   });
   const tabName = useInitialTabName();

@@ -41,7 +41,7 @@ export default function ScheduleScreen() {
   const navigation = useNavigation<ScheduleScreenNavigationProp>();
   const { params } = useRoute<ScheduleScreenRouteProp>();
   const { classCode } = params;
-  const { selectedSemester } = useSelector((state) => state.settings);
+  const settings = useSelector((state) => state.settings);
   const [sections, setSections] = useState<SectionInfo[] | null>(
     params.sections ?? null
   );
@@ -60,7 +60,7 @@ export default function ScheduleScreen() {
     db,
     navigation,
     params,
-    selectedSemester,
+    settings,
     isSettingsSettled,
   });
 

@@ -40,7 +40,7 @@ type SignInSignUpScreenRouteProp = RouteProp<
 export default function SignInSignUpScreen() {
   const navigation = useNavigation<SignInSignUpScreenNavigationProp>();
   const { params } = useRoute<SignInSignUpScreenRouteProp>();
-  const { selectedSemester } = useSelector((state) => state.settings);
+  const settings = useSelector((state) => state.settings);
   const auth = useAuth();
   const tabName = useInitialTabName();
 
@@ -84,7 +84,7 @@ export default function SignInSignUpScreen() {
     db: auth.db,
     navigation,
     params,
-    selectedSemester,
+    settings,
     isSettingsSettled: auth.isSettingsSettled,
   });
 

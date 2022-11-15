@@ -46,7 +46,7 @@ export default function SearchScreen() {
   const [showAlert, setShowAlert] = useState(false);
   const [searchFailed, setSearchFailed] = useState(false);
   const [matchedClasses, setMatchedClass] = useState<ClassInfo[]>([]);
-  const { selectedSemester } = useSelector((state) => state.settings);
+  const settings = useSelector((state) => state.settings);
   const [searchPending, setIsSearchPending] = useState(false);
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
@@ -56,7 +56,7 @@ export default function SearchScreen() {
     db,
     navigation,
     params,
-    selectedSemester,
+    settings,
     isSettingsSettled,
   });
 

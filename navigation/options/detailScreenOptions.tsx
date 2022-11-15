@@ -39,11 +39,11 @@ export default ({
   title: getFullClassCode(route.params.classCode),
   headerRight: (props) => {
     const { classCode } = route.params;
-    const { selectedSemester } = useSelector((state) => state.settings);
+    const settings = useSelector((state) => state.settings);
     const { user, isAuthenticated, db, isSettingsSettled } = useAuth();
     const semesterInfo = useSemester({
       params: route.params,
-      selectedSemester,
+      settings,
       isSettingsSettled,
     });
     const { classInfo } = useClassInfoLoader(

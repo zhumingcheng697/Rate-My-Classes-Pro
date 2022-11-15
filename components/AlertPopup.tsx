@@ -46,6 +46,13 @@ export default function AlertPopup({
   const { globalAlerts, setGlobalAlerts } = useAuth();
   const [shouldOpen, setShouldOpen] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const appState = useAppState();
+
+  useEffect(() => {
+    if (isOpen && isFocused && appState !== "active") {
+      Keyboard.dismiss();
+    }
+  }, [appState]);
 
   useEffect(() => {
     if (isOpen && isFocused) {

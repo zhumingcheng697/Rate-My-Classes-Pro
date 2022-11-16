@@ -1,10 +1,13 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import {
   useWindowDimensions,
   Platform,
   AppState,
   Appearance,
   useColorScheme as _useColorScheme,
+  Keyboard,
+  type KeyboardEvent,
+  type EmitterSubscription,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
@@ -391,3 +394,38 @@ export function useInnerHeight() {
 
   return cachedHeight - cachedHeaderHeight - cachedTabBarHeight;
 }
+
+export const useKeyboardHeight = () => {
+  const [height, setHeight] = useState(0);
+  const subscriptions = useRef<EmitterSubscription[]>([]);
+
+  useEffect(() => {
+    function onKeyboardChange(e: KeyboardEvent) {
+      if (
+        e.startCoordinates &&
+        e.endCoordinates.screenY < e.startCoordinates.screenY
+      ) {
+        setHeight(e.endCoordinates.height);
+      } else {
+        setHeight(0);
+      }
+    }
+
+    if (Platform.OS === "ios") {
+      subscriptions.current = [
+        Keyboard.addListener("keyboardWillChangeFrame", onKeyboardChange),
+      ];
+    } else {
+      subscriptions.current = [
+        Keyboard.addListener("keyboardDidHide", onKeyboardChange),
+        Keyboard.addListener("keyboardDidShow", onKeyboardChange),
+      ];
+    }
+    return () =>
+      subscriptions.current.forEach((subscription) => {
+        subscription.remove();
+      });
+  }, [setHeight, subscriptions]);
+
+  return height;
+};

@@ -7,14 +7,16 @@ import React, {
   useState,
   useMemo,
 } from "react";
-import { Keyboard } from "react-native";
+import { Keyboard, Platform } from "react-native";
 import { Button, AlertDialog, theme } from "native-base";
 import { useIsFocused } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { subtleBorder } from "../styling/colors";
 import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 import { textColorStyle } from "../styling/theme";
 import { useAuth } from "../mongodb/auth";
+import { useAppState, useDimensions, useKeyboardHeight } from "../libs/hooks";
 
 export type AlertPopupProps = {
   isOpen: boolean;
@@ -22,10 +24,8 @@ export type AlertPopupProps = {
   body?: ReactNode;
   global?: boolean;
   autoDismiss?: boolean;
-  avoidKeyboard?: boolean;
-  dismissKeyboard?: boolean;
   footer?: (ref: MutableRefObject<any>) => ReactNode;
-  footerPrimaryButton?: ReactElement;
+  footerPrimaryButton?: ReactElement | ((isPortrait: boolean) => ReactElement);
   onClose: () => any;
 };
 
@@ -34,14 +34,13 @@ export default function AlertPopup({
   body = "Please check your network connection or try again later.",
   global = false,
   autoDismiss = false,
-  avoidKeyboard = false,
-  dismissKeyboard = false,
   isOpen,
   footer,
   footerPrimaryButton,
   onClose,
 }: AlertPopupProps) {
   const ref = useRef();
+  const keyboardHeight = useKeyboardHeight();
   const isFocused = useIsFocused();
   const { globalAlerts, setGlobalAlerts } = useAuth();
   const [shouldOpen, setShouldOpen] = useState(false);
@@ -103,24 +102,35 @@ export default function AlertPopup({
   }, [isOpen, global, isFocused, globalAlerts.size]);
 
   const _onClose = useMemo(
+    () => () => {
+      onClose();
+      Keyboard.dismiss();
+    },
+    [onClose]
+  );
+
+  const { height, width } = useDimensions();
+  const { top } = useSafeAreaInsets();
+  const isLandscape = useMemo(
     () =>
-      dismissKeyboard
-        ? () => {
-            onClose();
-            Keyboard.dismiss();
-          }
-        : onClose,
-    [onClose, dismissKeyboard]
+      Platform.OS === "ios" &&
+      /phone/i.test(Platform.constants.interfaceIdiom) &&
+      width > height,
+    [Platform, width, height]
   );
 
   return (
     <AlertDialog
-      avoidKeyboard={avoidKeyboard}
       leastDestructiveRef={ref}
       isOpen={shouldOpen}
       onClose={_onClose}
     >
       <AlertDialog.Content
+        maxHeight={
+          keyboardHeight ? height - top - keyboardHeight - 10 + "px" : undefined
+        }
+        marginTop={keyboardHeight ? top + "px" : undefined}
+        bottom={keyboardHeight ? keyboardHeight / 2 + "px" : undefined}
         {...colorModeResponsiveStyle((selector) => ({
           background: selector({
             light: theme.colors.gray[50],
@@ -128,10 +138,15 @@ export default function AlertPopup({
           }),
         }))}
       >
-        <AlertDialog.Header _text={textColorStyle} borderColor={subtleBorder}>
+        <AlertDialog.Header
+          py={isLandscape ? "8px" : undefined}
+          _text={textColorStyle}
+          borderColor={subtleBorder}
+        >
           {header}
         </AlertDialog.Header>
         <AlertDialog.Body
+          pt={isLandscape ? "6px" : undefined}
           _text={colorModeResponsiveStyle((selector) => ({
             color: selector({
               light: theme.colors.gray[500],
@@ -142,6 +157,7 @@ export default function AlertPopup({
           {body}
         </AlertDialog.Body>
         <AlertDialog.Footer
+          py={isLandscape ? "8px" : undefined}
           {...colorModeResponsiveStyle((selector) => ({
             background: selector({
               light: theme.colors.gray[100],
@@ -162,10 +178,17 @@ export default function AlertPopup({
               >
                 Cancel
               </Button>
-              {footerPrimaryButton}
+              {typeof footerPrimaryButton === "function"
+                ? footerPrimaryButton(isLandscape)
+                : footerPrimaryButton}
             </Button.Group>
           ) : (
-            <Button ref={ref} onPress={_onClose}>
+            <Button
+              ref={ref}
+              onPress={_onClose}
+              borderRadius={isLandscape ? "8px" : undefined}
+              py={isLandscape ? "5px" : undefined}
+            >
               OK
             </Button>
           )}

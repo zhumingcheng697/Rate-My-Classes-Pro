@@ -212,6 +212,15 @@ export function useLinkProps<
   }
 }
 
+export function useIsCurrentRoute(routeKey: string) {
+  const routeIndex = useNavigationState((state) => state.index);
+  const routes = useNavigationState((state) => state.routes);
+
+  return (
+    routeIndex === routes.length - 1 && routes[routeIndex]?.key === routeKey
+  );
+}
+
 export function useClassInfoLoader(
   classCode: ClassCode,
   semester: SemesterInfo,

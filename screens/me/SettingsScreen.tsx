@@ -133,10 +133,12 @@ export default function SettingsScreen() {
               }.`
             : ""
         }`}
-        footerPrimaryButton={
+        footerPrimaryButton={(isLandscape) => (
           <DeleteAccountButton
             auth={auth}
             variant={"dangerous"}
+            borderRadius={isLandscape ? 8 : undefined}
+            py={isLandscape ? "5px" : undefined}
             deleteReviews={deleteReviews}
             setAccountDeleted={setAccountDeleted}
             setIsDeletingAccount={setIsDeletingAccount}
@@ -144,7 +146,7 @@ export default function SettingsScreen() {
             setShowDeleteAccountAlert={setShowDeleteAccountAlert}
             setShowDeleteAccountError={setShowDeleteAccountError}
           />
-        }
+        )}
       />
       <VStack margin={"10px"} space={"8px"}>
         {isAuthenticated && (

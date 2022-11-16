@@ -77,18 +77,22 @@ export default ({
               : "You need to sign in to keep track of your starred classes."
           }
           footerPrimaryButton={
-            isAuthenticated ? undefined : (
-              <Button
-                onPress={() => {
-                  setShowAlert(false);
-                  navigation.navigate("SignInSignUp", {
-                    classCode: classInfo ?? classCode,
-                  });
-                }}
-              >
-                Sign In
-              </Button>
-            )
+            isAuthenticated
+              ? undefined
+              : (isLandscape) => (
+                  <Button
+                    borderRadius={isLandscape ? 8 : undefined}
+                    py={isLandscape ? "5px" : undefined}
+                    onPress={() => {
+                      setShowAlert(false);
+                      navigation.navigate("SignInSignUp", {
+                        classCode: classInfo ?? classCode,
+                      });
+                    }}
+                  >
+                    Sign In
+                  </Button>
+                )
           }
         />
         <HStack>

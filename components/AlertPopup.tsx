@@ -24,8 +24,8 @@ export type AlertPopupProps = {
   body?: ReactNode;
   global?: boolean;
   autoDismiss?: boolean;
-  footer?: (ref: MutableRefObject<any>) => ReactNode;
-  footerPrimaryButton?: ReactElement | ((isLandscape: boolean) => ReactElement);
+  footer?: (ref: MutableRefObject<any>, isLandscape: boolean) => ReactNode;
+  footerPrimaryButton?: (isLandscape: boolean) => ReactElement;
   onClose: () => any;
 };
 
@@ -157,27 +157,26 @@ export default function AlertPopup({
           }))}
         >
           {footer ? (
-            footer(ref)
+            footer(ref, isLandscape)
           ) : footerPrimaryButton ? (
             <Button.Group space={2}>
               <Button
                 variant="unstyled"
                 _pressed={{ opacity: 0.5 }}
                 _hover={{ opacity: 0.72 }}
+                py={isLandscape ? "5px" : undefined}
                 onPress={onClose}
                 ref={ref}
               >
                 Cancel
               </Button>
-              {typeof footerPrimaryButton === "function"
-                ? footerPrimaryButton(isLandscape)
-                : footerPrimaryButton}
+              {footerPrimaryButton(isLandscape)}
             </Button.Group>
           ) : (
             <Button
               ref={ref}
               onPress={onClose}
-              borderRadius={isLandscape ? "8px" : undefined}
+              borderRadius={isLandscape ? 8 : undefined}
               py={isLandscape ? "5px" : undefined}
             >
               OK

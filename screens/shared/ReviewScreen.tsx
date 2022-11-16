@@ -230,8 +230,10 @@ export default function ReviewScreen() {
         body={
           "You are about to delete your review. This action is not reversable!"
         }
-        footerPrimaryButton={
+        footerPrimaryButton={(isLandscape) => (
           <Button
+            borderRadius={isLandscape ? 8 : undefined}
+            py={isLandscape ? "5px" : undefined}
             variant={"dangerous"}
             onPress={() => {
               setShowAlert(false);
@@ -245,7 +247,7 @@ export default function ReviewScreen() {
           >
             Delete
           </Button>
-        }
+        )}
       />
       <AlertPopup
         isOpen={

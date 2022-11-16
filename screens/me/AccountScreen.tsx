@@ -65,9 +65,11 @@ export default function AccountScreen() {
           body={
             "You are about to sign out. After you signed out, you will have to sign in again to view your starred and reviewed classes or star and review more classes."
           }
-          footerPrimaryButton={
+          footerPrimaryButton={(isLandscape) => (
             <Button
               variant={"dangerous"}
+              borderRadius={isLandscape ? 8 : undefined}
+              py={isLandscape ? "5px" : undefined}
               onPress={async () => {
                 setIsSigningOut(true);
                 setShowAlert(false);
@@ -84,7 +86,7 @@ export default function AccountScreen() {
             >
               Sign Out
             </Button>
-          }
+          )}
         />
       )}
       <AlertPopup

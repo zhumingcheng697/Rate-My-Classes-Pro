@@ -32,6 +32,7 @@ export default function KeyboardAwareSafeAreaScrollView({
   keyboardAwareScrollViewProps = Object.assign(
     {
       keyboardShouldPersistTaps: "handled",
+      extraHeight: 90,
       extraScrollHeight: -tabBarHeight,
     },
     keyboardAwareScrollViewProps

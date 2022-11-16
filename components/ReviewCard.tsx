@@ -125,16 +125,20 @@ function VoteBlock({
             : "You need to sign in to vote others’ reviews."
         }
         footerPrimaryButton={
-          !isAuthenticated ? (
-            <Button
-              onPress={() => {
-                setShowAlert(false);
-                navigation.navigate("SignInSignUp", { classCode });
-              }}
-            >
-              Sign In
-            </Button>
-          ) : undefined
+          !isAuthenticated
+            ? (isLandscape) => (
+                <Button
+                  borderRadius={isLandscape ? 8 : undefined}
+                  py={isLandscape ? "5px" : undefined}
+                  onPress={() => {
+                    setShowAlert(false);
+                    navigation.navigate("SignInSignUp", { classCode });
+                  }}
+                >
+                  Sign In
+                </Button>
+              )
+            : undefined
         }
       />
       <HStack alignItems={"center"} {...rest}>

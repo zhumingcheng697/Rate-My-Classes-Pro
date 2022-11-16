@@ -7,7 +7,6 @@ import {
   useColorScheme as _useColorScheme,
   Keyboard,
   type KeyboardEvent,
-  type EmitterSubscription,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
@@ -439,36 +438,31 @@ export function useInnerHeight() {
 }
 
 export const useKeyboardHeight = () => {
-  const { height } = useDimensions();
   const [keyboardHeight, setKeyboardHeight] = useState(0);
-  const subscriptions = useRef<EmitterSubscription[]>([]);
 
   useEffect(() => {
     function onKeyboardChange(e: KeyboardEvent) {
-      console.log(e);
-
-      if (e.startCoordinates) {
-        setKeyboardHeight(height - e.endCoordinates.screenY);
-      } else {
-        setKeyboardHeight(0);
-      }
+      setKeyboardHeight(e.endCoordinates.height);
     }
 
-    if (Platform.OS === "ios") {
-      subscriptions.current = [
-        Keyboard.addListener("keyboardWillChangeFrame", onKeyboardChange),
-      ];
-    } else {
-      subscriptions.current = [
-        Keyboard.addListener("keyboardDidHide", onKeyboardChange),
-        Keyboard.addListener("keyboardDidShow", onKeyboardChange),
-      ];
+    function onKeyboardHide(e: KeyboardEvent) {
+      setKeyboardHeight(0);
     }
+    function onKeyboardShow(e: KeyboardEvent) {
+      setKeyboardHeight(e.endCoordinates.height);
+    }
+
+    const subscriptions = [
+      Keyboard.addListener("keyboardWillChangeFrame", onKeyboardChange),
+      Keyboard.addListener("keyboardDidHide", onKeyboardHide),
+      Keyboard.addListener("keyboardDidShow", onKeyboardShow),
+    ];
+
     return () =>
-      subscriptions.current.forEach((subscription) => {
+      subscriptions.forEach((subscription) => {
         subscription.remove();
       });
-  }, [setKeyboardHeight, subscriptions, height]);
+  }, [setKeyboardHeight]);
 
   return keyboardHeight;
 };

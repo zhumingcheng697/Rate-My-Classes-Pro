@@ -444,10 +444,7 @@ export const useKeyboardHeight = () => {
 
   useEffect(() => {
     function onKeyboardChange(e: KeyboardEvent) {
-      if (
-        e.startCoordinates &&
-        e.endCoordinates.screenY < e.startCoordinates.screenY
-      ) {
+      if (e.startCoordinates && e.endCoordinates.height) {
         setHeight(e.endCoordinates.height);
       } else {
         setHeight(0);

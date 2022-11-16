@@ -16,7 +16,7 @@ import { subtleBorder } from "../styling/colors";
 import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 import { textColorStyle } from "../styling/theme";
 import { useAuth } from "../mongodb/auth";
-import { useAppState, useDimensions, useKeyboardHeight } from "../libs/hooks";
+import { useDimensions, useKeyboardHeight } from "../libs/hooks";
 
 export type AlertPopupProps = {
   isOpen: boolean;
@@ -25,7 +25,7 @@ export type AlertPopupProps = {
   global?: boolean;
   autoDismiss?: boolean;
   footer?: (ref: MutableRefObject<any>) => ReactNode;
-  footerPrimaryButton?: ReactElement | ((isPortrait: boolean) => ReactElement);
+  footerPrimaryButton?: ReactElement | ((isLandscape: boolean) => ReactElement);
   onClose: () => any;
 };
 
@@ -45,19 +45,18 @@ export default function AlertPopup({
   const { globalAlerts, setGlobalAlerts } = useAuth();
   const [shouldOpen, setShouldOpen] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const appState = useAppState();
-
-  useEffect(() => {
-    if (isOpen && isFocused && appState !== "active") {
-      Keyboard.dismiss();
-    }
-  }, [appState]);
 
   useEffect(() => {
     if (isOpen && isFocused) {
       Keyboard.dismiss();
     }
-  }, [isOpen, isFocused]);
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (isFocused) {
+      Keyboard.dismiss();
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (global) {
@@ -101,14 +100,6 @@ export default function AlertPopup({
     }
   }, [isOpen, global, isFocused, globalAlerts.size]);
 
-  const _onClose = useMemo(
-    () => () => {
-      onClose();
-      Keyboard.dismiss();
-    },
-    [onClose]
-  );
-
   const { height, width } = useDimensions();
   const { top } = useSafeAreaInsets();
   const isLandscape = useMemo(
@@ -123,7 +114,7 @@ export default function AlertPopup({
     <AlertDialog
       leastDestructiveRef={ref}
       isOpen={shouldOpen}
-      onClose={_onClose}
+      onClose={onClose}
     >
       <AlertDialog.Content
         maxHeight={
@@ -173,7 +164,7 @@ export default function AlertPopup({
                 variant="unstyled"
                 _pressed={{ opacity: 0.5 }}
                 _hover={{ opacity: 0.72 }}
-                onPress={_onClose}
+                onPress={onClose}
                 ref={ref}
               >
                 Cancel
@@ -185,7 +176,7 @@ export default function AlertPopup({
           ) : (
             <Button
               ref={ref}
-              onPress={_onClose}
+              onPress={onClose}
               borderRadius={isLandscape ? "8px" : undefined}
               py={isLandscape ? "5px" : undefined}
             >

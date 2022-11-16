@@ -38,9 +38,11 @@ import {
   type RouteNameFor,
   type RouteParamsFor,
   type Settings,
+  type StarredClassRecord,
+  type ReviewedClassRecord,
 } from "./types";
 import Semester, { type SemesterInfo } from "./semester";
-import { asyncTryCatch, validateSettings } from "./utils";
+import { asyncTryCatch, getFullClassCode, validateSettings } from "./utils";
 import { getClass } from "./schedge";
 import Database from "../mongodb/db";
 import { stringifyRoute } from "../navigation/linking/stringify";
@@ -221,11 +223,21 @@ export function useIsCurrentRoute(routeKey: string) {
   );
 }
 
-export function useClassInfoLoader(
-  classCode: ClassCode,
-  semester: SemesterInfo,
-  isSettingsSettled: boolean
-) {
+export function useClassInfoLoader({
+  classCode,
+  semester,
+  isSemesterSettled,
+  isSettingsSettled,
+  starredClassRecord,
+  reviewedClassRecord,
+}: {
+  classCode: ClassCode;
+  semester: SemesterInfo;
+  isSemesterSettled: boolean;
+  isSettingsSettled: boolean;
+  starredClassRecord?: StarredClassRecord | null;
+  reviewedClassRecord?: ReviewedClassRecord | null;
+}) {
   const [classInfo, setClassInfo] = useState<ClassInfo | null>(() => {
     const name = classCode.name;
     if (typeof name === "string") {
@@ -237,8 +249,36 @@ export function useClassInfoLoader(
     }
     return null;
   });
+  const [tempClassInfoError, setTempClassInfoError] =
+    useState<ErrorType | null>(null);
   const [classInfoError, setClassInfoError] = useState<ErrorType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const loadFromStarredReviewed = useCallback(() => {
+    if (starredClassRecord) {
+      const starredClass = starredClassRecord[getFullClassCode(classCode)];
+      if (starredClass) {
+        setClassInfo({
+          ...classCode,
+          name: starredClass.name,
+          description: starredClass.description,
+        });
+        return true;
+      }
+    }
+    if (reviewedClassRecord) {
+      const reviewedClass = reviewedClassRecord[getFullClassCode(classCode)];
+      if (reviewedClass) {
+        setClassInfo({
+          ...classCode,
+          name: reviewedClass.name,
+          description: reviewedClass.description,
+        });
+        return true;
+      }
+    }
+
+    return false;
+  }, [starredClassRecord, reviewedClassRecord, classCode]);
 
   const loadClass = useCallback(
     (failSilently: boolean = false) => {
@@ -248,9 +288,14 @@ export function useClassInfoLoader(
           if (classInfo) {
             setClassInfo(classInfo);
             setClassInfoError(null);
-          } else {
+          } else if (loadFromStarredReviewed()) {
+            setClassInfoError(null);
+          } else if (isSettingsSettled) {
             setClassInfo(null);
             setClassInfoError(ErrorType.noData);
+          } else {
+            setClassInfo(null);
+            setTempClassInfoError(ErrorType.noData);
           }
         })
         .catch((e) => {
@@ -260,7 +305,7 @@ export function useClassInfoLoader(
         })
         .finally(() => setIsLoading(false));
     },
-    [classCode, semester]
+    [classCode, semester, loadFromStarredReviewed, isSettingsSettled]
   );
 
   const needsReload = useMemo(() => {
@@ -273,6 +318,7 @@ export function useClassInfoLoader(
   }, [classInfo, classCode]);
 
   useEffect(() => {
+    setTempClassInfoError(null);
     const name = classInfo?.name ?? classCode.name;
     if (typeof name === "string" && !needsReload) {
       if (name !== classInfo?.name) {
@@ -282,18 +328,25 @@ export function useClassInfoLoader(
           description: classInfo?.description ?? classCode.description ?? "",
         });
       }
-    } else if (isSettingsSettled && !isLoading && (!classInfo || needsReload)) {
+    } else if (isSemesterSettled && !isLoading && (!classInfo || needsReload)) {
       loadClass();
     }
-  }, [
-    classCode.schoolCode,
-    classCode.departmentCode,
-    classCode.classNumber,
-    classCode.name,
-    semester.semesterCode,
-    semester.year,
-    isSettingsSettled,
-  ]);
+  }, [classCode, semester, isSemesterSettled, needsReload]);
+
+  useEffect(() => {
+    if (
+      isSemesterSettled &&
+      isSettingsSettled &&
+      !needsReload &&
+      !classInfo &&
+      tempClassInfoError === ErrorType.noData
+    ) {
+      if (!loadFromStarredReviewed()) {
+        setClassInfoError(tempClassInfoError);
+      }
+      setTempClassInfoError(null);
+    }
+  }, [isSettingsSettled]);
 
   const reloadClassInfo =
     !classInfo && !isLoading && classInfoError === ErrorType.network

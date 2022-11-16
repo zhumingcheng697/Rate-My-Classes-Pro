@@ -39,6 +39,7 @@ export default ({
   title: getFullClassCode(route.params.classCode),
   headerRight: (props) => {
     const { classCode } = route.params;
+    const starredClassRecord = useSelector((state) => state.starredClassRecord);
     const settings = useSelector((state) => state.settings);
     const { user, isAuthenticated, db, isSettingsSettled } = useAuth();
     const semesterInfo = useSemester({
@@ -46,18 +47,19 @@ export default ({
       settings,
       isSettingsSettled,
     });
-    const { classInfo } = useClassInfoLoader(
+    const { classInfo } = useClassInfoLoader({
       classCode,
-      semesterInfo,
-      !!route.params.semester
-    );
-    const starredClasses = useSelector((state) => state.starredClassRecord);
+      semester: semesterInfo,
+      isSemesterSettled: false,
+      isSettingsSettled: false,
+      starredClassRecord,
+    });
     const dispatch = useDispatch();
     const [showAlert, setShowAlert] = useState(false);
     const isStarred =
       isAuthenticated &&
-      starredClasses &&
-      !!starredClasses[getFullClassCode(classCode)];
+      starredClassRecord &&
+      !!starredClassRecord[getFullClassCode(classCode)];
 
     return (
       <>

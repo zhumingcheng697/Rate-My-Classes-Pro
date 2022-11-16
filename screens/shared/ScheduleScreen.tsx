@@ -40,6 +40,8 @@ type ScheduleScreenRouteProp = RouteProp<SharedNavigationParamList, "Schedule">;
 export default function ScheduleScreen() {
   const navigation = useNavigation<ScheduleScreenNavigationProp>();
   const { params } = useRoute<ScheduleScreenRouteProp>();
+  const starredClassRecord = useSelector((state) => state.starredClassRecord);
+  const reviewedClassRecord = useSelector((state) => state.reviewedClassRecord);
   const { classCode } = params;
   const settings = useSelector((state) => state.settings);
   const [sections, setSections] = useState<SectionInfo[] | null>(
@@ -69,11 +71,14 @@ export default function ScheduleScreen() {
     [semesterInfo.semesterCode, semesterInfo.year]
   );
 
-  const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader(
+  const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader({
     classCode,
-    semesterInfo,
-    isSettingsSettled || !!params.semester || !!params.semester
-  );
+    semester: semesterInfo,
+    isSemesterSettled: isSettingsSettled || !!params.semester,
+    isSettingsSettled,
+    starredClassRecord,
+    reviewedClassRecord,
+  });
 
   const notOffered = !!sections || classInfoError === ErrorType.noData;
 

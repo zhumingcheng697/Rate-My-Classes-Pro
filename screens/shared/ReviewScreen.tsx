@@ -46,6 +46,8 @@ export default function ReviewScreen() {
   const { user, isSettingsSettled, isVerified, db } = useAuth();
   const navigation = useNavigation<ReviewScreenNavigationProp>();
   const route = useRoute<ReviewScreenRouteProp>();
+  const starredClassRecord = useSelector((state) => state.starredClassRecord);
+  const reviewedClassRecord = useSelector((state) => state.reviewedClassRecord);
   const { params, key } = route;
   const settings = useSelector((state) => state.settings);
   const { classCode, previousReview, newOrEdit } = params;
@@ -60,11 +62,15 @@ export default function ReviewScreen() {
     settings,
     isSettingsSettled,
   });
-  const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader(
+  const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader({
     classCode,
-    semesterInfo,
-    (isSettingsSettled || !!params.semester) && !!user
-  );
+    semester: semesterInfo,
+    isSemesterSettled:
+      (isSettingsSettled || !!params.semester) && !!user && isVerified,
+    isSettingsSettled: isSettingsSettled && !!user && isVerified,
+    starredClassRecord,
+    reviewedClassRecord,
+  });
 
   const [enjoyment, setEnjoyment] = useState<Rating | undefined>(
     previousReview?.enjoyment

@@ -67,8 +67,17 @@ export default function DetailScreen() {
   const dispatch = useDispatch();
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-  const { user, isAuthenticated, isSettingsSettled, db, signInAnonymously } =
-    useAuth();
+  const starredClassRecord = useSelector((state) => state.starredClassRecord);
+  const reviewedClassRecord = useSelector((state) => state.reviewedClassRecord);
+
+  const {
+    user,
+    isAuthenticated,
+    isSettingsSettled,
+    isVerified,
+    db,
+    signInAnonymously,
+  } = useAuth();
   const isFocused = useIsFocused();
   const settings = useSelector((state) => state.settings);
   const semesterInfo = useSemester({
@@ -143,11 +152,14 @@ export default function DetailScreen() {
     }
   }, [user]);
 
-  const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader(
+  const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader({
     classCode,
-    semesterInfo,
-    isSettingsSettled || !!params.semester
-  );
+    semester: semesterInfo,
+    isSemesterSettled: isSettingsSettled || !!params.semester,
+    isSettingsSettled,
+    starredClassRecord,
+    reviewedClassRecord,
+  });
 
   const description = useMemo(() => {
     return classInfo?.description

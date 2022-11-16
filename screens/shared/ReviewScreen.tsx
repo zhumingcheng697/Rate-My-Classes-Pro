@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from "react";
-import { Box, Button, Input, Text, theme, VStack } from "native-base";
+import { Box, Button, Input, Text, VStack } from "native-base";
 import {
   useNavigation,
   useRoute,
@@ -26,10 +26,14 @@ import {
   hasEditedReview,
   notOfferedMessage,
 } from "../../libs/utils";
-import { useClassInfoLoader, useRefresh, useSemester } from "../../libs/hooks";
+import {
+  useClassInfoLoader,
+  useIsCurrentRoute,
+  useRefresh,
+  useSemester,
+} from "../../libs/hooks";
 import Semester from "../../libs/semester";
 import { useAuth } from "../../mongodb/auth";
-import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
 type ReviewScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -39,14 +43,16 @@ type ReviewScreenNavigationProp = StackNavigationProp<
 type ReviewScreenRouteProp = RouteProp<SharedNavigationParamList, "Review">;
 
 export default function ReviewScreen() {
-  const { user, isSettingsSettled, isAuthenticated, db } = useAuth();
+  const { user, isSettingsSettled, isVerified, db } = useAuth();
   const navigation = useNavigation<ReviewScreenNavigationProp>();
-  const { params } = useRoute<ReviewScreenRouteProp>();
+  const route = useRoute<ReviewScreenRouteProp>();
+  const { params, key } = route;
   const settings = useSelector((state) => state.settings);
   const { classCode, previousReview, newOrEdit } = params;
   const [hasEdited, setHasEdited] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [willDelete, setWillDelete] = useState(false);
+  const isCurrentRoute = useIsCurrentRoute(key);
   const semesterInfo = useSemester({
     db,
     navigation,
@@ -91,7 +97,7 @@ export default function ReviewScreen() {
     (failSilently: boolean = false) => {
       if (classInfo && !previousReview && newOrEdit !== "New" && db) {
         const loadMyReview = async () => {
-          if (isAuthenticated && user && !previousReview) {
+          if (isVerified && user && !previousReview) {
             try {
               const reviewRecord: ReviewRecord =
                 (await db.loadReviewDoc(classCode)) ?? {};
@@ -127,7 +133,7 @@ export default function ReviewScreen() {
       classInfo,
       previousReview,
       newOrEdit,
-      isAuthenticated,
+      isVerified,
       user,
       classCode,
       navigation,
@@ -138,7 +144,7 @@ export default function ReviewScreen() {
   useEffect(fetchMyReview, [classInfo, classInfoError, db]);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isVerified && isCurrentRoute) {
       navigation.goBack();
       return;
     }
@@ -192,8 +198,9 @@ export default function ReviewScreen() {
     semester,
     instructor,
     comment,
-    isAuthenticated,
+    isVerified,
     newOrEdit,
+    isCurrentRoute,
   ]);
 
   useEffect(() => {

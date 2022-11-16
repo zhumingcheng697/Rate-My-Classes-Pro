@@ -1,15 +1,5 @@
 import { type SemesterInfo } from "./semester";
 
-export type SchoolNameRecord = Record<string, string>;
-
-export type DepartmentNameRecord = Record<string, Record<string, string>>;
-
-export type StarredClassRecord = Record<string, StarredClassInfo>;
-
-export type ReviewedClassRecord = Record<string, ReviewedClassInfo>;
-
-export type ReviewRecord = Record<string, Review>;
-
 export type SchoolInfo = { schoolCode: string };
 
 export type DepartmentInfo = SchoolInfo & { departmentCode: string };
@@ -25,6 +15,16 @@ export type ClassInfo = Required<ClassCode>;
 export type StarredClassInfo = ClassInfo & { starredDate: number };
 
 export type ReviewedClassInfo = ClassInfo & { reviewedDate: number };
+
+export type SchoolNameRecord = Record<string, string>;
+
+export type DepartmentNameRecord = Record<string, Record<string, string>>;
+
+export type StarredClassRecord = Record<string, StarredClassInfo>;
+
+export type ReviewedClassRecord = Record<string, ReviewedClassInfo>;
+
+export type ReviewRecord = Record<string, Review>;
 
 export enum ErrorType {
   network = "NETWORK_ERROR",

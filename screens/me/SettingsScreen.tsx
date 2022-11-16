@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { VStack, theme } from "native-base";
-import { useNavigation } from "@react-navigation/native";
+import { VStack } from "native-base";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import AlertPopup from "../../components/AlertPopup";
 import AppIconSwitcher from "../../components/AppIconSwitcher";
@@ -12,7 +12,7 @@ import LabeledInput from "../../components/LabeledInput";
 import { LeftAlignedButton } from "../../components/LinkCompatibleButton";
 import { SemesterSelector } from "../../components/Selector";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
-import { useIsCatalyst } from "../../libs/hooks";
+import { useIsCatalyst, useIsCurrentRoute } from "../../libs/hooks";
 import { composeErrorMessage, validateSettings } from "../../libs/utils";
 import Semester from "../../libs/semester";
 import { loadSettings, selectSemester } from "../../redux/actions";
@@ -30,6 +30,8 @@ export default function SettingsScreen() {
     db,
   } = auth;
   const navigation = useNavigation();
+  const route = useRoute();
+  const isCurrentRoute = useIsCurrentRoute(route.key);
   const dispatch = useDispatch();
   const [accountDeleted, setAccountDeleted] = useState(false);
   const [showSettingsAlert, setShowSettingsAlert] = useState(false);
@@ -75,10 +77,21 @@ export default function SettingsScreen() {
   }, [navigation, isDeletingAccount]);
 
   useEffect(() => {
-    if (accountDeleted && !isDeletingAccount && !isAuthenticated) {
+    if (
+      accountDeleted &&
+      !isDeletingAccount &&
+      !isAuthenticated &&
+      isCurrentRoute
+    ) {
       navigation.goBack();
     }
-  }, [navigation, accountDeleted, isDeletingAccount, isAuthenticated]);
+  }, [
+    navigation,
+    accountDeleted,
+    isDeletingAccount,
+    isAuthenticated,
+    isCurrentRoute,
+  ]);
 
   return (
     <KeyboardAwareSafeAreaScrollView>

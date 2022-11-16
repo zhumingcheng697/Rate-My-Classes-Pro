@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Box } from "native-base";
 import {
   useNavigation,
-  useNavigationState,
   useRoute,
   type RouteProp,
 } from "@react-navigation/native";
@@ -13,6 +12,7 @@ import type {
   SharedNavigationParamList,
   MeNavigationParamList,
 } from "../../libs/types";
+import { useIsCurrentRoute } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
@@ -34,8 +34,7 @@ export default function StarredReviewedScreen() {
   const route = useRoute<StarredReviewedScreenRouteProp>();
   const [alertDismissed, setAlertDismissed] = useState(false);
   const auth = useAuth();
-  const routeIndex = useNavigationState((state) => state.index);
-  const routes = useNavigationState((state) => state.routes);
+  const isCurrentRoute = useIsCurrentRoute(route.key);
 
   const classes = useMemo(
     () =>
@@ -50,15 +49,11 @@ export default function StarredReviewedScreen() {
   );
 
   useEffect(() => {
-    if (
-      !auth.isAuthenticated &&
-      routeIndex === routes.length - 1 &&
-      routes[routeIndex]?.name === route.name
-    ) {
+    if (!auth.isAuthenticated && isCurrentRoute) {
       navigation.goBack();
       return;
     }
-  }, [auth.isAuthenticated, routes, routeIndex]);
+  }, [auth.isAuthenticated, isCurrentRoute]);
 
   return (
     <KeyboardAwareSafeAreaScrollView>

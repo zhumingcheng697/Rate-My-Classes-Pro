@@ -17,7 +17,11 @@ import {
   AppleSignInButton,
   GoogleSignInButton,
 } from "../../components/OAuthSignInButton";
-import { useInitialTabName, useSemester } from "../../libs/hooks";
+import {
+  useInitialTabName,
+  useIsCurrentRoute,
+  useSemester,
+} from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import LabeledInput from "../../components/LabeledInput";
 import {
@@ -39,7 +43,7 @@ type SignInSignUpScreenRouteProp = RouteProp<
 
 export default function SignInSignUpScreen() {
   const navigation = useNavigation<SignInSignUpScreenNavigationProp>();
-  const { params } = useRoute<SignInSignUpScreenRouteProp>();
+  const route = useRoute<SignInSignUpScreenRouteProp>();
   const settings = useSelector((state) => state.settings);
   const auth = useAuth();
   const tabName = useInitialTabName();
@@ -60,15 +64,16 @@ export default function SignInSignUpScreen() {
   const [showGoogleAlert, setShowGoogleAlert] = useState(false);
   const [googleError, setGoogleError] = useState<any>(null);
 
-  const isSigningUp = params?.isSigningUp ?? false;
+  const isSigningUp = route.params?.isSigningUp ?? false;
 
   const isAuthenticated = auth.isAuthenticated;
+  const isCurrentRoute = useIsCurrentRoute(route.key);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && isCurrentRoute) {
       navigation.goBack();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isCurrentRoute]);
 
   useEffect(() => {
     setIsLoading(false);
@@ -83,7 +88,7 @@ export default function SignInSignUpScreen() {
   useSemester({
     db: auth.db,
     navigation,
-    params,
+    params: route.params,
     settings,
     isSettingsSettled: auth.isSettingsSettled,
   });
@@ -235,7 +240,7 @@ export default function SignInSignUpScreen() {
                 title={isSigningUp ? "Sign In" : "Sign Up"}
                 linkTo={{
                   ...Route(tabName, "SignInSignUp", {
-                    ...params,
+                    ...route.params,
                     isSigningUp: !isSigningUp,
                   }),
                   action: CommonActions.setParams({

@@ -53,9 +53,6 @@ export default function RootNavigation() {
   );
   const [accountError, setAccountError] = useState<any>(null);
   const [showAlert, setShowAlert] = useState(false);
-  const [fetchingSchoolNames, setFetchingSchoolNames] = useState(false);
-  const [fetchingDepartmentNames, setFetchingDepartmentNames] = useState(false);
-  const [fetchingUserDoc, setFetchingUserDoc] = useState(false);
   const schoolNameRecord = useSelector((state) => state.schoolNameRecord);
   const departmentNameRecord = useSelector(
     (state) => state.departmentNameRecord
@@ -71,15 +68,11 @@ export default function RootNavigation() {
       schoolNameRecord: SchoolNameRecord | null,
       departmentNameRecord: DepartmentNameRecord | null,
       dispatch: Dispatch,
-      fetchingSchoolNames: boolean,
-      fetchingDepartmentNames: boolean,
       failSilently: boolean = false
     ) => {
       if (schoolNameRecord && departmentNameRecord) return;
 
-      if (!schoolNameRecord && !fetchingSchoolNames) {
-        setFetchingSchoolNames(true);
-
+      if (!schoolNameRecord) {
         getSchoolNames()
           .then((record) => {
             if (record && !isObjectEmpty(record)) {
@@ -94,13 +87,10 @@ export default function RootNavigation() {
             console.error(e);
             setSchoolError(ErrorType.network);
             if (!failSilently) setShowAlert(true);
-          })
-          .finally(() => setFetchingSchoolNames(false));
+          });
       }
 
-      if (!departmentNameRecord && !fetchingDepartmentNames) {
-        setFetchingDepartmentNames(true);
-
+      if (!departmentNameRecord) {
         getDepartmentNames()
           .then((record) => {
             if (record && !isObjectEmpty(record)) {
@@ -115,8 +105,7 @@ export default function RootNavigation() {
             console.error(e);
             setDepartmentError(ErrorType.network);
             if (!failSilently) setShowAlert(true);
-          })
-          .finally(() => setFetchingDepartmentNames(false));
+          });
       }
     },
     []
@@ -124,9 +113,7 @@ export default function RootNavigation() {
 
   const fetchInfo = useCallback(
     (failSilently: boolean = false) => {
-      if (!auth.isUserDocLoaded && !fetchingUserDoc) {
-        setFetchingUserDoc(true);
-
+      if (!auth.isUserDocLoaded) {
         auth
           .fetchUserDoc()
           .then(() => setAccountError(null))
@@ -134,28 +121,17 @@ export default function RootNavigation() {
             console.error(e);
             setAccountError(e);
             if (!failSilently) setShowAlert(true);
-          })
-          .finally(() => setFetchingUserDoc(false));
+          });
       }
 
       getSchoolAndDepartmentNames(
         schoolNameRecord,
         departmentNameRecord,
         dispatch,
-        fetchingSchoolNames,
-        fetchingDepartmentNames,
         failSilently
       );
     },
-    [
-      schoolNameRecord,
-      departmentNameRecord,
-      dispatch,
-      auth,
-      fetchingUserDoc,
-      fetchingSchoolNames,
-      fetchingDepartmentNames,
-    ]
+    [schoolNameRecord, departmentNameRecord, dispatch, auth]
   );
 
   useRefresh(

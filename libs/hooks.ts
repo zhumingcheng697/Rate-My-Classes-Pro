@@ -249,8 +249,6 @@ export function useClassInfoLoader({
     }
     return null;
   });
-  const [tempClassInfoError, setTempClassInfoError] =
-    useState<ErrorType | null>(null);
   const [classInfoError, setClassInfoError] = useState<ErrorType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const loadFromStarredReviewed = useCallback(() => {
@@ -295,7 +293,6 @@ export function useClassInfoLoader({
             setClassInfoError(ErrorType.noData);
           } else {
             setClassInfo(null);
-            setTempClassInfoError(ErrorType.noData);
           }
         })
         .catch((e) => {
@@ -318,7 +315,6 @@ export function useClassInfoLoader({
   }, [classInfo, classCode]);
 
   useEffect(() => {
-    setTempClassInfoError(null);
     const name = classInfo?.name ?? classCode.name;
     if (typeof name === "string" && !needsReload) {
       if (name !== classInfo?.name) {
@@ -328,25 +324,10 @@ export function useClassInfoLoader({
           description: classInfo?.description ?? classCode.description ?? "",
         });
       }
-    } else if (isSemesterSettled && !isLoading && (!classInfo || needsReload)) {
+    } else if (isSemesterSettled && (!classInfo || needsReload)) {
       loadClass();
     }
-  }, [classCode, semester, isSemesterSettled, needsReload]);
-
-  useEffect(() => {
-    if (
-      isSemesterSettled &&
-      isSettingsSettled &&
-      !needsReload &&
-      !classInfo &&
-      tempClassInfoError === ErrorType.noData
-    ) {
-      if (!loadFromStarredReviewed()) {
-        setClassInfoError(tempClassInfoError);
-      }
-      setTempClassInfoError(null);
-    }
-  }, [isSettingsSettled]);
+  }, [classCode, semester, isSemesterSettled, isSettingsSettled, needsReload]);
 
   const reloadClassInfo =
     !classInfo && !isLoading && classInfoError === ErrorType.network

@@ -93,6 +93,7 @@ export default ({
         />
         <HStack>
           <IconButton
+            disabled={!classInfo}
             isDisabled={!classInfo}
             variant={"unstyled"}
             marginRight={"5px"}

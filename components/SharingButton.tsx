@@ -86,6 +86,7 @@ function NativeSharingButton({ url, copyLink }: SharingButtonProps) {
       />
       <IconButton
         ref={ref}
+        disabled={!url}
         isDisabled={!url}
         variant={"unstyled"}
         marginRight={"5px"}
@@ -115,6 +116,7 @@ function NativeSharingButton({ url, copyLink }: SharingButtonProps) {
 function WebSharingButton({ url, copyLink }: SharingButtonProps) {
   return (
     <IconButton
+      disabled={!url}
       isDisabled={!url}
       variant={"unstyled"}
       marginRight={"5px"}

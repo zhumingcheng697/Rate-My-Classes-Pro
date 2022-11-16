@@ -11,6 +11,24 @@ index 67d7dd2..4525de9 100644
    const [, baseInputProps] = (0, _utils.extractInObject)(nonLayoutProps, ['variant']); //TODO: refactor for responsive prop
  
    if ((0, _useHasResponsiveProps.useHasResponsiveProps)(props)) {
+diff --git a/node_modules/native-base/lib/commonjs/theme/components/icon-button.js b/node_modules/native-base/lib/commonjs/theme/components/icon-button.js
+index c7378bc..85664f8 100644
+--- a/node_modules/native-base/lib/commonjs/theme/components/icon-button.js
++++ b/node_modules/native-base/lib/commonjs/theme/components/icon-button.js
+@@ -19,7 +19,12 @@ const baseStyle = props => {
+   return {
+     borderRadius: 'sm',
+     _web: {
+-      cursor: props.isDisabled ? 'not-allowed' : props.isLoading ? 'default' : 'pointer'
++      _disabled: {
++        cursor: 'not-allowed'
++      },
++      _loading: {
++        cursor: 'not-allowed'
++      },
+     },
+     _focusVisible: {
+       style: props.variant !== 'unstyled' ? { ...focusRing
 diff --git a/node_modules/native-base/lib/commonjs/theme/styled-system.js b/node_modules/native-base/lib/commonjs/theme/styled-system.js
 index 97309ef..78e3a8d 100644
 --- a/node_modules/native-base/lib/commonjs/theme/styled-system.js
@@ -36,6 +54,24 @@ index cdd877c..a3111cf 100644
    const [, baseInputProps] = extractInObject(nonLayoutProps, ['variant']); //TODO: refactor for responsive prop
  
    if (useHasResponsiveProps(props)) {
+diff --git a/node_modules/native-base/lib/module/theme/components/icon-button.js b/node_modules/native-base/lib/module/theme/components/icon-button.js
+index 7515355..5c46602 100644
+--- a/node_modules/native-base/lib/module/theme/components/icon-button.js
++++ b/node_modules/native-base/lib/module/theme/components/icon-button.js
+@@ -11,7 +11,12 @@ const baseStyle = props => {
+   return {
+     borderRadius: 'sm',
+     _web: {
+-      cursor: props.isDisabled ? 'not-allowed' : props.isLoading ? 'default' : 'pointer'
++      _disabled: {
++        cursor: 'not-allowed'
++      },
++      _loading: {
++        cursor: 'not-allowed'
++      },
+     },
+     _focusVisible: {
+       style: props.variant !== 'unstyled' ? { ...focusRing
 diff --git a/node_modules/native-base/lib/module/theme/styled-system.js b/node_modules/native-base/lib/module/theme/styled-system.js
 index 637de0c..715ce46 100644
 --- a/node_modules/native-base/lib/module/theme/styled-system.js
@@ -60,6 +96,28 @@ index 4adb61f..d8df714 100644
    ]);
  
    const [, baseInputProps] = extractInObject(nonLayoutProps, ['variant']);
+diff --git a/node_modules/native-base/src/theme/components/icon-button.ts b/node_modules/native-base/src/theme/components/icon-button.ts
+index 7e30a1f..9d2ba52 100644
+--- a/node_modules/native-base/src/theme/components/icon-button.ts
++++ b/node_modules/native-base/src/theme/components/icon-button.ts
+@@ -11,11 +11,12 @@ const baseStyle = (props: any) => {
+   return {
+     borderRadius: 'sm',
+     _web: {
+-      cursor: props.isDisabled
+-        ? 'not-allowed'
+-        : props.isLoading
+-        ? 'default'
+-        : 'pointer',
++      _disabled: {
++        cursor: 'not-allowed'
++      },
++      _loading: {
++        cursor: 'not-allowed'
++      },
+     },
+     _focusVisible: {
+       style: props.variant !== 'unstyled' ? { ...focusRing } : {},
 diff --git a/node_modules/native-base/src/theme/styled-system.ts b/node_modules/native-base/src/theme/styled-system.ts
 index 6dc36a5..c27b9fc 100644
 --- a/node_modules/native-base/src/theme/styled-system.ts

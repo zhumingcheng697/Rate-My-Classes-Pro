@@ -439,15 +439,18 @@ export function useInnerHeight() {
 }
 
 export const useKeyboardHeight = () => {
-  const [height, setHeight] = useState(0);
+  const { height } = useDimensions();
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const subscriptions = useRef<EmitterSubscription[]>([]);
 
   useEffect(() => {
     function onKeyboardChange(e: KeyboardEvent) {
-      if (e.startCoordinates && e.endCoordinates.height) {
-        setHeight(e.endCoordinates.height);
+      console.log(e);
+
+      if (e.startCoordinates) {
+        setKeyboardHeight(height - e.endCoordinates.screenY);
       } else {
-        setHeight(0);
+        setKeyboardHeight(0);
       }
     }
 
@@ -465,7 +468,7 @@ export const useKeyboardHeight = () => {
       subscriptions.current.forEach((subscription) => {
         subscription.remove();
       });
-  }, [setHeight, subscriptions]);
+  }, [setKeyboardHeight, subscriptions, height]);
 
-  return height;
+  return keyboardHeight;
 };

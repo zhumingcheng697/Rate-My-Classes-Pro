@@ -29,6 +29,7 @@ type StarredReviewedScreenRouteProp = RouteProp<
 export default function StarredReviewedScreen() {
   const starredClasses = useSelector((state) => state.starredClassRecord);
   const reviewedClasses = useSelector((state) => state.reviewedClassRecord);
+  const { selectedSemester } = useSelector((state) => state.settings);
   const navigation = useNavigation<StarredReviewedScreenNavigationProp>();
   const route = useRoute<StarredReviewedScreenRouteProp>();
   const [alertDismissed, setAlertDismissed] = useState(false);
@@ -81,6 +82,7 @@ export default function StarredReviewedScreen() {
           isLoaded={!!classes.length}
           classes={classes}
           navigation={navigation}
+          semesterInfo={selectedSemester}
         />
       </Box>
     </KeyboardAwareSafeAreaScrollView>

@@ -15,6 +15,7 @@ import React, {
 import { useSelector, useDispatch } from "react-redux";
 import { useNetInfo } from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SEND_CODE_ENDPOINT, VERIFY_CODE_ENDPOINT } from "react-native-dotenv";
 import Realm from "./Realm";
 
 import realmApp from "./realmApp";
@@ -52,6 +53,8 @@ export type AuthContext = {
   setGlobalAlerts: Dispatch<SetStateAction<Set<MutableRefObject<any>>>>;
   fetchUserDoc: () => Promise<void>;
   updateUsername: (username: string) => Promise<void>;
+  sendConfirmationCode: (email: string) => Promise<void>;
+  verifyConfirmationCode: (code: string) => Promise<void>;
   continueWithApple: (
     idToken: string,
     username: string | null
@@ -237,6 +240,42 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
     setResyncPending(false);
   }, [isUserDocLoaded]);
+
+  const sendConfirmationCode = useCallback(
+    async (email: string) => {
+      if (!isAuthenticated || isVerified) return;
+
+      const res = await fetch(
+        `${SEND_CODE_ENDPOINT}?id=${encodeURIComponent(
+          user.id
+        )}&email=${encodeURIComponent(email)}`
+      );
+
+      const json = await res.json();
+
+      if (json !== user.id) throw json;
+    },
+    [user, isAuthenticated, isVerified]
+  );
+
+  const verifyConfirmationCode = useCallback(
+    async (code: string) => {
+      if (!isAuthenticated || isVerified) return;
+
+      const res = await fetch(
+        `${VERIFY_CODE_ENDPOINT}?id=${encodeURIComponent(
+          user.id
+        )}&code=${encodeURIComponent(code.toLowerCase())}`
+      );
+
+      const json = await res.json();
+
+      if (json !== user.id) throw json;
+
+      setIsVerified(true);
+    },
+    [user, isAuthenticated, isVerified]
+  );
 
   const loadUserDoc = useCallback(
     async (user: Realm.User, db: Database, throws: boolean = false) => {
@@ -550,6 +589,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         setGlobalAlerts,
         fetchUserDoc,
         updateUsername,
+        sendConfirmationCode,
+        verifyConfirmationCode,
         continueWithApple,
         continueWithGoogle,
         signInAnonymously,

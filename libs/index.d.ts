@@ -47,6 +47,8 @@ declare module "react-native-dotenv" {
   export const GOOGLE_WEB_CLIENT_ID: string;
   export const GOOGLE_IOS_CLIENT_ID: string;
   export const GOOGLE_OAUTH_ENDPOINT: string;
+  export const SEND_CODE_ENDPOINT: string;
+  export const VERIFY_CODE_ENDPOINT: string;
   export const WEB_DEPLOYMENT_URL: string;
 }
 

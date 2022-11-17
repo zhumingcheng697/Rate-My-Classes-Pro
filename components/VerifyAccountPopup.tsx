@@ -45,7 +45,7 @@ export default function VerifyAccountPopup({
   useEffect(() => {
     asyncTryCatch(async () => {
       const fontName =
-        await NativeModules.RNSystemFontModule?.getSystemMonoFont(500);
+        await NativeModules.RNSystemFontModule?.getSystemMonoFont(17);
       if (fontName) {
         setSystemMonoFont(fontName);
       }

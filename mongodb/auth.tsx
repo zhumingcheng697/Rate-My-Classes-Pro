@@ -33,6 +33,7 @@ import {
   composeUsername,
   getFullClassCode,
   getFullSemesterCode,
+  tryCatch,
 } from "../libs/utils";
 import { useAppState } from "../libs/hooks";
 import { AppleOAuth, GoogleOAuth } from "../libs/oauth";
@@ -245,15 +246,23 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     async (email: string) => {
       if (!isAuthenticated || isVerified) return;
 
-      const res = await fetch(
-        `${SEND_CODE_ENDPOINT}?id=${encodeURIComponent(
-          user.id
-        )}&email=${encodeURIComponent(email)}`
-      );
+      try {
+        const res = await fetch(
+          `${SEND_CODE_ENDPOINT}?id=${encodeURIComponent(
+            user.id
+          )}&email=${encodeURIComponent(email)}`
+        );
 
-      const json = await res.json();
+        const json = await res.json();
 
-      if (json !== user.id) throw json;
+        if (json !== user.id) throw json;
+      } catch (e: any) {
+        throw (
+          (typeof e?.error === "string" &&
+            tryCatch(() => JSON.parse(e.error))) ||
+          e
+        );
+      }
     },
     [user, isAuthenticated, isVerified]
   );
@@ -262,17 +271,25 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     async (code: string) => {
       if (!isAuthenticated || isVerified) return;
 
-      const res = await fetch(
-        `${VERIFY_CODE_ENDPOINT}?id=${encodeURIComponent(
-          user.id
-        )}&code=${encodeURIComponent(code.toLowerCase())}`
-      );
+      try {
+        const res = await fetch(
+          `${VERIFY_CODE_ENDPOINT}?id=${encodeURIComponent(
+            user.id
+          )}&code=${encodeURIComponent(code.toLowerCase())}`
+        );
 
-      const json = await res.json();
+        const json = await res.json();
 
-      if (json !== user.id) throw json;
+        if (json !== user.id) throw json;
 
-      setIsVerified(true);
+        setIsVerified(true);
+      } catch (e: any) {
+        throw (
+          (typeof e?.error === "string" &&
+            tryCatch(() => JSON.parse(e.error))) ||
+          e
+        );
+      }
     },
     [user, isAuthenticated, isVerified]
   );

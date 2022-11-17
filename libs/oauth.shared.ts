@@ -5,6 +5,8 @@ import {
   GOOGLE_OAUTH_ENDPOINT,
 } from "react-native-dotenv";
 
+import { tryCatch } from "./utils";
+
 export type OAuthProviderProps = {
   children: ReactNode;
 };
@@ -34,26 +36,38 @@ export async function getOAuthToken(
   authCode: string,
   provider: "Apple" | "Google"
 ) {
-  const endpoint =
-    provider === "Apple" ? APPLE_OAUTH_ENDPOINT : GOOGLE_OAUTH_ENDPOINT;
+  try {
+    const endpoint =
+      provider === "Apple" ? APPLE_OAUTH_ENDPOINT : GOOGLE_OAUTH_ENDPOINT;
 
-  const res = await fetch(
-    `${endpoint}?platform=${Platform.OS}&code=${encodeURIComponent(authCode)}`
-  );
+    const res = await fetch(
+      `${endpoint}?platform=${Platform.OS}&code=${encodeURIComponent(authCode)}`
+    );
 
-  return (await res.json()) as { id_token?: string; refresh_token?: string };
+    return (await res.json()) as { id_token?: string; refresh_token?: string };
+  } catch (e: any) {
+    throw (
+      (typeof e?.error === "string" && tryCatch(() => JSON.parse(e.error))) || e
+    );
+  }
 }
 
 export async function revokeOAuthToken(
   refreshToken: string,
   provider: "Apple" | "Google"
 ) {
-  const endpoint =
-    provider === "Apple" ? APPLE_OAUTH_ENDPOINT : GOOGLE_OAUTH_ENDPOINT;
+  try {
+    const endpoint =
+      provider === "Apple" ? APPLE_OAUTH_ENDPOINT : GOOGLE_OAUTH_ENDPOINT;
 
-  await fetch(
-    `${endpoint}?action=revoke&platform=${
-      Platform.OS
-    }&token=${encodeURIComponent(refreshToken)}`
-  );
+    await fetch(
+      `${endpoint}?action=revoke&platform=${
+        Platform.OS
+      }&token=${encodeURIComponent(refreshToken)}`
+    );
+  } catch (e: any) {
+    throw (
+      (typeof e?.error === "string" && tryCatch(() => JSON.parse(e.error))) || e
+    );
+  }
 }

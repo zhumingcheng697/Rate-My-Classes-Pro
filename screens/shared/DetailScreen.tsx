@@ -43,6 +43,7 @@ import {
   SubtleButton,
 } from "../../components/LinkCompatibleButton";
 import { ReviewOrderSelector } from "../../components/Selector";
+import VerifyAccountPopup from "../../components/VerifyAccountPopup";
 import { useAuth } from "../../mongodb/auth";
 import { reviewClass, unreviewClass } from "../../redux/actions";
 
@@ -90,6 +91,7 @@ export default function DetailScreen() {
   const tabName = useInitialTabName();
 
   const [showAlert, setShowAlert] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState<ReviewErrorType | null>(null);
   const [scheduleError, setScheduleError] = useState(false);
   const [reviewError, setReviewError] = useState(false);
@@ -328,10 +330,16 @@ export default function DetailScreen() {
 
   return (
     <>
+      <VerifyAccountPopup
+        isVerifying={isVerifying && isAuthenticated}
+        setIsVerifying={setIsVerifying}
+      />
       <AlertPopup
         header={"Not Offered"}
         body={notOfferedMessage(classCode, classInfo, semester)}
-        isOpen={showAlert && classInfoError === ErrorType.noData}
+        isOpen={
+          !isVerifying && showAlert && classInfoError === ErrorType.noData
+        }
         onClose={() => {
           setShowAlert(false);
           navigation.goBack();
@@ -339,7 +347,9 @@ export default function DetailScreen() {
       />
       <AlertPopup
         autoDismiss
-        isOpen={showAlert && classInfoError === ErrorType.network}
+        isOpen={
+          !isVerifying && showAlert && classInfoError === ErrorType.network
+        }
         onClose={() => {
           setShowAlert(false);
           navigation.goBack();
@@ -348,19 +358,37 @@ export default function DetailScreen() {
       <AlertPopup
         autoDismiss
         header={"Unable to Load Schedule or Review"}
-        isOpen={showAlert && !classInfoError && scheduleError && reviewError}
+        isOpen={
+          !isVerifying &&
+          showAlert &&
+          !classInfoError &&
+          scheduleError &&
+          reviewError
+        }
         onClose={() => setShowAlert(false)}
       />
       <AlertPopup
         autoDismiss
         header={"Unable to Load Schedule"}
-        isOpen={showAlert && !classInfoError && scheduleError && !reviewError}
+        isOpen={
+          !isVerifying &&
+          showAlert &&
+          !classInfoError &&
+          scheduleError &&
+          !reviewError
+        }
         onClose={() => setShowAlert(false)}
       />
       <AlertPopup
         autoDismiss
         header={"Unable to Load Review"}
-        isOpen={showAlert && !classInfoError && !scheduleError && reviewError}
+        isOpen={
+          !isVerifying &&
+          showAlert &&
+          !classInfoError &&
+          !scheduleError &&
+          reviewError
+        }
         onClose={() => setShowAlert(false)}
       />
       {[
@@ -372,6 +400,7 @@ export default function DetailScreen() {
           key={e}
           header={`Unable to ${e}`}
           isOpen={
+            !isVerifying &&
             showAlert &&
             error === e &&
             !classInfoError &&
@@ -439,17 +468,26 @@ export default function DetailScreen() {
               </Text>
             </SubtleButton>
             <SolidButton
-              isDisabled={!classInfo || !reviewRecord}
+              isDisabled={
+                isVerifying || (isVerified && (!classInfo || !reviewRecord))
+              }
+              onPress={
+                user && isAuthenticated && !isVerified
+                  ? () => setIsVerifying(true)
+                  : undefined
+              }
               linkTo={
                 user && isAuthenticated
-                  ? Route(tabName, "Review", {
-                      classCode: classInfo ?? classCode,
-                      previousReview: myReview,
-                      starredOrReviewed,
-                      newOrEdit: myReview ? "Edit" : "New",
-                      query,
-                      semester: semesterInfo,
-                    })
+                  ? isVerified
+                    ? Route(tabName, "Review", {
+                        classCode: classInfo ?? classCode,
+                        previousReview: myReview,
+                        starredOrReviewed,
+                        newOrEdit: myReview ? "Edit" : "New",
+                        query,
+                        semester: semesterInfo,
+                      })
+                    : undefined
                   : Route(tabName, "SignInSignUp", {
                       classCode: classInfo ?? classCode,
                       starredOrReviewed,
@@ -459,9 +497,13 @@ export default function DetailScreen() {
             >
               <Text variant={"button"}>
                 {user && isAuthenticated
-                  ? myReview
-                    ? "Edit My Review"
-                    : "Review"
+                  ? isVerifying
+                    ? "Verifying Account…"
+                    : isVerified
+                    ? myReview
+                      ? "Edit My Review"
+                      : "Review"
+                    : "Verify Account to Review"
                   : "Sign In to Review"}
               </Text>
             </SolidButton>
@@ -481,6 +523,8 @@ export default function DetailScreen() {
                       classInfo={classInfo ?? undefined}
                       semesterInfo={semesterInfo}
                       review={reviewRecord[id]}
+                      isVerifying={isVerifying && isAuthenticated}
+                      startVerify={() => setIsVerifying(true)}
                       setReview={(newReview) => {
                         const newReviewRecord = { ...reviewRecord };
                         newReviewRecord[id] = newReview;

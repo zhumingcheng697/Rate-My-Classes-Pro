@@ -1,8 +1,7 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { Button, Input, Text, theme, VStack } from "native-base";
-import { Keyboard } from "react-native";
-
-import { composeErrorMessage } from "../libs/utils";
+import { Keyboard, Platform, NativeModules } from "react-native";
+import { asyncTryCatch, composeErrorMessage } from "../libs/utils";
 import { useAuth } from "../mongodb/auth";
 import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 import AlertPopup from "./AlertPopup";
@@ -17,17 +16,24 @@ enum VerifyAccountState {
   failedToVerifyCode,
 }
 
-export type VerifyAccountAlertProps = {
+export type VerifyAccountPopupProps = {
   isVerifying: boolean;
   setIsVerifying: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function VerifyAccountAlert({
+export default function VerifyAccountPopup({
   isVerifying,
   setIsVerifying,
-}: VerifyAccountAlertProps) {
+}: VerifyAccountPopupProps) {
   const [verifyAccountState, setVerifyAccountState] = useState(
-    VerifyAccountState.codeSent
+    VerifyAccountState.askingForEmail
+  );
+  const [systemMonoFont, setSystemMonoFont] = useState(() =>
+    Platform.OS === "web"
+      ? "ui-monospace, 'SF Mono', SFMono-Regular, 'DejaVu Sans Mono', Menlo, Consolas, monospace;"
+      : Platform.OS === "ios"
+      ? "Menlo"
+      : "mono"
   );
   const [codeSendError, setCodeSendError] = useState<any>(null);
   const [codeVerifyError, setCodeVerifyError] = useState<any>(null);
@@ -37,8 +43,18 @@ export default function VerifyAccountAlert({
     useAuth();
 
   useEffect(() => {
+    asyncTryCatch(async () => {
+      const fontName =
+        await NativeModules.RNSystemFontModule?.getSystemMonoFont(500);
+      if (fontName) {
+        setSystemMonoFont(fontName);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     if (isVerifying) {
-      setVerifyAccountState(VerifyAccountState.codeSent);
+      setVerifyAccountState(VerifyAccountState.askingForEmail);
       setCodeSendError(null);
       setCodeVerifyError(null);
       setNyuEmail("");
@@ -165,6 +181,7 @@ export default function VerifyAccountAlert({
                 autoCapitalize={"none"}
                 keyboardType={"ascii-capable"}
                 textContentType={"oneTimeCode"}
+                fontFamily={systemMonoFont}
               />
             </LabeledInput>
           </VStack>

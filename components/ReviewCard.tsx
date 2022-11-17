@@ -263,6 +263,8 @@ type ReviewCardBaseProps = {
   review: Review;
   setReview: (review: Review) => void;
   semesterInfo: SemesterInfo;
+  isVerifying: boolean;
+  startVerify: () => void;
 };
 
 export type ReviewCardProps = ReviewCardBaseProps &
@@ -273,6 +275,8 @@ export default function ReviewCard({
   review,
   setReview,
   semesterInfo,
+  isVerifying,
+  startVerify,
   ...rest
 }: ReviewCardProps) {
   const {
@@ -290,7 +294,7 @@ export default function ReviewCard({
   } = review;
   const route = useRoute<ReviewCardRouteProp>();
   const { classCode } = route.params;
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isVerified } = useAuth();
 
   const setVotes = (newUpvotes?: VoteRecord, newDownvotes?: VoteRecord) => {
     const newReview = { ...review };
@@ -336,14 +340,26 @@ export default function ReviewCard({
         />
         {isAuthenticated && user?.id === userId && (
           <PlainTextButton
+            isDisabled={isVerifying}
             paddingX={"5px"}
-            title={"Edit My Review"}
-            linkTo={Route(tabName, "Review", {
-              classCode: classInfo ?? classCode,
-              previousReview: review,
-              newOrEdit: "Edit",
-              semester: semesterInfo,
-            })}
+            title={
+              isVerifying
+                ? "Verifying…"
+                : isVerified
+                ? "Edit Review"
+                : "Verify Account"
+            }
+            onPress={isVerified ? undefined : startVerify}
+            linkTo={
+              isVerified
+                ? Route(tabName, "Review", {
+                    classCode: classInfo ?? classCode,
+                    previousReview: review,
+                    newOrEdit: "Edit",
+                    semester: semesterInfo,
+                  })
+                : undefined
+            }
           />
         )}
         <Text>

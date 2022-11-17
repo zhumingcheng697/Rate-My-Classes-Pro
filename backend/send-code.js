@@ -29,7 +29,7 @@ exports = async function ({ query }) {
     from: `Rate My Classes Pro <${context.values.get("email-address")}>`,
     to: query.email,
     subject: "Rate My Classes Confirmation Code",
-    html: `<div><p>Thank you for verifying your Rate My Classes account!</p><p>Your confirmation code is: </p><p style="font-size: 2.5em; font-weight:700; margin: 1rem 0; font-family: monospace;">${code}</p></div>`,
+    html: `<div><p>Thank you for verifying your Rate My Classes account!</p><p>Your confirmation code is: </p><p style="font-size: 2.5em; font-weight:700; margin: 1rem 0; font-family: monospace;">${code}</p><p>This code will expire in 30 minutes.</p></div>`,
   });
 
   return query.id;

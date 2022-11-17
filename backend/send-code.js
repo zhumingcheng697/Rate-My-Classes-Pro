@@ -9,7 +9,11 @@ exports = async function ({ query }) {
   const db = mongodb.db(context.values.get("database-name"));
   await db
     .collection(context.values.get("collection-name"))
-    .updateOne({ _id: query.id }, { code }, { upsert: true });
+    .updateOne(
+      { _id: query.id },
+      { code, generatedAt: Date.now() },
+      { upsert: true }
+    );
 
   const nodeMailer = require("nodemailer");
 

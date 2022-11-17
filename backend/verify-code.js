@@ -9,6 +9,10 @@ exports = async function ({ query }) {
     .findOneAndDelete({ _id: query.id });
 
   if (doc && doc.code === query.code) {
+    if (Date.now() - doc.generatedAt >= 30 * 60 * 1000) {
+      throw new Error("The confirmation code has expired. Please try again.");
+    }
+
     await db
       .collection("users")
       .updateOne({ _id: query.id }, { $set: { verified: true } });

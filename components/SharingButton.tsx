@@ -73,10 +73,10 @@ function NativeSharingButton({ url, copyLink }: SharingButtonProps) {
         onClose={() => setShareAlert(false)}
         footerPrimaryButton={
           url
-            ? (isLandscape) => (
+            ? (isCompact) => (
                 <Button
-                  borderRadius={isLandscape ? 8 : undefined}
-                  py={isLandscape ? "5px" : undefined}
+                  borderRadius={isCompact ? 8 : undefined}
+                  py={isCompact ? "5px" : undefined}
                   onPress={() => {
                     setShareAlert(false);
                     copyLink(url);

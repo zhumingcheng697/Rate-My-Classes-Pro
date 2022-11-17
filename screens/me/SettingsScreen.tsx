@@ -132,12 +132,12 @@ export default function SettingsScreen() {
               }.`
             : ""
         }`}
-        footerPrimaryButton={(isLandscape) => (
+        footerPrimaryButton={(isCompact) => (
           <DeleteAccountButton
             auth={auth}
             variant={"dangerous"}
-            borderRadius={isLandscape ? 8 : undefined}
-            py={isLandscape ? "5px" : undefined}
+            borderRadius={isCompact ? 8 : undefined}
+            py={isCompact ? "5px" : undefined}
             deleteReviews={deleteReviews}
             setAccountDeleted={setAccountDeleted}
             setIsDeletingAccount={setIsDeletingAccount}

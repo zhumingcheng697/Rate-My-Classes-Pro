@@ -79,10 +79,10 @@ export default ({
           footerPrimaryButton={
             isAuthenticated
               ? undefined
-              : (isLandscape) => (
+              : (isCompact) => (
                   <Button
-                    borderRadius={isLandscape ? 8 : undefined}
-                    py={isLandscape ? "5px" : undefined}
+                    borderRadius={isCompact ? 8 : undefined}
+                    py={isCompact ? "5px" : undefined}
                     onPress={() => {
                       setShowAlert(false);
                       navigation.navigate("SignInSignUp", {

@@ -24,8 +24,8 @@ export type AlertPopupProps = {
   body?: ReactNode;
   global?: boolean;
   autoDismiss?: boolean;
-  footer?: (ref: MutableRefObject<any>, isLandscape: boolean) => ReactNode;
-  footerPrimaryButton?: (isLandscape: boolean) => ReactElement;
+  footer?: (ref: MutableRefObject<any>, isCompact: boolean) => ReactNode;
+  footerPrimaryButton?: (isCompact: boolean) => ReactElement;
   onClose: () => any;
 };
 
@@ -101,12 +101,13 @@ export default function AlertPopup({
   }, [isOpen, global, isFocused, globalAlerts.size]);
 
   const { height, width } = useDimensions();
-  const { top } = useSafeAreaInsets();
-  const isLandscape = useMemo(
+  const { top, bottom } = useSafeAreaInsets();
+  const isCompact = useMemo(
     () =>
-      Platform.OS === "ios" &&
-      /phone/i.test(Platform.constants.interfaceIdiom) &&
-      width > height,
+      (Platform.OS === "ios" &&
+        /phone/i.test(Platform.constants.interfaceIdiom) &&
+        width > height) ||
+      height < 400,
     [Platform, width, height]
   );
 
@@ -118,7 +119,9 @@ export default function AlertPopup({
     >
       <AlertDialog.Content
         maxHeight={
-          keyboardHeight ? height - top - keyboardHeight - 10 + "px" : undefined
+          keyboardHeight
+            ? height - top - keyboardHeight - 10 + "px"
+            : height - top - bottom - 40 + "px"
         }
         marginTop={keyboardHeight ? top + "px" : undefined}
         bottom={keyboardHeight ? keyboardHeight / 2 + "px" : undefined}
@@ -130,14 +133,14 @@ export default function AlertPopup({
         }))}
       >
         <AlertDialog.Header
-          py={isLandscape ? "10px" : undefined}
+          py={isCompact ? "10px" : undefined}
           _text={textColorStyle}
           borderColor={subtleBorder}
         >
           {header}
         </AlertDialog.Header>
         <AlertDialog.Body
-          pt={isLandscape ? "6px" : undefined}
+          pt={isCompact ? "6px" : undefined}
           _text={colorModeResponsiveStyle((selector) => ({
             color: selector({
               light: theme.colors.gray[500],
@@ -148,7 +151,7 @@ export default function AlertPopup({
           {body}
         </AlertDialog.Body>
         <AlertDialog.Footer
-          py={isLandscape ? "8px" : undefined}
+          py={isCompact ? "8px" : undefined}
           {...colorModeResponsiveStyle((selector) => ({
             background: selector({
               light: theme.colors.gray[100],
@@ -157,27 +160,27 @@ export default function AlertPopup({
           }))}
         >
           {footer ? (
-            footer(ref, isLandscape)
+            footer(ref, isCompact)
           ) : footerPrimaryButton ? (
             <Button.Group space={2}>
               <Button
                 variant="unstyled"
                 _pressed={{ opacity: 0.5 }}
                 _hover={{ opacity: 0.72 }}
-                py={isLandscape ? "5px" : undefined}
+                py={isCompact ? "5px" : undefined}
                 onPress={onClose}
                 ref={ref}
               >
                 Cancel
               </Button>
-              {footerPrimaryButton(isLandscape)}
+              {footerPrimaryButton(isCompact)}
             </Button.Group>
           ) : (
             <Button
               ref={ref}
               onPress={onClose}
-              borderRadius={isLandscape ? 8 : undefined}
-              py={isLandscape ? "5px" : undefined}
+              borderRadius={isCompact ? 8 : undefined}
+              py={isCompact ? "5px" : undefined}
             >
               OK
             </Button>

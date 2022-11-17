@@ -112,7 +112,7 @@ export default function VerifyAccountPopup({
             </LabeledInput>
           </VStack>
         }
-        footerPrimaryButton={(isLandscape: boolean) => (
+        footerPrimaryButton={(isCompact: boolean) => (
           <Button
             isDisabled={
               !/^(?:[^\s.][^\s]*[^\s.]|[^\s.]+)+@nyu\.edu$/i.test(nyuEmail) ||
@@ -130,9 +130,9 @@ export default function VerifyAccountPopup({
                 setVerifyAccountState(VerifyAccountState.failedToSendCode);
               }
             }}
-            borderRadius={isLandscape ? "8px" : undefined}
-            pt={isLandscape ? "5px" : undefined}
-            pb={isLandscape ? "5px" : undefined}
+            borderRadius={isCompact ? "8px" : undefined}
+            pt={isCompact ? "5px" : undefined}
+            pb={isCompact ? "5px" : undefined}
           >
             Send Code
           </Button>
@@ -186,7 +186,7 @@ export default function VerifyAccountPopup({
             </LabeledInput>
           </VStack>
         }
-        footerPrimaryButton={(isLandscape: boolean) => (
+        footerPrimaryButton={(isCompact: boolean) => (
           <Button
             isDisabled={!verificationCode}
             onPress={async () => {
@@ -200,9 +200,9 @@ export default function VerifyAccountPopup({
                 setVerifyAccountState(VerifyAccountState.failedToVerifyCode);
               }
             }}
-            borderRadius={isLandscape ? "8px" : undefined}
-            pt={isLandscape ? "5px" : undefined}
-            pb={isLandscape ? "5px" : undefined}
+            borderRadius={isCompact ? "8px" : undefined}
+            pt={isCompact ? "5px" : undefined}
+            pb={isCompact ? "5px" : undefined}
           >
             Verify
           </Button>

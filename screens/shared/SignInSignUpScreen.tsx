@@ -128,10 +128,10 @@ export default function SignInSignUpScreen() {
             <Input
               value={email}
               onChangeText={setEmail}
-              textContentType={"emailAddress"}
               autoCorrect={false}
               autoCapitalize={"none"}
               keyboardType={"email-address"}
+              textContentType={"emailAddress"}
             />
           </LabeledInput>
           <LabeledInput label={"Password"} usePlainLabel>

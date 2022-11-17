@@ -452,11 +452,17 @@ export const useKeyboardHeight = () => {
       setKeyboardHeight(e.endCoordinates.height);
     }
 
-    const subscriptions = [
-      Keyboard.addListener("keyboardWillChangeFrame", onKeyboardChange),
-      Keyboard.addListener("keyboardDidHide", onKeyboardHide),
-      Keyboard.addListener("keyboardDidShow", onKeyboardShow),
-    ];
+    const subscriptions =
+      Platform.OS === "ios"
+        ? [
+            Keyboard.addListener("keyboardWillChangeFrame", onKeyboardChange),
+            Keyboard.addListener("keyboardWillHide", onKeyboardHide),
+            Keyboard.addListener("keyboardWillShow", onKeyboardShow),
+          ]
+        : [
+            Keyboard.addListener("keyboardDidHide", onKeyboardHide),
+            Keyboard.addListener("keyboardDidShow", onKeyboardShow),
+          ];
 
     return () =>
       subscriptions.forEach((subscription) => {

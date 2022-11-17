@@ -17,7 +17,6 @@ import { composeErrorMessage, validateSettings } from "../../libs/utils";
 import Semester from "../../libs/semester";
 import { loadSettings, selectSemester } from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";
-import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 
 export default function SettingsScreen() {
   const auth = useAuth();

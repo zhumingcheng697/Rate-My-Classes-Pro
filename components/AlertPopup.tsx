@@ -130,7 +130,7 @@ export default function AlertPopup({
         }))}
       >
         <AlertDialog.Header
-          py={isLandscape ? "8px" : undefined}
+          py={isLandscape ? "10px" : undefined}
           _text={textColorStyle}
           borderColor={subtleBorder}
         >

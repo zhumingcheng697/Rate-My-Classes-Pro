@@ -7,6 +7,12 @@ Streamline your NYU course selection process with Rate My Classes!
 
 Ever got frustrated by how slow and how hard to use Albert is? Having a hard time keeping track of all the classes you are interested in? Can’t find reviews for the class you are considering or the professor teaching the class? Want to know how enjoyable, difficult, heavy, or valuable your peers think a class is? Try out Rate My Classes today!
 
+## Platforms
+
+- [iOS](https://apple.co/3AduK8G)
+- [macOS](https://apple.co/3AduK8G)
+- [Web](https://rate-my-classes-pro.netlify.app/)
+
 ## Features
 
 ### Viewing Class Offerings
@@ -41,12 +47,6 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 - Multiple-tab support on web
 - `mask-icon` on Safari for Mac
 
-## Platforms
-
-- [iOS](https://apple.co/3AduK8G)
-- [macOS](https://apple.co/3AduK8G)
-- [Web](https://rate-my-classes-pro.netlify.app/)
-
 ## Tech Stack
 
 - [React Native](https://reactnative.dev)
@@ -62,7 +62,7 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 
 ## Privacy
 
-Rate My Classes stores the user’s random user id, username, stars, reviews, and settings in the database. If the user is signed up by email, their email address will also be collected for authentication purposes only. No additional data is collected by Rate My Classes. Users can easily delete their account and remove all their data directly in the app with a single tap. If the user used Sign in with Apple or Sign in with Google, their Apple ID or Google account will also be unlinked when they delete their Rate My Classes account in the app.
+Rate My Classes stores the user’s random user id, username, stars, reviews, and settings in the database. If the user is signed up by email, their email address will also be recorded for authentication purposes. If a user wants to review for classes, in order to ensure the authenticity of the reviews, they first need to verify their account with an nyu.edu email address, which will be used only once to receive a confirmation code but this NYU email will _not_ be recorded. No additional data is collected by Rate My Classes. Users can easily delete their account and optionally remove all their data directly in the app with a single tap. If the user used Sign in with Apple or Sign in with Google, their Apple ID or Google account will also be unlinked when they delete their Rate My Classes account in the app.
 
 ## Support
 

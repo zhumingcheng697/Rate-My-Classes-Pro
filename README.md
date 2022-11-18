@@ -11,7 +11,9 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 <picture alt="Download on the App Store">
   <source height="55px" srcset="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us" media="(prefers-color-scheme: dark)">
   <img height="55px" src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/white/en-us">
-</picture></a>&nbsp;<a href="https://apple.co/3AduK8G" style="display: inline-block; overflow: hidden;">
+</picture></a>
+&nbsp;
+<a href="https://apple.co/3AduK8G" style="display: inline-block; overflow: hidden;">
 <picture alt="Download on the Mac App Store">
   <source height="55px" srcset="https://tools.applemediaservices.com/api/badges/download-on-the-mac-app-store/black/en-us" media="(prefers-color-scheme: dark)">
   <img height="55px" src="https://tools.applemediaservices.com/api/badges/download-on-the-mac-app-store/white/en-us">

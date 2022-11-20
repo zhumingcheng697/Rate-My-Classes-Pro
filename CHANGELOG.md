@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.1
+## [v1.1](https://github.com/zhumingcheng697/Rate-My-Classes-Pro/releases/tag/v1.1)
 
 **Built:** November 17, 2022
 
@@ -12,7 +12,7 @@
 - Embed semester information in links to better ensure that sending and receiving users can see the same class information.
 - Remember semester settings locally when user is not logged in.
 
-## v1.0
+## [v1.0](https://github.com/zhumingcheng697/Rate-My-Classes-Pro/releases/tag/v1.0)
 
 **Built:** November 12, 2022
 

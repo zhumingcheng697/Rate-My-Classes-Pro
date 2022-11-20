@@ -14,6 +14,8 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import Semester from "../../libs/semester";
 import {
   ErrorType,
+  type ClassCode,
+  type ClassInfo,
   type SectionInfo,
   type SharedNavigationParamList,
 } from "../../libs/types";
@@ -29,6 +31,152 @@ import {
 import { useAuth } from "../../mongodb/auth";
 import colors from "../../styling/colors";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
+
+type SectionViewProps = {
+  classCode: ClassCode;
+  classInfo?: ClassInfo | null;
+  sectionInfo: SectionInfo;
+  cleanText: (text: string) => string;
+};
+
+function SectionView({
+  classCode,
+  classInfo,
+  sectionInfo,
+  cleanText,
+}: SectionViewProps) {
+  const {
+    code,
+    instructors,
+    type,
+    status,
+    meetings,
+    name,
+    campus,
+    minUnits,
+    maxUnits,
+    location,
+    notes,
+    prerequisites,
+  } = sectionInfo;
+
+  return (
+    <VStack
+      space={"5px"}
+      padding={"10px"}
+      borderRadius={10}
+      {...colorModeResponsiveStyle((selector) => ({
+        background: selector(colors.background.secondary),
+      }))}
+    >
+      <HStack
+        flexWrap={"wrap"}
+        space={"5px"}
+        alignItems={"baseline"}
+        marginY={"-1px"}
+      >
+        <Text
+          fontSize={"xl"}
+          lineHeight={"1.15em"}
+          fontWeight={"semibold"}
+          marginY={"1px"}
+        >
+          {name || (classInfo?.name ?? getFullClassCode(classCode))}
+        </Text>
+        <Text fontSize={"xl"} lineHeight={"1.15em"} marginY={"1px"}>
+          ({[getFullClassCode(classCode), code].join(" ")})
+        </Text>
+      </HStack>
+      <VStack space={"3px"}>
+        {!!instructors && !!instructors.length && (
+          <IconHStack iconName={"school"} text={instructors.join(", ")} />
+        )}
+        {!!maxUnits && (
+          <IconHStack
+            iconName={"ribbon"}
+            text={
+              (!!maxUnits && !minUnits) || minUnits === maxUnits
+                ? `${maxUnits} Credit${maxUnits === 1 ? "" : "s"}`
+                : `${minUnits}–${maxUnits} Credits`
+            }
+          />
+        )}
+        {!!type && <IconHStack iconName={"easel"} text={type} />}
+        {!!status && <IconHStack iconName={"golf"} text={status} />}
+        {(!!campus || !!location) && (
+          <IconHStack
+            iconName={"location"}
+            text={[campus, location].join(": ")}
+          />
+        )}
+        {!!meetings && !!meetings.length && (
+          <IconHStack iconName={"time"}>
+            <VStack space={"2px"} flexShrink={1} flexGrow={1}>
+              {getMeetingScheduleString(
+                meetings.map(({ beginDate, minutesDuration }) => {
+                  const begin: Date = new Date(
+                    beginDate.replace(
+                      /^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{1,2})/i,
+                      "$1T$2"
+                    )
+                  );
+
+                  const end: Date = new Date(
+                    begin.valueOf() + minutesDuration * 60 * 1000
+                  );
+
+                  return [begin, end];
+                })
+              ).map(([day, time], index) => (
+                <Text
+                  fontSize={"md"}
+                  lineHeight={"sm"}
+                  key={day + time + index}
+                >
+                  {day}: {time}
+                </Text>
+              ))}
+            </VStack>
+          </IconHStack>
+        )}
+      </VStack>
+      {!!prerequisites &&
+        stripLineBreaks(prepend(cleanText(prerequisites), "Prerequisite", ": "))
+          .split(/\n/)
+          .map((prerequisite, index) => (
+            <Text
+              key={"prerequisites" + index}
+              lineHeight={"md"}
+              {...colorModeResponsiveStyle((selector) => ({
+                color: selector({
+                  light: theme.colors.gray[600],
+                  dark: theme.colors.gray[400],
+                }),
+              }))}
+            >
+              {prerequisite}
+            </Text>
+          ))}
+      {!!notes &&
+        stripLineBreaks(prepend(cleanText(notes), "Notes", ": "))
+          .split(/\n/)
+          .map((note, index) => (
+            <Text
+              key={"notes" + index}
+              lineHeight={"md"}
+              {...colorModeResponsiveStyle((selector) => ({
+                color: selector({
+                  light: theme.colors.gray[600],
+                  dark: theme.colors.gray[400],
+                }),
+              }))}
+            >
+              {note}
+            </Text>
+          ))}
+    </VStack>
+  );
+}
 
 type ScheduleScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -143,153 +291,29 @@ export default function ScheduleScreen() {
       <KeyboardAwareSafeAreaScrollView>
         <VStack marginX={"10px"} marginY={"15px"} space={"10px"}>
           {sections && sections.length
-            ? sections.map(
-                (
-                  {
-                    code,
-                    instructors,
-                    type,
-                    status,
-                    meetings,
-                    name,
-                    campus,
-                    minUnits,
-                    maxUnits,
-                    location,
-                    notes,
-                    prerequisites,
-                  },
-                  index
-                ) => (
-                  <VStack
-                    space={"5px"}
-                    key={index}
-                    padding={"10px"}
-                    borderRadius={10}
-                    {...colorModeResponsiveStyle((selector) => ({
-                      background: selector(colors.background.secondary),
-                    }))}
-                  >
-                    <HStack
-                      flexWrap={"wrap"}
-                      space={"5px"}
-                      alignItems={"baseline"}
-                      marginY={"-1px"}
-                    >
-                      <Text
-                        fontSize={"xl"}
-                        lineHeight={"1.15em"}
-                        fontWeight={"semibold"}
-                        marginY={"1px"}
-                      >
-                        {name ||
-                          (classInfo?.name ?? getFullClassCode(classCode))}
-                      </Text>
-                      <Text
-                        fontSize={"xl"}
-                        lineHeight={"1.15em"}
-                        marginY={"1px"}
-                      >
-                        ({[getFullClassCode(classCode), code].join(" ")})
-                      </Text>
-                    </HStack>
-                    <VStack space={"3px"}>
-                      {!!instructors && !!instructors.length && (
-                        <IconHStack
-                          iconName={"school"}
-                          text={instructors.join(", ")}
-                        />
-                      )}
-                      {typeof maxUnits !== "undefined" && (
-                        <IconHStack
-                          iconName={"ribbon"}
-                          text={
-                            (!!maxUnits && !minUnits) || minUnits === maxUnits
-                              ? `${maxUnits} Credit${maxUnits === 1 ? "" : "s"}`
-                              : `${minUnits}–${maxUnits} Credits`
-                          }
-                        />
-                      )}
-                      {!!type && <IconHStack iconName={"easel"} text={type} />}
-                      {!!status && (
-                        <IconHStack iconName={"golf"} text={status} />
-                      )}
-                      {(!!campus || !!location) && (
-                        <IconHStack
-                          iconName={"location"}
-                          text={[campus, location].join(": ")}
-                        />
-                      )}
-                      {!!meetings && !!meetings.length && (
-                        <IconHStack iconName={"time"}>
-                          <VStack space={"2px"} flexShrink={1} flexGrow={1}>
-                            {getMeetingScheduleString(
-                              meetings.map(({ beginDate, minutesDuration }) => {
-                                const begin: Date = new Date(
-                                  beginDate.replace(
-                                    /^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{1,2})/i,
-                                    "$1T$2"
-                                  )
-                                );
-
-                                const end: Date = new Date(
-                                  begin.valueOf() + minutesDuration * 60 * 1000
-                                );
-
-                                return [begin, end];
-                              })
-                            ).map(([day, time], index) => (
-                              <Text
-                                fontSize={"md"}
-                                lineHeight={"sm"}
-                                key={day + time + index}
-                              >
-                                {day}: {time}
-                              </Text>
-                            ))}
-                          </VStack>
-                        </IconHStack>
-                      )}
-                    </VStack>
-                    {!!prerequisites &&
-                      stripLineBreaks(
-                        prepend(cleanText(prerequisites), "Prerequisite", ": ")
-                      )
-                        .split(/\n/)
-                        .map((prerequisite, index) => (
-                          <Text
-                            key={"prerequisites" + index}
-                            lineHeight={"md"}
-                            {...colorModeResponsiveStyle((selector) => ({
-                              color: selector({
-                                light: theme.colors.gray[600],
-                                dark: theme.colors.gray[400],
-                              }),
-                            }))}
-                          >
-                            {prerequisite}
-                          </Text>
-                        ))}
-                    {!!notes &&
-                      stripLineBreaks(prepend(cleanText(notes), "Notes", ": "))
-                        .split(/\n/)
-                        .map((note, index) => (
-                          <Text
-                            key={"notes" + index}
-                            lineHeight={"md"}
-                            {...colorModeResponsiveStyle((selector) => ({
-                              color: selector({
-                                light: theme.colors.gray[600],
-                                dark: theme.colors.gray[400],
-                              }),
-                            }))}
-                          >
-                            {note}
-                          </Text>
-                        ))}
-                  </VStack>
-                )
-              )
+            ? sections.map((sectionInfo, index) => (
+                <VStack
+                  space={"10px"}
+                  key={getFullClassCode(classCode) + "-" + index}
+                >
+                  <SectionView
+                    classCode={classCode}
+                    classInfo={classInfo}
+                    sectionInfo={sectionInfo}
+                    cleanText={cleanText}
+                  />
+                  {sectionInfo.recitations &&
+                    sectionInfo.recitations.map((recitationInfo, i) => (
+                      <SectionView
+                        key={index + "-" + i}
+                        classCode={classCode}
+                        classInfo={classInfo}
+                        sectionInfo={recitationInfo}
+                        cleanText={cleanText}
+                      />
+                    ))}
+                </VStack>
+              ))
             : [...Array(5)].map((_, index) => (
                 <Skeleton borderRadius={10} height={"150px"} key={index} />
               ))}

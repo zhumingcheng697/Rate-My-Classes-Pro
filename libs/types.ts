@@ -12,6 +12,25 @@ export type ClassCode = DepartmentInfo & {
 
 export type ClassInfo = Required<ClassCode>;
 
+type SectionInfoBase = {
+  code?: string;
+  instructors?: string[];
+  type?: string;
+  status?: string;
+  meetings?: { beginDate: string; minutesDuration: number; endDate: string }[];
+  name?: string;
+  campus?: string;
+  minUnits?: number;
+  maxUnits?: number;
+  location?: string;
+  notes?: string;
+  prerequisites?: string;
+};
+
+export type SectionInfo = SectionInfoBase & {
+  recitations?: SectionInfoBase[];
+};
+
 export type StarredClassInfo = ClassInfo & { starredDate: number };
 
 export type ReviewedClassInfo = ClassInfo & { reviewedDate: number };
@@ -68,21 +87,6 @@ export type Review = {
   semester: SemesterInfo;
   instructor: string;
   comment: string;
-};
-
-export type SectionInfo = {
-  code?: string;
-  instructors?: string[];
-  type?: string;
-  status?: string;
-  meetings?: { beginDate: string; minutesDuration: number; endDate: string }[];
-  name?: string;
-  campus?: string;
-  minUnits?: number;
-  maxUnits?: number;
-  location?: string;
-  notes?: string;
-  prerequisites?: string;
 };
 
 export type Settings = {

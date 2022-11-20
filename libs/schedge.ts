@@ -21,14 +21,12 @@ type SchedgeSchoolNameRecord = Record<string, NameRecord>;
 
 type SchedgeDepartmentNameRecord = Record<string, Record<string, NameRecord>>;
 
-type SchedgeSectionInfo = SectionInfo & { recitations?: any[] };
-
 type SchedgeClassRecord = {
   name: string;
   deptCourseId: string;
   description?: string;
   subjectCode?: string;
-  sections?: SchedgeSectionInfo[];
+  sections?: SectionInfo[];
 }[];
 
 const baseUrl = "https://schedge.a1liu.com";
@@ -181,7 +179,11 @@ export async function getSections(
         e.subjectCode === getFullDepartmentCode({ schoolCode, departmentCode })
     )?.sections ?? [];
 
-  sections.forEach((section) => delete section.recitations);
+  sections.forEach((section) =>
+    section.recitations?.sort((a, b) =>
+      (a.code || "") < (b.code || "") ? -1 : 1
+    )
+  );
 
   return sections;
 }

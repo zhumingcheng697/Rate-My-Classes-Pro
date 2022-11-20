@@ -17,7 +17,6 @@ import { useClassInfoLoader, useSemester } from "../../libs/hooks";
 import { getFullClassCode, extractClassInfo } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
 import { starClass, unstarClass } from "../../redux/actions";
-import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
 import SharingButton from "../../components/SharingButton";
 
 type DetailScreenNavigationProp = StackNavigationProp<

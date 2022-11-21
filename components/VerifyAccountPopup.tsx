@@ -101,7 +101,7 @@ export default function VerifyAccountPopup({
                 isDisabled={
                   verifyAccountState === VerifyAccountState.sendingCode
                 }
-                placeholder={"@nyu.edu"}
+                placeholder={"ratemyclassespro@nyu.edu"}
                 value={nyuEmail}
                 onChangeText={setNyuEmail}
                 autoCorrect={false}
@@ -115,7 +115,10 @@ export default function VerifyAccountPopup({
         footerPrimaryButton={(isCompact: boolean) => (
           <Button
             isDisabled={
-              !/^(?:[^\s.][^\s]*[^\s.]|[^\s.]+)+@nyu\.edu$/i.test(nyuEmail) ||
+              !/^(?:[^\s.][^\s]*[^\s.]|[^\s.]+)@nyu\.edu$/i.test(nyuEmail) ||
+              /(?:^rate-*my-*classes-*(?:pro)@nyu.edu$)|\.{2,}/i.test(
+                nyuEmail
+              ) ||
               verifyAccountState === VerifyAccountState.sendingCode
             }
             onPress={async () => {

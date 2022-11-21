@@ -103,7 +103,7 @@ export function validateSettings(settings: Settings) {
 
 export function isSchoolGrad(schoolCode: string) {
   const code = schoolCode.toUpperCase();
-  return code.startsWith("G") || code === "DN";
+  return /^G|^(?:DN|ML|LW)$/.test(code);
 }
 
 export function composeErrorMessage(
@@ -283,41 +283,75 @@ export function getMeetingScheduleString(meetings: [Date, Date][]) {
   return finalSchedule;
 }
 
-export function compareClasses(
-  schoolCodes: string[],
+export function compareSchools(a: string, b: string) {
+  const isGradA = isSchoolGrad(a);
+  const isGradB = isSchoolGrad(b);
+
+  if (isGradA == isGradB) {
+    const isStandardA = /^(?:U|G)/.test(a);
+    const isStandardB = /^(?:U|G)/.test(b);
+
+    if (isStandardA == isStandardB) {
+      return a < b ? -1 : 1;
+    } else if (isStandardA) {
+      return -1;
+    } else {
+      return 1;
+    }
+  } else if (isGradA) {
+    return 1;
+  } else {
+    return -1;
+  }
+}
+
+export function compareDepartments(
   departmentNames: DepartmentNameRecord,
-  a: ClassCode,
-  b: ClassCode
+  schoolCode: string,
+  a: string,
+  b: string
 ) {
-  if (a.schoolCode !== b.schoolCode) {
-    return (
-      schoolCodes.indexOf(a.schoolCode) - schoolCodes.indexOf(b.schoolCode)
-    );
-  }
+  const departmenNameA = departmentNames[schoolCode]?.[a];
+  const departmenNameB = departmentNames[schoolCode]?.[b];
+  return departmenNameA && departmenNameB
+    ? departmenNameA < departmenNameB
+      ? -1
+      : 1
+    : a < b
+    ? -1
+    : 1;
+}
 
-  if (a.departmentCode !== b.departmentCode) {
-    const departmentsA = Object.keys(departmentNames[a.schoolCode] ?? {});
-    const departmentsB = Object.keys(departmentNames[b.schoolCode] ?? {});
-    return (
-      departmentsA.indexOf(a.departmentCode) -
-      departmentsB.indexOf(b.departmentCode)
-    );
-  }
-
-  const numberLengthA = a.classNumber.replace(/[^0-9]+/gi, "").length;
-  const numberLengthB = b.classNumber.replace(/[^0-9]+/gi, "").length;
+export function compareClassNumbers(a: string, b: string) {
+  const numberLengthA = a.replace(/[^0-9]+/gi, "").length;
+  const numberLengthB = b.replace(/[^0-9]+/gi, "").length;
 
   if (numberLengthA !== numberLengthB) {
     return numberLengthA - numberLengthB;
   }
 
-  if (a.classNumber < b.classNumber) {
-    return -1;
-  } else if (a.classNumber > b.classNumber) {
-    return 1;
-  } else {
-    return 0;
+  return a < b ? -1 : 1;
+}
+
+export function compareClasses(
+  departmentNames: DepartmentNameRecord,
+  a: ClassCode,
+  b: ClassCode
+) {
+  if (a.schoolCode !== b.schoolCode) {
+    return compareSchools(a.schoolCode, b.schoolCode);
   }
+
+  if (a.departmentCode !== b.departmentCode) {
+    return compareDepartments(
+      departmentNames,
+      a.schoolCode,
+      a.departmentCode,
+      b.departmentCode
+    );
+  }
+
+  return compareClassNumbers(a.classNumber, b.classNumber);
 }
 
 export function hasEditedReview(

@@ -150,7 +150,7 @@ export function useSemester({
     }
   }, [isSettingsSettled]);
 
-  return params.semester || settings.selectedSemester;
+  return params?.semester || settings.selectedSemester;
 }
 
 export function useLinkProps<

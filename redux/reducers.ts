@@ -22,7 +22,7 @@ function schoolNameReducer(
   action: SchoolNameAction
 ) {
   if (action.type === ActionType.setSchoolNameRecord && !!action.payload) {
-    return action.payload;
+    return { ...state, ...action.payload };
   }
 
   return state;
@@ -32,7 +32,10 @@ function departmentNameReducer(
   state: DepartmentNameRecord | null = null,
   action: DepartmentNameAction
 ) {
-  if (action.type === ActionType.setDepartmentNameRecord && !!action.payload) {
+  if (
+    action.type === ActionType.setDepartmentNameRecord &&
+    typeof action.payload !== "undefined"
+  ) {
     return action.payload;
   }
 

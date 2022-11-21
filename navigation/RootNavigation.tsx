@@ -5,6 +5,7 @@ import React, {
   useState,
   useEffect,
 } from "react";
+import { Platform } from "react-native";
 import { type Dispatch } from "redux";
 import { useDispatch, useSelector } from "react-redux";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -20,14 +21,14 @@ import {
   type DepartmentNameRecord,
   ErrorType,
 } from "../libs/types";
-import { getDepartmentNames, getSchoolNames } from "../libs/schedge";
+import { getNameRecordFor } from "../libs/schedge";
+import { type SemesterInfo } from "../libs/semester";
 import { useRefresh } from "../libs/hooks";
 import { composeErrorMessage, isObjectEmpty } from "../libs/utils";
 import { useAuth } from "../mongodb/auth";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "../redux/actions";
 import { subtleBorder } from "../styling/colors";
 import { useDynamicColor } from "../styling/color-mode-utils";
-import { Platform } from "react-native";
 
 const Tab = createBottomTabNavigator<RootNavigationParamList>();
 
@@ -47,10 +48,8 @@ class RootNavigationComponent extends Component<RootNavigationComponentProps> {
 }
 
 export default function RootNavigation() {
-  const [schoolError, setSchoolError] = useState<ErrorType | null>(null);
-  const [departmentError, setDepartmentError] = useState<ErrorType | null>(
-    null
-  );
+  const [recordError, setRecordError] = useState<ErrorType | null>(null);
+  const { selectedSemester } = useSelector((state) => state.settings);
   const [accountError, setAccountError] = useState<any>(null);
   const [showAlert, setShowAlert] = useState(false);
   const schoolNameRecord = useSelector((state) => state.schoolNameRecord);
@@ -60,53 +59,41 @@ export default function RootNavigation() {
   const dispatch = useDispatch();
   const auth = useAuth();
   const userDocError = auth.userDocError;
-  const hasError =
-    schoolError || departmentError || accountError || userDocError;
+  const hasError = recordError || accountError || userDocError;
 
   const getSchoolAndDepartmentNames = useCallback(
     (
       schoolNameRecord: SchoolNameRecord | null,
       departmentNameRecord: DepartmentNameRecord | null,
+      selectedSemester: SemesterInfo,
+      isSemesterSettled: boolean,
       dispatch: Dispatch,
       failSilently: boolean = false
     ) => {
-      if (schoolNameRecord && departmentNameRecord) return;
+      if ((schoolNameRecord && departmentNameRecord) || !isSemesterSettled)
+        return;
 
-      if (!schoolNameRecord) {
-        getSchoolNames()
-          .then((record) => {
-            if (record && !isObjectEmpty(record)) {
-              setSchoolNameRecord(dispatch)(record);
-              setSchoolError(null);
-            } else {
-              setSchoolError(ErrorType.noData);
-              if (!failSilently) setShowAlert(true);
-            }
-          })
-          .catch((e) => {
-            console.error(e);
-            setSchoolError(ErrorType.network);
+      getNameRecordFor(selectedSemester)
+        .then(({ school, department }) => {
+          if (
+            school &&
+            department &&
+            !isObjectEmpty(school) &&
+            !isObjectEmpty(department)
+          ) {
+            setSchoolNameRecord(dispatch)(school);
+            setDepartmentNameRecord(dispatch)(department);
+            setRecordError(null);
+          } else {
+            setRecordError(ErrorType.noData);
             if (!failSilently) setShowAlert(true);
-          });
-      }
-
-      if (!departmentNameRecord) {
-        getDepartmentNames()
-          .then((record) => {
-            if (record && !isObjectEmpty(record)) {
-              setDepartmentNameRecord(dispatch)(record);
-              setDepartmentError(null);
-            } else {
-              setDepartmentError(ErrorType.noData);
-              if (!failSilently) setShowAlert(true);
-            }
-          })
-          .catch((e) => {
-            console.error(e);
-            setDepartmentError(ErrorType.network);
-            if (!failSilently) setShowAlert(true);
-          });
-      }
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+          setRecordError(ErrorType.network);
+          if (!failSilently) setShowAlert(true);
+        });
     },
     []
   );
@@ -127,12 +114,31 @@ export default function RootNavigation() {
       getSchoolAndDepartmentNames(
         schoolNameRecord,
         departmentNameRecord,
+        selectedSemester,
+        auth.isSemesterSettled,
         dispatch,
         failSilently
       );
     },
-    [schoolNameRecord, departmentNameRecord, dispatch, auth]
+    [schoolNameRecord, departmentNameRecord, dispatch, auth, selectedSemester]
   );
+
+  useEffect(() => {
+    if (auth.isSemesterSettled && auth.isSettingsSettled) {
+      setDepartmentNameRecord(dispatch)(null);
+      getSchoolAndDepartmentNames(
+        schoolNameRecord,
+        null,
+        selectedSemester,
+        auth.isSemesterSettled && auth.isSettingsSettled,
+        dispatch
+      );
+    }
+  }, [
+    selectedSemester.semesterCode,
+    selectedSemester.year,
+    auth.isSemesterSettled && auth.isSettingsSettled,
+  ]);
 
   useRefresh(
     !hasError ? undefined : (reason) => fetchInfo(reason === "NetInfo")
@@ -143,27 +149,17 @@ export default function RootNavigation() {
   }, [userDocError]);
 
   useEffect(() => {
-    if (
-      !schoolError &&
-      !departmentError &&
-      !accountError &&
-      !userDocError &&
-      showAlert
-    ) {
+    if (!recordError && !accountError && !userDocError && showAlert) {
       setShowAlert(false);
     }
-  }, [schoolError, departmentError, accountError, userDocError, showAlert]);
+  }, [recordError, accountError, userDocError, showAlert]);
 
   return (
     <RootNavigationComponent fetchInfo={fetchInfo}>
       <AlertPopup
         global
         header={"Unable to Load Class or Account Information"}
-        isOpen={
-          showAlert &&
-          (accountError || userDocError) &&
-          (schoolError || departmentError)
-        }
+        isOpen={showAlert && (accountError || userDocError) && recordError}
         onClose={() => {
           setShowAlert(false);
           fetchInfo(true);
@@ -171,12 +167,7 @@ export default function RootNavigation() {
       />
       <AlertPopup
         global
-        isOpen={
-          showAlert &&
-          !accountError &&
-          !userDocError &&
-          !!(schoolError || departmentError)
-        }
+        isOpen={showAlert && !accountError && !userDocError && !!recordError}
         onClose={() => {
           setShowAlert(false);
           fetchInfo(true);
@@ -185,12 +176,7 @@ export default function RootNavigation() {
       <AlertPopup
         global
         header={"Unable to Load Account Information"}
-        isOpen={
-          showAlert &&
-          (accountError || userDocError) &&
-          !schoolError &&
-          !departmentError
-        }
+        isOpen={showAlert && (accountError || userDocError) && !recordError}
         body={composeErrorMessage(accountError || userDocError)}
         onClose={() => {
           setShowAlert(false);

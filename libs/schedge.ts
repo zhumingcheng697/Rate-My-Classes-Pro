@@ -9,18 +9,22 @@ import type {
 } from "./types";
 import { SemesterInfo } from "./semester";
 import {
+  compareClassNumbers,
   getFullDepartmentCode,
   getFullSemesterCode,
-  isSchoolGrad,
 } from "./utils";
 
 type URLParams = Record<string, string | number | boolean>;
 
-type NameRecord = { name: string };
-
-type SchedgeSchoolNameRecord = Record<string, NameRecord>;
-
-type SchedgeDepartmentNameRecord = Record<string, Record<string, NameRecord>>;
+type SchedgeSchoolDeparmentNameRecord = {
+  schools: {
+    name: string;
+    subjects: {
+      code: string;
+      name: string;
+    }[];
+  }[];
+};
 
 type SchedgeClassRecord = {
   name: string;
@@ -30,70 +34,68 @@ type SchedgeClassRecord = {
   sections?: SectionInfo[];
 }[];
 
-const baseUrl = "https://schedge.a1liu.com";
-
-const v2BaseUrl = "https://nyu.a1liu.com/api";
+const baseUrl = "https://nyu.a1liu.com/api";
 
 const composeUrl = (path: string, params: URLParams = { full: true }) =>
   baseUrl + path + "?" + composeQuery(params);
-
-const composeV2Url = (path: string, params: URLParams = { full: true }) =>
-  v2BaseUrl + path + "?" + composeQuery(params);
 
 const composeQuery = (params: URLParams) =>
   Object.entries(params)
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
 
-export async function getSchoolNames() {
-  const res = await fetch(composeUrl("/schools"));
-  const json: SchedgeSchoolNameRecord = await res.json();
-  const record: SchoolNameRecord = {};
+const cleanUpName = (name?: string) =>
+  name
+    ? name.replace(/^(?:\| +[A-Z][A-Z0-9]+-[A-Z]{2,3} [0-9]+[A-Z0-9]* +)+/, "")
+    : "";
 
-  const fallbackMap: Record<string, string> = {
-    CD: "College of Dentistry Continuing Education",
-    NT: "Non-Credit Tisch School of the Arts",
-    GH: "NYU Abu Dhabi - Graduate",
-    DN: "College of Dentistry - Graduate",
-  };
+export async function getNameRecordFor(semesterInfo: SemesterInfo) {
+  const res = await fetch(
+    composeUrl(`/schools/${getFullSemesterCode(semesterInfo)}`)
+  );
+  const json: SchedgeSchoolDeparmentNameRecord = await res.json();
+  const schoolNameRecord: SchoolNameRecord = {};
+  const departmentNameRecord: DepartmentNameRecord = {};
+  const schoolNameMap: Record<string, Record<string, number>> = {};
 
-  for (let schoolCode of Object.keys(json)
-    .concat(Object.keys(fallbackMap))
-    .sort(
-      (a, b) =>
-        (isSchoolGrad(a) ? 1 : 0) +
-        (a in fallbackMap ? 0.5 : 0) -
-        (isSchoolGrad(b) ? 1 : 0) -
-        (b in fallbackMap ? 0.5 : 0)
-    )) {
-    const name =
-      json[schoolCode]?.name || fallbackMap[schoolCode.toUpperCase()];
-
-    if (name) {
-      record[schoolCode.toUpperCase()] = name;
+  for (let { subjects, name: schoolName } of json.schools) {
+    for (let { code, name } of subjects) {
+      const match = code.match(/^([^-–]+)(?:-|–)([^-–]{2,3})$/i);
+      if (match) {
+        const subjectCode = match[1].toUpperCase();
+        const schoolCode = match[2].toUpperCase();
+        if (!departmentNameRecord[schoolCode]) {
+          departmentNameRecord[schoolCode] = {};
+        }
+        if (!schoolNameMap[schoolCode]) {
+          schoolNameMap[schoolCode] = {};
+        }
+        if (!schoolNameMap[schoolCode][schoolName]) {
+          schoolNameMap[schoolCode][schoolName] = 1;
+        } else {
+          schoolNameMap[schoolCode][schoolName] += 1;
+        }
+        departmentNameRecord[schoolCode][subjectCode] = name;
+      }
     }
   }
 
-  return record;
-}
-
-export async function getDepartmentNames() {
-  const res = await fetch(composeUrl("/subjects"));
-  const json: SchedgeDepartmentNameRecord = await res.json();
-  const record: DepartmentNameRecord = {};
-
-  for (let schoolCode in json) {
-    if (!record[schoolCode.toUpperCase()]) {
-      record[schoolCode.toUpperCase()] = {};
+  for (let schoolCode in schoolNameMap) {
+    const schoolNames = schoolNameMap[schoolCode];
+    let name: string | null = null;
+    let maxCount = -1;
+    for (let schoolName in schoolNames) {
+      const count = schoolNames[schoolName];
+      if (count > maxCount) {
+        maxCount = count;
+        name = schoolName;
+      }
     }
 
-    for (let departmentCode of Object.keys(json[schoolCode]).sort()) {
-      record[schoolCode.toUpperCase()][departmentCode.toUpperCase()] =
-        json[schoolCode][departmentCode].name;
-    }
+    if (name) schoolNameRecord[schoolCode] = name;
   }
 
-  return record;
+  return { school: schoolNameRecord, department: departmentNameRecord };
 }
 
 export async function getClasses(
@@ -101,7 +103,7 @@ export async function getClasses(
   semesterInfo: SemesterInfo
 ): Promise<ClassInfo[]> {
   const res = await fetch(
-    composeV2Url(
+    composeUrl(
       `/courses/${getFullSemesterCode(semesterInfo)}/${getFullDepartmentCode({
         schoolCode,
         departmentCode,
@@ -117,10 +119,10 @@ export async function getClasses(
           schoolCode,
           departmentCode,
           classNumber: deptCourseId,
-          name,
+          name: cleanUpName(name),
           description: description ?? "",
         }))
-        .sort((a, b) => parseInt(a.classNumber) - parseInt(b.classNumber))
+        .sort((a, b) => compareClassNumbers(a.classNumber, b.classNumber))
     : [];
 }
 
@@ -131,7 +133,7 @@ export async function getClassWithSections(
   console.log("getClassWithSections", semesterInfo);
 
   const res = await fetch(
-    composeV2Url(
+    composeUrl(
       `/courses/${getFullSemesterCode(semesterInfo)}/${getFullDepartmentCode({
         schoolCode,
         departmentCode,
@@ -157,7 +159,7 @@ export async function getClassWithSections(
   );
 
   return {
-    name,
+    name: cleanUpName(name),
     schoolCode,
     departmentCode,
     classNumber,
@@ -171,7 +173,7 @@ export async function searchClasses(
   semesterInfo: SemesterInfo
 ): Promise<ClassInfo[]> {
   const res = await fetch(
-    composeV2Url(`/search/${getFullSemesterCode(semesterInfo)}`, {
+    composeUrl(`/search/${getFullSemesterCode(semesterInfo)}`, {
       query,
       limit: 50,
     })
@@ -185,7 +187,7 @@ export async function searchClasses(
       schoolCode: schoolCode || "",
       departmentCode: departmentCode || "",
       classNumber: deptCourseId,
-      name,
+      name: cleanUpName(name),
       description: description ?? "",
     };
   });
@@ -196,7 +198,7 @@ export async function getSections(
   semesterInfo: SemesterInfo
 ): Promise<SectionInfo[]> {
   const res = await fetch(
-    composeV2Url(
+    composeUrl(
       `/courses/${getFullSemesterCode(semesterInfo)}/${getFullDepartmentCode({
         schoolCode,
         departmentCode,
@@ -208,7 +210,7 @@ export async function getSections(
   const sections =
     json.find(
       (e) =>
-        e.name === name &&
+        cleanUpName(e.name).toLowerCase() === cleanUpName(name).toLowerCase() &&
         e.deptCourseId === classNumber &&
         e.subjectCode === getFullDepartmentCode({ schoolCode, departmentCode })
     )?.sections ?? [];

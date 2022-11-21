@@ -30,7 +30,7 @@ export const setSchoolNameRecord =
 
 export const setDepartmentNameRecord =
   (dispath: Dispatch<DepartmentNameAction>) =>
-  (departmentNameRecord: DepartmentNameRecord) =>
+  (departmentNameRecord: DepartmentNameRecord | null) =>
     dispath({
       type: ActionType.setDepartmentNameRecord,
       payload: departmentNameRecord,

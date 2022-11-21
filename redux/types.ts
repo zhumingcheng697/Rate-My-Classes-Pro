@@ -30,7 +30,7 @@ export type SchoolNameAction = {
 
 export type DepartmentNameAction = {
   type: ActionType.setDepartmentNameRecord;
-  payload?: DepartmentNameRecord;
+  payload?: DepartmentNameRecord | null;
 };
 
 export type SettingsAction =

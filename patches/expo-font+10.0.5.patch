@@ -1,5 +1,5 @@
 diff --git a/node_modules/expo-font/build/ExpoFontLoader.web.js b/node_modules/expo-font/build/ExpoFontLoader.web.js
-index 3784a6a..2f3c98c 100644
+index 3784a6a..6328479 100644
 --- a/node_modules/expo-font/build/ExpoFontLoader.web.js
 +++ b/node_modules/expo-font/build/ExpoFontLoader.web.js
 @@ -65,7 +65,7 @@ export default {
@@ -7,12 +7,12 @@ index 3784a6a..2f3c98c 100644
              return;
          }
 -        return new FontObserver(fontFamilyName, { display: resource.display }).load();
-+        return new FontObserver(fontFamilyName, { display: resource.display }).load(null, 5000);
++        return new FontObserver(fontFamilyName, { display: resource.display }).load(null, 10000);
      },
  };
  const ID = 'expo-generated-fonts';
 diff --git a/node_modules/expo-font/src/ExpoFontLoader.web.ts b/node_modules/expo-font/src/ExpoFontLoader.web.ts
-index 380f1ae..d5aa67e 100644
+index 380f1ae..ba2b3a8 100644
 --- a/node_modules/expo-font/src/ExpoFontLoader.web.ts
 +++ b/node_modules/expo-font/src/ExpoFontLoader.web.ts
 @@ -89,7 +89,7 @@ export default {
@@ -20,7 +20,7 @@ index 380f1ae..d5aa67e 100644
      }
  
 -    return new FontObserver(fontFamilyName, { display: resource.display }).load();
-+    return new FontObserver(fontFamilyName, { display: resource.display }).load(null, 5000);
++    return new FontObserver(fontFamilyName, { display: resource.display }).load(null, 10000);
    },
  };
  

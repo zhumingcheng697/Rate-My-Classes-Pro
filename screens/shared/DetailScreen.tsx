@@ -154,14 +154,18 @@ export default function DetailScreen() {
     }
   }, [user]);
 
-  const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader({
-    classCode,
-    semester: semesterInfo,
-    isSemesterSettled: isSettingsSettled || !!params.semester,
-    isSettingsSettled,
-    starredClassRecord,
-    reviewedClassRecord,
-  });
+  const { classInfo, classInfoError, scheduleLoaded, reloadClassInfo } =
+    useClassInfoLoader(
+      {
+        classCode,
+        semester: semesterInfo,
+        isSemesterSettled: isSettingsSettled || !!params.semester,
+        isSettingsSettled,
+        starredClassRecord,
+        reviewedClassRecord,
+      },
+      !classCode.name
+    );
 
   const description = useMemo(() => {
     return classInfo?.description
@@ -222,7 +226,7 @@ export default function DetailScreen() {
 
       if (!Semester.equals(semester, previousSemester)) {
         setPreviousSemester(semester);
-      } else if (sections) {
+      } else if (!classCode.name) {
         return;
       }
 
@@ -244,6 +248,7 @@ export default function DetailScreen() {
       previousSemester,
       sections,
       semesterInfo,
+      scheduleLoaded,
     ]
   );
 
@@ -321,11 +326,18 @@ export default function DetailScreen() {
     })();
   }, [isFocused, user]);
 
+  const resolvedSections =
+    sections || (scheduleLoaded && classInfo?.sections) || null;
+
   useRefresh((reason) => {
     const failSilently = reason === "NetInfo";
-    reloadClassInfo?.(failSilently);
-    fetchReviews(failSilently);
-    fetchSections(failSilently);
+
+    if (classInfoError) {
+      reloadClassInfo?.(failSilently);
+    } else {
+      if (scheduleError) fetchSections(failSilently);
+      if (reviewError) fetchReviews(failSilently);
+    }
   });
 
   return (
@@ -442,18 +454,18 @@ export default function DetailScreen() {
           />
           <VStack margin={"10px"} space={"10px"}>
             <SubtleButton
-              isDisabled={!sections || !sections.length}
+              isDisabled={!resolvedSections || !resolvedSections.length}
               linkTo={Route(tabName, "Schedule", {
                 semester: semesterInfo,
-                sections: sections ?? undefined,
+                sections: resolvedSections ?? undefined,
                 classCode: classInfo ?? classCode,
                 starredOrReviewed,
                 query,
               })}
             >
               <Text variant={"subtleButton"}>
-                {sections
-                  ? sections.length
+                {resolvedSections
+                  ? resolvedSections.length
                     ? `View ${semesterName} Schedule`
                     : `Not Offered in ${semesterName}`
                   : classInfoError === ErrorType.noData

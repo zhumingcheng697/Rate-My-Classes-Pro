@@ -31,6 +31,10 @@ export type SectionInfo = SectionInfoBase & {
   recitations?: SectionInfoBase[];
 };
 
+export type ClassInfoWithSections = ClassInfo & {
+  sections: SectionInfo[];
+};
+
 export type StarredClassInfo = ClassInfo & { starredDate: number };
 
 export type ReviewedClassInfo = ClassInfo & { reviewedDate: number };

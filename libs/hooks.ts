@@ -39,10 +39,11 @@ import {
   type Settings,
   type StarredClassRecord,
   type ReviewedClassRecord,
+  type ClassInfoWithSections,
 } from "./types";
 import Semester, { type SemesterInfo } from "./semester";
 import { asyncTryCatch, getFullClassCode, validateSettings } from "./utils";
-import { getClass } from "./schedge";
+import { getClassWithSections } from "./schedge";
 import Database from "../mongodb/db";
 import { stringifyRoute } from "../navigation/linking/stringify";
 import { selectSemester } from "../redux/actions";
@@ -222,34 +223,42 @@ export function useIsCurrentRoute(routeKey: string) {
   );
 }
 
-export function useClassInfoLoader({
-  classCode,
-  semester,
-  isSemesterSettled,
-  isSettingsSettled,
-  starredClassRecord,
-  reviewedClassRecord,
-}: {
-  classCode: ClassCode;
-  semester: SemesterInfo;
-  isSemesterSettled: boolean;
-  isSettingsSettled: boolean;
-  starredClassRecord?: StarredClassRecord | null;
-  reviewedClassRecord?: ReviewedClassRecord | null;
-}) {
-  const [classInfo, setClassInfo] = useState<ClassInfo | null>(() => {
-    const name = classCode.name;
-    if (typeof name === "string") {
-      return {
-        ...classCode,
-        name,
-        description: classCode.description ?? "",
-      };
+export function useClassInfoLoader(
+  {
+    classCode,
+    semester,
+    isSemesterSettled,
+    isSettingsSettled,
+    starredClassRecord,
+    reviewedClassRecord,
+  }: {
+    classCode: ClassCode;
+    semester: SemesterInfo;
+    isSemesterSettled: boolean;
+    isSettingsSettled: boolean;
+    starredClassRecord?: StarredClassRecord | null;
+    reviewedClassRecord?: ReviewedClassRecord | null;
+  },
+  loadSchedule: boolean = false
+) {
+  const isLoading = useRef(false);
+  const [classInfo, setClassInfo] = useState<ClassInfoWithSections | null>(
+    () => {
+      const name = classCode.name;
+      if (typeof name === "string" && !loadSchedule) {
+        return {
+          ...classCode,
+          name,
+          description: classCode.description ?? "",
+          sections: [],
+        };
+      }
+      return null;
     }
-    return null;
-  });
+  );
+  const [loadedSemester, setLoadedSemester] = useState(semester);
+  const [scheduleLoaded, setScheduleLoaded] = useState(false);
   const [classInfoError, setClassInfoError] = useState<ErrorType | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const loadFromStarredReviewed = useCallback(() => {
     if (starredClassRecord) {
       const starredClass = starredClassRecord[getFullClassCode(classCode)];
@@ -258,6 +267,7 @@ export function useClassInfoLoader({
           ...classCode,
           name: starredClass.name,
           description: starredClass.description,
+          sections: [],
         });
         return true;
       }
@@ -269,6 +279,7 @@ export function useClassInfoLoader({
           ...classCode,
           name: reviewedClass.name,
           description: reviewedClass.description,
+          sections: [],
         });
         return true;
       }
@@ -279,11 +290,16 @@ export function useClassInfoLoader({
 
   const loadClass = useCallback(
     (failSilently: boolean = false) => {
-      setIsLoading(true);
-      getClass(classCode, semester)
+      isLoading.current = true;
+
+      getClassWithSections(classCode, semester)
         .then((classInfo) => {
           if (classInfo) {
+            if (!loadSchedule) {
+              classInfo.sections = [];
+            }
             setClassInfo(classInfo);
+            setScheduleLoaded(true);
             setClassInfoError(null);
           } else if (loadFromStarredReviewed()) {
             setClassInfoError(null);
@@ -299,9 +315,15 @@ export function useClassInfoLoader({
           setClassInfo(null);
           if (!failSilently) setClassInfoError(ErrorType.network);
         })
-        .finally(() => setIsLoading(false));
+        .finally(() => (isLoading.current = false));
     },
-    [classCode, semester, loadFromStarredReviewed, isSettingsSettled]
+    [
+      classCode,
+      semester,
+      loadFromStarredReviewed,
+      isSettingsSettled,
+      loadSchedule,
+    ]
   );
 
   const needsReload = useMemo(() => {
@@ -313,27 +335,49 @@ export function useClassInfoLoader({
     );
   }, [classInfo, classCode]);
 
+  const hasSemesterChanged = useMemo(
+    () => !Semester.equals(semester, loadedSemester),
+    [semester, loadedSemester]
+  );
+
   useEffect(() => {
     const name = classInfo?.name ?? classCode.name;
-    if (typeof name === "string" && !needsReload) {
+    if (
+      typeof name === "string" &&
+      !needsReload &&
+      (!loadSchedule || (scheduleLoaded && !hasSemesterChanged))
+    ) {
       if (name !== classInfo?.name) {
         setClassInfo({
           ...classCode,
           name,
           description: classInfo?.description ?? classCode.description ?? "",
+          sections: classInfo?.sections ?? [],
         });
       }
-    } else if (isSemesterSettled && (!classInfo || needsReload)) {
+    } else if (
+      isSemesterSettled &&
+      (!classInfo || needsReload || (loadSchedule && hasSemesterChanged))
+    ) {
+      setLoadedSemester(semester);
+      setScheduleLoaded(false);
       loadClass();
     }
-  }, [classCode, semester, isSemesterSettled, isSettingsSettled, needsReload]);
+  }, [
+    classCode,
+    semester.semesterCode,
+    semester.year,
+    isSemesterSettled,
+    isSettingsSettled,
+    needsReload,
+  ]);
 
   const reloadClassInfo =
-    !classInfo && !isLoading && classInfoError === ErrorType.network
+    !classInfo && !isLoading.current && classInfoError === ErrorType.network
       ? loadClass
       : undefined;
 
-  return { classInfo, classInfoError, reloadClassInfo };
+  return { classInfo, classInfoError, scheduleLoaded, reloadClassInfo };
 }
 
 export function useAppState() {

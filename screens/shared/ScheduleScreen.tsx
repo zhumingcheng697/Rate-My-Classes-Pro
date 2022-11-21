@@ -219,26 +219,46 @@ export default function ScheduleScreen() {
     [semesterInfo.semesterCode, semesterInfo.year]
   );
 
-  const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader({
-    classCode,
-    semester: semesterInfo,
-    isSemesterSettled: isSettingsSettled || !!params.semester,
-    isSettingsSettled,
-    starredClassRecord,
-    reviewedClassRecord,
-  });
+  const { classInfo, classInfoError, scheduleLoaded, reloadClassInfo } =
+    useClassInfoLoader(
+      {
+        classCode,
+        semester: semesterInfo,
+        isSemesterSettled: isSettingsSettled || !!params.semester,
+        isSettingsSettled,
+        starredClassRecord,
+        reviewedClassRecord,
+      },
+      !classCode.name && !sections
+    );
 
-  const notOffered = !!sections || classInfoError === ErrorType.noData;
+  const resolvedSections =
+    sections || (scheduleLoaded && classInfo?.sections) || null;
+
+  const notOffered = !!resolvedSections || classInfoError === ErrorType.noData;
 
   useEffect(() => {
-    if (!classInfoError && sections && sections.length && showAlert) {
+    if (
+      !classInfoError &&
+      resolvedSections &&
+      resolvedSections.length &&
+      showAlert
+    ) {
       setShowAlert(false);
     }
-  }, [classInfoError, sections, showAlert]);
+  }, [classInfoError, resolvedSections, showAlert]);
+
+  useEffect(() => {
+    if ((scheduleLoaded && !classInfo?.sections.length) || classInfoError) {
+      setShowAlert(true);
+    }
+  }, [scheduleLoaded, classInfoError]);
 
   const fetchSections = useCallback(
     (failSilently: boolean = false) => {
       if (!(isSettingsSettled || params.semester) || !classInfo) return;
+
+      if (!classCode.name && !sections) return;
 
       getSections(classInfo, semesterInfo)
         .then((sections) => {
@@ -263,7 +283,7 @@ export default function ScheduleScreen() {
     const failSilently = reason === "NetInfo";
     if (reloadClassInfo) {
       reloadClassInfo?.(failSilently);
-    } else if (classInfo && !sections) {
+    } else if (classInfo && !resolvedSections) {
       fetchSections(failSilently);
     }
   });
@@ -290,8 +310,8 @@ export default function ScheduleScreen() {
       />
       <KeyboardAwareSafeAreaScrollView>
         <VStack marginX={"10px"} marginY={"15px"} space={"10px"}>
-          {sections && sections.length
-            ? sections.map((sectionInfo, index) => (
+          {resolvedSections && resolvedSections.length
+            ? resolvedSections.map((sectionInfo, index) => (
                 <VStack
                   space={"10px"}
                   key={getFullClassCode(classCode) + "-" + index}

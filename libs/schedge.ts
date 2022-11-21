@@ -5,6 +5,7 @@ import type {
   ClassCode,
   ClassInfo,
   SectionInfo,
+  ClassInfoWithSections,
 } from "./types";
 import { SemesterInfo } from "./semester";
 import {
@@ -123,13 +124,46 @@ export async function getClasses(
     : [];
 }
 
-export async function getClass(
+export async function getClassWithSections(
   { schoolCode, departmentCode, classNumber }: ClassCode,
-  semester: SemesterInfo
-): Promise<ClassInfo | undefined> {
-  return (await getClasses({ schoolCode, departmentCode }, semester)).find(
-    (classInfo) => classInfo.classNumber === classNumber
+  semesterInfo: SemesterInfo
+): Promise<ClassInfoWithSections | undefined> {
+  console.log("getClassWithSections", semesterInfo);
+
+  const res = await fetch(
+    composeV2Url(
+      `/courses/${getFullSemesterCode(semesterInfo)}/${getFullDepartmentCode({
+        schoolCode,
+        departmentCode,
+      })}`
+    )
   );
+
+  const json: SchedgeClassRecord = await res.json();
+  const schedgeClass = json.find(
+    (e) =>
+      e.deptCourseId === classNumber &&
+      e.subjectCode === getFullDepartmentCode({ schoolCode, departmentCode })
+  );
+
+  if (!schedgeClass) return undefined;
+
+  const { name, description, sections } = schedgeClass;
+
+  sections?.forEach((section) =>
+    section.recitations?.sort((a, b) =>
+      (a.code || "") < (b.code || "") ? -1 : 1
+    )
+  );
+
+  return {
+    name,
+    schoolCode,
+    departmentCode,
+    classNumber,
+    description: description || "",
+    sections: sections || [],
+  };
 }
 
 export async function searchClasses(

@@ -11,6 +11,7 @@ import type {
   RouteNameFor,
   RouteParamsFor,
   ValueOf,
+  PendingReview,
 } from "../../libs/types";
 import type { SemesterInfo } from "../../libs/semester";
 import { getFullSemesterCode, tryCatch } from "../../libs/utils";
@@ -29,15 +30,33 @@ const getPathForClass = (classCode: ClassCode) =>
 const addQueryParam = ({
   query,
   semester,
+  pendingReview,
 }: {
   query?: string;
   semester?: SemesterInfo;
+  pendingReview?: PendingReview;
 }) => {
   const queryStr = query && `query=${encodeURIComponent(query)}`;
   const semesterStr = semester && `semester=${getFullSemesterCode(semester)}`;
+  const reviewStr =
+    pendingReview &&
+    Object.keys(pendingReview)
+      .map((e) => {
+        const val =
+          e === "semester"
+            ? pendingReview.semester
+              ? getFullSemesterCode(pendingReview.semester)
+              : undefined
+            : pendingReview[e as Exclude<keyof PendingReview, "semester">];
+        return val
+          ? `${e === "semester" ? "for" : e}=${encodeURIComponent(val)}`
+          : "";
+      })
+      .filter(Boolean)
+      .join("&");
 
-  if (queryStr || semesterStr) {
-    return "?" + [queryStr, semesterStr].filter(Boolean).join("&");
+  if (queryStr || semesterStr || reviewStr) {
+    return "?" + [queryStr, semesterStr, reviewStr].filter(Boolean).join("&");
   }
 
   return "";
@@ -56,15 +75,17 @@ function stringifyExploreRoute<Screen extends keyof ExploreNavigationParamList>(
 ) {
   const exploreRouteToPathMap: RouteToPathMap<ExploreNavigationParamList> = {
     University: () => "/explore",
-    School: ({ schoolCode }) => `/explore/${schoolCode.toUpperCase()}`,
+    School: ({ schoolInfo, semester }) =>
+      `/explore/${schoolInfo.schoolCode.toUpperCase()}` +
+      addQueryParam({ semester }),
     Department: ({ departmentInfo, semester }) =>
       `/explore/${departmentInfo.schoolCode.toUpperCase()}/${departmentInfo.departmentCode.toUpperCase()}` +
       addQueryParam({ semester }),
     Detail: ({ classCode, semester }) =>
       `/explore/${getPathForClass(classCode)}` + addQueryParam({ semester }),
-    Review: ({ classCode, semester }) =>
+    Review: ({ classCode, semester, pendingReview }) =>
       `/explore/${getPathForClass(classCode)}/review` +
-      addQueryParam({ semester }),
+      addQueryParam({ semester, pendingReview }),
     Schedule: ({ classCode, semester }) =>
       `/explore/${getPathForClass(classCode)}/schedule` +
       addQueryParam({ semester }),
@@ -89,9 +110,9 @@ function stringifySearchRoute<Screen extends keyof SearchNavigationParamList>(
     Detail: ({ classCode, query, semester }) =>
       `/search/${getPathForClass(classCode)}` +
       addQueryParam({ query, semester }),
-    Review: ({ classCode, query, semester }) =>
+    Review: ({ classCode, query, semester, pendingReview }) =>
       `/search/${getPathForClass(classCode)}/review` +
-      addQueryParam({ query, semester }),
+      addQueryParam({ query, semester, pendingReview }),
     Schedule: ({ classCode, query, semester }) =>
       `/search/${getPathForClass(classCode)}/schedule` +
       addQueryParam({ query, semester }),
@@ -119,10 +140,10 @@ function stringifyMeRoute<Screen extends keyof MeNavigationParamList>(
       `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
         classCode
       )}` + addQueryParam({ semester }),
-    Review: ({ classCode, starredOrReviewed, semester }) =>
+    Review: ({ classCode, starredOrReviewed, semester, pendingReview }) =>
       `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
         classCode
-      )}/review` + addQueryParam({ semester }),
+      )}/review` + addQueryParam({ semester, pendingReview }),
     Schedule: ({ classCode, starredOrReviewed, semester }) =>
       `/${checkStarredOrReviewed(starredOrReviewed)}/${getPathForClass(
         classCode

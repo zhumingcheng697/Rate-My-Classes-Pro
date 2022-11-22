@@ -107,12 +107,16 @@ export type StarredOrReviewed = "Starred" | "Reviewed";
 
 export type NewOrEdit = "New" | "Edit";
 
+export type PendingReview = Partial<
+  Omit<Review, "userId" | "upvotes" | "downvotes" | "reviewedDate">
+>;
+
 export type SharedNavigationParamList = {
   Detail: {
     classCode: ClassCode;
     semester?: SemesterInfo;
     deleteReview?: true;
-    newReview?: Review;
+    newReview?: Omit<Review, "userId">;
     query?: string;
     starredOrReviewed?: StarredOrReviewed;
   };
@@ -120,7 +124,8 @@ export type SharedNavigationParamList = {
     classCode: ClassCode;
     semester?: SemesterInfo;
     previousReview?: Review;
-    newReview?: Review;
+    pendingReview?: PendingReview;
+    recoveredReview?: PendingReview;
     query?: string;
     starredOrReviewed?: StarredOrReviewed;
     newOrEdit?: NewOrEdit;
@@ -143,7 +148,7 @@ export type SharedNavigationParamList = {
 
 export type ExploreNavigationParamList = {
   University: undefined;
-  School: SchoolInfo;
+  School: { schoolInfo: SchoolInfo; semester?: SemesterInfo };
   Department: { departmentInfo: DepartmentInfo; semester?: SemesterInfo };
 } & SharedNavigationParamList;
 
@@ -152,7 +157,7 @@ export type SearchNavigationParamList = {
 } & SharedNavigationParamList;
 
 export type MeNavigationParamList = {
-  Account: { isAuthenticated: boolean } | undefined;
+  Account: { isAuthenticated: boolean; semester?: SemesterInfo } | undefined;
   Starred: undefined;
   Reviewed: undefined;
   Settings: undefined;

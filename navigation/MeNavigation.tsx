@@ -14,12 +14,24 @@ import reviewScreenOptions from "./options/reviewScreenOptions";
 import scheduleScreenOptions from "./options/scheduleScreenOptions";
 import signInSignUpScreenOptions from "./options/signInSignUpScreenOptions";
 import { type MeNavigationParamList } from "../libs/types";
+import { useAuth } from "../mongodb/auth";
 
 const Stack = createStackNavigator<MeNavigationParamList>();
 
 export default function MeNavigation() {
+  const { setIsSemesterSettled } = useAuth();
+
   return (
-    <Stack.Navigator screenOptions={defaultScreenOptions}>
+    <Stack.Navigator
+      screenOptions={defaultScreenOptions}
+      screenListeners={({ route }) => ({
+        state: () => {
+          if (!route.params?.semester) {
+            setIsSemesterSettled(true);
+          }
+        },
+      })}
+    >
       <Stack.Screen
         name={"Account"}
         component={AccountScreen}

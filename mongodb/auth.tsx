@@ -45,12 +45,14 @@ export type AuthContext = {
   db: Database | null;
   user: Realm.User | null;
   username: string | null;
+  isSemesterSettled: boolean;
   isSettingsSettled: boolean;
   isUserDocLoaded: boolean;
   isAuthenticated: boolean;
   isVerified: boolean;
   userDocError: any;
   globalAlerts: Set<MutableRefObject<any>>;
+  setIsSemesterSettled: Dispatch<SetStateAction<boolean>>;
   setGlobalAlerts: Dispatch<SetStateAction<Set<MutableRefObject<any>>>>;
   fetchUserDoc: () => Promise<void>;
   updateUsername: (username: string) => Promise<void>;
@@ -89,6 +91,7 @@ const Context = createContext<AuthContext | null>(null);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState(realmApp.currentUser);
+  const [isSemesterSettled, setIsSemesterSettled] = useState(false);
   const [isSettingsSettled, setIsSettingsSettled] = useState(false);
   const [isUserDocLoaded, setIsUserDocLoaded] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
@@ -597,12 +600,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         db,
         user,
         username,
+        isSemesterSettled,
         isSettingsSettled,
         isUserDocLoaded,
         isAuthenticated,
         isVerified,
         userDocError,
         globalAlerts,
+        setIsSemesterSettled,
         setGlobalAlerts,
         fetchUserDoc,
         updateUsername,

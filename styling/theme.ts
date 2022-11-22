@@ -130,6 +130,7 @@ const componentsStyle = {
   },
   Input: {
     defaultProps: {
+      maxLength: 50,
       enablesReturnKeyAutomatically: true,
       ...inputSelectDefaultProps,
     },

@@ -57,7 +57,7 @@ export default class Semester {
     );
   }
 
-  static fromCode(code?: string | null) {
+  static fromCode(code?: string | null, validate: boolean = true) {
     if (!code) return undefined;
 
     const semesterCode = code.slice(0, 2)?.toLowerCase() as SemesterCode;
@@ -65,7 +65,7 @@ export default class Semester {
 
     if (year && this.semesterCodes.includes(semesterCode)) {
       const semester = new Semester({ semesterCode, year });
-      if (semester.validate()) {
+      if (!validate || semester.validate()) {
         return semester;
       }
     }

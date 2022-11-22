@@ -78,6 +78,7 @@ export default function DetailScreen() {
     isVerified,
     db,
     signInAnonymously,
+    setIsSemesterSettled,
   } = useAuth();
   const isFocused = useIsFocused();
   const settings = useSelector((state) => state.settings);
@@ -87,6 +88,7 @@ export default function DetailScreen() {
     params,
     settings,
     isSettingsSettled,
+    setIsSemesterSettled,
   });
   const tabName = useInitialTabName();
 
@@ -108,7 +110,7 @@ export default function DetailScreen() {
 
   const semesterName = useMemo(
     () => new Semester(semesterInfo).toString(),
-    [semesterInfo]
+    [semesterInfo.semesterCode, semesterInfo.year]
   );
 
   const myReview = useMemo(() => {
@@ -220,13 +222,18 @@ export default function DetailScreen() {
     }
   }, [classInfo, classInfoError]);
 
+  const resolvedSections =
+    sections || (scheduleLoaded && classInfo?.sections) || null;
+
   const fetchSections = useCallback(
     (failSilently: boolean = false) => {
       if (!(isSettingsSettled || params.semester) || !classInfo) return;
 
+      if (!classCode.name && !sections) return;
+
       if (!Semester.equals(semester, previousSemester)) {
         setPreviousSemester(semester);
-      } else if (!classCode.name) {
+      } else if (!classCode.name || resolvedSections) {
         return;
       }
 
@@ -249,10 +256,16 @@ export default function DetailScreen() {
       sections,
       semesterInfo,
       scheduleLoaded,
+      resolvedSections,
     ]
   );
 
-  useEffect(fetchSections, [semesterInfo, isSettingsSettled, classInfo]);
+  useEffect(fetchSections, [
+    semesterInfo.semesterCode,
+    semesterInfo.year,
+    isSettingsSettled,
+    classInfo,
+  ]);
 
   const reviewerIds = useMemo(() => {
     if (!reviewRecord) return [];
@@ -283,14 +296,17 @@ export default function DetailScreen() {
               setReviewRecord(newReviewRecord);
             }
           } else if (newReview) {
+            const review = { ...newReview, userId: user.id };
+            review.upvotes[user.id] = true;
+
             if (myReview) {
-              await db.updateReview(classCode, newReview);
+              await db.updateReview(classCode, review);
             } else if (classInfo) {
               const reviewedClass = {
                 ...extractClassInfo(classInfo),
                 reviewedDate: Date.now(),
               };
-              await db.submitReview(classCode, newReview);
+              await db.submitReview(classCode, review);
               await db.reviewClass(reviewedClass);
               reviewClass(dispatch)(reviewedClass);
             } else {
@@ -299,7 +315,7 @@ export default function DetailScreen() {
 
             if (reviewRecord) {
               const newReviewRecord = { ...reviewRecord };
-              newReviewRecord[user.id] = newReview;
+              newReviewRecord[user.id] = review;
               setReviewRecord(newReviewRecord);
             }
           }
@@ -325,9 +341,6 @@ export default function DetailScreen() {
       }
     })();
   }, [isFocused, user]);
-
-  const resolvedSections =
-    sections || (scheduleLoaded && classInfo?.sections) || null;
 
   useRefresh((reason) => {
     const failSilently = reason === "NetInfo";

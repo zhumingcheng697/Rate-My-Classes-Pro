@@ -31,7 +31,7 @@ export default function ExploreNavigation() {
         name={"School"}
         component={SchoolScreen}
         options={({ route }) => ({
-          title: route.params.schoolCode.toUpperCase(),
+          title: route.params.schoolInfo.schoolCode.toUpperCase(),
           headerRight: () => <SharingButton />,
         })}
       />

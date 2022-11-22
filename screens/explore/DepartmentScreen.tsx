@@ -42,20 +42,24 @@ export default function DepartmentScreen() {
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const settings = useSelector((state) => state.settings);
   const { departmentInfo } = route.params;
-  const { db, isSettingsSettled } = useAuth();
+  const { db, isSettingsSettled, setIsSemesterSettled } = useAuth();
   const semesterInfo = useSemester({
     db,
     navigation,
     params: route.params,
     settings,
     isSettingsSettled,
+    setIsSemesterSettled,
   });
 
   const [classes, setClasses] = useState<ClassInfo[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   const [error, setError] = useState<ErrorType | null>(null);
 
-  const semester = useMemo(() => new Semester(semesterInfo), [semesterInfo]);
+  const semester = useMemo(
+    () => new Semester(semesterInfo),
+    [semesterInfo.semesterCode, semesterInfo.year]
+  );
 
   const noDataErrorMessage = useMemo(() => {
     const diff = Semester.between(Semester.predictCurrentSemester(), semester);
@@ -67,7 +71,7 @@ export default function DepartmentScreen() {
         ? "will not be offering"
         : "is not offering"
     } any classes in ${semester.toString()}.`;
-  }, [semester, route.params]);
+  }, [semester, departmentInfo]);
 
   const fetchClasses = useCallback(
     (failSilently: boolean = false) => {
@@ -90,10 +94,10 @@ export default function DepartmentScreen() {
           if (!failSilently) setShowAlert(true);
         });
     },
-    [isSettingsSettled, route.params, semester]
+    [isSettingsSettled, semester, departmentInfo]
   );
 
-  useEffect(fetchClasses, [route.params, semester, isSettingsSettled]);
+  useEffect(fetchClasses, [semester, isSettingsSettled]);
 
   useEffect(() => {
     if (!error && showAlert) setShowAlert(false);

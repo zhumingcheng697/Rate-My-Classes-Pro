@@ -1,6 +1,7 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, useEffect } from "react";
 import { Text, Box } from "native-base";
 import { useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
 
 import Semester from "../../libs/semester";
 import type { SchoolInfo } from "../../libs/types";
@@ -9,6 +10,7 @@ import {
   isObjectEmpty,
   getSchoolName,
   Route,
+  compareSchools,
 } from "../../libs/utils";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid, { type GridRenderItemInfo } from "../../containers/Grid";
@@ -20,6 +22,13 @@ export default function UniversityScreen() {
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const { selectedSemester } = useSelector((state) => state.settings);
   const auth = useAuth();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      auth.setIsSemesterSettled(true);
+    }
+  }, [isFocused]);
 
   const isSchoolNameLoaded = !!schoolNames && !isObjectEmpty(schoolNames);
   const isDepartmentNameLoaded =
@@ -47,6 +56,9 @@ export default function UniversityScreen() {
       }
     }
 
+    undergradCodes.sort(compareSchools);
+    gradCodes.sort(compareSchools);
+
     return [undergradCodes, gradCodes];
   }, [schoolNames, departmentNames]);
 
@@ -60,7 +72,10 @@ export default function UniversityScreen() {
           {...info}
           primaryText={getSchoolName(schoolInfo, schoolNames)}
           secondaryText={schoolCode.toUpperCase()}
-          linkTo={Route("ExploreTab", "School", schoolInfo)}
+          linkTo={Route("ExploreTab", "School", {
+            schoolInfo,
+            semester: selectedSemester,
+          })}
         />
       );
     },

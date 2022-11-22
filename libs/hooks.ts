@@ -22,16 +22,14 @@ import {
   CommonActions,
   useNavigation,
   useNavigationState,
-  type RouteProp,
 } from "@react-navigation/native";
 
 import {
   ErrorType,
   type ClassCode,
-  type ClassInfo,
   type RootNavigationParamList,
-  type ExploreNavigationParamList,
   type SharedNavigationParamList,
+  type ExploreNavigationParamList,
   type SearchNavigationParamList,
   type MeNavigationParamList,
   type RouteNameFor,
@@ -48,12 +46,14 @@ import Database from "../mongodb/db";
 import { stringifyRoute } from "../navigation/linking/stringify";
 import { selectSemester } from "../redux/actions";
 
+type NavigationProp =
+  | StackNavigationProp<ExploreNavigationParamList>
+  | StackNavigationProp<SearchNavigationParamList>
+  | StackNavigationProp<MeNavigationParamList>
+  | StackNavigationProp<SharedNavigationParamList>;
+
 export function useInitialTabName() {
-  const tabNavigation = useNavigation<
-    | StackNavigationProp<ExploreNavigationParamList>
-    | StackNavigationProp<SearchNavigationParamList>
-    | StackNavigationProp<MeNavigationParamList>
-  >().getParent();
+  const tabNavigation = useNavigation<NavigationProp>().getParent();
 
   const isFocused = useIsFocused();
 
@@ -102,12 +102,14 @@ export function useSemester({
   params,
   settings,
   isSettingsSettled,
+  setIsSemesterSettled,
 }: {
   db?: Database | null;
-  navigation?: StackNavigationProp<SharedNavigationParamList>;
-  params: RouteProp<SharedNavigationParamList>["params"];
+  navigation?: NavigationProp;
+  params: { semester?: SemesterInfo };
   settings: Settings;
   isSettingsSettled: boolean;
+  setIsSemesterSettled: (isSemesterSettled: boolean) => void;
 }) {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
@@ -124,21 +126,26 @@ export function useSemester({
   }, [settings.selectedSemester.semesterCode, settings.selectedSemester.year]);
 
   useEffect(() => {
-    if (
-      isSettingsSettled &&
-      isFocused &&
-      params.semester &&
-      !Semester.equals(params.semester, settings.selectedSemester)
-    ) {
-      selectSemester(dispatch)(params.semester);
+    if (isSettingsSettled && isFocused) {
+      if (
+        params.semester &&
+        !Semester.equals(params.semester, settings.selectedSemester)
+      ) {
+        selectSemester(dispatch)(params.semester);
 
-      asyncTryCatch(async () => {
-        if (db && params.semester) {
-          await db.updateSettings(
-            validateSettings({ ...settings, selectedSemester: params.semester })
-          );
-        }
-      });
+        asyncTryCatch(async () => {
+          if (db && params.semester) {
+            await db.updateSettings(
+              validateSettings({
+                ...settings,
+                selectedSemester: params.semester,
+              })
+            );
+          }
+        });
+      }
+
+      setIsSemesterSettled(true);
     }
   }, [isSettingsSettled, isFocused]);
 
@@ -215,11 +222,9 @@ export function useLinkProps<
 }
 
 export function useIsCurrentRoute(routeKey: string) {
-  const routeIndex = useNavigationState((state) => state.index);
-  const routes = useNavigationState((state) => state.routes);
-
-  return (
-    routeIndex === routes.length - 1 && routes[routeIndex]?.key === routeKey
+  return useNavigationState(
+    ({ index, routes }) =>
+      index === routes.length - 1 && routes[index]?.key === routeKey
   );
 }
 

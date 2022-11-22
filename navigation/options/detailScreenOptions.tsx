@@ -40,11 +40,18 @@ export default ({
     const { classCode } = route.params;
     const starredClassRecord = useSelector((state) => state.starredClassRecord);
     const settings = useSelector((state) => state.settings);
-    const { user, isAuthenticated, db, isSettingsSettled } = useAuth();
+    const {
+      user,
+      isAuthenticated,
+      db,
+      isSettingsSettled,
+      setIsSemesterSettled,
+    } = useAuth();
     const semesterInfo = useSemester({
       params: route.params,
       settings,
       isSettingsSettled,
+      setIsSemesterSettled,
     });
     const { classInfo } = useClassInfoLoader({
       classCode,

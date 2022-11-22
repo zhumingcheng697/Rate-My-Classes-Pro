@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { HStack, Skeleton, Text, theme, VStack } from "native-base";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import {
@@ -196,7 +202,7 @@ export default function ScheduleScreen() {
     params.sections ?? null
   );
   const [showAlert, setShowAlert] = useState(false);
-  const { db, isSettingsSettled } = useAuth();
+  const { db, isSettingsSettled, setIsSemesterSettled } = useAuth();
 
   const cleanText = useCallback(
     (text: string) =>
@@ -212,6 +218,7 @@ export default function ScheduleScreen() {
     params,
     settings,
     isSettingsSettled,
+    setIsSemesterSettled,
   });
 
   const semester = useMemo(
@@ -246,17 +253,24 @@ export default function ScheduleScreen() {
     ) {
       setShowAlert(false);
     }
-  }, [classInfoError, resolvedSections, showAlert]);
+  }, [classInfoError, resolvedSections]);
 
   useEffect(() => {
     if ((scheduleLoaded && !classInfo?.sections.length) || classInfoError) {
       setShowAlert(true);
     }
-  }, [scheduleLoaded, classInfoError]);
+  }, [scheduleLoaded, classInfo, classInfoError]);
+
+  const firstFetched = useRef(false);
 
   const fetchSections = useCallback(
     (failSilently: boolean = false) => {
       if (!(isSettingsSettled || params.semester) || !classInfo) return;
+
+      if (!firstFetched.current) {
+        firstFetched.current = true;
+        if (sections) return;
+      }
 
       if (!classCode.name && !sections) return;
 
@@ -274,8 +288,26 @@ export default function ScheduleScreen() {
           if (!failSilently) setShowAlert(true);
         });
     },
-    [isSettingsSettled, classInfo, semester, navigation]
+    [isSettingsSettled, classInfo, semesterInfo]
   );
+
+  const duplicateIndices = useMemo(() => {
+    if (!resolvedSections || !resolvedSections.length) {
+      return new Set<number>();
+    }
+
+    const duplicateIndices = new Set<number>();
+    const sectionKeys = new Set<string>();
+    resolvedSections.forEach((e, index) => {
+      const key = `${e.name}-${e.code}`;
+      if (sectionKeys.has(key)) {
+        duplicateIndices.add(index);
+      } else {
+        sectionKeys.add(key);
+      }
+    });
+    return duplicateIndices;
+  }, [resolvedSections]);
 
   useEffect(fetchSections, [semester, isSettingsSettled, classInfo]);
 
@@ -311,29 +343,31 @@ export default function ScheduleScreen() {
       <KeyboardAwareSafeAreaScrollView>
         <VStack marginX={"10px"} marginY={"15px"} space={"10px"}>
           {resolvedSections && resolvedSections.length
-            ? resolvedSections.map((sectionInfo, index) => (
-                <VStack
-                  space={"10px"}
-                  key={getFullClassCode(classCode) + "-" + index}
-                >
-                  <SectionView
-                    classCode={classCode}
-                    classInfo={classInfo}
-                    sectionInfo={sectionInfo}
-                    cleanText={cleanText}
-                  />
-                  {sectionInfo.recitations &&
-                    sectionInfo.recitations.map((recitationInfo, i) => (
-                      <SectionView
-                        key={index + "-" + i}
-                        classCode={classCode}
-                        classInfo={classInfo}
-                        sectionInfo={recitationInfo}
-                        cleanText={cleanText}
-                      />
-                    ))}
-                </VStack>
-              ))
+            ? resolvedSections.map((sectionInfo, index) =>
+                duplicateIndices.has(index) ? null : (
+                  <VStack
+                    space={"10px"}
+                    key={getFullClassCode(classCode) + "-" + index}
+                  >
+                    <SectionView
+                      classCode={classCode}
+                      classInfo={classInfo}
+                      sectionInfo={sectionInfo}
+                      cleanText={cleanText}
+                    />
+                    {sectionInfo.recitations &&
+                      sectionInfo.recitations.map((recitationInfo, i) => (
+                        <SectionView
+                          key={index + "-" + i}
+                          classCode={classCode}
+                          classInfo={classInfo}
+                          sectionInfo={recitationInfo}
+                          cleanText={cleanText}
+                        />
+                      ))}
+                  </VStack>
+                )
+              )
             : [...Array(5)].map((_, index) => (
                 <Skeleton borderRadius={10} height={"150px"} key={index} />
               ))}

@@ -91,6 +91,7 @@ export default function SignInSignUpScreen() {
     params: route.params,
     settings,
     isSettingsSettled: auth.isSettingsSettled,
+    setIsSemesterSettled: auth.setIsSemesterSettled,
   });
 
   return (

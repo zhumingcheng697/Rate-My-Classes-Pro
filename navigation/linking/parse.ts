@@ -16,6 +16,8 @@ import type {
   MeNavigationParamList,
   StarredOrReviewed,
   NavigationParamListFor,
+  PendingReview,
+  Rating,
 } from "../../libs/types";
 
 type PathToRouteMap<ParamList extends ParamListBase> = {
@@ -62,6 +64,32 @@ const lastPathToScreenNameMap: Record<string, keyof SharedNavigationParamList> =
 const parseSemester = (semester: string) =>
   Semester.fromCode(semester)?.toJSON();
 
+const recoverReview = (query: Record<keyof PendingReview | "for", string>) => {
+  const recoveredReview: PendingReview = {};
+  const {
+    enjoyment,
+    difficulty,
+    workload,
+    value,
+    for: semester,
+    instructor,
+    comment,
+  } = query;
+
+  const parseRating = (rating?: string) =>
+    rating && /^[1-5]$/.test(rating) ? (parseInt(rating) as Rating) : undefined;
+
+  recoveredReview.enjoyment = parseRating(enjoyment);
+  recoveredReview.difficulty = parseRating(difficulty);
+  recoveredReview.workload = parseRating(workload);
+  recoveredReview.value = parseRating(value);
+  recoveredReview.semester = Semester.fromCode(semester, false);
+  recoveredReview.instructor = instructor;
+  recoveredReview.comment = comment;
+
+  return recoveredReview;
+};
+
 const getClassFromPaths = (paths: string[]): ClassCode => ({
   schoolCode: paths[1].toUpperCase(),
   departmentCode: paths[2].toUpperCase(),
@@ -80,9 +108,12 @@ function parseExplorePath(
 ): ResultRoute<ExploreNavigationParamList>[] {
   const explorePathToRouteMap: PathToRouteMap<ExploreNavigationParamList> = {
     University: () => ({ name: "University" }),
-    School: (paths) => ({
+    School: (paths, { semester }) => ({
       name: "School",
-      params: { schoolCode: paths[1].toUpperCase() },
+      params: {
+        schoolInfo: { schoolCode: paths[1].toUpperCase() },
+        semester: parseSemester(semester),
+      },
     }),
     Department: (paths, { semester }) => ({
       name: "Department",
@@ -101,11 +132,12 @@ function parseExplorePath(
         semester: parseSemester(semester),
       },
     }),
-    Review: (paths, { semester }) => ({
+    Review: (paths, params) => ({
       name: "Review",
       params: {
         classCode: getClassFromPaths(paths),
-        semester: parseSemester(semester),
+        semester: parseSemester(params.semester),
+        recoveredReview: recoverReview(params),
       },
     }),
     Schedule: (paths, { semester }) => ({
@@ -173,12 +205,13 @@ function parseSearchPath(
         semester: parseSemester(semester),
       },
     }),
-    Review: (paths, { query, semester }) => ({
+    Review: (paths, params) => ({
       name: "Review",
       params: {
         classCode: getClassFromPaths(paths),
-        query,
-        semester: parseSemester(semester),
+        query: params.query,
+        semester: parseSemester(params.semester),
+        recoveredReview: recoverReview(params),
       },
     }),
     Schedule: (paths, { query, semester }) => ({
@@ -233,12 +266,13 @@ function parseMePath(
         semester: parseSemester(semester),
       },
     }),
-    Review: (paths, { semester }) => ({
+    Review: (paths, params) => ({
       name: "Review",
       params: {
         classCode: getClassFromPaths(paths),
         starredOrReviewed: checkStarredOrReviewed(paths),
-        semester: parseSemester(semester),
+        semester: parseSemester(params.semester),
+        recoveredReview: recoverReview(params),
       },
     }),
     Schedule: (paths, { semester }) => ({

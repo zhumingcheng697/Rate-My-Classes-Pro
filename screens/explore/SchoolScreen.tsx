@@ -17,11 +17,15 @@ import {
   getDepartmentName,
   isObjectEmpty,
   Route,
+  compareDepartments,
 } from "../../libs/utils";
+import Semester from "../../libs/semester";
+import { useSemester } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import AlertPopup from "../../components/AlertPopup";
 import { TieredTextButton } from "../../components/LinkCompatibleButton";
+import { useAuth } from "../../mongodb/auth";
 
 type SchoolScreenNavigationProp = StackNavigationProp<
   ExploreNavigationParamList,
@@ -33,33 +37,54 @@ type SchoolScreenRouteProp = RouteProp<ExploreNavigationParamList, "School">;
 export default function SchoolScreen() {
   const navigation = useNavigation<SchoolScreenNavigationProp>();
   const route = useRoute<SchoolScreenRouteProp>();
-  const { schoolCode } = route.params;
-  const { selectedSemester } = useSelector((state) => state.settings);
+  const settings = useSelector((state) => state.settings);
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const isLoaded = !!departmentNames && !isObjectEmpty(departmentNames);
+  const { schoolInfo } = route.params;
+  const { db, isSettingsSettled, setIsSemesterSettled } = useAuth();
+  const semesterInfo = useSemester({
+    db,
+    navigation,
+    params: route.params,
+    settings,
+    isSettingsSettled,
+    setIsSemesterSettled,
+  });
   const [showAlert, setShowAlert] = useState(false);
 
   const departments = useMemo(() => {
     if (!isLoaded) return [];
 
-    return Object.keys(departmentNames[schoolCode] ?? {});
+    return Object.keys(departmentNames[schoolInfo.schoolCode] ?? {}).sort(
+      (a, b) => compareDepartments(departmentNames, schoolInfo.schoolCode, a, b)
+    );
   }, [departmentNames]);
 
   useEffect(() => {
-    if (departmentNames && !(schoolCode in departmentNames)) {
+    if (departmentNames && !(schoolInfo.schoolCode in departmentNames)) {
       setShowAlert(true);
     }
   }, [departmentNames]);
+
+  const noDataErrorMessage = useMemo(() => {
+    const diff = Semester.between(
+      Semester.predictCurrentSemester(),
+      semesterInfo
+    );
+
+    return `${getSchoolName(schoolInfo, schoolNames)} ${
+      diff > 0 ? "did" : diff < 0 ? "will" : "does"
+    } not have any course offering departments in ${new Semester(
+      semesterInfo
+    ).toString()}.`;
+  }, [semesterInfo, schoolInfo, schoolNames]);
 
   return (
     <>
       <AlertPopup
         header={"No Departments Available"}
-        body={`${getSchoolName(
-          route.params,
-          schoolNames
-        )} does not have any course offering departments.`}
+        body={noDataErrorMessage}
         isOpen={showAlert}
         onClose={() => {
           setShowAlert(false);
@@ -69,7 +94,7 @@ export default function SchoolScreen() {
       <KeyboardAwareSafeAreaScrollView>
         <Box marginY={"10px"}>
           <Text variant={"h1"} opacity={schoolNames ? 1 : 0.5}>
-            {getSchoolName(route.params, schoolNames)}
+            {getSchoolName(schoolInfo, schoolNames)}
           </Text>
           <Grid
             isLoaded={isLoaded && !!departments.length}
@@ -78,22 +103,22 @@ export default function SchoolScreen() {
             {(info) =>
               departments.map((departmentCode, index) => {
                 const departmentInfo: DepartmentInfo = {
-                  ...route.params,
+                  ...schoolInfo,
                   departmentCode,
                 };
 
                 return (
                   <TieredTextButton
-                    key={index}
+                    key={departmentCode + index}
                     {...info}
                     primaryText={getDepartmentName(
                       departmentInfo,
                       departmentNames
                     )}
-                    secondaryText={`${departmentCode.toUpperCase()}-${schoolCode.toUpperCase()}`}
+                    secondaryText={`${departmentCode.toUpperCase()}-${schoolInfo.schoolCode.toUpperCase()}`}
                     linkTo={Route("ExploreTab", "Department", {
                       departmentInfo,
-                      semester: selectedSemester,
+                      semester: semesterInfo,
                     })}
                   />
                 );

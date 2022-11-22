@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Box, Button, Input, Text, VStack } from "native-base";
 import {
   useNavigation,
@@ -18,14 +18,11 @@ import {
   type Rating,
   type Review,
   type ReviewRecord,
+  type PendingReview,
   RatingType,
   ErrorType,
 } from "../../libs/types";
-import {
-  getFullClassCode,
-  hasEditedReview,
-  notOfferedMessage,
-} from "../../libs/utils";
+import { getFullClassCode, notOfferedMessage } from "../../libs/utils";
 import {
   useClassInfoLoader,
   useIsCurrentRoute,
@@ -43,15 +40,15 @@ type ReviewScreenNavigationProp = StackNavigationProp<
 type ReviewScreenRouteProp = RouteProp<SharedNavigationParamList, "Review">;
 
 export default function ReviewScreen() {
-  const { user, isSettingsSettled, isVerified, db } = useAuth();
+  const { user, isSettingsSettled, isVerified, db, setIsSemesterSettled } =
+    useAuth();
   const navigation = useNavigation<ReviewScreenNavigationProp>();
   const route = useRoute<ReviewScreenRouteProp>();
   const starredClassRecord = useSelector((state) => state.starredClassRecord);
   const reviewedClassRecord = useSelector((state) => state.reviewedClassRecord);
   const { params, key } = route;
   const settings = useSelector((state) => state.settings);
-  const { classCode, previousReview, newOrEdit } = params;
-  const [hasEdited, setHasEdited] = useState(false);
+  const { classCode, previousReview, newOrEdit, recoveredReview } = params;
   const [showAlert, setShowAlert] = useState(false);
   const [willDelete, setWillDelete] = useState(false);
   const isCurrentRoute = useIsCurrentRoute(key);
@@ -61,6 +58,7 @@ export default function ReviewScreen() {
     params,
     settings,
     isSettingsSettled,
+    setIsSemesterSettled,
   });
   const { classInfo, classInfoError, reloadClassInfo } = useClassInfoLoader({
     classCode,
@@ -91,12 +89,17 @@ export default function ReviewScreen() {
   const [comment, setComment] = useState(previousReview?.comment ?? "");
   const [reviewError, setReviewError] = useState(false);
 
-  const semesterOptions = useMemo(
-    () =>
-      previousReview
-        ? [new Semester(previousReview.semester)]
-        : Semester.getSemesterOptions(false, 12).reverse(),
-    [previousReview]
+  const [semesterOptions, setSemesterOptions] = useState(() =>
+    previousReview
+      ? [new Semester(previousReview.semester)]
+      : Semester.getSemesterOptions(false, 12).reverse()
+  );
+
+  const resolveReview = useCallback(
+    function <T extends keyof PendingReview>(previous: Review, key: T) {
+      return recoveredReview?.[key] || previous[key];
+    },
+    [recoveredReview]
   );
 
   const fetchMyReview = useCallback(
@@ -109,19 +112,51 @@ export default function ReviewScreen() {
                 (await db.loadReviewDoc(classCode)) ?? {};
               const review: Review | undefined = reviewRecord[user.id];
               if (review) {
-                setEnjoyment(review.enjoyment);
-                setDifficulty(review.difficulty);
-                setWorkload(review.workload);
-                setValue(review.value);
-                setSemester(new Semester(review.semester));
-                setInstructor(review.instructor);
-                setComment(review.comment);
+                const semester = new Semester(review.semester);
+                setSemesterOptions([semester]);
+                setInstructor(resolveReview(review, "instructor"));
+                setSemester(semester);
+                setEnjoyment(resolveReview(review, "enjoyment"));
+                setDifficulty(resolveReview(review, "difficulty"));
+                setWorkload(resolveReview(review, "workload"));
+                setValue(resolveReview(review, "value"));
+                setComment(resolveReview(review, "comment"));
                 navigation.setParams({
                   previousReview: review,
                   newOrEdit: "Edit",
+                  recoveredReview: undefined,
                 });
               } else {
-                navigation.setParams({ newOrEdit: "New" });
+                const {
+                  enjoyment,
+                  difficulty,
+                  workload,
+                  value,
+                  semester,
+                  instructor,
+                  comment,
+                } = recoveredReview ?? {};
+
+                if (instructor) setInstructor(instructor);
+                if (semester) {
+                  const semesterObj = new Semester(semester);
+                  if (
+                    Semester.getSemesterOptions(false, 12).some((e) =>
+                      Semester.equals(e, semester)
+                    )
+                  ) {
+                    setSemester(semesterObj);
+                  }
+                }
+                if (enjoyment) setEnjoyment(enjoyment);
+                if (difficulty) setDifficulty(difficulty);
+                if (workload) setWorkload(workload);
+                if (value) setValue(value);
+                if (comment) setComment(comment);
+                navigation.setParams({
+                  newOrEdit: "New",
+                  recoveredReview: undefined,
+                });
               }
             } catch (e) {
               setReviewError(true);
@@ -149,53 +184,47 @@ export default function ReviewScreen() {
 
   useEffect(fetchMyReview, [classInfo, classInfoError, db]);
 
+  const update = useCallback(
+    (() => {
+      let timeoutId: ReturnType<typeof setTimeout>;
+      let lastUpdated = 0;
+
+      return (pendingReview: PendingReview) => {
+        clearTimeout(timeoutId);
+
+        const diff = Date.now() - lastUpdated;
+
+        if (diff > 300) {
+          lastUpdated = Date.now();
+          navigation.setParams({ pendingReview });
+        } else {
+          timeoutId = setTimeout(() => {
+            lastUpdated = Date.now();
+            navigation.setParams({ pendingReview });
+          }, 300 - diff);
+        }
+      };
+    })(),
+    [navigation]
+  );
+
   useEffect(() => {
     if (!isVerified && isCurrentRoute) {
       navigation.goBack();
       return;
     }
 
-    if (
-      newOrEdit &&
-      user &&
-      enjoyment &&
-      difficulty &&
-      workload &&
-      value &&
-      semester &&
-      instructor
-    ) {
-      if (
-        hasEdited ||
-        hasEditedReview(
-          previousReview,
-          enjoyment,
-          difficulty,
-          workload,
-          value,
-          comment
-        )
-      ) {
-        setHasEdited(true);
-        navigation.setParams({
-          newReview: {
-            userId: user.id,
-            enjoyment,
-            difficulty,
-            workload,
-            value,
-            upvotes: previousReview?.upvotes ?? { [user.id]: true },
-            downvotes: previousReview?.downvotes ?? {},
-            reviewedDate: previousReview?.reviewedDate ?? Date.now(),
-            semester: semester.toJSON(),
-            instructor,
-            comment,
-          },
-        });
-      }
-    } else if (params.newReview) {
-      navigation.setParams({ newReview: undefined });
-    }
+    setTimeout(() => {
+      update({
+        instructor,
+        semester: semester?.toJSON(),
+        enjoyment,
+        difficulty,
+        workload,
+        value,
+        comment,
+      });
+    }, 0);
   }, [
     enjoyment,
     difficulty,
@@ -207,6 +236,7 @@ export default function ReviewScreen() {
     isVerified,
     newOrEdit,
     isCurrentRoute,
+    update,
   ]);
 
   useEffect(() => {
@@ -357,6 +387,7 @@ export default function ReviewScreen() {
             </LabeledInput>
             <LabeledInput label={"Comment"} isDisabled={!newOrEdit}>
               <Input
+                maxLength={600}
                 placeholder={"Optional"}
                 value={comment}
                 onChangeText={setComment}

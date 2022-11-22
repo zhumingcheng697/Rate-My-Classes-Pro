@@ -8,7 +8,8 @@ import {
 } from "@react-navigation/stack";
 
 import { PlainTextButton } from "../../components/LinkCompatibleButton";
-import { type SharedNavigationParamList } from "../../libs/types";
+import type { Review, SharedNavigationParamList } from "../../libs/types";
+import { hasEditedReview } from "../../libs/utils";
 
 type ReviewScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -40,10 +41,47 @@ export default ({
     />
   ),
   headerRight: (props) => {
-    const { classCode, newReview, newOrEdit, semester } = route.params;
+    const { classCode, pendingReview, previousReview, newOrEdit, semester } =
+      route.params;
+
+    let newReview: Omit<Review, "userId"> | undefined = undefined;
+    let hasEdited = false;
+
+    if (
+      pendingReview &&
+      pendingReview.enjoyment &&
+      pendingReview.difficulty &&
+      pendingReview.workload &&
+      pendingReview.value &&
+      pendingReview.semester &&
+      pendingReview.instructor
+    ) {
+      newReview = {
+        enjoyment: pendingReview.enjoyment,
+        difficulty: pendingReview.difficulty,
+        workload: pendingReview.workload,
+        value: pendingReview.value,
+        semester: pendingReview.semester,
+        instructor: pendingReview.instructor,
+        comment: pendingReview.comment ?? "",
+        upvotes: previousReview?.upvotes ?? {},
+        downvotes: previousReview?.downvotes ?? {},
+        reviewedDate: previousReview?.reviewedDate ?? Date.now(),
+      };
+
+      hasEdited = hasEditedReview(
+        previousReview,
+        newReview.enjoyment,
+        newReview.difficulty,
+        newReview.workload,
+        newReview.value,
+        newReview.comment
+      );
+    }
+
     return (
       <PlainTextButton
-        isDisabled={!newReview || !newOrEdit}
+        isDisabled={!newReview || !newOrEdit || !hasEdited}
         marginRight={"5px"}
         padding={"5px"}
         title={newOrEdit === "Edit" ? "Update" : "Submit"}

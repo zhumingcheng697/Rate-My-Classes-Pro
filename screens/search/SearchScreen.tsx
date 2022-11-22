@@ -51,13 +51,14 @@ export default function SearchScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const innerHeight = useInnerHeight();
-  const { isSettingsSettled, db } = useAuth();
+  const { isSettingsSettled, db, setIsSemesterSettled } = useAuth();
   const semesterInfo = useSemester({
     db,
     navigation,
     params,
     settings,
     isSettingsSettled,
+    setIsSemesterSettled,
   });
 
   const semester = useMemo(() => new Semester(semesterInfo), [semesterInfo]);
@@ -100,7 +101,7 @@ export default function SearchScreen() {
                     !isObjectEmpty(departmentNames)
                   ) {
                     matches.sort((a, b) =>
-                      compareClasses(schoolCodes, departmentNames, a, b)
+                      compareClasses(departmentNames, a, b)
                     );
                   }
                   setMatchedClass(matches);
@@ -190,9 +191,7 @@ export default function SearchScreen() {
             isSearchBar
             margin={`${searchBarMargin}px`}
             value={query}
-            onChangeText={(text) => {
-              setQuery(text.slice(0, 50));
-            }}
+            onChangeText={setQuery}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             onSubmitEditing={() => {

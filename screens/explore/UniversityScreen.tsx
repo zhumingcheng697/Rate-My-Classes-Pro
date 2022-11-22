@@ -16,6 +16,7 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import Grid, { type GridRenderItemInfo } from "../../containers/Grid";
 import { TieredTextButton } from "../../components/LinkCompatibleButton";
 import { useAuth } from "../../mongodb/auth";
+import { useHandoff } from "../../libs/hooks";
 
 export default function UniversityScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);
@@ -29,6 +30,13 @@ export default function UniversityScreen() {
       auth.setIsSemesterSettled(true);
     }
   }, [isFocused]);
+
+  useHandoff({
+    isFocused,
+    route: Route("ExploreTab", "University"),
+    title: `Explore Classes for ${new Semester(selectedSemester).toString()}`,
+    isReady: auth.isSemesterSettled,
+  });
 
   const isSchoolNameLoaded = !!schoolNames && !isObjectEmpty(schoolNames);
   const isDepartmentNameLoaded =

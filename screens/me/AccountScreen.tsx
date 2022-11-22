@@ -12,7 +12,7 @@ import AlertPopup from "../../components/AlertPopup";
 import { LeftAlignedButton } from "../../components/LinkCompatibleButton";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import { type MeNavigationParamList } from "../../libs/types";
-import { useInnerHeight } from "../../libs/hooks";
+import { useHandoff, useInnerHeight } from "../../libs/hooks";
 import { composeErrorMessage, Route } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
 import { colorModeResponsiveStyle } from "../../styling/color-mode-utils";
@@ -38,6 +38,12 @@ export default function AccountScreen() {
   const isAuthenticated = auth.isAuthenticated;
 
   const wasAuthenticated = route.params?.isAuthenticated ?? isAuthenticated;
+
+  useHandoff({
+    isFocused,
+    route: Route("MeTab", "Account", route.params),
+    title: "View Account",
+  });
 
   useEffect(() => {
     if (!route.params) {

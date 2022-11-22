@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { Text, Input, VStack, Box, HStack, Divider } from "native-base";
 import {
   CommonActions,
+  useIsFocused,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -18,6 +19,7 @@ import {
   GoogleSignInButton,
 } from "../../components/OAuthSignInButton";
 import {
+  useHandoff,
   useInitialTabName,
   useIsCurrentRoute,
   useSemester,
@@ -68,6 +70,7 @@ export default function SignInSignUpScreen() {
 
   const isAuthenticated = auth.isAuthenticated;
   const isCurrentRoute = useIsCurrentRoute(route.key);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     if (isAuthenticated && isCurrentRoute) {
@@ -92,6 +95,13 @@ export default function SignInSignUpScreen() {
     settings,
     isSettingsSettled: auth.isSettingsSettled,
     setIsSemesterSettled: auth.setIsSemesterSettled,
+  });
+
+  useHandoff({
+    isFocused,
+    route: Route(tabName, "SignInSignUp", route.params),
+    title: isSigningUp ? "Sign Up" : "Sign In",
+    isReady: auth.isSemesterSettled,
   });
 
   return (

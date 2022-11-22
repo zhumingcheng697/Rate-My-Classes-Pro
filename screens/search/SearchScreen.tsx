@@ -1,7 +1,12 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Text, Center, Divider, Box, theme } from "native-base";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import {
+  RouteProp,
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import ClearableInput from "../../components/ClearableInput";
@@ -16,11 +21,12 @@ import type {
 } from "../../libs/types";
 import {
   useDimensions,
+  useHandoff,
   useInnerHeight,
   useRefresh,
   useSemester,
 } from "../../libs/hooks";
-import { compareClasses, isObjectEmpty } from "../../libs/utils";
+import { compareClasses, isObjectEmpty, Route } from "../../libs/utils";
 import { searchClasses } from "../../libs/schedge";
 import Semester from "../../libs/semester";
 import { useAuth } from "../../mongodb/auth";
@@ -51,7 +57,8 @@ export default function SearchScreen() {
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
   const innerHeight = useInnerHeight();
-  const { isSettingsSettled, db, setIsSemesterSettled } = useAuth();
+  const { isSettingsSettled, db, isSemesterSettled, setIsSemesterSettled } =
+    useAuth();
   const semesterInfo = useSemester({
     db,
     navigation,
@@ -62,11 +69,22 @@ export default function SearchScreen() {
   });
 
   const semester = useMemo(() => new Semester(semesterInfo), [semesterInfo]);
+  const isFocused = useIsFocused();
 
   const schoolCodes = useMemo(
     () => Object.keys(schoolNames ?? {}),
     [schoolNames]
   );
+
+  useHandoff({
+    isFocused,
+    route: Route("SearchTab", "Search", params),
+    title: `Search${
+      query ? ` "${query}" ` : " "
+    }Classes for ${semester.toString()}`,
+    isReady: query ? !!matchedClasses.length : isSemesterSettled,
+    timeout: query ? 500 : undefined,
+  });
 
   const search = useCallback(
     (() => {
@@ -236,10 +254,10 @@ export default function SearchScreen() {
               {query
                 ? searchFailed
                   ? "Unable to Load Classes"
-                  : `No Matches Found in ${semester.toString()}`
-                : `Search${
-                    isSettingsSettled ? ` ${semester.toString()} ` : " "
-                  }Classes`}
+                  : `No Matches Found for ${semester.toString()}`
+                : `Search Classes${
+                    isSettingsSettled ? ` for ${semester.toString()}` : ""
+                  }`}
             </Text>
           </Center>
         )}

@@ -30,6 +30,7 @@ import Semester from "../../libs/semester";
 import { getSections } from "../../libs/schedge";
 import {
   useClassInfoLoader,
+  useHandoff,
   useInitialTabName,
   useRefresh,
   useSemester,
@@ -112,6 +113,13 @@ export default function DetailScreen() {
     () => new Semester(semesterInfo).toString(),
     [semesterInfo.semesterCode, semesterInfo.year]
   );
+
+  useHandoff({
+    isFocused,
+    route: Route(tabName, "Detail", params),
+    title: `View ${getFullClassCode(classCode)} for ${semesterName}`,
+    isReady: !!params.semester,
+  });
 
   const myReview = useMemo(() => {
     return (

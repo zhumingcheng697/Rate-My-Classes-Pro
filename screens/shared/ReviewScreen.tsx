@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Box, Button, Input, Text, VStack } from "native-base";
 import {
+  useIsFocused,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -22,9 +23,11 @@ import {
   RatingType,
   ErrorType,
 } from "../../libs/types";
-import { getFullClassCode, notOfferedMessage } from "../../libs/utils";
+import { getFullClassCode, notOfferedMessage, Route } from "../../libs/utils";
 import {
   useClassInfoLoader,
+  useHandoff,
+  useInitialTabName,
   useIsCurrentRoute,
   useRefresh,
   useSemester,
@@ -70,6 +73,8 @@ export default function ReviewScreen() {
     starredClassRecord,
     reviewedClassRecord,
   });
+  const isFocused = useIsFocused();
+  const tabName = useInitialTabName();
 
   const [enjoyment, setEnjoyment] = useState<Rating | undefined>(
     previousReview?.enjoyment
@@ -184,6 +189,14 @@ export default function ReviewScreen() {
   );
 
   useEffect(fetchMyReview, [classInfo, classInfoError, db]);
+
+  useHandoff({
+    isFocused,
+    route: Route(tabName, "Review", params),
+    title: `Review ${getFullClassCode(classCode)}`,
+    isReady: !recoveredReview && !!params.semester,
+    timeout: 500,
+  });
 
   const update = useThrottle((pendingReview: PendingReview) => {
     navigation.setParams({ pendingReview });

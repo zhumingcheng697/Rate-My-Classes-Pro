@@ -6,6 +6,7 @@ import {
   Appearance,
   useColorScheme as _useColorScheme,
   Keyboard,
+  NativeModules,
   type KeyboardEvent,
 } from "react-native";
 import { useDispatch } from "react-redux";
@@ -23,6 +24,7 @@ import {
   useNavigation,
   useNavigationState,
 } from "@react-navigation/native";
+import { HANDOFF_ACTIVITY_TYPE, WEB_DEPLOYMENT_URL } from "react-native-dotenv";
 
 import {
   ErrorType,
@@ -40,7 +42,12 @@ import {
   type ClassInfoWithSections,
 } from "./types";
 import Semester, { type SemesterInfo } from "./semester";
-import { asyncTryCatch, getFullClassCode, validateSettings } from "./utils";
+import {
+  asyncTryCatch,
+  getFullClassCode,
+  Route,
+  validateSettings,
+} from "./utils";
 import { getClassWithSections } from "./schedge";
 import Database from "../mongodb/db";
 import { stringifyRoute } from "../navigation/linking/stringify";
@@ -97,6 +104,43 @@ export function useThrottle<T extends any[]>(
     },
     [timeoutId, lastUpdated, f, timeout]
   );
+}
+
+export function useHandoff({
+  isFocused,
+  route,
+  title,
+  isReady = true,
+  timeout = 100,
+}: {
+  isFocused: boolean;
+  route: ReturnType<typeof Route>;
+  title: string;
+  isReady?: boolean;
+  timeout?: number;
+}) {
+  const update = useThrottle((title: string, url: string) => {
+    if (Platform.OS === "ios" && url) {
+      NativeModules.RNHandoffModule?.updateUserActivity(
+        HANDOFF_ACTIVITY_TYPE,
+        title,
+        url
+      );
+    }
+  }, timeout);
+
+  const path = useMemo(() => {
+    const { tabName, screenName, screenParams } = route;
+    if (tabName && screenName) {
+      return stringifyRoute(tabName, screenName, screenParams);
+    }
+  }, [route.tabName, route.screenName, route.screenParams]);
+
+  useEffect(() => {
+    if (isFocused && isReady && path) {
+      update(title, WEB_DEPLOYMENT_URL + path);
+    }
+  }, [isFocused, isReady, path, title]);
 }
 
 export function useInitialPreviousRoute() {

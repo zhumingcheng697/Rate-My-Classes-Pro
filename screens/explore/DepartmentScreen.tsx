@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Text, Box } from "native-base";
 import {
+  useIsFocused,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -19,9 +20,10 @@ import {
   getSchoolName,
   getDepartmentName,
   getFullDepartmentCode,
+  Route,
 } from "../../libs/utils";
 import Semester from "../../libs/semester";
-import { useRefresh, useSemester } from "../../libs/hooks";
+import { useHandoff, useRefresh, useSemester } from "../../libs/hooks";
 import { getClasses } from "../../libs/schedge";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
@@ -55,11 +57,21 @@ export default function DepartmentScreen() {
   const [classes, setClasses] = useState<ClassInfo[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   const [error, setError] = useState<ErrorType | null>(null);
+  const isFocused = useIsFocused();
 
   const semester = useMemo(
     () => new Semester(semesterInfo),
     [semesterInfo.semesterCode, semesterInfo.year]
   );
+
+  useHandoff({
+    isFocused,
+    route: Route("ExploreTab", "Department", route.params),
+    title: `Explore ${getFullDepartmentCode(
+      departmentInfo
+    )} Classes for ${new Semester(semesterInfo).toString()}`,
+    isReady: !!route.params.semester,
+  });
 
   const noDataErrorMessage = useMemo(() => {
     const diff = Semester.between(Semester.predictCurrentSemester(), semester);

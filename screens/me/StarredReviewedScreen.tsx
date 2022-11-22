@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Box } from "native-base";
 import {
+  useIsFocused,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -12,11 +13,12 @@ import type {
   SharedNavigationParamList,
   MeNavigationParamList,
 } from "../../libs/types";
-import { useIsCurrentRoute } from "../../libs/hooks";
+import { useHandoff, useIsCurrentRoute } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
 import { useAuth } from "../../mongodb/auth";
+import { Route } from "../../libs/utils";
 
 type StarredReviewedScreenNavigationProp =
   StackNavigationProp<SharedNavigationParamList>;
@@ -47,6 +49,13 @@ export default function StarredReviewedScreen() {
           ),
     [route.name, starredClasses, reviewedClasses]
   );
+  const isFocused = useIsFocused();
+
+  useHandoff({
+    isFocused,
+    route: Route("MeTab", route.name),
+    title: `View ${route.name} Classes`,
+  });
 
   useEffect(() => {
     if (!auth.isAuthenticated && isCurrentRoute) {

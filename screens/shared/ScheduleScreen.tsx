@@ -8,6 +8,7 @@ import React, {
 import { HStack, Skeleton, Text, theme, VStack } from "native-base";
 import { type StackNavigationProp } from "@react-navigation/stack";
 import {
+  useIsFocused,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -25,13 +26,20 @@ import {
   type SectionInfo,
   type SharedNavigationParamList,
 } from "../../libs/types";
-import { useClassInfoLoader, useRefresh, useSemester } from "../../libs/hooks";
+import {
+  useClassInfoLoader,
+  useHandoff,
+  useInitialTabName,
+  useRefresh,
+  useSemester,
+} from "../../libs/hooks";
 import { getSections } from "../../libs/schedge";
 import {
   getFullClassCode,
   getMeetingScheduleString,
   notOfferedMessage,
   prepend,
+  Route,
   stripLineBreaks,
 } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
@@ -203,6 +211,8 @@ export default function ScheduleScreen() {
   );
   const [showAlert, setShowAlert] = useState(false);
   const { db, isSettingsSettled, setIsSemesterSettled } = useAuth();
+  const isFocused = useIsFocused();
+  const tabName = useInitialTabName();
 
   const cleanText = useCallback(
     (text: string) =>
@@ -225,6 +235,15 @@ export default function ScheduleScreen() {
     () => new Semester(semesterInfo),
     [semesterInfo.semesterCode, semesterInfo.year]
   );
+
+  useHandoff({
+    isFocused,
+    route: Route(tabName, "Schedule", params),
+    title: `View ${getFullClassCode(
+      classCode
+    )} Schedule for ${semester.toString()}`,
+    isReady: !!params.semester,
+  });
 
   const { classInfo, classInfoError, scheduleLoaded, reloadClassInfo } =
     useClassInfoLoader(

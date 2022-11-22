@@ -42,6 +42,7 @@ declare module "react-native-dotenv" {
   export const REALM_APP_ID: string;
   export const MONGODB_SERVICE_NAME: string;
   export const MONGODB_DATABASE_NAME: string;
+  export const HANDOFF_ACTIVITY_TYPE: string;
   export const SEMESTER_SETTINGS_KEY: string;
   export const APPLE_SIGN_IN_SERVICE_ID: string;
   export const APPLE_OAUTH_ENDPOINT: string;

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Text, Box } from "native-base";
 import {
+  useIsFocused,
   useNavigation,
   useRoute,
   type RouteProp,
@@ -20,7 +21,7 @@ import {
   compareDepartments,
 } from "../../libs/utils";
 import Semester from "../../libs/semester";
-import { useSemester } from "../../libs/hooks";
+import { useHandoff, useSemester } from "../../libs/hooks";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
 import Grid from "../../containers/Grid";
 import AlertPopup from "../../components/AlertPopup";
@@ -40,9 +41,14 @@ export default function SchoolScreen() {
   const settings = useSelector((state) => state.settings);
   const schoolNames = useSelector((state) => state.schoolNameRecord);
   const departmentNames = useSelector((state) => state.departmentNameRecord);
-  const isLoaded = !!departmentNames && !isObjectEmpty(departmentNames);
+  const isLoaded =
+    !!schoolNames &&
+    !isObjectEmpty(schoolNames) &&
+    !!departmentNames &&
+    !isObjectEmpty(departmentNames);
   const { schoolInfo } = route.params;
   const { db, isSettingsSettled, setIsSemesterSettled } = useAuth();
+  const isFocused = useIsFocused();
   const semesterInfo = useSemester({
     db,
     navigation,
@@ -60,6 +66,15 @@ export default function SchoolScreen() {
       (a, b) => compareDepartments(departmentNames, schoolInfo.schoolCode, a, b)
     );
   }, [departmentNames]);
+
+  useHandoff({
+    isFocused,
+    route: Route("ExploreTab", "School", route.params),
+    title: `Explore ${schoolInfo.schoolCode.toUpperCase()} Classes for ${new Semester(
+      semesterInfo
+    ).toString()}`,
+    isReady: !!route.params.semester,
+  });
 
   useEffect(() => {
     if (departmentNames && !(schoolInfo.schoolCode in departmentNames)) {

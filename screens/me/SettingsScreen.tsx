@@ -2,7 +2,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { VStack } from "native-base";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 
 import AlertPopup from "../../components/AlertPopup";
 import AppIconSwitcher from "../../components/AppIconSwitcher";
@@ -12,8 +16,8 @@ import LabeledInput from "../../components/LabeledInput";
 import { LeftAlignedButton } from "../../components/LinkCompatibleButton";
 import { SemesterSelector } from "../../components/Selector";
 import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeAreaScrollView";
-import { useIsCatalyst, useIsCurrentRoute } from "../../libs/hooks";
-import { composeErrorMessage, validateSettings } from "../../libs/utils";
+import { useHandoff, useIsCatalyst, useIsCurrentRoute } from "../../libs/hooks";
+import { composeErrorMessage, Route, validateSettings } from "../../libs/utils";
 import Semester from "../../libs/semester";
 import { loadSettings, selectSemester } from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";
@@ -60,7 +64,14 @@ export default function SettingsScreen() {
   );
 
   const isCatalyst = useIsCatalyst();
+  const isFocused = useIsFocused();
   const canSelectAlternativeIcon = Platform.OS !== "web" && !isCatalyst;
+
+  useHandoff({
+    isFocused,
+    route: Route("MeTab", "Settings"),
+    title: "Update Settings",
+  });
 
   useEffect(() => {
     if (isAuthenticated && username) {

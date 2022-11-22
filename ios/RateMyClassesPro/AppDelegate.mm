@@ -66,8 +66,15 @@
 - (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
  restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
+  NSUserActivity* activity = userActivity;
+  
+  if ([activity.activityType isEqualToString:@"com.mingcheng-mccoy-zhu.RateMyClassesPro.handoff"]) {
+    activity = [[NSUserActivity alloc] initWithActivityType:NSUserActivityTypeBrowsingWeb];
+    activity.webpageURL = userActivity.webpageURL;
+  }
+  
   return [self setTimeout:^(void){ return [RCTLinkingManager application:application  
-                                                    continueUserActivity:userActivity  
+                                                    continueUserActivity:activity  
                                                       restorationHandler:restorationHandler]; } 
        secondsAfterLaunch:1.5];
 }

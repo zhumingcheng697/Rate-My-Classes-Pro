@@ -294,7 +294,7 @@ export default function ReviewCard({
   } = review;
   const route = useRoute<ReviewCardRouteProp>();
   const { classCode } = route.params;
-  const { user, isAuthenticated, isVerified } = useAuth();
+  const { user, isAuthenticated, isVerified, isSettingsSettled } = useAuth();
 
   const setVotes = (newUpvotes?: VoteRecord, newDownvotes?: VoteRecord) => {
     const newReview = { ...review };
@@ -340,12 +340,12 @@ export default function ReviewCard({
         />
         {isAuthenticated && user?.id === userId && (
           <PlainTextButton
-            isDisabled={isVerifying}
+            isDisabled={isVerifying || !isSettingsSettled}
             paddingX={"5px"}
             title={
               isVerifying
                 ? "Verifying…"
-                : isVerified
+                : isVerified || !isSettingsSettled
                 ? "Edit Review"
                 : "Verify Account"
             }

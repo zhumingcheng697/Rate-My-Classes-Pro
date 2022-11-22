@@ -209,7 +209,7 @@ export default function ReviewScreen() {
   );
 
   useEffect(() => {
-    if (!isVerified && isCurrentRoute) {
+    if (!isVerified && isSettingsSettled && isCurrentRoute) {
       navigation.goBack();
       return;
     }

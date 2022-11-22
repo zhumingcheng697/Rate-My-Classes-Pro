@@ -494,7 +494,9 @@ export default function DetailScreen() {
             </SubtleButton>
             <SolidButton
               isDisabled={
-                isVerifying || (isVerified && (!classInfo || !reviewRecord))
+                isVerifying ||
+                (isVerified && (!classInfo || !reviewRecord)) ||
+                !isSettingsSettled
               }
               onPress={
                 user && isAuthenticated && !isVerified
@@ -524,7 +526,7 @@ export default function DetailScreen() {
                 {user && isAuthenticated
                   ? isVerifying
                     ? "Verifying Account…"
-                    : isVerified
+                    : isVerified || !isSettingsSettled
                     ? myReview
                       ? "Edit My Review"
                       : "Review"

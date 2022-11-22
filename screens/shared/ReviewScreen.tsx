@@ -28,6 +28,7 @@ import {
   useIsCurrentRoute,
   useRefresh,
   useSemester,
+  useThrottle,
 } from "../../libs/hooks";
 import Semester from "../../libs/semester";
 import { useAuth } from "../../mongodb/auth";
@@ -184,29 +185,9 @@ export default function ReviewScreen() {
 
   useEffect(fetchMyReview, [classInfo, classInfoError, db]);
 
-  const update = useCallback(
-    (() => {
-      let timeoutId: ReturnType<typeof setTimeout>;
-      let lastUpdated = 0;
-
-      return (pendingReview: PendingReview) => {
-        clearTimeout(timeoutId);
-
-        const diff = Date.now() - lastUpdated;
-
-        if (diff > 300) {
-          lastUpdated = Date.now();
-          navigation.setParams({ pendingReview });
-        } else {
-          timeoutId = setTimeout(() => {
-            lastUpdated = Date.now();
-            navigation.setParams({ pendingReview });
-          }, 300 - diff);
-        }
-      };
-    })(),
-    [navigation]
-  );
+  const update = useThrottle((pendingReview: PendingReview) => {
+    navigation.setParams({ pendingReview });
+  }, 300);
 
   useEffect(() => {
     if (!isVerified && isSettingsSettled && isCurrentRoute) {
@@ -214,17 +195,15 @@ export default function ReviewScreen() {
       return;
     }
 
-    setTimeout(() => {
-      update({
-        instructor,
-        semester: semester?.toJSON(),
-        enjoyment,
-        difficulty,
-        workload,
-        value,
-        comment,
-      });
-    }, 0);
+    update({
+      instructor,
+      semester: semester?.toJSON(),
+      enjoyment,
+      difficulty,
+      workload,
+      value,
+      comment,
+    });
   }, [
     enjoyment,
     difficulty,

@@ -74,6 +74,31 @@ export function useInitialTabName() {
   return tabName;
 }
 
+export function useThrottle<T extends any[]>(
+  f: (...arg: T) => void,
+  timeout: number
+) {
+  const timeoutId = useRef<ReturnType<typeof setTimeout>>();
+  const lastUpdated = useRef<number>(0);
+
+  return useCallback(
+    (...arg: T) => {
+      if (timeoutId.current) clearTimeout(timeoutId.current);
+
+      const diff = Date.now() - lastUpdated.current;
+
+      timeoutId.current = setTimeout(
+        () => {
+          lastUpdated.current = Date.now();
+          f(...arg);
+        },
+        diff > timeout ? 0 : timeout - diff
+      );
+    },
+    [timeoutId, lastUpdated, f, timeout]
+  );
+}
+
 export function useInitialPreviousRoute() {
   const current = useNavigationState(
     (state) => state.routes[state.index - 1]

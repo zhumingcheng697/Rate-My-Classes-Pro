@@ -15,7 +15,11 @@ import React, {
 import { useSelector, useDispatch } from "react-redux";
 import { useNetInfo } from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SEND_CODE_ENDPOINT, VERIFY_CODE_ENDPOINT } from "react-native-dotenv";
+import {
+  SEMESTER_SETTINGS_KEY,
+  SEND_CODE_ENDPOINT,
+  VERIFY_CODE_ENDPOINT,
+} from "react-native-dotenv";
 import Realm from "./Realm";
 
 import realmApp from "./realmApp";
@@ -38,8 +42,6 @@ import {
 import { useAppState } from "../libs/hooks";
 import { AppleOAuth, GoogleOAuth } from "../libs/oauth";
 import Semester from "../libs/semester";
-
-const selectedSemesterKey = "RATE_MY_CLASSES_PRO:SELECTED_SEMESTER";
 
 export type AuthContext = {
   db: Database | null;
@@ -114,7 +116,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const loadSelectedSemester = useCallback(async () => {
     const selectedSemester = Semester.fromCode(
       await asyncTryCatch(
-        async () => await AsyncStorage.getItem(selectedSemesterKey)
+        async () => await AsyncStorage.getItem(SEMESTER_SETTINGS_KEY)
       )
     );
     if (selectedSemester) {
@@ -212,7 +214,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     asyncTryCatch(async () => {
       await AsyncStorage.setItem(
-        selectedSemesterKey,
+        SEMESTER_SETTINGS_KEY,
         getFullSemesterCode(settings.selectedSemester)
       );
     });
@@ -356,7 +358,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         syncCleanup();
         const unsync = sync(user, updateUserDoc);
         if (unsync) syncCleanupRef.current.add(unsync);
-      }, 1000);
+      }, 8000);
     },
     [syncCleanup, updateUserDoc, guardDB, loadUserDoc]
   );

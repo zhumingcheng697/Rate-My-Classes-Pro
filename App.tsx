@@ -26,6 +26,16 @@ declare module "native-base" {
   interface ICustomTheme extends Theme {}
 }
 
+declare module "react-native" {
+  interface NativeModulesStatic {
+    RNSystemFontModule?: {
+      getSystemSerifFont: (fontSize: number) => Promise<string>;
+      getSystemRoundedFont: (fontSize: number) => Promise<string>;
+      getSystemMonoFont: (fontSize: number) => Promise<string>;
+    };
+  }
+}
+
 type RootState = ReturnType<typeof store.getState>;
 
 declare module "react-redux" {

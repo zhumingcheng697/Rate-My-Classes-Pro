@@ -114,12 +114,7 @@ export function useThrottle<T extends any[]>(
 
 export function useDelayedTruth(truth: boolean, delay: number = 1000) {
   const [isTrue, setIsTrue] = useState(false);
-  const delayedSetIsTrue = useThrottle(
-    (truth: boolean) => setIsTrue(truth),
-    delay,
-    true,
-    truth
-  );
+  const delayedSetIsTrue = useThrottle(setIsTrue, delay, true, truth);
 
   useEffect(() => {
     if (!truth) {
@@ -146,7 +141,7 @@ export function useHandoff({
   isReady?: boolean;
   isTemporary?: boolean;
 }) {
-  const update = useThrottle(
+  const addUserActivity = useCallback(
     (title: string, url: string, isTemporary: boolean) => {
       asyncTryCatch(async () => {
         if (Platform.OS === "ios" && url)
@@ -161,9 +156,10 @@ export function useHandoff({
           });
       });
     },
-    timeout,
-    isTemporary
+    []
   );
+
+  const update = useThrottle(addUserActivity, timeout);
 
   const path = useMemo(() => {
     const { tabName, screenName, screenParams } = route;

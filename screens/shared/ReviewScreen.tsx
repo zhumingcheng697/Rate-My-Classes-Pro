@@ -216,9 +216,26 @@ export default function ReviewScreen() {
     isTemporary: hasPendingReview,
   });
 
-  const update = useThrottle((pendingReview: PendingReview) => {
-    navigation.setParams({ pendingReview });
-  }, 300);
+  const getPendingReview = useCallback(
+    () => ({
+      pendingReview: {
+        instructor,
+        semester: semester?.toJSON(),
+        enjoyment,
+        difficulty,
+        workload,
+        value,
+        comment,
+      },
+    }),
+    [instructor, semester, enjoyment, difficulty, workload, value, comment]
+  );
+
+  const setParams = useCallback((f: typeof getPendingReview) => {
+    navigation.setParams(f());
+  }, []);
+
+  const update = useThrottle(setParams, 300);
 
   useEffect(() => {
     if (!isVerified && isSettingsSettled && isCurrentRoute) {
@@ -226,15 +243,7 @@ export default function ReviewScreen() {
       return;
     }
 
-    update({
-      instructor,
-      semester: semester?.toJSON(),
-      enjoyment,
-      difficulty,
-      workload,
-      value,
-      comment,
-    });
+    update(getPendingReview);
   }, [
     enjoyment,
     difficulty,
@@ -244,8 +253,8 @@ export default function ReviewScreen() {
     instructor,
     comment,
     isVerified,
-    newOrEdit,
     isCurrentRoute,
+    isSettingsSettled,
     update,
   ]);
 

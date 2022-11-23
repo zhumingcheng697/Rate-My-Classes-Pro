@@ -130,8 +130,6 @@ export async function getClassWithSections(
   { schoolCode, departmentCode, classNumber }: ClassCode,
   semesterInfo: SemesterInfo
 ): Promise<ClassInfoWithSections | undefined> {
-  console.log("getClassWithSections", semesterInfo);
-
   const res = await fetch(
     composeUrl(
       `/courses/${getFullSemesterCode(semesterInfo)}/${getFullDepartmentCode({

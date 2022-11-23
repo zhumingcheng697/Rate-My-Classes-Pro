@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useState,
   useEffect,
+  useRef,
 } from "react";
 import { Platform } from "react-native";
 import { type Dispatch } from "redux";
@@ -22,7 +23,7 @@ import {
   ErrorType,
 } from "../libs/types";
 import { getNameRecordFor } from "../libs/schedge";
-import { type SemesterInfo } from "../libs/semester";
+import Semester, { type SemesterInfo } from "../libs/semester";
 import { useRefresh } from "../libs/hooks";
 import { composeErrorMessage, isObjectEmpty } from "../libs/utils";
 import { useAuth } from "../mongodb/auth";
@@ -50,6 +51,7 @@ class RootNavigationComponent extends Component<RootNavigationComponentProps> {
 export default function RootNavigation() {
   const [recordError, setRecordError] = useState<ErrorType | null>(null);
   const { selectedSemester } = useSelector((state) => state.settings);
+  const loadedSemester = useRef<SemesterInfo | null>(null);
   const [accountError, setAccountError] = useState<any>(null);
   const [showAlert, setShowAlert] = useState(false);
   const schoolNameRecord = useSelector((state) => state.schoolNameRecord);
@@ -84,6 +86,7 @@ export default function RootNavigation() {
             setSchoolNameRecord(dispatch)(school);
             setDepartmentNameRecord(dispatch)(department);
             setRecordError(null);
+            loadedSemester.current = selectedSemester;
           } else {
             setRecordError(ErrorType.noData);
             if (!failSilently) setShowAlert(true);
@@ -115,7 +118,7 @@ export default function RootNavigation() {
         schoolNameRecord,
         departmentNameRecord,
         selectedSemester,
-        auth.isSemesterSettled,
+        auth.isSemesterSettled && auth.isSettingsSettled,
         dispatch,
         failSilently
       );
@@ -125,6 +128,14 @@ export default function RootNavigation() {
 
   useEffect(() => {
     if (auth.isSemesterSettled && auth.isSettingsSettled) {
+      if (
+        schoolNameRecord &&
+        departmentNameRecord &&
+        loadedSemester.current &&
+        Semester.equals(selectedSemester, loadedSemester.current)
+      )
+        return;
+
       setDepartmentNameRecord(dispatch)(null);
       getSchoolAndDepartmentNames(
         schoolNameRecord,

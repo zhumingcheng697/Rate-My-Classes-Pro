@@ -160,10 +160,10 @@ export default function DetailScreen() {
   }, [reviewRecord]);
 
   useEffect(() => {
-    if (!user) {
+    if (!user && isFocused) {
       signInAnonymously();
     }
-  }, [user]);
+  }, [user, isFocused]);
 
   const { classInfo, classInfoError, scheduleLoaded, reloadClassInfo } =
     useClassInfoLoader(

@@ -28,6 +28,20 @@ declare module "native-base" {
 
 declare module "react-native" {
   interface NativeModulesStatic {
+    RNHandoffModule?: {
+      addUserActivity: (options: {
+        activityType: string;
+        title?: string;
+        webpageURL?: string;
+        eligibleForSearch?: boolean;
+        eligibleForHandoff?: boolean;
+        eligibleForPrediction?: boolean;
+        isTemporary?: boolean;
+        userInfo?: Record<string, any>;
+      }) => Promise<void>;
+      invalidateUserActivities: () => Promise<void>;
+    };
+
     RNSystemFontModule?: {
       getSystemSerifFont: (fontSize: number) => Promise<string>;
       getSystemRoundedFont: (fontSize: number) => Promise<string>;

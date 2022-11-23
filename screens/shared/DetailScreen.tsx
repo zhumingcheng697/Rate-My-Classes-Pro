@@ -119,7 +119,7 @@ export default function DetailScreen() {
     isFocused,
     route: Route(tabName, "Detail", params),
     title: `View ${getFullClassCode(classCode)} for ${semesterName}`,
-    isReady: isSemesterSettled,
+    isReady: !!params.semester || (isSemesterSettled && isSettingsSettled),
   });
 
   const myReview = useMemo(() => {

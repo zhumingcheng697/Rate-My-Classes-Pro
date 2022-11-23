@@ -75,15 +75,17 @@ export default function SearchScreen() {
     () => Object.keys(schoolNames ?? {}),
     [schoolNames]
   );
+  const isSearchFinalized = !query || !!matchedClasses.length;
 
   useHandoff({
     isFocused,
     route: Route("SearchTab", "Search", params),
     title: `Search${
-      query ? ` "${query}" ` : " "
+      query && matchedClasses.length ? ` "${query}" ` : " "
     }Classes for ${semester.toString()}`,
-    isReady: query ? !!matchedClasses.length : isSemesterSettled,
-    timeout: query ? 500 : undefined,
+    timeout: isSearchFinalized ? undefined : 500,
+    isReady: isSemesterSettled && isSearchFinalized,
+    isTemporary: !isSearchFinalized,
   });
 
   const search = useCallback(

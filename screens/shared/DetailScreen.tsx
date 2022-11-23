@@ -78,6 +78,7 @@ export default function DetailScreen() {
     isSettingsSettled,
     isVerified,
     db,
+    isSemesterSettled,
     signInAnonymously,
     setIsSemesterSettled,
   } = useAuth();
@@ -118,7 +119,7 @@ export default function DetailScreen() {
     isFocused,
     route: Route(tabName, "Detail", params),
     title: `View ${getFullClassCode(classCode)} for ${semesterName}`,
-    isReady: !!params.semester,
+    isReady: isSemesterSettled,
   });
 
   const myReview = useMemo(() => {

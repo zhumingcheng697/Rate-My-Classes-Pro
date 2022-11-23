@@ -23,7 +23,12 @@ import {
   RatingType,
   ErrorType,
 } from "../../libs/types";
-import { getFullClassCode, notOfferedMessage, Route } from "../../libs/utils";
+import {
+  getFullClassCode,
+  isObjectEmpty,
+  notOfferedMessage,
+  Route,
+} from "../../libs/utils";
 import {
   useClassInfoLoader,
   useHandoff,
@@ -44,8 +49,14 @@ type ReviewScreenNavigationProp = StackNavigationProp<
 type ReviewScreenRouteProp = RouteProp<SharedNavigationParamList, "Review">;
 
 export default function ReviewScreen() {
-  const { user, isSettingsSettled, isVerified, db, setIsSemesterSettled } =
-    useAuth();
+  const {
+    user,
+    isSettingsSettled,
+    isVerified,
+    db,
+    isSemesterSettled,
+    setIsSemesterSettled,
+  } = useAuth();
   const navigation = useNavigation<ReviewScreenNavigationProp>();
   const route = useRoute<ReviewScreenRouteProp>();
   const starredClassRecord = useSelector((state) => state.starredClassRecord);
@@ -190,12 +201,16 @@ export default function ReviewScreen() {
 
   useEffect(fetchMyReview, [classInfo, classInfoError, db]);
 
+  const hasPendingReview =
+    params.pendingReview && !isObjectEmpty(params.pendingReview);
+
   useHandoff({
     isFocused,
     route: Route(tabName, "Review", params),
     title: `Review ${getFullClassCode(classCode)}`,
-    isReady: !recoveredReview && !!params.semester,
-    timeout: 500,
+    timeout: hasPendingReview ? 500 : undefined,
+    isReady: !recoveredReview && isSemesterSettled,
+    isTemporary: !hasPendingReview,
   });
 
   const update = useThrottle((pendingReview: PendingReview) => {

@@ -83,7 +83,8 @@ export function useInitialTabName() {
 
 export function useThrottle<T extends any[]>(
   f: (...arg: T) => void,
-  timeout: number
+  timeout: number,
+  lazy: boolean = false
 ) {
   const timeoutId = useRef<ReturnType<typeof setTimeout>>();
   const lastUpdated = useRef<number>(0);
@@ -99,10 +100,10 @@ export function useThrottle<T extends any[]>(
           lastUpdated.current = Date.now();
           f(...arg);
         },
-        diff > timeout ? 0 : timeout - diff
+        diff > timeout ? 0 : lazy ? timeout : timeout - diff
       );
     },
-    [timeoutId, lastUpdated, f, timeout]
+    [timeoutId, lastUpdated, f, timeout, lazy]
   );
 }
 
@@ -110,24 +111,32 @@ export function useHandoff({
   isFocused,
   route,
   title,
+  timeout = 300,
   isReady = true,
-  timeout = 100,
+  isTemporary = false,
 }: {
   isFocused: boolean;
   route: ReturnType<typeof Route>;
   title: string;
-  isReady?: boolean;
   timeout?: number;
+  isReady?: boolean;
+  isTemporary?: boolean;
 }) {
-  const update = useThrottle((title: string, url: string) => {
-    if (Platform.OS === "ios" && url) {
-      NativeModules.RNHandoffModule?.updateUserActivity(
-        HANDOFF_ACTIVITY_TYPE,
-        title,
-        url
-      );
-    }
-  }, timeout);
+  const update = useThrottle(
+    (title: string, url: string) => {
+      asyncTryCatch(async () => {
+        if (Platform.OS === "ios" && url)
+          await NativeModules.RNHandoffModule?.addUserActivity(
+            HANDOFF_ACTIVITY_TYPE,
+            title,
+            url,
+            isTemporary
+          );
+      });
+    },
+    timeout,
+    isTemporary
+  );
 
   const path = useMemo(() => {
     const { tabName, screenName, screenParams } = route;
@@ -140,7 +149,7 @@ export function useHandoff({
     if (isFocused && isReady && path) {
       update(title, WEB_DEPLOYMENT_URL + path);
     }
-  }, [isFocused, isReady, path, title]);
+  }, [isFocused, path, title, isReady, isTemporary]);
 }
 
 export function useInitialPreviousRoute() {

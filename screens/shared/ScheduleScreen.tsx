@@ -210,7 +210,8 @@ export default function ScheduleScreen() {
     params.sections ?? null
   );
   const [showAlert, setShowAlert] = useState(false);
-  const { db, isSettingsSettled, setIsSemesterSettled } = useAuth();
+  const { db, isSettingsSettled, isSemesterSettled, setIsSemesterSettled } =
+    useAuth();
   const isFocused = useIsFocused();
   const tabName = useInitialTabName();
 
@@ -242,7 +243,7 @@ export default function ScheduleScreen() {
     title: `View ${getFullClassCode(
       classCode
     )} Schedule for ${semester.toString()}`,
-    isReady: !!params.semester,
+    isReady: isSemesterSettled,
   });
 
   const { classInfo, classInfoError, scheduleLoaded, reloadClassInfo } =

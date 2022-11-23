@@ -34,8 +34,7 @@ export default function UniversityScreen() {
   useHandoff({
     isFocused,
     route: Route("ExploreTab", "University"),
-    title: `Explore Classes for ${new Semester(selectedSemester).toString()}`,
-    isReady: auth.isSemesterSettled,
+    title: "Explore Classes",
   });
 
   const isSchoolNameLoaded = !!schoolNames && !isObjectEmpty(schoolNames);

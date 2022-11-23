@@ -243,7 +243,7 @@ export default function ScheduleScreen() {
     title: `View ${getFullClassCode(
       classCode
     )} Schedule for ${semester.toString()}`,
-    isReady: isSemesterSettled,
+    isReady: !!params.semester || (isSemesterSettled && isSettingsSettled),
   });
 
   const { classInfo, classInfoError, scheduleLoaded, reloadClassInfo } =

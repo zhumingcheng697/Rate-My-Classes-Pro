@@ -101,7 +101,9 @@ export default function SignInSignUpScreen() {
     isFocused,
     route: Route(tabName, "SignInSignUp", route.params),
     title: isSigningUp ? "Sign Up" : "Sign In",
-    isReady: auth.isSemesterSettled,
+    isReady:
+      !!route.params.semester ||
+      (auth.isSemesterSettled && auth.isSettingsSettled),
   });
 
   return (

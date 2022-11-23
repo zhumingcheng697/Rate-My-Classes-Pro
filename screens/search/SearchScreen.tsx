@@ -20,6 +20,7 @@ import type {
   SearchNavigationParamList,
 } from "../../libs/types";
 import {
+  useDelayedTruth,
   useDimensions,
   useHandoff,
   useInnerHeight,
@@ -75,17 +76,21 @@ export default function SearchScreen() {
     () => Object.keys(schoolNames ?? {}),
     [schoolNames]
   );
-  const isSearchFinalized = !query || !!matchedClasses.length;
+  const delayedIsFinalized = useDelayedTruth(
+    !params.query || (isLoaded && !!matchedClasses.length)
+  );
 
   useHandoff({
     isFocused,
     route: Route("SearchTab", "Search", params),
-    title: `Search${
-      query && matchedClasses.length ? ` "${query}" ` : " "
-    }Classes for ${semester.toString()}`,
-    timeout: isSearchFinalized ? undefined : 500,
-    isReady: isSemesterSettled && isSearchFinalized,
-    isTemporary: !isSearchFinalized,
+    title: `${
+      params.query && isLoaded && matchedClasses.length
+        ? `"${params.query}"`
+        : "Search"
+    } Classes for ${semester.toString()}`,
+    timeout: !params.query || isLoaded ? undefined : 500,
+    isReady: !!params.semester || (isSemesterSettled && isSettingsSettled),
+    isTemporary: !delayedIsFinalized,
   });
 
   const search = useCallback(

@@ -84,7 +84,8 @@ export function useInitialTabName() {
 export function useThrottle<T extends any[]>(
   f: (...arg: T) => void,
   timeout: number,
-  lazy: boolean = false
+  lazy: boolean = false,
+  alwaysDelay: boolean = false
 ) {
   const timeoutId = useRef<ReturnType<typeof setTimeout>>();
   const lastUpdated = useRef<number>(0);
@@ -100,11 +101,34 @@ export function useThrottle<T extends any[]>(
           lastUpdated.current = Date.now();
           f(...arg);
         },
-        diff > timeout ? 0 : lazy ? timeout : timeout - diff
+        diff > timeout && !alwaysDelay
+          ? 0
+          : lazy || alwaysDelay
+          ? timeout
+          : timeout - diff
       );
     },
     [timeoutId, lastUpdated, f, timeout, lazy]
   );
+}
+
+export function useDelayedTruth(truth: boolean, delay: number = 1000) {
+  const [isTrue, setIsTrue] = useState(false);
+  const delayedSetIsTrue = useThrottle(
+    (truth: boolean) => setIsTrue(truth),
+    delay,
+    true,
+    truth
+  );
+
+  useEffect(() => {
+    if (!truth) {
+      setIsTrue(false);
+    }
+    delayedSetIsTrue(truth);
+  }, [truth]);
+
+  return isTrue;
 }
 
 export function useHandoff({
@@ -123,15 +147,18 @@ export function useHandoff({
   isTemporary?: boolean;
 }) {
   const update = useThrottle(
-    (title: string, url: string) => {
+    (title: string, url: string, isTemporary: boolean) => {
       asyncTryCatch(async () => {
         if (Platform.OS === "ios" && url)
-          await NativeModules.RNHandoffModule?.addUserActivity(
-            HANDOFF_ACTIVITY_TYPE,
+          await NativeModules.RNHandoffModule?.addUserActivity({
+            activityType: HANDOFF_ACTIVITY_TYPE,
             title,
-            url,
-            isTemporary
-          );
+            webpageURL: url,
+            eligibleForSearch: !isTemporary,
+            eligibleForHandoff: true,
+            eligibleForPrediction: !isTemporary,
+            isTemporary,
+          });
       });
     },
     timeout,
@@ -147,7 +174,7 @@ export function useHandoff({
 
   useEffect(() => {
     if (isFocused && isReady && path) {
-      update(title, WEB_DEPLOYMENT_URL + path);
+      update(title, WEB_DEPLOYMENT_URL + path, isTemporary);
     }
   }, [isFocused, path, title, isReady, isTemporary]);
 }

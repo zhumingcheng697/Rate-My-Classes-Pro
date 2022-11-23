@@ -202,15 +202,18 @@ export default function ReviewScreen() {
   useEffect(fetchMyReview, [classInfo, classInfoError, db]);
 
   const hasPendingReview =
-    params.pendingReview && !isObjectEmpty(params.pendingReview);
+    params.pendingReview &&
+    Object.values(params.pendingReview).filter(Boolean).length > 0;
 
   useHandoff({
     isFocused,
     route: Route(tabName, "Review", params),
     title: `Review ${getFullClassCode(classCode)}`,
     timeout: hasPendingReview ? 500 : undefined,
-    isReady: !recoveredReview && isSemesterSettled,
-    isTemporary: !hasPendingReview,
+    isReady:
+      !recoveredReview &&
+      (!!params.semester || (isSemesterSettled && isSettingsSettled)),
+    isTemporary: hasPendingReview,
   });
 
   const update = useThrottle((pendingReview: PendingReview) => {

@@ -1,15 +1,15 @@
 //
-//  RNHandoff.mm
+//  RNUserActivity.mm
 //  RateMyClassesPro
 //
 //  Created by McCoy Zhu on 11/22/22.
 //
 
-#import "RNHandoff.h"
+#import "RNUserActivity.h"
 
-@implementation RNHandoffModule
+@implementation RNUserActivity
 
-RCT_EXPORT_MODULE(RNHandoffModule);
+RCT_EXPORT_MODULE(RNUserActivity);
 
 NSMutableArray<NSUserActivity*> *validActivitityArray = nil;
 
@@ -90,6 +90,11 @@ RCT_EXPORT_METHOD(becomeCurrent:(NSDictionary*)options resolver:(RCTPromiseResol
         if (eligibleForPrediction && [eligibleForPrediction isKindOfClass:[NSNumber class]]) {
           userActivity.eligibleForPrediction = [eligibleForPrediction boolValue];
         }
+      }
+      
+      NSNumber* eligibleForPublicIndexing = options[@"eligibleForPublicIndexing"];
+      if (eligibleForPublicIndexing && [eligibleForPublicIndexing isKindOfClass:[NSNumber class]]) {
+        userActivity.eligibleForPublicIndexing = [eligibleForPublicIndexing boolValue];
       }
       
       NSDictionary* userInfo = options[@"userInfo"];

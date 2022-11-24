@@ -16,7 +16,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		C2788FCA292695BB0009567E /* RNSystemFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2788FC9292695BB0009567E /* RNSystemFont.mm */; };
 		C281D999280F5DD8009E8DBF /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = C281D998280F5DD8009E8DBF /* File.swift */; };
-		C2B63311292D4221002183A3 /* RNHandoff.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2B63310292D4221002183A3 /* RNHandoff.mm */; };
+		C2B63311292D4221002183A3 /* RNUserActivity.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2B63310292D4221002183A3 /* RNUserActivity.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,8 +51,8 @@
 		C281D994280F50B6009E8DBF /* RateMyClassesPro.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = RateMyClassesPro.entitlements; path = RateMyClassesPro/RateMyClassesPro.entitlements; sourceTree = "<group>"; };
 		C281D995280F5473009E8DBF /* RateMyClassesPro-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RateMyClassesPro-Bridging-Header.h"; sourceTree = "<group>"; };
 		C281D998280F5DD8009E8DBF /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
-		C2B6330F292D41DE002183A3 /* RNHandoff.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNHandoff.h; sourceTree = "<group>"; };
-		C2B63310292D4221002183A3 /* RNHandoff.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RNHandoff.mm; sourceTree = "<group>"; };
+		C2B6330F292D41DE002183A3 /* RNUserActivity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNUserActivity.h; sourceTree = "<group>"; };
+		C2B63310292D4221002183A3 /* RNUserActivity.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RNUserActivity.mm; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -100,9 +100,9 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				C2788FC8292695880009567E /* RNSystemFont.h */,
-				C2B6330F292D41DE002183A3 /* RNHandoff.h */,
 				C2788FC9292695BB0009567E /* RNSystemFont.mm */,
-				C2B63310292D4221002183A3 /* RNHandoff.mm */,
+				C2B6330F292D41DE002183A3 /* RNUserActivity.h */,
+				C2B63310292D4221002183A3 /* RNUserActivity.mm */,
 				13B07FB51A68108700A75B9A /* Assets.xcassets */,
 				C281D998280F5DD8009E8DBF /* File.swift */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -428,7 +428,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
-				C2B63311292D4221002183A3 /* RNHandoff.mm in Sources */,
+				C2B63311292D4221002183A3 /* RNUserActivity.mm in Sources */,
 				C2788FCA292695BB0009567E /* RNSystemFont.mm in Sources */,
 				C281D999280F5DD8009E8DBF /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,

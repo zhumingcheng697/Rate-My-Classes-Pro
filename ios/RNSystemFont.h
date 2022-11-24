@@ -9,7 +9,7 @@
 #define RNSystemFont_h
 
 #import <React/RCTBridgeModule.h>
-@interface RNSystemFontModule : NSObject <RCTBridgeModule>
+@interface RNSystemFont : NSObject <RCTBridgeModule>
 @end
 
 #endif /* RNSystemFont_h */

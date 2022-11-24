@@ -7,9 +7,9 @@
 
 #import "RNSystemFont.h"
 
-@implementation RNSystemFontModule
+@implementation RNSystemFont
 
-RCT_EXPORT_MODULE(RNSystemFontModule);
+RCT_EXPORT_MODULE(RNSystemFont);
 
 + (BOOL)requiresMainQueueSetup {
   return NO;

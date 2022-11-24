@@ -28,7 +28,14 @@ declare module "native-base" {
 
 declare module "react-native" {
   interface NativeModulesStatic {
-    RNHandoffModule?: {
+    RNSystemFont?: {
+      getSystemFont: (fontSize: number) => Promise<string>;
+      getSystemSerifFont: (fontSize: number) => Promise<string>;
+      getSystemRoundedFont: (fontSize: number) => Promise<string>;
+      getSystemMonoFont: (fontSize: number) => Promise<string>;
+    };
+
+    RNUserActivity?: {
       becomeCurrent: (options: {
         activityType: string;
         title?: string;
@@ -42,13 +49,6 @@ declare module "react-native" {
       resignCurrent: () => Promise<void>;
       invalidateCurrent: () => Promise<void>;
       invalidateAll: () => Promise<void>;
-    };
-
-    RNSystemFontModule?: {
-      getSystemFont: (fontSize: number) => Promise<string>;
-      getSystemSerifFont: (fontSize: number) => Promise<string>;
-      getSystemRoundedFont: (fontSize: number) => Promise<string>;
-      getSystemMonoFont: (fontSize: number) => Promise<string>;
     };
   }
 }

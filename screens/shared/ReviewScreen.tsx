@@ -131,7 +131,7 @@ export default function ReviewScreen() {
               if (review) {
                 const semester = new Semester(review.semester);
                 setSemesterOptions([semester]);
-                setInstructor(resolveReview(review, "instructor"));
+                setInstructor(review.instructor);
                 setSemester(semester);
                 setEnjoyment(resolveReview(review, "enjoyment"));
                 setDifficulty(resolveReview(review, "difficulty"));

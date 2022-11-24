@@ -44,6 +44,7 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 - Easy to update or delete previous ratings
 - Upvote or downvote reviews from other users
 - Order reviews by review time, semester taken, or helpfulness
+- Restore review in progress after refresh on web and through Handoff on iOS and macOS
 
 ### Few More Things…
 
@@ -54,6 +55,8 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 - Sign in with Google
 - Universal link on iOS, macOS, and web
 - Deep linking with custom URL scheme on iOS and macOS
+- Handoff on iOS and macOS
+- Spotlight and Siri Shortcuts suggestions on iOS
 - Alternate icon on iOS
 - Fullscreen web app on iOS
 - Multiple-tab support on web

@@ -1,5 +1,19 @@
 # Changelog
 
+## [v1.2](https://github.com/zhumingcheng697/Rate-My-Classes-Pro/releases/tag/v1.2)
+
+**Built:** November 23, 2022
+
+**Released:** November 24, 2022
+
+- Added schedules for recitation sections.
+- Remove duplicate classes or class sections when exploring and searching.
+- Hide schools and departments that do not offer any courses in the selected semester.
+- Added Handoff, Spotlight, and Siri Shortcuts support.
+- Restore review in progress with linking and Handoff.
+- Optimize load speed and network usage when navigating to certain screens with universal links, deep links, Handoff, Spotlight, or Siri Shortcuts.
+- Additional bug fixes and improvements.
+
 ## [v1.1](https://github.com/zhumingcheng697/Rate-My-Classes-Pro/releases/tag/v1.1)
 
 **Built:** November 17, 2022

@@ -145,7 +145,7 @@ export function useHandoff({
     (title: string, url: string, isTemporary: boolean) => {
       asyncTryCatch(async () => {
         if (Platform.OS === "ios" && url)
-          await NativeModules.RNHandoffModule?.addUserActivity({
+          await NativeModules.RNHandoffModule?.becomeCurrent({
             activityType: HANDOFF_ACTIVITY_TYPE,
             title,
             webpageURL: url,

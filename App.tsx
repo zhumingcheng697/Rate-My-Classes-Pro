@@ -29,7 +29,7 @@ declare module "native-base" {
 declare module "react-native" {
   interface NativeModulesStatic {
     RNHandoffModule?: {
-      addUserActivity: (options: {
+      becomeCurrent: (options: {
         activityType: string;
         title?: string;
         webpageURL?: string;
@@ -39,7 +39,9 @@ declare module "react-native" {
         isTemporary?: boolean;
         userInfo?: Record<string, any>;
       }) => Promise<void>;
-      invalidateUserActivities: () => Promise<void>;
+      resignCurrent: () => Promise<void>;
+      invalidateCurrent: () => Promise<void>;
+      invalidateAll: () => Promise<void>;
     };
 
     RNSystemFontModule?: {

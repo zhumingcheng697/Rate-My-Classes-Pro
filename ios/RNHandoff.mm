@@ -11,35 +11,49 @@
 
 RCT_EXPORT_MODULE(RNHandoffModule);
 
-NSMutableArray<NSUserActivity*> *validActivities = nil;
+NSMutableArray<NSUserActivity*> *validActivitityArray = nil;
 
-NSMutableArray<NSUserActivity*> *temporaryActivities = nil;
+NSMutableArray<NSUserActivity*> *temporaryActivityArray = nil;
 
 - (NSMutableArray<NSUserActivity*> *)validActivities
 {
-    if (validActivities == nil) validActivities = [NSMutableArray array];
-    return validActivities;
+    if (validActivitityArray == nil) validActivitityArray = [NSMutableArray array];
+    return validActivitityArray;
 }
 
 - (NSMutableArray<NSUserActivity*> *)temporaryActivities
 {
-    if (temporaryActivities == nil) temporaryActivities = [NSMutableArray array];
-    return temporaryActivities;
+    if (temporaryActivityArray == nil) temporaryActivityArray = [NSMutableArray array];
+    return temporaryActivityArray;
 }
 
 + (BOOL)requiresMainQueueSetup {
   return NO;
 }
 
-RCT_REMAP_METHOD(addUserActivity, options:(NSDictionary*)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+- (NSUserActivity*)lastValidUserActivity {
+  NSMutableArray<NSUserActivity*>* userActivities = [self validActivities];
+  
+  if (!userActivities) return nil;
+  
+  if ([userActivities count] == 0) return nil;
+  
+  return [userActivities objectAtIndex:[userActivities count] - 1];
+}
+
+- (void)invalidateAllUserActivities:(NSMutableArray<NSUserActivity*>*)userActivities {
   NSMutableArray<NSUserActivity*> *invalidatedActivities = [NSMutableArray array];
   
-  for (NSUserActivity* activity in [self temporaryActivities]) {
+  for (NSUserActivity* activity in userActivities) {
     [activity invalidate];
     [invalidatedActivities addObject:activity];
   }
   
-  [[self temporaryActivities] removeObjectsInArray:invalidatedActivities];
+  [userActivities removeObjectsInArray:invalidatedActivities];
+}
+
+RCT_EXPORT_METHOD(becomeCurrent:(NSDictionary*)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  [self invalidateAllUserActivities:[self temporaryActivities]];
   
   if (!options) return reject(@"EMPTY_OPTIONS", @"Options cannot be empty", nil);
   
@@ -101,17 +115,31 @@ RCT_REMAP_METHOD(addUserActivity, options:(NSDictionary*)options resolver:(RCTPr
   });
 }
 
+RCT_EXPORT_METHOD(resignCurrent:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  [self invalidateAllUserActivities:[self temporaryActivities]];
+  
+  NSUserActivity* activity = [self lastValidUserActivity];
+  
+  if (!activity) return reject(@"NO_ACTIVITY", @"There are no activities no inactivate", nil);
+  
+  [activity resignCurrent];
+  resolve(nil);
+}
 
-RCT_REMAP_METHOD(invalidateUserActivities, resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSMutableArray<NSUserActivity*> *invalidatedActivities = [NSMutableArray array];
+RCT_EXPORT_METHOD(invalidateCurrent:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  [self invalidateAllUserActivities:[self temporaryActivities]];
   
-  for (NSUserActivity* activity in [self validActivities]) {
-    [activity invalidate];
-    [invalidatedActivities addObject:activity];
-  }
+  NSUserActivity* activity = [self lastValidUserActivity];
   
-  [[self validActivities] removeObjectsInArray:invalidatedActivities];
+  if (!activity) return reject(@"NO_ACTIVITY", @"There are no activities no invalidate", nil);
   
+  [activity invalidate];
+  resolve(nil);
+}
+
+RCT_EXPORT_METHOD(invalidateAll:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  [self invalidateAllUserActivities:[self temporaryActivities]];
+  [self invalidateAllUserActivities:[self validActivities]];
   resolve(nil);
 }
 

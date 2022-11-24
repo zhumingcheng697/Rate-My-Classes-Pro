@@ -43,6 +43,7 @@ declare module "react-native" {
     };
 
     RNSystemFontModule?: {
+      getSystemFont: (fontSize: number) => Promise<string>;
       getSystemSerifFont: (fontSize: number) => Promise<string>;
       getSystemRoundedFont: (fontSize: number) => Promise<string>;
       getSystemMonoFont: (fontSize: number) => Promise<string>;

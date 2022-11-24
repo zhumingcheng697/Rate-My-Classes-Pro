@@ -43,7 +43,7 @@ RCT_EXPORT_MODULE(RNSystemFontModule);
   });
 }
 
-RCT_REMAP_METHOD(getSystemFont, fontSize:(double)fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getSystemFont:(double)fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   if (@available(iOS 13.0, *)) {
     [self getSystemFontWithDesign:UIFontDescriptorSystemDesignDefault
                            inSize:fontSize
@@ -54,7 +54,7 @@ RCT_REMAP_METHOD(getSystemFont, fontSize:(double)fontSize resolver:(RCTPromiseRe
   }
 }
 
-RCT_REMAP_METHOD(getSystemSerifFont, serifFontSize:(double)fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getSystemSerifFont:(double)fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   if (@available(iOS 13.0, *)) {
     [self getSystemFontWithDesign:UIFontDescriptorSystemDesignSerif
                            inSize:fontSize
@@ -65,7 +65,7 @@ RCT_REMAP_METHOD(getSystemSerifFont, serifFontSize:(double)fontSize resolver:(RC
   }
 }
 
-RCT_REMAP_METHOD(getSystemRoundedFont, roundedFontSize:(double)fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getSystemRoundedFont:(double)fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   if (@available(iOS 13.0, *)) {
     [self getSystemFontWithDesign:UIFontDescriptorSystemDesignRounded
                            inSize:fontSize
@@ -76,7 +76,7 @@ RCT_REMAP_METHOD(getSystemRoundedFont, roundedFontSize:(double)fontSize resolver
   }
 }
 
-RCT_REMAP_METHOD(getSystemMonoFont, monoFontSize:(double)fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getSystemMonoFont:(double)fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   if (@available(iOS 13.0, *)) {
     [self getSystemFontWithDesign:UIFontDescriptorSystemDesignMonospaced
                            inSize:fontSize

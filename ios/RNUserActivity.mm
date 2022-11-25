@@ -31,7 +31,7 @@ NSMutableArray<NSUserActivity*> *temporaryActivityArray = nil;
   return NO;
 }
 
-+(NSUserActivity*)lastValidUserActivity {
++ (NSUserActivity*)lastValidUserActivity {
   NSMutableArray<NSUserActivity*>* userActivities = [self validActivities];
   
   if (!userActivities) return nil;

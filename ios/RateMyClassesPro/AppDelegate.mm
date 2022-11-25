@@ -53,6 +53,22 @@
   return callback();
 }
 
++ (BOOL)isHandOffActivityType:(NSString*) activityType {
+  if (!activityType) return NO;
+  
+  NSArray* userActivitiyTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSUserActivityTypes"];
+  if ([userActivitiyTypes isKindOfClass:[NSArray class]]) {
+    if ([userActivitiyTypes count] >= 1) {
+      NSString* handOffActivityType = userActivitiyTypes[0];
+      if ([handOffActivityType isKindOfClass:[NSString class]]) {
+        return [handOffActivityType isEqualToString:activityType];
+      }
+    }
+  }
+  
+  return NO;
+}
+
 - (BOOL)application:(UIApplication *)application
    openURL:(NSURL *)url
    options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
@@ -68,7 +84,7 @@
 {
   NSUserActivity* activity = userActivity;
   
-  if ([activity.activityType isEqualToString:@"com.mingcheng-mccoy-zhu.RateMyClassesPro.handoff"]) {
+  if ([AppDelegate isHandOffActivityType:activity.activityType]) {
     activity = [[NSUserActivity alloc] initWithActivityType:NSUserActivityTypeBrowsingWeb];
     activity.webpageURL = userActivity.webpageURL;
   }

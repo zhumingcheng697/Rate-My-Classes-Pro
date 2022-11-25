@@ -324,7 +324,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             e?.error || e?.message || ""
           )
         ) {
-          e = new Error("Your account might have been deleted");
           await signOut();
         }
 

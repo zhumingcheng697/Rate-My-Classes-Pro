@@ -7,7 +7,7 @@ import React, {
   useState,
   useMemo,
 } from "react";
-import { Animated, Keyboard, Platform } from "react-native";
+import { Animated, Keyboard, Platform, type ScrollView } from "react-native";
 import { Button, AlertDialog, theme } from "native-base";
 import { useIsFocused } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -121,6 +121,8 @@ export default function AlertPopup({
     new Animated.Value(keyboardHeight ? (top - keyboardHeight) / 2 : 0)
   ).current;
 
+  const scrollRef = useRef<ScrollView | null>(null);
+
   useEffect(() => {
     setTimeout(() => {
       Animated.parallel([
@@ -135,7 +137,10 @@ export default function AlertPopup({
           duration: 300,
           useNativeDriver: false,
         }),
-      ]).start();
+      ]).start(() => {
+        if (keyboardHeight && scrollRef.current)
+          scrollRef.current.scrollToEnd();
+      });
     }, 50);
   }, [keyboardHeight, height, top, bottom]);
 
@@ -166,14 +171,16 @@ export default function AlertPopup({
           }))}
         >
           <AlertDialog.Header
-            py={isCompact ? "10px" : undefined}
+            py={isCompact ? "9px" : undefined}
             _text={textColorStyle}
             borderColor={subtleBorder}
           >
             {header}
           </AlertDialog.Header>
           <AlertDialog.Body
-            pt={isCompact ? "6px" : undefined}
+            ref={scrollRef}
+            pt={isCompact ? "5px" : undefined}
+            pb={isCompact ? "10px" : undefined}
             _text={colorModeResponsiveStyle((selector) => ({
               color: selector({
                 light: theme.colors.gray[500],
@@ -184,7 +191,7 @@ export default function AlertPopup({
             {body}
           </AlertDialog.Body>
           <AlertDialog.Footer
-            py={isCompact ? "8px" : undefined}
+            py={isCompact ? "7px" : undefined}
             {...colorModeResponsiveStyle((selector) => ({
               background: selector({
                 light: theme.colors.gray[100],

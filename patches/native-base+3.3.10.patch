@@ -84,6 +84,21 @@ index 637de0c..715ce46 100644
    shadow: {
      scale: 'shadows'
    },
+diff --git a/node_modules/native-base/src/components/composites/AlertDialog/AlertDialogBody.tsx b/node_modules/native-base/src/components/composites/AlertDialog/AlertDialogBody.tsx
+index 10243c4..27d5151 100644
+--- a/node_modules/native-base/src/components/composites/AlertDialog/AlertDialogBody.tsx
++++ b/node_modules/native-base/src/components/composites/AlertDialog/AlertDialogBody.tsx
+@@ -11,8 +11,8 @@ const AlertDialogBody = (props: IBoxProps, ref?: any) => {
+     return null;
+   }
+   return (
+-    <ScrollView>
+-      <Box {...newProps} ref={ref}>
++    <ScrollView ref={ref}>
++      <Box {...newProps}>
+         {props.children}
+       </Box>
+     </ScrollView>
 diff --git a/node_modules/native-base/src/components/primitives/Input/Input.tsx b/node_modules/native-base/src/components/primitives/Input/Input.tsx
 index 4adb61f..d8df714 100644
 --- a/node_modules/native-base/src/components/primitives/Input/Input.tsx

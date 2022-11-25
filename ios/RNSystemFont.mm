@@ -15,7 +15,7 @@ RCT_EXPORT_MODULE(RNSystemFont);
   return NO;
 }
 
-- (void)getSystemFontWithDesign:(UIFontDescriptorSystemDesign) fontDesign inSize:(CGFloat) fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject {
++ (void)getSystemFontWithDesign:(UIFontDescriptorSystemDesign) fontDesign inSize:(CGFloat) fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject {
   dispatch_async(dispatch_get_main_queue(), ^{
     if (@available(iOS 13.0, *)) {
       UIFont* systemFont = [UIFont systemFontOfSize:17];
@@ -45,10 +45,10 @@ RCT_EXPORT_MODULE(RNSystemFont);
 
 RCT_EXPORT_METHOD(getSystemFont:(double)fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   if (@available(iOS 13.0, *)) {
-    [self getSystemFontWithDesign:UIFontDescriptorSystemDesignDefault
-                           inSize:fontSize
-                         resolver:resolve
-                         rejecter:reject];
+    [RNSystemFont getSystemFontWithDesign:UIFontDescriptorSystemDesignDefault
+                                   inSize:fontSize
+                                 resolver:resolve
+                                 rejecter:reject];
   } else {
     reject(@"Error", @"NOT_SUPPORTED", nil);
   }
@@ -56,10 +56,10 @@ RCT_EXPORT_METHOD(getSystemFont:(double)fontSize resolver:(RCTPromiseResolveBloc
 
 RCT_EXPORT_METHOD(getSystemSerifFont:(double)fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   if (@available(iOS 13.0, *)) {
-    [self getSystemFontWithDesign:UIFontDescriptorSystemDesignSerif
-                           inSize:fontSize
-                         resolver:resolve
-                         rejecter:reject];
+    [RNSystemFont getSystemFontWithDesign:UIFontDescriptorSystemDesignSerif
+                                   inSize:fontSize
+                                 resolver:resolve
+                                 rejecter:reject];
   } else {
     reject(@"Error", @"NOT_SUPPORTED", nil);
   }
@@ -67,10 +67,10 @@ RCT_EXPORT_METHOD(getSystemSerifFont:(double)fontSize resolver:(RCTPromiseResolv
 
 RCT_EXPORT_METHOD(getSystemRoundedFont:(double)fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   if (@available(iOS 13.0, *)) {
-    [self getSystemFontWithDesign:UIFontDescriptorSystemDesignRounded
-                           inSize:fontSize
-                         resolver:resolve
-                         rejecter:reject];
+    [RNSystemFont getSystemFontWithDesign:UIFontDescriptorSystemDesignRounded
+                                   inSize:fontSize
+                                 resolver:resolve
+                                 rejecter:reject];
   } else {
     reject(@"Error", @"NOT_SUPPORTED", nil);
   }
@@ -78,10 +78,10 @@ RCT_EXPORT_METHOD(getSystemRoundedFont:(double)fontSize resolver:(RCTPromiseReso
 
 RCT_EXPORT_METHOD(getSystemMonoFont:(double)fontSize resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   if (@available(iOS 13.0, *)) {
-    [self getSystemFontWithDesign:UIFontDescriptorSystemDesignMonospaced
-                           inSize:fontSize
-                         resolver:resolve
-                         rejecter:reject];
+    [RNSystemFont getSystemFontWithDesign:UIFontDescriptorSystemDesignMonospaced
+                                   inSize:fontSize
+                                 resolver:resolve
+                                 rejecter:reject];
   } else {
     reject(@"Error", @"NOT_SUPPORTED", nil);
   }

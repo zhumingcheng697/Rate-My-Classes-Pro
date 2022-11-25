@@ -72,6 +72,7 @@ export default function VerifyAccountPopup({
         }
       />
       <AlertPopup
+        scrollOnKeyboard
         isOpen={
           isVerifying &&
           !isVerified &&
@@ -151,6 +152,7 @@ export default function VerifyAccountPopup({
         body={composeErrorMessage(codeSendError)}
       />
       <AlertPopup
+        scrollOnKeyboard
         isOpen={
           isVerifying &&
           !isVerified &&

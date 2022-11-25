@@ -24,6 +24,7 @@ export type AlertPopupProps = {
   body?: ReactNode;
   global?: boolean;
   autoDismiss?: boolean;
+  scrollOnKeyboard?: boolean;
   footer?: (ref: MutableRefObject<any>, isCompact: boolean) => ReactNode;
   footerPrimaryButton?: (isCompact: boolean) => ReactElement;
   onClose: () => any;
@@ -34,6 +35,7 @@ export default function AlertPopup({
   body = "Please check your network connection or try again later.",
   global = false,
   autoDismiss = false,
+  scrollOnKeyboard = false,
   isOpen,
   footer,
   footerPrimaryButton,
@@ -138,7 +140,7 @@ export default function AlertPopup({
           useNativeDriver: false,
         }),
       ]).start(() => {
-        if (keyboardHeight && scrollRef.current)
+        if (scrollOnKeyboard && keyboardHeight && scrollRef.current)
           scrollRef.current.scrollToEnd();
       });
     }, 50);

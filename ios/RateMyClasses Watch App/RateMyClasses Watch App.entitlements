@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:ratemyclasses.netlify.app</string>
+		<string>applinks:rate-my-classes-pro.netlify.app</string>
+		<string>webcredentials:ratemyclasses.netlify.app</string>
+		<string>webcredentials:rate-my-classes-pro.netlify.app</string>
+		<string>activitycontinuation:ratemyclasses.netlify.app</string>
+		<string>activitycontinuation:rate-my-classes-pro.netlify.app</string>
+	</array>
+</dict>
+</plist>

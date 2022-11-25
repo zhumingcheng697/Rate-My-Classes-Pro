@@ -14,6 +14,10 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-RateMyClassesPro-RateMyClassesProTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-RateMyClassesPro-RateMyClassesProTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		C25F9C67292F14340007E3C3 /* RateMyClassesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C25F9C66292F14340007E3C3 /* RateMyClassesApp.swift */; };
+		C25F9C69292F14340007E3C3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C25F9C68292F14340007E3C3 /* ContentView.swift */; };
+		C25F9C6B292F14350007E3C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C25F9C6A292F14350007E3C3 /* Assets.xcassets */; };
+		C25F9C6E292F14350007E3C3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C25F9C6D292F14350007E3C3 /* Preview Assets.xcassets */; };
 		C2788FCA292695BB0009567E /* RNSystemFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2788FC9292695BB0009567E /* RNSystemFont.mm */; };
 		C281D999280F5DD8009E8DBF /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = C281D998280F5DD8009E8DBF /* File.swift */; };
 		C2B63311292D4221002183A3 /* RNUserActivity.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2B63310292D4221002183A3 /* RNUserActivity.mm */; };
@@ -46,6 +50,12 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-RateMyClassesPro.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RateMyClassesPro.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RateMyClassesPro/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-RateMyClassesPro-RateMyClassesProTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RateMyClassesPro-RateMyClassesProTests.release.xcconfig"; path = "Target Support Files/Pods-RateMyClassesPro-RateMyClassesProTests/Pods-RateMyClassesPro-RateMyClassesProTests.release.xcconfig"; sourceTree = "<group>"; };
+		C25F9C64292F14340007E3C3 /* Rate My Classes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rate My Classes.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C25F9C66292F14340007E3C3 /* RateMyClassesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateMyClassesApp.swift; sourceTree = "<group>"; };
+		C25F9C68292F14340007E3C3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C25F9C6A292F14350007E3C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C25F9C6D292F14350007E3C3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C25F9C72292F145B0007E3C3 /* RateMyClasses Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "RateMyClasses Watch App.entitlements"; sourceTree = "<group>"; };
 		C2788FC8292695880009567E /* RNSystemFont.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNSystemFont.h; sourceTree = "<group>"; };
 		C2788FC9292695BB0009567E /* RNSystemFont.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RNSystemFont.mm; sourceTree = "<group>"; };
 		C281D994280F50B6009E8DBF /* RateMyClassesPro.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = RateMyClassesPro.entitlements; path = RateMyClassesPro/RateMyClassesPro.entitlements; sourceTree = "<group>"; };
@@ -70,6 +80,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C80B921A6F3F58F76C31292 /* libPods-RateMyClassesPro.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C25F9C61292F14340007E3C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +153,7 @@
 				13B07FAE1A68108700A75B9A /* RateMyClassesPro */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* RateMyClassesProTests */,
+				C25F9C65292F14340007E3C3 /* RateMyClasses Watch App */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
@@ -150,6 +168,7 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* Rate My Classes.app */,
 				00E356EE1AD99517003FC87E /* RateMyClassesProTests.xctest */,
+				C25F9C64292F14340007E3C3 /* Rate My Classes.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -163,6 +182,26 @@
 				89C6BE57DB24E9ADA2F236DE /* Pods-RateMyClassesPro-RateMyClassesProTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		C25F9C65292F14340007E3C3 /* RateMyClasses Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				C25F9C72292F145B0007E3C3 /* RateMyClasses Watch App.entitlements */,
+				C25F9C66292F14340007E3C3 /* RateMyClassesApp.swift */,
+				C25F9C68292F14340007E3C3 /* ContentView.swift */,
+				C25F9C6A292F14350007E3C3 /* Assets.xcassets */,
+				C25F9C6C292F14350007E3C3 /* Preview Content */,
+			);
+			path = "RateMyClasses Watch App";
+			sourceTree = "<group>";
+		};
+		C25F9C6C292F14350007E3C3 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				C25F9C6D292F14350007E3C3 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -211,6 +250,23 @@
 			productReference = 13B07F961A680F5B00A75B9A /* Rate My Classes.app */;
 			productType = "com.apple.product-type.application";
 		};
+		C25F9C63292F14340007E3C3 /* RateMyClasses Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C25F9C71292F14350007E3C3 /* Build configuration list for PBXNativeTarget "RateMyClasses Watch App" */;
+			buildPhases = (
+				C25F9C60292F14340007E3C3 /* Sources */,
+				C25F9C61292F14340007E3C3 /* Frameworks */,
+				C25F9C62292F14340007E3C3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "RateMyClasses Watch App";
+			productName = "RateMyClasses Watch App";
+			productReference = C25F9C64292F14340007E3C3 /* Rate My Classes.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -226,6 +282,9 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1330;
+					};
+					C25F9C63292F14340007E3C3 = {
+						CreatedOnToolsVersion = 14.1;
 					};
 				};
 			};
@@ -244,6 +303,7 @@
 			targets = (
 				13B07F861A680F5B00A75B9A /* RateMyClassesPro */,
 				00E356ED1AD99517003FC87E /* RateMyClassesProTests */,
+				C25F9C63292F14340007E3C3 /* RateMyClasses Watch App */,
 			);
 		};
 /* End PBXProject section */
@@ -262,6 +322,15 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C25F9C62292F14340007E3C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C25F9C6E292F14350007E3C3 /* Preview Assets.xcassets in Resources */,
+				C25F9C6B292F14350007E3C3 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,6 +502,15 @@
 				C2788FCA292695BB0009567E /* RNSystemFont.mm in Sources */,
 				C281D999280F5DD8009E8DBF /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C25F9C60292F14340007E3C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C25F9C69292F14340007E3C3 /* ContentView.swift in Sources */,
+				C25F9C67292F14340007E3C3 /* RateMyClassesApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -650,6 +728,7 @@
 				);
 				PRODUCT_NAME = "Rate My Classe";
 				SDKROOT = iphoneos;
+				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 			};
 			name = Debug;
 		};
@@ -716,6 +795,91 @@
 				PRODUCT_NAME = "Rate My Classe";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 8.0;
+			};
+			name = Release;
+		};
+		C25F9C6F292F14350007E3C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = WatchAppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = nyu;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "RateMyClasses Watch App/RateMyClasses Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_ASSET_PATHS = "\"RateMyClasses Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = MGM7CAKZL4;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.mingcheng-mccoy-zhu.RateMyClassesPro";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mingcheng-mccoy-zhu.RateMyClassesPro.watchkitapp";
+				PRODUCT_NAME = "Rate My Classes";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 8.0;
+			};
+			name = Debug;
+		};
+		C25F9C70292F14350007E3C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = WatchAppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = nyu;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "RateMyClasses Watch App/RateMyClasses Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_ASSET_PATHS = "\"RateMyClasses Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = MGM7CAKZL4;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.mingcheng-mccoy-zhu.RateMyClassesPro";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mingcheng-mccoy-zhu.RateMyClassesPro.watchkitapp";
+				PRODUCT_NAME = "Rate My Classes";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 			};
 			name = Release;
 		};
@@ -745,6 +909,15 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C25F9C71292F14350007E3C3 /* Build configuration list for PBXNativeTarget "RateMyClasses Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C25F9C6F292F14350007E3C3 /* Debug */,
+				C25F9C70292F14350007E3C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

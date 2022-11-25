@@ -362,6 +362,46 @@ export default function DetailScreen() {
     }
   });
 
+  const descriptionToText = useCallback(
+    (text: string, index: number) => (
+      <Text fontSize={"md"} key={"description" + index}>
+        {text}
+      </Text>
+    ),
+    []
+  );
+
+  const idToReviewCard = useCallback(
+    (id: string) =>
+      !reviewRecord ? null : (
+        <ReviewCard
+          key={id}
+          classInfo={classInfo ?? undefined}
+          semesterInfo={semesterInfo}
+          review={reviewRecord[id]}
+          isVerifying={isVerifying && isAuthenticated}
+          startVerify={() => setIsVerifying(true)}
+          setReview={(newReview) => {
+            const newReviewRecord = { ...reviewRecord };
+            newReviewRecord[id] = newReview;
+            setReviewRecord(newReviewRecord);
+          }}
+        />
+      ),
+    [classInfo, semesterInfo, reviewRecord, isVerifying, isAuthenticated]
+  );
+
+  const skeletons = useMemo(
+    () => (
+      <>
+        <Skeleton borderRadius={10} height={"120px"} />
+        <Skeleton borderRadius={10} height={"120px"} />
+        <Skeleton borderRadius={10} height={"120px"} />
+      </>
+    ),
+    []
+  );
+
   return (
     <>
       <VerifyAccountPopup
@@ -459,11 +499,7 @@ export default function DetailScreen() {
           </Text>
           {!!description && (
             <VStack margin={"10px"} space={"5px"}>
-              {description.map((text, index) => (
-                <Text fontSize={"md"} key={"description" + index}>
-                  {text}
-                </Text>
-              ))}
+              {description.map(descriptionToText)}
             </VStack>
           )}
           <RatingDashboard
@@ -552,25 +588,7 @@ export default function DetailScreen() {
                   onSelectedReviewOrderChange={setReviewOrder}
                 />
               )}
-              {reviewRecord
-                ? reviewerIds.map((id) => (
-                    <ReviewCard
-                      key={id}
-                      classInfo={classInfo ?? undefined}
-                      semesterInfo={semesterInfo}
-                      review={reviewRecord[id]}
-                      isVerifying={isVerifying && isAuthenticated}
-                      startVerify={() => setIsVerifying(true)}
-                      setReview={(newReview) => {
-                        const newReviewRecord = { ...reviewRecord };
-                        newReviewRecord[id] = newReview;
-                        setReviewRecord(newReviewRecord);
-                      }}
-                    />
-                  ))
-                : [...Array(3)].map((_, index) => (
-                    <Skeleton borderRadius={10} height={"120px"} key={index} />
-                  ))}
+              {reviewRecord ? reviewerIds.map(idToReviewCard) : skeletons}
             </VStack>
           )}
         </Box>

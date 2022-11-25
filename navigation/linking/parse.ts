@@ -180,9 +180,10 @@ function parseExplorePath(
     screenNames = pathsLengthToScreenNamesMap[Math.min(paths.length, 4)];
   }
 
-  return screenNames.map((screenName) =>
-    explorePathToRouteMap[screenName](paths, params)
-  );
+  const screenNameToRouteMap = (screenName: keyof ExploreNavigationParamList) =>
+    explorePathToRouteMap[screenName](paths, params);
+
+  return screenNames.map(screenNameToRouteMap);
 }
 
 function parseSearchPath(
@@ -244,9 +245,10 @@ function parseSearchPath(
     screenNames = ["Search"];
   }
 
-  return screenNames.map((screenName) =>
-    searchPathtoRouteMap[screenName](paths, params)
-  );
+  const screenNameToRouteMap = (screenName: keyof SearchNavigationParamList) =>
+    searchPathtoRouteMap[screenName](paths, params);
+
+  return screenNames.map(screenNameToRouteMap);
 }
 
 function parseMePath(
@@ -324,9 +326,10 @@ function parseMePath(
     screenNames = ["Account"];
   }
 
-  return screenNames.map((screenName) =>
-    mePathToRouteMap[screenName](paths, params)
-  );
+  const screenNameToRouteMap = (screenName: keyof MeNavigationParamList) =>
+    mePathToRouteMap[screenName](paths, params);
+
+  return screenNames.map(screenNameToRouteMap);
 }
 
 export default function parse(
@@ -347,18 +350,13 @@ export default function parse(
 
   const paths = route?.split(/\//)?.filter(Boolean) ?? [];
 
+  const cleanupValue = (e: string, i: number) =>
+    i === 0 ? decodeURIComponent(e).toLowerCase() : decodeURIComponent(e);
+
+  const paramsToEntry = (param: string) => param.split(/=/).map(cleanupValue);
+
   const params: Record<string, string> = Object.fromEntries(
-    param
-      ?.split(/&/)
-      ?.map((param) =>
-        param
-          .split(/=/)
-          .map((e, i) =>
-            i === 0
-              ? decodeURIComponent(e).toLowerCase()
-              : decodeURIComponent(e)
-          )
-      ) ?? []
+    param?.split(/&/)?.map(paramsToEntry) ?? []
   );
 
   const firstPathToTabNameMap: Record<string, keyof RootNavigationParamList> = {

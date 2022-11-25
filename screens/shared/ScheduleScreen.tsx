@@ -74,6 +74,62 @@ function SectionView({
     prerequisites,
   } = sectionInfo;
 
+  const meetingStrToDate = useCallback(
+    ({
+      beginDate,
+      minutesDuration,
+    }: Exclude<SectionInfo["meetings"], undefined>[number]) => {
+      const begin: Date = new Date(
+        beginDate.replace(
+          /^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{1,2})/i,
+          "$1T$2"
+        )
+      );
+
+      const end: Date = new Date(begin.valueOf() + minutesDuration * 60 * 1000);
+
+      return [begin, end] as [Date, Date];
+    },
+    []
+  );
+
+  const dayTimeToText = useCallback(
+    ([day, time]: [string, string], index: number) => (
+      <Text fontSize={"md"} lineHeight={"sm"} key={day + time + index}>
+        {day}: {time}
+      </Text>
+    ),
+    []
+  );
+
+  const itemToText = useCallback(
+    (kind: string, itemToText: string, index: number) => (
+      <Text
+        key={kind + index}
+        lineHeight={"md"}
+        {...colorModeResponsiveStyle((selector) => ({
+          color: selector({
+            light: theme.colors.gray[600],
+            dark: theme.colors.gray[400],
+          }),
+        }))}
+      >
+        {itemToText}
+      </Text>
+    ),
+    []
+  );
+
+  const prereqToText = useCallback(
+    (prereq: string, index: number) => itemToText("prereq", prereq, index),
+    [itemToText]
+  );
+
+  const noteToText = useCallback(
+    (note: string, index: number) => itemToText("note", note, index),
+    [itemToText]
+  );
+
   return (
     <VStack
       space={"5px"}
@@ -126,30 +182,9 @@ function SectionView({
         {!!meetings && !!meetings.length && (
           <IconHStack iconName={"time"}>
             <VStack space={"2px"} flexShrink={1} flexGrow={1}>
-              {getMeetingScheduleString(
-                meetings.map(({ beginDate, minutesDuration }) => {
-                  const begin: Date = new Date(
-                    beginDate.replace(
-                      /^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{1,2})/i,
-                      "$1T$2"
-                    )
-                  );
-
-                  const end: Date = new Date(
-                    begin.valueOf() + minutesDuration * 60 * 1000
-                  );
-
-                  return [begin, end];
-                })
-              ).map(([day, time], index) => (
-                <Text
-                  fontSize={"md"}
-                  lineHeight={"sm"}
-                  key={day + time + index}
-                >
-                  {day}: {time}
-                </Text>
-              ))}
+              {getMeetingScheduleString(meetings.map(meetingStrToDate)).map(
+                dayTimeToText
+              )}
             </VStack>
           </IconHStack>
         )}
@@ -157,37 +192,11 @@ function SectionView({
       {!!prerequisites &&
         stripLineBreaks(prepend(cleanText(prerequisites), "Prerequisite", ": "))
           .split(/\n/)
-          .map((prerequisite, index) => (
-            <Text
-              key={"prerequisites" + index}
-              lineHeight={"md"}
-              {...colorModeResponsiveStyle((selector) => ({
-                color: selector({
-                  light: theme.colors.gray[600],
-                  dark: theme.colors.gray[400],
-                }),
-              }))}
-            >
-              {prerequisite}
-            </Text>
-          ))}
+          .map(prereqToText)}
       {!!notes &&
         stripLineBreaks(prepend(cleanText(notes), "Notes", ": "))
           .split(/\n/)
-          .map((note, index) => (
-            <Text
-              key={"notes" + index}
-              lineHeight={"md"}
-              {...colorModeResponsiveStyle((selector) => ({
-                color: selector({
-                  light: theme.colors.gray[600],
-                  dark: theme.colors.gray[400],
-                }),
-              }))}
-            >
-              {note}
-            </Text>
-          ))}
+          .map(noteToText)}
     </VStack>
   );
 }
@@ -318,14 +327,16 @@ export default function ScheduleScreen() {
 
     const duplicateIndices = new Set<number>();
     const sectionKeys = new Set<string>();
-    resolvedSections.forEach((e, index) => {
+    const findDuplicate = (e: SectionInfo, index: number) => {
       const key = `${e.name}-${e.code}`;
       if (sectionKeys.has(key)) {
         duplicateIndices.add(index);
       } else {
         sectionKeys.add(key);
       }
-    });
+    };
+
+    resolvedSections.forEach(findDuplicate);
     return duplicateIndices;
   }, [resolvedSections]);
 
@@ -339,6 +350,52 @@ export default function ScheduleScreen() {
       fetchSections(failSilently);
     }
   });
+
+  const recToSectionView = useCallback(
+    (
+      recitationInfo: Exclude<SectionInfo["recitations"], undefined>[number],
+      i: number
+    ) => (
+      <SectionView
+        key={recitationInfo.code + "-" + i}
+        classCode={classCode}
+        classInfo={classInfo}
+        sectionInfo={recitationInfo}
+        cleanText={cleanText}
+      />
+    ),
+    [classCode, classInfo, cleanText]
+  );
+
+  const sectionToSectionView = useCallback(
+    (sectionInfo: SectionInfo, index: number) =>
+      duplicateIndices.has(index) ? null : (
+        <VStack space={"10px"} key={getFullClassCode(classCode) + "-" + index}>
+          <SectionView
+            classCode={classCode}
+            classInfo={classInfo}
+            sectionInfo={sectionInfo}
+            cleanText={cleanText}
+          />
+          {sectionInfo.recitations &&
+            sectionInfo.recitations.map(recToSectionView)}
+        </VStack>
+      ),
+    [duplicateIndices, classCode, classInfo, cleanText]
+  );
+
+  const skeletons = useMemo(
+    () => (
+      <>
+        <Skeleton borderRadius={10} height={"150px"} />
+        <Skeleton borderRadius={10} height={"150px"} />
+        <Skeleton borderRadius={10} height={"150px"} />
+        <Skeleton borderRadius={10} height={"150px"} />
+        <Skeleton borderRadius={10} height={"150px"} />
+      </>
+    ),
+    []
+  );
 
   return (
     <>
@@ -363,34 +420,8 @@ export default function ScheduleScreen() {
       <KeyboardAwareSafeAreaScrollView>
         <VStack marginX={"10px"} marginY={"15px"} space={"10px"}>
           {resolvedSections && resolvedSections.length
-            ? resolvedSections.map((sectionInfo, index) =>
-                duplicateIndices.has(index) ? null : (
-                  <VStack
-                    space={"10px"}
-                    key={getFullClassCode(classCode) + "-" + index}
-                  >
-                    <SectionView
-                      classCode={classCode}
-                      classInfo={classInfo}
-                      sectionInfo={sectionInfo}
-                      cleanText={cleanText}
-                    />
-                    {sectionInfo.recitations &&
-                      sectionInfo.recitations.map((recitationInfo, i) => (
-                        <SectionView
-                          key={index + "-" + i}
-                          classCode={classCode}
-                          classInfo={classInfo}
-                          sectionInfo={recitationInfo}
-                          cleanText={cleanText}
-                        />
-                      ))}
-                  </VStack>
-                )
-              )
-            : [...Array(5)].map((_, index) => (
-                <Skeleton borderRadius={10} height={"150px"} key={index} />
-              ))}
+            ? resolvedSections.map(sectionToSectionView)
+            : skeletons}
         </VStack>
       </KeyboardAwareSafeAreaScrollView>
     </>

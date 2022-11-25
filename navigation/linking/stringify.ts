@@ -38,20 +38,22 @@ const addQueryParam = ({
 }) => {
   const queryStr = query && `query=${encodeURIComponent(query)}`;
   const semesterStr = semester && `semester=${getFullSemesterCode(semester)}`;
+  const reviewComponentToStr = (e: string) => {
+    const val =
+      e === "semester"
+        ? pendingReview?.semester
+          ? getFullSemesterCode(pendingReview.semester)
+          : undefined
+        : pendingReview?.[e as Exclude<keyof PendingReview, "semester">];
+    return val
+      ? `${e === "semester" ? "for" : e}=${encodeURIComponent(val)}`
+      : "";
+  };
+
   const reviewStr =
     pendingReview &&
     Object.keys(pendingReview)
-      .map((e) => {
-        const val =
-          e === "semester"
-            ? pendingReview.semester
-              ? getFullSemesterCode(pendingReview.semester)
-              : undefined
-            : pendingReview[e as Exclude<keyof PendingReview, "semester">];
-        return val
-          ? `${e === "semester" ? "for" : e}=${encodeURIComponent(val)}`
-          : "";
-      })
+      .map(reviewComponentToStr)
       .filter(Boolean)
       .join("&");
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Text, Box } from "native-base";
 import {
   useIsFocused,
@@ -95,6 +95,29 @@ export default function SchoolScreen() {
     ).toString()}.`;
   }, [semesterInfo, schoolInfo, schoolNames]);
 
+  const departmentCodeToNavigationButton = useCallback(
+    (info) => (departmentCode: string, index: number) => {
+      const departmentInfo: DepartmentInfo = {
+        ...schoolInfo,
+        departmentCode,
+      };
+
+      return (
+        <TieredTextButton
+          key={departmentCode + index}
+          {...info}
+          primaryText={getDepartmentName(departmentInfo, departmentNames)}
+          secondaryText={`${departmentCode.toUpperCase()}-${schoolInfo.schoolCode.toUpperCase()}`}
+          linkTo={Route("ExploreTab", "Department", {
+            departmentInfo,
+            semester: semesterInfo,
+          })}
+        />
+      );
+    },
+    [schoolInfo, departmentNames, semesterInfo]
+  );
+
   return (
     <>
       <AlertPopup
@@ -115,30 +138,10 @@ export default function SchoolScreen() {
             isLoaded={isLoaded && !!departments.length}
             childrenCount={departments.length}
           >
-            {(info) =>
-              departments.map((departmentCode, index) => {
-                const departmentInfo: DepartmentInfo = {
-                  ...schoolInfo,
-                  departmentCode,
-                };
-
-                return (
-                  <TieredTextButton
-                    key={departmentCode + index}
-                    {...info}
-                    primaryText={getDepartmentName(
-                      departmentInfo,
-                      departmentNames
-                    )}
-                    secondaryText={`${departmentCode.toUpperCase()}-${schoolInfo.schoolCode.toUpperCase()}`}
-                    linkTo={Route("ExploreTab", "Department", {
-                      departmentInfo,
-                      semester: semesterInfo,
-                    })}
-                  />
-                );
-              })
-            }
+            {(info) => {
+              const btn = departmentCodeToNavigationButton(info);
+              return departments.map(btn);
+            }}
           </Grid>
         </Box>
       </KeyboardAwareSafeAreaScrollView>

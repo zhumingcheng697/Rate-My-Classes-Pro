@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { type StackNavigationProp } from "@react-navigation/stack";
 
 import type {
@@ -38,38 +38,45 @@ export default function ClassesGrid({
     const classKeys = new Set<string>();
     const duplicateIndices = new Set<number>();
 
-    classes.forEach((classInfo, i) => {
+    const findDuplicate = (classInfo: ClassInfo, i: number) => {
       const classKey = `${getFullClassCode(classInfo)} ${classInfo.name}`;
       if (classKeys.has(classKey)) {
         duplicateIndices.add(i);
       } else {
         classKeys.add(classKey);
       }
-    });
+    };
+
+    classes.forEach(findDuplicate);
 
     return duplicateIndices;
   }, [classes]);
 
+  const classToNavigationButton = useCallback(
+    (info) => (classInfo: ClassInfo, index: number) =>
+      duplicateIndices.has(index) ? null : (
+        <TieredTextButton
+          key={`${getFullClassCode(classInfo)} ${classInfo.name}`}
+          {...info}
+          primaryText={classInfo.name}
+          secondaryText={getFullClassCode(classInfo)}
+          linkTo={Route(tabName, "Detail", {
+            classCode: classInfo,
+            query,
+            starredOrReviewed,
+            semester: semesterInfo,
+          })}
+        />
+      ),
+    [duplicateIndices, tabName, query, starredOrReviewed, semesterInfo]
+  );
+
   return (
     <Grid childrenCount={classes.length - duplicateIndices.size} {...rest}>
-      {(info) =>
-        classes.map((classInfo, index) =>
-          duplicateIndices.has(index) ? null : (
-            <TieredTextButton
-              key={`${getFullClassCode(classInfo)} ${classInfo.name}`}
-              {...info}
-              primaryText={classInfo.name}
-              secondaryText={getFullClassCode(classInfo)}
-              linkTo={Route(tabName, "Detail", {
-                classCode: classInfo,
-                query,
-                starredOrReviewed,
-                semester: semesterInfo,
-              })}
-            />
-          )
-        )
-      }
+      {(info) => {
+        const btn = classToNavigationButton(info);
+        return classes.map(btn);
+      }}
     </Grid>
   );
 }

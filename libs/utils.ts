@@ -239,16 +239,18 @@ export function getMeetingScheduleString(meetings: [Date, Date][]) {
 
   const stringnifiedSchedule: Record<number, string> = {};
 
+  const sortDate = ([a]: [Date, Date], [b]: [Date, Date]) =>
+    a.valueOf() - b.valueOf();
+
   for (let day in weeklySchedule) {
     const stringnifiedDailySchedule: Set<string> = new Set();
 
-    weeklySchedule[day]
-      .sort(([a], [b]) => a.valueOf() - b.valueOf())
-      .forEach(([begin, end]) =>
-        stringnifiedDailySchedule.add(
-          `${getTimeString(begin)}–${getTimeString(end)}`
-        )
+    const stringifySchedule = ([begin, end]: [Date, Date]) =>
+      stringnifiedDailySchedule.add(
+        `${getTimeString(begin)}–${getTimeString(end)}`
       );
+
+    weeklySchedule[day].sort(sortDate).forEach(stringifySchedule);
 
     stringnifiedSchedule[day] = [...stringnifiedDailySchedule].join(", ");
   }

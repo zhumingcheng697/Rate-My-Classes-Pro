@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Select, type ISelectProps, Icon } from "native-base";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -39,6 +39,13 @@ export default function Selector<T>({
     return optionRecord;
   }, [serializeOption, options]);
 
+  const selectOption = useCallback(
+    (option: string) => (
+      <Select.Item key={option} label={option} value={option} />
+    ),
+    []
+  );
+
   return (
     <Select
       {...rest}
@@ -62,9 +69,7 @@ export default function Selector<T>({
         ),
       }}
     >
-      {Object.keys(optionRecord).map((option) => (
-        <Select.Item key={option} label={option} value={option} />
-      ))}
+      {Object.keys(optionRecord).map(selectOption)}
     </Select>
   );
 }

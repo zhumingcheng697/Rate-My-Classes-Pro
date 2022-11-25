@@ -39,6 +39,7 @@ import {
   getFullSemesterCode,
   tryCatch,
 } from "../libs/utils";
+import type { ReviewedClassInfo, StarredClassInfo } from "../libs/types";
 import { useAppState } from "../libs/hooks";
 import { AppleOAuth, GoogleOAuth } from "../libs/oauth";
 import Semester from "../libs/semester";
@@ -185,18 +186,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (username) setUsername(username);
 
+      const classToEntry = (info: StarredClassInfo | ReviewedClassInfo) => [
+        getFullClassCode(info),
+        info,
+      ];
+
       if (starred)
         loadStarredClasses(dispatch)(
-          Object.fromEntries(
-            starred.map((info) => [getFullClassCode(info), info])
-          )
+          Object.fromEntries(starred.map(classToEntry))
         );
 
       if (reviewed)
         loadReviewedClasses(dispatch)(
-          Object.fromEntries(
-            reviewed.map((info) => [getFullClassCode(info), info])
-          )
+          Object.fromEntries(reviewed.map(classToEntry))
         );
 
       if (settings) loadSettings(dispatch)(settings);

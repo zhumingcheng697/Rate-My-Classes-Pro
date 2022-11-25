@@ -88,25 +88,32 @@ export default function Grid({
   }, [spacing, minChildWidth, width, left, right, heightProps]);
 
   const skeletonChildren = useCallback(
-    (info: GridRenderItemInfo) =>
-      [...Array(Math.ceil(skeletonCount / columns) * columns)].map(
-        (_, index) => (
-          <Skeleton
-            key={"skeleton" + index}
-            {...info}
-            {...Object.assign({ borderRadius: 10 }, skeletonProps)}
-          />
-        )
-      ),
+    (info: GridRenderItemInfo) => {
+      const skeleton = (_: any, index: number) => (
+        <Skeleton
+          key={"skeleton" + index}
+          {...info}
+          {...Object.assign({ borderRadius: 10 }, skeletonProps)}
+        />
+      );
+      return [...Array(Math.ceil(skeletonCount / columns) * columns)].map(
+        skeleton
+      );
+    },
     [skeletonCount, skeletonProps]
   );
 
   const placeholderChildren = useCallback(
-    (info: GridRenderItemInfo) => [
-      [...Array((columns - (childrenCount % columns)) % columns)].map(
-        (_, index) => <Box key={"placeholder" + index} {...info} />
-      ),
-    ],
+    (info: GridRenderItemInfo) => {
+      const placeholder = (_: any, index: number) => (
+        <Box key={"placeholder" + index} {...info} />
+      );
+      return [
+        [...Array((columns - (childrenCount % columns)) % columns)].map(
+          placeholder
+        ),
+      ];
+    },
     [childrenCount, columns]
   );
 

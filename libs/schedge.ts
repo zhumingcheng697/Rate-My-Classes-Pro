@@ -6,6 +6,7 @@ import type {
   ClassInfo,
   SectionInfo,
   ClassInfoWithSections,
+  ValueOf,
 } from "./types";
 import { SemesterInfo } from "./semester";
 import {
@@ -39,15 +40,21 @@ const baseUrl = "https://nyu.a1liu.com/api";
 const composeUrl = (path: string, params: URLParams = { full: true }) =>
   baseUrl + path + "?" + composeQuery(params);
 
+const joinKeyVal = ([key, value]: [string, ValueOf<URLParams>]) =>
+  `${key}=${value}`;
+
 const composeQuery = (params: URLParams) =>
-  Object.entries(params)
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
+  Object.entries(params).map(joinKeyVal).join("&");
 
 const cleanUpName = (name?: string) =>
   name
     ? name.replace(/^(?:\| +[A-Z][A-Z0-9]+-[A-Z]{2,3} [0-9]+[A-Z0-9]* +)+/, "")
     : "";
+
+const sortRecitations = (section: SectionInfo) =>
+  section.recitations?.sort((a, b) =>
+    (a.code || "") < (b.code || "") ? -1 : 1
+  );
 
 export async function getNameRecordFor(semesterInfo: SemesterInfo) {
   const res = await fetch(
@@ -113,15 +120,21 @@ export async function getClasses(
 
   const json: SchedgeClassRecord = await res.json();
 
+  const schedgeClassToClass = ({
+    name,
+    deptCourseId,
+    description,
+  }: SchedgeClassRecord[number]) => ({
+    schoolCode,
+    departmentCode,
+    classNumber: deptCourseId,
+    name: cleanUpName(name),
+    description: description ?? "",
+  });
+
   return json && Array.isArray(json)
     ? json
-        .map(({ name, deptCourseId, description }) => ({
-          schoolCode,
-          departmentCode,
-          classNumber: deptCourseId,
-          name: cleanUpName(name),
-          description: description ?? "",
-        }))
+        .map(schedgeClassToClass)
         .sort((a, b) => compareClassNumbers(a.classNumber, b.classNumber))
     : [];
 }
@@ -150,11 +163,7 @@ export async function getClassWithSections(
 
   const { name, description, sections } = schedgeClass;
 
-  sections?.forEach((section) =>
-    section.recitations?.sort((a, b) =>
-      (a.code || "") < (b.code || "") ? -1 : 1
-    )
-  );
+  sections?.forEach(sortRecitations);
 
   return {
     name: cleanUpName(name),
@@ -179,7 +188,12 @@ export async function searchClasses(
 
   const json: SchedgeClassRecord = await res.json();
 
-  return json.map(({ name, deptCourseId, description, subjectCode }) => {
+  const schedgeClassToClass = ({
+    name,
+    deptCourseId,
+    description,
+    subjectCode,
+  }: SchedgeClassRecord[number]) => {
     const [departmentCode, schoolCode] = subjectCode?.split("-") ?? [];
     return {
       schoolCode: schoolCode || "",
@@ -188,7 +202,9 @@ export async function searchClasses(
       name: cleanUpName(name),
       description: description ?? "",
     };
-  });
+  };
+
+  return json.map(schedgeClassToClass);
 }
 
 export async function getSections(
@@ -213,11 +229,7 @@ export async function getSections(
         e.subjectCode === getFullDepartmentCode({ schoolCode, departmentCode })
     )?.sections ?? [];
 
-  sections.forEach((section) =>
-    section.recitations?.sort((a, b) =>
-      (a.code || "") < (b.code || "") ? -1 : 1
-    )
-  );
+  sections.forEach(sortRecitations);
 
   return sections;
 }

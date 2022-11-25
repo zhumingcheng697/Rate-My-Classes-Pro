@@ -118,6 +118,14 @@ export default function SchoolScreen() {
     [schoolInfo, departmentNames, semesterInfo]
   );
 
+  const departmentsToNavigationButtons = useCallback(
+    (info) => {
+      const btn = departmentCodeToNavigationButton(info);
+      return departments.map(btn);
+    },
+    [departments, departmentCodeToNavigationButton]
+  );
+
   return (
     <>
       <AlertPopup
@@ -138,10 +146,7 @@ export default function SchoolScreen() {
             isLoaded={isLoaded && !!departments.length}
             childrenCount={departments.length}
           >
-            {(info) => {
-              const btn = departmentCodeToNavigationButton(info);
-              return departments.map(btn);
-            }}
+            {departmentsToNavigationButtons}
           </Grid>
         </Box>
       </KeyboardAwareSafeAreaScrollView>

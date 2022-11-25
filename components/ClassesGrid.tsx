@@ -71,12 +71,17 @@ export default function ClassesGrid({
     [duplicateIndices, tabName, query, starredOrReviewed, semesterInfo]
   );
 
+  const classesToNavigationButtons = useCallback(
+    (info) => {
+      const btn = classToNavigationButton(info);
+      return classes.map(btn);
+    },
+    [classes, classToNavigationButton]
+  );
+
   return (
     <Grid childrenCount={classes.length - duplicateIndices.size} {...rest}>
-      {(info) => {
-        const btn = classToNavigationButton(info);
-        return classes.map(btn);
-      }}
+      {classesToNavigationButtons}
     </Grid>
   );
 }

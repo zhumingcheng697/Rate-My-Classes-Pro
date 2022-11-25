@@ -123,18 +123,19 @@ export default function AlertPopup({
 
   useEffect(() => {
     setTimeout(() => {
-      Animated.timing(maxHeight, {
-        toValue:
-          height - top - (keyboardHeight ? keyboardHeight + 10 : bottom + 40),
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-
-      Animated.timing(translateY, {
-        toValue: keyboardHeight ? (top - keyboardHeight) / 2 : 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
+      Animated.parallel([
+        Animated.timing(maxHeight, {
+          toValue:
+            height - top - (keyboardHeight ? keyboardHeight + 10 : bottom + 40),
+          duration: 300,
+          useNativeDriver: false,
+        }),
+        Animated.timing(translateY, {
+          toValue: keyboardHeight ? (top - keyboardHeight) / 2 : 0,
+          duration: 300,
+          useNativeDriver: false,
+        }),
+      ]).start();
     }, 50);
   }, [keyboardHeight, height, top, bottom]);
 

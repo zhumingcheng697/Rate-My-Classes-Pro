@@ -129,16 +129,22 @@ export default function SignInSignUpScreen() {
       <KeyboardAwareSafeAreaScrollView>
         <VStack margin={"10px"} space={"8px"}>
           {isSigningUp && (
-            <LabeledInput label={"Username"} usePlainLabel>
+            <LabeledInput
+              label={"Username"}
+              isDisabled={isLoading}
+              usePlainLabel
+            >
               <Input
+                isDisabled={isLoading}
                 value={username}
                 onChangeText={setUsername}
                 textContentType={"username"}
               />
             </LabeledInput>
           )}
-          <LabeledInput label={"Email"} usePlainLabel>
+          <LabeledInput label={"Email"} isDisabled={isLoading} usePlainLabel>
             <Input
+              isDisabled={isLoading}
               value={email}
               onChangeText={setEmail}
               autoCorrect={false}
@@ -147,8 +153,9 @@ export default function SignInSignUpScreen() {
               textContentType={"emailAddress"}
             />
           </LabeledInput>
-          <LabeledInput label={"Password"} usePlainLabel>
+          <LabeledInput label={"Password"} isDisabled={isLoading} usePlainLabel>
             <Input
+              isDisabled={isLoading}
               key={`${key}`}
               value={password}
               onChangeText={setPassword}
@@ -157,8 +164,13 @@ export default function SignInSignUpScreen() {
             />
           </LabeledInput>
           {isSigningUp && (
-            <LabeledInput label={"Confirm Password"} usePlainLabel>
+            <LabeledInput
+              label={"Confirm Password"}
+              isDisabled={isLoading}
+              usePlainLabel
+            >
               <Input
+                isDisabled={isLoading}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 textContentType={"oneTimeCode"}

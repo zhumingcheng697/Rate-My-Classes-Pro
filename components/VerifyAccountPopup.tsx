@@ -96,7 +96,10 @@ export default function VerifyAccountPopup({
               only be used once to receive a confirmation code and will never be
               recorded.
             </Text>
-            <LabeledInput label={"NYU Email"}>
+            <LabeledInput
+              label={"NYU Email"}
+              isDisabled={verifyAccountState === VerifyAccountState.sendingCode}
+            >
               <Input
                 isDisabled={
                   verifyAccountState === VerifyAccountState.sendingCode
@@ -174,7 +177,10 @@ export default function VerifyAccountPopup({
               Please check the NYU email you provided and type in the
               confirmation code you received.
             </Text>
-            <LabeledInput label={"Confirmation Code"}>
+            <LabeledInput
+              label={"Confirmation Code"}
+              isDisabled={verifyAccountState !== VerifyAccountState.codeSent}
+            >
               <Input
                 isDisabled={verifyAccountState !== VerifyAccountState.codeSent}
                 value={verificationCode}

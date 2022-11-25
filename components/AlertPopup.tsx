@@ -7,7 +7,7 @@ import React, {
   useState,
   useMemo,
 } from "react";
-import { Keyboard, Platform } from "react-native";
+import { Animated, Keyboard, Platform } from "react-native";
 import { Button, AlertDialog, theme } from "native-base";
 import { useIsFocused } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -111,82 +111,115 @@ export default function AlertPopup({
     [Platform, width, height]
   );
 
+  const maxHeight = useRef(
+    new Animated.Value(
+      height - top - (keyboardHeight ? keyboardHeight + 10 : bottom + 40)
+    )
+  ).current;
+
+  const translateY = useRef(
+    new Animated.Value(keyboardHeight ? (top - keyboardHeight) / 2 : 0)
+  ).current;
+
+  useEffect(() => {
+    setTimeout(() => {
+      Animated.timing(maxHeight, {
+        toValue:
+          height - top - (keyboardHeight ? keyboardHeight + 10 : bottom + 40),
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+
+      Animated.timing(translateY, {
+        toValue: keyboardHeight ? (top - keyboardHeight) / 2 : 0,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+    }, 50);
+  }, [keyboardHeight, height, top, bottom]);
+
   return (
     <AlertDialog
       leastDestructiveRef={ref}
       isOpen={shouldOpen}
       onClose={onClose}
     >
-      <AlertDialog.Content
-        maxHeight={
-          keyboardHeight
-            ? height - top - keyboardHeight - 10 + "px"
-            : height - top - bottom - 40 + "px"
-        }
-        marginTop={keyboardHeight ? top + "px" : undefined}
-        bottom={keyboardHeight ? keyboardHeight / 2 + "px" : undefined}
-        {...colorModeResponsiveStyle((selector) => ({
-          background: selector({
-            light: theme.colors.gray[50],
-            dark: theme.colors.gray[700],
-          }),
-        }))}
+      <Animated.View
+        style={{
+          maxHeight,
+          transform: [{ translateY }, { perspective: 1000 }],
+          flex: 1,
+          justifyContent: "center",
+          alignContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}
       >
-        <AlertDialog.Header
-          py={isCompact ? "10px" : undefined}
-          _text={textColorStyle}
-          borderColor={subtleBorder}
-        >
-          {header}
-        </AlertDialog.Header>
-        <AlertDialog.Body
-          pt={isCompact ? "6px" : undefined}
-          _text={colorModeResponsiveStyle((selector) => ({
-            color: selector({
-              light: theme.colors.gray[500],
-              dark: theme.colors.gray[300],
-            }),
-          }))}
-        >
-          {body}
-        </AlertDialog.Body>
-        <AlertDialog.Footer
-          py={isCompact ? "8px" : undefined}
+        <AlertDialog.Content
+          maxHeight={"100%"}
           {...colorModeResponsiveStyle((selector) => ({
             background: selector({
-              light: theme.colors.gray[100],
-              dark: theme.colors.gray[600],
+              light: theme.colors.gray[50],
+              dark: theme.colors.gray[700],
             }),
           }))}
         >
-          {footer ? (
-            footer(ref, isCompact)
-          ) : footerPrimaryButton ? (
-            <Button.Group space={2}>
+          <AlertDialog.Header
+            py={isCompact ? "10px" : undefined}
+            _text={textColorStyle}
+            borderColor={subtleBorder}
+          >
+            {header}
+          </AlertDialog.Header>
+          <AlertDialog.Body
+            pt={isCompact ? "6px" : undefined}
+            _text={colorModeResponsiveStyle((selector) => ({
+              color: selector({
+                light: theme.colors.gray[500],
+                dark: theme.colors.gray[300],
+              }),
+            }))}
+          >
+            {body}
+          </AlertDialog.Body>
+          <AlertDialog.Footer
+            py={isCompact ? "8px" : undefined}
+            {...colorModeResponsiveStyle((selector) => ({
+              background: selector({
+                light: theme.colors.gray[100],
+                dark: theme.colors.gray[600],
+              }),
+            }))}
+          >
+            {footer ? (
+              footer(ref, isCompact)
+            ) : footerPrimaryButton ? (
+              <Button.Group space={2}>
+                <Button
+                  variant="unstyled"
+                  _pressed={{ opacity: 0.5 }}
+                  _hover={{ opacity: 0.72 }}
+                  py={isCompact ? "5px" : undefined}
+                  onPress={onClose}
+                  ref={ref}
+                >
+                  Cancel
+                </Button>
+                {footerPrimaryButton(isCompact)}
+              </Button.Group>
+            ) : (
               <Button
-                variant="unstyled"
-                _pressed={{ opacity: 0.5 }}
-                _hover={{ opacity: 0.72 }}
-                py={isCompact ? "5px" : undefined}
-                onPress={onClose}
                 ref={ref}
+                onPress={onClose}
+                borderRadius={isCompact ? 8 : undefined}
+                py={isCompact ? "5px" : undefined}
               >
-                Cancel
+                OK
               </Button>
-              {footerPrimaryButton(isCompact)}
-            </Button.Group>
-          ) : (
-            <Button
-              ref={ref}
-              onPress={onClose}
-              borderRadius={isCompact ? 8 : undefined}
-              py={isCompact ? "5px" : undefined}
-            >
-              OK
-            </Button>
-          )}
-        </AlertDialog.Footer>
-      </AlertDialog.Content>
+            )}
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </Animated.View>
     </AlertDialog>
   );
 }

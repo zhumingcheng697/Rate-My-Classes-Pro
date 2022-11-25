@@ -49,7 +49,7 @@ function showConfirmation(message: string) {
         </HStack>
       ),
     });
-  }, 5);
+  }, 50);
 }
 
 type SharingButtonProps = {

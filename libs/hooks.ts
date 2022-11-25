@@ -591,27 +591,21 @@ export const useKeyboardHeight = () => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   useEffect(() => {
-    function onKeyboardChange(e: KeyboardEvent) {
+    const onKeyboardChange = (e: KeyboardEvent) =>
       setKeyboardHeight(e.endCoordinates.height);
-    }
 
-    function onKeyboardHide(e: KeyboardEvent) {
-      setKeyboardHeight(0);
-    }
-    function onKeyboardShow(e: KeyboardEvent) {
-      setKeyboardHeight(e.endCoordinates.height);
-    }
+    const onKeyboardHide = () => setKeyboardHeight(0);
 
     const subscriptions =
       Platform.OS === "ios"
         ? [
             Keyboard.addListener("keyboardWillChangeFrame", onKeyboardChange),
             Keyboard.addListener("keyboardWillHide", onKeyboardHide),
-            Keyboard.addListener("keyboardWillShow", onKeyboardShow),
+            Keyboard.addListener("keyboardWillShow", onKeyboardChange),
           ]
         : [
             Keyboard.addListener("keyboardDidHide", onKeyboardHide),
-            Keyboard.addListener("keyboardDidShow", onKeyboardShow),
+            Keyboard.addListener("keyboardDidShow", onKeyboardChange),
           ];
 
     return () =>

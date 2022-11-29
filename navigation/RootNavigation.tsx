@@ -5,6 +5,7 @@ import React, {
   useState,
   useEffect,
   useRef,
+  useMemo,
 } from "react";
 import { Platform } from "react-native";
 import { type Dispatch } from "redux";
@@ -25,7 +26,12 @@ import {
 import { getNameRecordFor } from "../libs/schedge";
 import Semester, { type SemesterInfo } from "../libs/semester";
 import { useRefresh } from "../libs/hooks";
-import { composeErrorMessage, isObjectEmpty } from "../libs/utils";
+import {
+  composeErrorMessage,
+  getFullSemesterCode,
+  isObjectEmpty,
+} from "../libs/utils";
+import { useWatchConnectivity } from "../libs/watch";
 import { useAuth } from "../mongodb/auth";
 import { setDepartmentNameRecord, setSchoolNameRecord } from "../redux/actions";
 import { subtleBorder } from "../styling/colors";
@@ -50,6 +56,7 @@ class RootNavigationComponent extends Component<RootNavigationComponentProps> {
 
 export default function RootNavigation() {
   const [recordError, setRecordError] = useState<ErrorType | null>(null);
+  const starred = useSelector((state) => state.starredClassRecord);
   const { selectedSemester } = useSelector((state) => state.settings);
   const loadedSemester = useRef<SemesterInfo | null>(null);
   const [accountError, setAccountError] = useState<any>(null);
@@ -164,6 +171,26 @@ export default function RootNavigation() {
       setShowAlert(false);
     }
   }, [recordError, accountError, userDocError, showAlert]);
+
+  const context = useMemo(
+    () => ({
+      synced: true,
+      starred: starred ?? {},
+      selectedSemester: getFullSemesterCode(selectedSemester),
+      isAuthenticated: auth.isAuthenticated,
+    }),
+    [
+      starred,
+      selectedSemester.semesterCode,
+      selectedSemester.year,
+      auth.isAuthenticated,
+    ]
+  );
+
+  useWatchConnectivity(
+    auth.isSemesterSettled && auth.isSettingsSettled,
+    JSON.stringify(context)
+  );
 
   return (
     <RootNavigationComponent fetchInfo={fetchInfo}>

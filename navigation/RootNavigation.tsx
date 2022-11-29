@@ -172,25 +172,24 @@ export default function RootNavigation() {
     }
   }, [recordError, accountError, userDocError, showAlert]);
 
-  const context = useMemo(
-    () => ({
-      synced: true,
-      starred: starred ?? {},
-      selectedSemester: getFullSemesterCode(selectedSemester),
-      isAuthenticated: auth.isAuthenticated,
-    }),
-    [
-      starred,
-      selectedSemester.semesterCode,
-      selectedSemester.year,
-      auth.isAuthenticated,
-    ]
-  );
-
-  useWatchConnectivity(
+  const [isReady, context] = useMemo(() => {
+    return [
+      auth.isSemesterSettled && auth.isSettingsSettled,
+      JSON.stringify({
+        synced: true,
+        starred: starred ?? {},
+        selectedSemester: getFullSemesterCode(selectedSemester),
+        isAuthenticated: auth.isAuthenticated,
+      }),
+    ];
+  }, [
     auth.isSemesterSettled && auth.isSettingsSettled,
-    JSON.stringify(context)
-  );
+    starred,
+    selectedSemester,
+    auth.isAuthenticated,
+  ]);
+
+  useWatchConnectivity(isReady, context);
 
   return (
     <RootNavigationComponent fetchInfo={fetchInfo}>

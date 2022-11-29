@@ -391,6 +391,8 @@ PODS:
     - React
   - RNVectorIcons (9.1.0):
     - React-Core
+  - RNWatch (1.1.0):
+    - React
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -464,6 +466,7 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - RNWatch (from `../node_modules/react-native-watch-connectivity`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -574,6 +577,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  RNWatch:
+    :path: "../node_modules/react-native-watch-connectivity"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -638,6 +643,7 @@ SPEC CHECKSUMS:
   RNScreens: d6da2b9e29cf523832c2542f47bf1287318b1868
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
+  RNWatch: fd30ca40a5b5ef58dcbc195638e68219bc455236
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 6671cf077f614314c22fd09ddf87d7abeee64e96
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

@@ -21,7 +21,7 @@
 		C2788FCA292695BB0009567E /* RNSystemFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2788FC9292695BB0009567E /* RNSystemFont.mm */; };
 		C281D999280F5DD8009E8DBF /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = C281D998280F5DD8009E8DBF /* File.swift */; };
 		C2B63311292D4221002183A3 /* RNUserActivity.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2B63310292D4221002183A3 /* RNUserActivity.mm */; };
-		C2F35E5C29366F5500EF89CD /* Rate My Classes.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C25F9C64292F14340007E3C3 /* Rate My Classes.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C2F35E5C29366F5500EF89CD /* Rate My Classes.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C25F9C64292F14340007E3C3 /* Rate My Classes.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

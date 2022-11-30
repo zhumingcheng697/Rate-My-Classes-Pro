@@ -37,7 +37,7 @@ struct StarredClass: ClassInfo, Codable, Hashable, Identifiable {
   }
 }
 
-struct Section: Codable, Hashable {
+struct SectionInfo: Codable, Hashable {
   struct Meeting: Codable, Hashable {
     let beginDate: String
     let minutesDuration: Int
@@ -56,5 +56,5 @@ struct Section: Codable, Hashable {
   let location: String?
   let notes: String?
   let prerequisites: String?
-  let recitations: [Section]?
+  let recitations: [SectionInfo]?
 }

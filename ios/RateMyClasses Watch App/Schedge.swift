@@ -12,12 +12,12 @@ struct Schedge {
     let name: String?
     let deptCourseId: String?
     let subjectCode: String?
-    let sections: [Section]?
+    let sections: [SectionInfo]?
   }
   
   private static let baseURL = "https://nyu.a1liu.com/api"
   
-  static func getSchedule(classInfo: ClassInfo, selectedSemester: Semester) async -> [Section]? {
+  static func getSchedule(classInfo: ClassInfo, selectedSemester: Semester) async -> [SectionInfo]? {
     if let url = URL(string: "\(Schedge.baseURL)/courses/\(selectedSemester.code)/\(classInfo.fullDepartmentCode)" ),
        let (data, _) = try? await URLSession.shared.data(from: url),
        let classRecords = try? JSONDecoder().decode([ClassRecord].self, from: data) {

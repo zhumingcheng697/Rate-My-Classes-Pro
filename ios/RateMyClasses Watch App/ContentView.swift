@@ -14,7 +14,7 @@ struct ContentView: View {
     if !contextModel.context.hasSynced {
       return ("exclamationmark.arrow.triangle.2.circlepath", "No Data Available", "Please open the Rate My Classes app on your iPhone to start syncing.")
     } else if !contextModel.context.isAuthenticated {
-      return ("person.2", "Not Signed In", "Please sign in on the Rate My Classes app on your iPhone to track your starred classes.")
+      return ("person.crop.circle.badge.exclamationmark", "Not Signed In", "Please sign in on the Rate My Classes app on your iPhone to track your starred classes.")
     } else if contextModel.context.starred.count == 0 {
       return ("star", "No Starred Classes", "Please star some classes on the Rate My Classes app on your iPhone to track them here.")
     } else {

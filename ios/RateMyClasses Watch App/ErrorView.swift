@@ -35,7 +35,7 @@ struct ErrorView: View {
 struct ErrorView_Previews: PreviewProvider {
   static var previews: some View {
     ErrorView(
-      iconName: "person.2",
+      iconName: "person.crop.circle.badge.exclamationmark",
       title: "Not Signed In",
       message: "Please sign in on the Rate My Classes app on your iPhone to track your starred classes.")
   }

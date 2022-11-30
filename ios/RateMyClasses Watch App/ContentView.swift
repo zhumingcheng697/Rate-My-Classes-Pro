@@ -42,13 +42,12 @@ struct ContentView: View {
       }
 
       ScrollView {
-        ForEach(Array(contextModel.context.starred), id: \.self) { starredClassInfo in
-          Text(starredClassToString(starredClassInfo))
-            .foregroundColor(.secondary)
+        ForEach(contextModel.context.starred) { starredClass in
+          Text(starredClassToString(starredClass))
         }
       }
     }
-    .padding()
+    .padding(.vertical)
     .ignoresSafeArea(.all, edges: [.bottom])
   }
 }

@@ -9,17 +9,17 @@ import SwiftUI
 
 struct StarredClassView: View {
   @EnvironmentObject var contextModel: ContextModel
-  let starredClassInfo: StarredClass
+  let starredClass: StarredClass
   
   var body: some View {
 
     ScrollView {
       VStack(alignment: .leading) {
-        Text(starredClassInfo.name)
+        Text(starredClass.name)
           .font(.title3)
           .foregroundColor(.accentColor)
 
-        Text(starredClassInfo.fullClassCode)
+        Text(starredClass.fullClassCode)
           .font(.callout)
           .fontWeight(.semibold)
 
@@ -29,7 +29,7 @@ struct StarredClassView: View {
         .padding(.vertical)
 
 
-        Text(starredClassInfo.description)
+        Text(starredClass.description)
           .font(.caption)
       }
     }
@@ -38,7 +38,13 @@ struct StarredClassView: View {
 
 struct StarredClassView_Previews: PreviewProvider {
   static var previews: some View {
-    StarredClassView(starredClassInfo: StarredClass(schoolCode: "UY", departmentCode: "CS", classNumber: "2124", name: "Object Oriented Programming", description: "This intermediate-level programming course teaches object-oriented programming in C++. Topics: Pointers, dynamic memory allocation and recursion. Classes and objects including constructors, destructors, methods (member functions) and data members. Access and the interface to relationships of classes including composition, association and inheritance. Polymorphism through function overloading operators. Inheritance and templates. Use of the standard template library containers and algorithms. | Prerequisite: CS-UY 1134 (C- or better); Corequisite: EX-UY 1", starredDate: 0))
-      .environmentObject(ContextModel())
+    StarredClassView(starredClass: StarredClass(
+      schoolCode: "UY",
+      departmentCode: "CS",
+      classNumber: "2124",
+      name: "Object Oriented Programming",
+      description: "This intermediate-level programming course teaches object-oriented programming in C++. Topics: Pointers, dynamic memory allocation and recursion. Classes and objects including constructors, destructors, methods (member functions) and data members. Access and the interface to relationships of classes including composition, association and inheritance. Polymorphism through function overloading operators. Inheritance and templates. Use of the standard template library containers and algorithms. | Prerequisite: CS-UY 1134 (C- or better); Corequisite: EX-UY 1",
+      starredDate: 0))
+    .environmentObject(ContextModel())
   }
 }

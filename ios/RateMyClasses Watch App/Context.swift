@@ -8,7 +8,7 @@
 import WatchConnectivity
 import SwiftUI
 
-struct StarredClass: Codable, Hashable {
+struct StarredClass: Codable, Hashable, Identifiable {
   let schoolCode: String
   let departmentCode: String
   let classNumber: String
@@ -18,6 +18,10 @@ struct StarredClass: Codable, Hashable {
 
   var fullClassCode: String {
     return "\(departmentCode)-\(schoolCode) \(classNumber)"
+  }
+  
+  var id: String {
+    return fullClassCode
   }
 }
 

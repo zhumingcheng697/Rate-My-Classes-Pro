@@ -31,7 +31,7 @@ struct ContentView: View {
         Spacer()
         
         VStack {
-          Text(contextModel.context.selectedSemester)
+          Text(contextModel.context.selectedSemester.name)
             .font(.headline)
             .foregroundColor(.accentColor)
           

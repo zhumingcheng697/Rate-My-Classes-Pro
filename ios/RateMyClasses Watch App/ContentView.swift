@@ -8,45 +8,54 @@
 import SwiftUI
 
 struct ContentView: View {
-  @State var semesters: Array<String> = [];
+  @EnvironmentObject var contextModel: ContextModel
+  
+  func starredClassInfoToString(_ starredClassCode: String) -> String {
+    if let data = try? JSONEncoder().encode(contextModel.context.starred[starredClassCode]) {
+      if let str = String(data: data, encoding: .utf8) {
+        return str
+      }
+    }
+    return starredClassCode
+  }
   
   var body: some View {
     VStack {
-      Image(systemName: "graduationcap.fill")
-        .imageScale(.large)
-        .foregroundColor(.accentColor)
-      
-      Text("Rate My Classes")
-      
-      if self.semesters.count == 0 {
-        Button("Load Data") {
-          guard let url = URL(string: "https://nyu.a1liu.com/api/terms") else { return }
-          URLSession.shared.dataTask(with: URLRequest(url: url)) { data, res, err in
-            guard let data = data else { return }
-            if let list = try? JSONDecoder().decode(Array<String>.self, from: data) {
-              self.semesters = list;
-            }
-          }.resume()
-        }.buttonStyle(.bordered)
-      } else {
-        ScrollView {
-          ForEach(self.semesters, id: \.self) { semester in
-            Text(semester) 
-          }
+      HStack {
+        Spacer()
+        
+        Image(systemName: "graduationcap.fill")
+          .imageScale(.large)
+          .foregroundColor(.accentColor)
+        
+        Spacer()
+        
+        VStack {
+          Text(contextModel.context.selectedSemester)
+            .font(.headline)
+            .foregroundColor(.accentColor)
           
-          Button("Clear") {
-            self.semesters = [];
-          }.buttonBorderShape(.capsule).padding(.vertical)
+          Text(contextModel.context.isAuthenticated ? "Signed In" : "Not Signed In")
+        }
+        
+        Spacer()
+      }
+      
+      ScrollView {
+        ForEach(Array(contextModel.context.starred.keys), id: \.self) { starredClassCode in
+          Text(starredClassInfoToString(starredClassCode))
+            .foregroundColor(.secondary)
         }
       }
     }
     .padding()
-    .ignoresSafeArea(.container, edges: self.semesters.count == 0 ? [] : [.bottom])
+    .ignoresSafeArea(.all, edges: [.bottom])
   }
 }
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     ContentView()
+      .environmentObject(ContextModel())
   }
 }

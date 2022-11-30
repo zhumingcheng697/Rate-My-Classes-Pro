@@ -8,7 +8,7 @@
 import WatchConnectivity
 import SwiftUI
 
-struct StarredClassInfo: Codable {
+struct StarredClassInfo: Codable, Hashable {
   let schoolCode: String
   let departmentCode: String
   let classNumber: String
@@ -69,7 +69,7 @@ struct Semester: Codable {
 
 struct ApplicationContext: Codable {
   let synced: Bool
-  let starred: [String: StarredClassInfo]
+  let starred: [StarredClassInfo]
   let selectedSemester: Semester
   let isAuthenticated: Bool
 }
@@ -85,7 +85,7 @@ class ContextModel: NSObject, WCSessionDelegate, ObservableObject {
       context = decodedContext
       super.init()
     } else {
-      context = ApplicationContext(synced: false, starred: [:], selectedSemester: Semester.predictCurrentSemester(), isAuthenticated: false)
+      context = ApplicationContext(synced: false, starred: [], selectedSemester: Semester.predictCurrentSemester(), isAuthenticated: false)
       super.init()
       updateUserDefaults()
     }

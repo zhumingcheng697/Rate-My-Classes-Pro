@@ -177,7 +177,9 @@ export default function RootNavigation() {
       auth.isSemesterSettled && auth.isSettingsSettled,
       JSON.stringify({
         synced: true,
-        starred: starred ?? {},
+        starred: starred
+          ? Object.values(starred).sort((a, b) => b.starredDate - a.starredDate)
+          : [],
         selectedSemester,
         isAuthenticated: auth.isAuthenticated,
       }),

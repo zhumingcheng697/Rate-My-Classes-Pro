@@ -10,40 +10,40 @@ import SwiftUI
 struct ContentView: View {
   @EnvironmentObject var contextModel: ContextModel
   
-  func starredClassInfoToString(_ starredClassCode: String) -> String {
-    if let data = try? JSONEncoder().encode(contextModel.context.starred[starredClassCode]) {
+  func starredClassInfoToString(_ starredClassInfo: StarredClassInfo) -> String {
+    if let data = try? JSONEncoder().encode(starredClassInfo) {
       if let str = String(data: data, encoding: .utf8) {
         return str
       }
     }
-    return starredClassCode
+    return starredClassInfo.fullClassCode
   }
   
   var body: some View {
     VStack {
       HStack {
         Spacer()
-        
+
         Image(systemName: "graduationcap.fill")
           .imageScale(.large)
           .foregroundColor(.accentColor)
-        
+
         Spacer()
-        
+
         VStack {
           Text(contextModel.context.selectedSemester.name)
             .font(.headline)
             .foregroundColor(.accentColor)
-          
+
           Text(contextModel.context.isAuthenticated ? "Signed In" : "Not Signed In")
         }
-        
+
         Spacer()
       }
-      
+
       ScrollView {
-        ForEach(Array(contextModel.context.starred.keys), id: \.self) { starredClassCode in
-          Text(starredClassInfoToString(starredClassCode))
+        ForEach(Array(contextModel.context.starred), id: \.self) { starredClassInfo in
+          Text(starredClassInfoToString(starredClassInfo))
             .foregroundColor(.secondary)
         }
       }

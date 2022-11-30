@@ -15,6 +15,10 @@ struct StarredClassInfo: Codable {
   let name: String
   let description: String
   let starredDate: Double
+
+  var fullClassCode: String {
+    return "\(departmentCode)-\(schoolCode) \(classNumber)"
+  }
 }
 
 enum SemesterCode: String, Codable {

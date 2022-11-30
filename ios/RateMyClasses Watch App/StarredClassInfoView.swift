@@ -10,10 +10,6 @@ import SwiftUI
 struct StarredClassInfoView: View {
   @EnvironmentObject var contextModel: ContextModel
   let starredClassInfo: StarredClassInfo
-
-  var fullClassCode: String {
-    return "\(starredClassInfo.departmentCode)-\(starredClassInfo.schoolCode) \(starredClassInfo.classNumber)"
-  }
   
   var body: some View {
 
@@ -23,7 +19,7 @@ struct StarredClassInfoView: View {
           .font(.title3)
           .foregroundColor(.accentColor)
 
-        Text(fullClassCode)
+        Text(starredClassInfo.fullClassCode)
           .font(.callout)
           .fontWeight(.semibold)
 

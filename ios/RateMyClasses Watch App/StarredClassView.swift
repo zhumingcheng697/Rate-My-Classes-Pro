@@ -21,6 +21,7 @@ struct StarredClassView: View {
         
         Text(starredClass.fullClassCode)
           .font(.callout)
+          .fontWeight(.medium)
           .padding([.horizontal])
         
         Button("\(contextModel.context.selectedSemester.name) Schedule") {

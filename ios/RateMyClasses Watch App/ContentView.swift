@@ -14,9 +14,9 @@ struct ContentView: View {
     if !contextModel.context.hasSynced {
       return ("exclamationmark.arrow.triangle.2.circlepath", "No Data Available", "Please open the Rate My Classes app on your iPhone to start syncing.")
     } else if !contextModel.context.isAuthenticated {
-      return ("person.2.slash", "Not Signed In", "Please sign in on the Rate My Classes app on your iPhone to view your starred classes.")
+      return ("person.2", "Not Signed In", "Please sign in on the Rate My Classes app on your iPhone to track your starred classes.")
     } else if contextModel.context.starred.count == 0 {
-      return ("star.slash", "No Starred Classes", "Please star some classes on the Rate My Classes app on your iPhone to view them here.")
+      return ("star", "No Starred Classes", "Please star some classes on the Rate My Classes app on your iPhone to track them here.")
     } else {
       return nil
     }
@@ -27,6 +27,9 @@ struct ContentView: View {
       VStack(spacing: 4) {
         Image(systemName: error.iconName)
           .foregroundColor(.red)
+          .symbolVariant(.fill)
+          .symbolVariant(.slash)
+          .symbolRenderingMode(.hierarchical)
           .font(.title2)
         
         Text(error.title)

@@ -16,7 +16,7 @@ import type {
 import { useClassInfoLoader, useSemester } from "../../libs/hooks";
 import { getFullClassCode, extractClassInfo } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
-import { starClass, unstarClass } from "../../redux/actions";
+import Action from "../../redux/actions";
 import SharingButton from "../../components/SharingButton";
 
 type DetailScreenNavigationProp = StackNavigationProp<
@@ -119,14 +119,14 @@ export default ({
                 try {
                   if (isStarred) {
                     await db.unstarClass(classCode);
-                    unstarClass(dispatch)(classCode);
+                    Action.unstarClass(dispatch)(classCode);
                   } else if (classInfo) {
                     const starredClass: StarredClassInfo = {
                       ...extractClassInfo(classInfo),
                       starredDate: Date.now(),
                     };
                     await db.starClass(starredClass);
-                    starClass(dispatch)(starredClass);
+                    Action.starClass(dispatch)(starredClass);
                   }
                 } catch (e) {
                   setShowAlert(true);

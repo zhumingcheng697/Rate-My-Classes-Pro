@@ -51,7 +51,7 @@ import {
 import Schedge from "./schedge";
 import Database from "../mongodb/db";
 import { stringifyRoute } from "../navigation/linking/stringify";
-import { selectSemester } from "../redux/actions";
+import Action from "../redux/actions";
 
 type NavigationProp =
   | StackNavigationProp<ExploreNavigationParamList>
@@ -232,7 +232,7 @@ export function useSemester({
         params.semester &&
         !Semester.equals(params.semester, settings.selectedSemester)
       ) {
-        selectSemester(dispatch)(params.semester);
+        Action.selectSemester(dispatch)(params.semester);
 
         asyncTryCatch(async () => {
           if (db && params.semester) {

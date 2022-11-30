@@ -46,7 +46,7 @@ import {
 import { ReviewOrderSelector } from "../../components/Selector";
 import VerifyAccountPopup from "../../components/VerifyAccountPopup";
 import { useAuth } from "../../mongodb/auth";
-import { reviewClass, unreviewClass } from "../../redux/actions";
+import Action from "../../redux/actions";
 
 type DetailScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -297,7 +297,7 @@ export default function DetailScreen() {
           if (deleteReview) {
             await db.deleteReview(classCode);
             await db.unreviewClass(classCode);
-            unreviewClass(dispatch)(classCode);
+            Action.unreviewClass(dispatch)(classCode);
 
             if (reviewRecord) {
               const newReviewRecord = { ...reviewRecord };
@@ -317,7 +317,7 @@ export default function DetailScreen() {
               };
               await db.submitReview(classCode, review);
               await db.reviewClass(reviewedClass);
-              reviewClass(dispatch)(reviewedClass);
+              Action.reviewClass(dispatch)(reviewedClass);
             } else {
               setError(ReviewErrorType.submitReview);
             }

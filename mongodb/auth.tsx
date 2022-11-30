@@ -26,12 +26,7 @@ import realmApp from "./realmApp";
 import Database from "./db";
 import sync from "./sync";
 import type { UserDoc } from "./types";
-import {
-  loadReviewedClasses,
-  loadSettings,
-  loadStarredClasses,
-  selectSemester,
-} from "../redux/actions";
+import Action from "../redux/actions";
 import {
   asyncTryCatch,
   composeUsername,
@@ -121,7 +116,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       )
     );
     if (selectedSemester) {
-      selectSemester(dispatch)(selectedSemester.toJSON());
+      Action.selectSemester(dispatch)(selectedSemester.toJSON());
     }
   }, [dispatch]);
 
@@ -145,8 +140,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [syncCleanupRef.current]);
 
   const cleanupLocalProfile = useCallback(() => {
-    loadStarredClasses(dispatch)({});
-    loadReviewedClasses(dispatch)({});
+    Action.loadStarredClasses(dispatch)({});
+    Action.loadReviewedClasses(dispatch)({});
     syncCleanup();
     setIsVerified(false);
     setUser(null);
@@ -192,16 +187,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       ];
 
       if (starred)
-        loadStarredClasses(dispatch)(
+        Action.loadStarredClasses(dispatch)(
           Object.fromEntries(starred.map(classToEntry))
         );
 
       if (reviewed)
-        loadReviewedClasses(dispatch)(
+        Action.loadReviewedClasses(dispatch)(
           Object.fromEntries(reviewed.map(classToEntry))
         );
 
-      if (settings) loadSettings(dispatch)(settings);
+      if (settings) Action.loadSettings(dispatch)(settings);
 
       if (verified) setIsVerified(true);
 

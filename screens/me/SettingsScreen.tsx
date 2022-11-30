@@ -19,7 +19,7 @@ import KeyboardAwareSafeAreaScrollView from "../../containers/KeyboardAwareSafeA
 import { useHandoff, useIsCatalyst, useIsCurrentRoute } from "../../libs/hooks";
 import { composeErrorMessage, Route, validateSettings } from "../../libs/utils";
 import Semester from "../../libs/semester";
-import { loadSettings, selectSemester } from "../../redux/actions";
+import Action from "../../redux/actions";
 import { useAuth } from "../../mongodb/auth";
 
 export default function SettingsScreen() {
@@ -201,13 +201,13 @@ export default function SettingsScreen() {
               };
 
               const oldSemester = semester.toJSON();
-              loadSettings(dispatch)(newSettings);
+              Action.loadSettings(dispatch)(newSettings);
 
               if (isAuthenticated && db) {
                 try {
                   await db.updateSettings(validateSettings(newSettings));
                 } catch (e) {
-                  selectSemester(dispatch)(oldSemester);
+                  Action.selectSemester(dispatch)(oldSemester);
                   setShowSettingsAlert(true);
                   console.error(e);
                 }

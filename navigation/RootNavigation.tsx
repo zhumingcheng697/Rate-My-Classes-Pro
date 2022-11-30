@@ -26,14 +26,10 @@ import {
 import Schedge from "../libs/schedge";
 import Semester, { type SemesterInfo } from "../libs/semester";
 import { useRefresh } from "../libs/hooks";
-import {
-  composeErrorMessage,
-  getFullSemesterCode,
-  isObjectEmpty,
-} from "../libs/utils";
+import { composeErrorMessage, isObjectEmpty } from "../libs/utils";
 import { useWatchConnectivity } from "../libs/watch";
 import { useAuth } from "../mongodb/auth";
-import { setDepartmentNameRecord, setSchoolNameRecord } from "../redux/actions";
+import Action from "../redux/actions";
 import { subtleBorder } from "../styling/colors";
 import { useDynamicColor } from "../styling/color-mode-utils";
 
@@ -90,8 +86,8 @@ export default function RootNavigation() {
             !isObjectEmpty(school) &&
             !isObjectEmpty(department)
           ) {
-            setSchoolNameRecord(dispatch)(school);
-            setDepartmentNameRecord(dispatch)(department);
+            Action.setSchoolNameRecord(dispatch)(school);
+            Action.setDepartmentNameRecord(dispatch)(department);
             setRecordError(null);
             loadedSemester.current = selectedSemester;
           } else {
@@ -143,7 +139,7 @@ export default function RootNavigation() {
       )
         return;
 
-      setDepartmentNameRecord(dispatch)(null);
+      Action.setDepartmentNameRecord(dispatch)(null);
       getSchoolAndDepartmentNames(
         schoolNameRecord,
         null,

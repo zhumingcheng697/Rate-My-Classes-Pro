@@ -12,6 +12,10 @@ struct ScheduleView: View {
   @Binding var schedules: [SectionInfo]?
   @Binding var isLoading: Bool
   let classInfo: ClassInfo
+  
+  var diff: Int {
+    return contextModel.context.selectedSemester - Semester.predictCurrentSemester()
+  }
 
   var body: some View {
     Section {
@@ -23,7 +27,7 @@ struct ScheduleView: View {
             
           }
         } else {
-          ErrorView(iconName: "calendar.badge.exclamationmark", title: "Not Offered", message: "\(classInfo.fullClassCode) is not offered in \(contextModel.context.selectedSemester.name)")
+          ErrorView(iconName: "calendar.badge.exclamationmark", title: "Not Offered", message: "\(classInfo.fullClassCode) \(diff > 0 ? "will not be" : diff < 0 ? "was not" : "is not") offered in \(contextModel.context.selectedSemester.name)")
             .padding(.horizontal)
         }
       } else {

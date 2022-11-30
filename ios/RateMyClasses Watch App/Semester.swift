@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct Semester: Codable, Equatable {
-  enum SemesterCode: String, Codable {
+struct Semester: Codable, Equatable, Comparable {
+  enum SemesterCode: String, Codable, CaseIterable {
     case ja, sp, su, fa
   }
   
@@ -50,5 +50,17 @@ struct Semester: Codable, Equatable {
     }
     
     return Semester(semesterCode: semesterCode, year: year)
+  }
+  
+  static func -(lhs: Semester, rhs: Semester) -> Int {
+    return (lhs.year - rhs.year) * 4 + (SemesterCode.allCases.firstIndex(of: lhs.semesterCode) ?? 0) - (SemesterCode.allCases.firstIndex(of: rhs.semesterCode) ?? 0)
+  }
+  
+  static func <(lhs: Semester, rhs: Semester) -> Bool {
+    return lhs - rhs < 0
+  }
+  
+  static func >(lhs: Semester, rhs: Semester) -> Bool {
+    return lhs - rhs > 0
   }
 }

@@ -1,5 +1,5 @@
 //
-//  StarredClassInfoView.swift
+//  StarredClassView.swift
 //  RateMyClasses Watch App
 //
 //  Created by McCoy Zhu on 11/29/22.
@@ -12,27 +12,29 @@ struct StarredClassView: View {
   let starredClass: StarredClass
   
   var body: some View {
-
     ScrollView {
       VStack(alignment: .leading) {
         Text(starredClass.name)
           .font(.title3)
           .foregroundColor(.accentColor)
-
+          .padding([.horizontal])
+        
         Text(starredClass.fullClassCode)
           .font(.callout)
-          .fontWeight(.semibold)
-
+          .padding([.horizontal])
+        
         Button("\(contextModel.context.selectedSemester.name) Schedule") {
-
+          
         }
         .padding(.vertical)
-
-
+        
         Text(starredClass.description)
           .font(.caption)
+          .padding([.horizontal])
       }
     }
+    .navigationTitle(Text(starredClass.fullClassCode))
+    .navigationBarTitleDisplayMode(.inline)
   }
 }
 

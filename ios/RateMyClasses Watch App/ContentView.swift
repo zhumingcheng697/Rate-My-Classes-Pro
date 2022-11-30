@@ -20,35 +20,15 @@ struct ContentView: View {
   }
   
   var body: some View {
-    VStack {
-      HStack {
-        Spacer()
-
-        Image(systemName: "graduationcap.fill")
-          .imageScale(.large)
-          .foregroundColor(.accentColor)
-
-        Spacer()
-
-        VStack {
-          Text(contextModel.context.selectedSemester.name)
-            .font(.headline)
-            .foregroundColor(.accentColor)
-
-          Text(contextModel.context.isAuthenticated ? "Signed In" : "Not Signed In")
-        }
-
-        Spacer()
-      }
-
+    NavigationView {
       ScrollView {
         ForEach(contextModel.context.starred) { starredClass in
-          Text(starredClassToString(starredClass))
+          StarredClassViewNavigationLink(starredClass: starredClass)
         }
       }
+      .navigationTitle(Text("Starred"))
+      .navigationBarTitleDisplayMode(.large)
     }
-    .padding(.vertical)
-    .ignoresSafeArea(.all, edges: [.bottom])
   }
 }
 

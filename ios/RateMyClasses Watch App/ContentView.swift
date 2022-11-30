@@ -24,22 +24,8 @@ struct ContentView: View {
   
   var body: some View {
     if let error = error {
-      VStack(spacing: 4) {
-        Image(systemName: error.iconName)
-          .foregroundColor(.red)
-          .symbolVariant(.fill)
-          .symbolVariant(.slash)
-          .symbolRenderingMode(.hierarchical)
-          .font(.title2)
-        
-        Text(error.title)
-          .multilineTextAlignment(.center)
-        
-        Text(error.message)
-          .font(.caption2)
-          .multilineTextAlignment(.center)
-          .foregroundColor(.secondary)
-      }.padding(.horizontal)
+      ErrorView(iconName: error.iconName, title: error.title, message: error.message)
+        .padding(.horizontal)
     } else {
       NavigationView {
         ScrollView {

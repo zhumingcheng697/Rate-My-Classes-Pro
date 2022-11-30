@@ -8,17 +8,32 @@
 import WatchConnectivity
 import SwiftUI
 
-struct StarredClass: Codable, Hashable, Identifiable {
+protocol ClassInfo {
+  var schoolCode: String { get }
+  var departmentCode: String { get }
+  var classNumber: String { get }
+  var name: String { get }
+  var fullDepartmentCode: String { get }
+  var fullClassCode: String { get }
+}
+
+extension ClassInfo {
+  var fullDepartmentCode: String {
+    return "\(departmentCode)-\(schoolCode)"
+  }
+  
+  var fullClassCode: String {
+    return "\(fullDepartmentCode) \(classNumber)"
+  }
+}
+
+struct StarredClass: ClassInfo, Codable, Hashable, Identifiable {
   let schoolCode: String
   let departmentCode: String
   let classNumber: String
   let name: String
   let description: String
   let starredDate: Double
-
-  var fullClassCode: String {
-    return "\(departmentCode)-\(schoolCode) \(classNumber)"
-  }
   
   var id: String {
     return fullClassCode
@@ -29,14 +44,14 @@ enum SemesterCode: String, Codable {
   case ja, sp, su, fa
 }
 
-struct Semester: Codable {
+struct Semester: Codable, Equatable {
   let semesterCode: SemesterCode
   let year: Int
-
+  
   var code: String {
     return "\(semesterCode.rawValue)\(year)"
   }
-
+  
   var name: String {
     let semesterName: String
     switch semesterCode {
@@ -51,12 +66,12 @@ struct Semester: Codable {
     }
     return "\(semesterName) \(year)"
   }
-
+  
   static func predictCurrentSemester() -> Semester {
     let semesterCode: SemesterCode
     let month = Calendar(identifier: .gregorian).component(.month, from: Date())
     let year = Calendar(identifier: .gregorian).component(.year, from: Date())
-
+    
     if (month <= 1) {
       semesterCode = .ja
     } else if (month <= 5) {
@@ -66,7 +81,7 @@ struct Semester: Codable {
     } else {
       semesterCode = .fa
     }
-
+    
     return Semester(semesterCode: semesterCode, year: year)
   }
 }
@@ -82,7 +97,7 @@ class ContextModel: NSObject, WCSessionDelegate, ObservableObject {
   @Published var context: ApplicationContext
   
   private static let userDefaultsKey = "RATE_MY_CLASSES_PRO:APPLICATION_CONTEXT"
-
+  
   init(session: WCSession = .default) {
     if let data = UserDefaults.standard.data(forKey: ContextModel.userDefaultsKey),
        let decodedContext = try? JSONDecoder().decode(ApplicationContext.self, from: data) {

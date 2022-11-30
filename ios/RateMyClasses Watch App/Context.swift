@@ -17,10 +17,36 @@ struct StarredClassInfo: Codable {
   let starredDate: Double
 }
 
+enum SemesterCode: String, Codable {
+  case ja, sp, su, fa
+}
+
+struct Semester: Codable {
+  let semesterCode: SemesterCode
+  let year: Int
+  var name: String {
+    let semesterName: String
+    switch semesterCode {
+      case .ja:
+        semesterName = "J-Term"
+      case .sp:
+        semesterName = "Spring"
+      case .su:
+        semesterName = "Summer"
+      case .fa:
+        semesterName = "Fall"
+    }
+    return "\(semesterName) \(year)"
+  }
+  var code: String {
+    return "\(semesterCode.rawValue)\(year)"
+  }
+}
+
 struct ApplicationContext: Codable {
   let synced: Bool
   let starred: [String: StarredClassInfo]
-  let selectedSemester: String
+  let selectedSemester: Semester
   let isAuthenticated: Bool
 }
 
@@ -35,21 +61,21 @@ class ContextModel: NSObject, WCSessionDelegate, ObservableObject {
       context = decodedContext
       super.init()
     } else {
-      let semesterCode: String
+      let semesterCode: SemesterCode
       let month = Calendar(identifier: .gregorian).component(.month, from: Date())
       let year = Calendar(identifier: .gregorian).component(.year, from: Date())
       
       if (month <= 1) {
-        semesterCode = "ja"
+        semesterCode = .ja
       } else if (month <= 5) {
-        semesterCode = "sp"
+        semesterCode = .sp
       } else if (month <= 8) {
-        semesterCode = "su"
+        semesterCode = .su
       } else {
-        semesterCode = "fa"
+        semesterCode = .fa
       }
       
-      context = ApplicationContext(synced: false, starred: [:], selectedSemester: "\(semesterCode)\(year)", isAuthenticated: false)
+      context = ApplicationContext(synced: false, starred: [:], selectedSemester: Semester(semesterCode: semesterCode, year: year), isAuthenticated: false)
       super.init()
       updateUserDefaults()
     }

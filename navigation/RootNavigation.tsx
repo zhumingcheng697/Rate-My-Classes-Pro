@@ -178,7 +178,7 @@ export default function RootNavigation() {
       JSON.stringify({
         synced: true,
         starred: starred ?? {},
-        selectedSemester: getFullSemesterCode(selectedSemester),
+        selectedSemester,
         isAuthenticated: auth.isAuthenticated,
       }),
     ];

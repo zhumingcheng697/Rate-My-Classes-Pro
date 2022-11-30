@@ -48,7 +48,7 @@ import {
   Route,
   validateSettings,
 } from "./utils";
-import { getClassWithSections } from "./schedge";
+import Schedge from "./schedge";
 import Database from "../mongodb/db";
 import { stringifyRoute } from "../navigation/linking/stringify";
 import { selectSemester } from "../redux/actions";
@@ -398,7 +398,7 @@ export function useClassInfoLoader(
     (failSilently: boolean = false) => {
       isLoading.current = true;
 
-      getClassWithSections(classCode, semester)
+      Schedge.getClassWithSections(classCode, semester)
         .then((classInfo) => {
           if (classInfo) {
             if (!loadSchedule) {

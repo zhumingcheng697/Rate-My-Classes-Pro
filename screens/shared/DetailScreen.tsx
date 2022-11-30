@@ -27,7 +27,7 @@ import {
   stripLineBreaks,
 } from "../../libs/utils";
 import Semester from "../../libs/semester";
-import { getSections } from "../../libs/schedge";
+import Schedge from "../../libs/schedge";
 import {
   useClassInfoLoader,
   useHandoff,
@@ -246,7 +246,7 @@ export default function DetailScreen() {
         return;
       }
 
-      getSections(classInfo, semesterInfo)
+      Schedge.getSections(classInfo, semesterInfo)
         .then((sections) => {
           setSections(sections);
           setScheduleError(false);

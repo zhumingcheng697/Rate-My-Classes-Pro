@@ -23,7 +23,7 @@ import {
   type DepartmentNameRecord,
   ErrorType,
 } from "../libs/types";
-import { getNameRecordFor } from "../libs/schedge";
+import Schedge from "../libs/schedge";
 import Semester, { type SemesterInfo } from "../libs/semester";
 import { useRefresh } from "../libs/hooks";
 import {
@@ -82,7 +82,7 @@ export default function RootNavigation() {
       if ((schoolNameRecord && departmentNameRecord) || !isSemesterSettled)
         return;
 
-      getNameRecordFor(selectedSemester)
+      Schedge.getNameRecordFor(selectedSemester)
         .then(({ school, department }) => {
           if (
             school &&

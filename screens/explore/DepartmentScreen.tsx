@@ -24,7 +24,7 @@ import {
 } from "../../libs/utils";
 import Semester from "../../libs/semester";
 import { useHandoff, useRefresh, useSemester } from "../../libs/hooks";
-import { getClasses } from "../../libs/schedge";
+import Schedge from "../../libs/schedge";
 import AlertPopup from "../../components/AlertPopup";
 import ClassesGrid from "../../components/ClassesGrid";
 import { useAuth } from "../../mongodb/auth";
@@ -89,7 +89,7 @@ export default function DepartmentScreen() {
     (failSilently: boolean = false) => {
       if (!isSettingsSettled) return;
 
-      getClasses(departmentInfo, semester)
+      Schedge.getClasses(departmentInfo, semester)
         .then((classes) => {
           if (classes && classes.length) {
             setClasses(classes);

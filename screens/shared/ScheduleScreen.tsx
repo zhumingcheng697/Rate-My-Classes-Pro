@@ -33,7 +33,7 @@ import {
   useRefresh,
   useSemester,
 } from "../../libs/hooks";
-import { getSections } from "../../libs/schedge";
+import Schedge from "../../libs/schedge";
 import {
   getFullClassCode,
   getMeetingScheduleString,
@@ -303,7 +303,7 @@ export default function ScheduleScreen() {
 
       if (!classCode.name && !sections) return;
 
-      getSections(classInfo, semesterInfo)
+      Schedge.getSections(classInfo, semesterInfo)
         .then((sections) => {
           setSections(sections);
           if (!sections.length) {

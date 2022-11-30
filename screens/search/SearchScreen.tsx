@@ -28,7 +28,7 @@ import {
   useSemester,
 } from "../../libs/hooks";
 import { compareClasses, isObjectEmpty, Route } from "../../libs/utils";
-import { searchClasses } from "../../libs/schedge";
+import Schedge from "../../libs/schedge";
 import Semester from "../../libs/semester";
 import { useAuth } from "../../mongodb/auth";
 import colors from "../../styling/colors";
@@ -117,7 +117,7 @@ export default function SearchScreen() {
             const myId = {};
             id = myId;
 
-            searchClasses(query, selectedSemester)
+            Schedge.searchClasses(query, selectedSemester)
               .then((matches) => {
                 if (id === myId) {
                   if (

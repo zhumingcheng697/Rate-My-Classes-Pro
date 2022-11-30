@@ -1,5 +1,5 @@
 //
-//  ContextModel.swift
+//  Context.swift
 //  RateMyClasses Watch App
 //
 //  Created by McCoy Zhu on 11/28/22.
@@ -82,7 +82,7 @@ class ContextModel: NSObject, WCSessionDelegate, ObservableObject {
   @Published var context: ApplicationContext
   
   private static let userDefaultsKey = "RATE_MY_CLASSES_PRO:APPLICATION_CONTEXT"
-  
+
   init(session: WCSession = .default) {
     if let data = UserDefaults.standard.data(forKey: ContextModel.userDefaultsKey),
        let decodedContext = try? JSONDecoder().decode(ApplicationContext.self, from: data) {

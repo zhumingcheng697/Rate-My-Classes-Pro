@@ -23,7 +23,7 @@ struct ContentView: View {
     NavigationView {
       ScrollView {
         ForEach(contextModel.context.starred) { starredClass in
-          StarredClassViewNavigationLink(starredClass: starredClass)
+          StarredClassViewNavLink(starredClass: starredClass)
         }
       }
       .navigationTitle(Text("Starred"))

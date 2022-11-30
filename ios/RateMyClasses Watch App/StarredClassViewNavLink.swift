@@ -1,5 +1,5 @@
 //
-//  StarredClassViewNavigationLink.swift
+//  StarredClassViewNavLink.swift
 //  RateMyClasses Watch App
 //
 //  Created by McCoy Zhu on 11/29/22.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct StarredClassViewNavigationLink: View {
+struct StarredClassViewNavLink: View {
   let starredClass: StarredClass
   
   var body: some View {
@@ -24,9 +24,9 @@ struct StarredClassViewNavigationLink: View {
   }
 }
 
-struct StarredClassViewNavigationLink_Previews: PreviewProvider {
+struct StarredClassViewNavLink_Previews: PreviewProvider {
   static var previews: some View {
-    StarredClassViewNavigationLink(starredClass: StarredClass(
+    StarredClassViewNavLink(starredClass: StarredClass(
       schoolCode: "UY",
       departmentCode: "CS",
       classNumber: "2124",

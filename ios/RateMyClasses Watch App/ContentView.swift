@@ -10,24 +10,43 @@ import SwiftUI
 struct ContentView: View {
   @EnvironmentObject var contextModel: ContextModel
   
-  func starredClassToString(_ starredClassInfo: StarredClass) -> String {
-    if let data = try? JSONEncoder().encode(starredClassInfo) {
-      if let str = String(data: data, encoding: .utf8) {
-        return str
-      }
+  var error: (iconName: String, title: String, message: String)? {
+    if !contextModel.context.hasSynced {
+      return ("exclamationmark.arrow.triangle.2.circlepath", "No Data Available", "Please open the Rate My Classes app on your iPhone to start syncing.")
+    } else if !contextModel.context.isAuthenticated {
+      return ("person.2.slash", "Not Signed In", "Please sign in on the Rate My Classes app on your iPhone to view your starred classes.")
+    } else if contextModel.context.starred.count == 0 {
+      return ("star.slash", "No Starred Classes", "Please star some classes on the Rate My Classes app on your iPhone to view them here.")
+    } else {
+      return nil
     }
-    return starredClassInfo.fullClassCode
   }
   
   var body: some View {
-    NavigationView {
-      ScrollView {
-        ForEach(contextModel.context.starred) { starredClass in
-          StarredClassViewNavLink(starredClass: starredClass)
+    if let error = error {
+      VStack(spacing: 4) {
+        Image(systemName: error.iconName)
+          .foregroundColor(.red)
+          .font(.title2)
+        
+        Text(error.title)
+          .multilineTextAlignment(.center)
+        
+        Text(error.message)
+          .font(.caption2)
+          .multilineTextAlignment(.center)
+          .foregroundColor(.secondary)
+      }.padding(.horizontal)
+    } else {
+      NavigationView {
+        ScrollView {
+          ForEach(contextModel.context.starred) { starredClass in
+            StarredClassViewNavLink(starredClass: starredClass)
+          }
         }
+        .navigationTitle(Text("Starred"))
+        .navigationBarTitleDisplayMode(.large)
       }
-      .navigationTitle(Text("Starred"))
-      .navigationBarTitleDisplayMode(.large)
     }
   }
 }

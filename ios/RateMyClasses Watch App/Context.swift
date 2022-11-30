@@ -89,7 +89,7 @@ class ContextModel: NSObject, WCSessionDelegate, ObservableObject {
       context = decodedContext
       super.init()
     } else {
-      context = ApplicationContext(synced: false, starred: [], selectedSemester: Semester.predictCurrentSemester(), isAuthenticated: false)
+      context = ApplicationContext(hasSynced: false, starred: [], selectedSemester: Semester.predictCurrentSemester(), isAuthenticated: false)
       super.init()
       updateUserDefaults()
     }

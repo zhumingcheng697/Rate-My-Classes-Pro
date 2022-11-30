@@ -31,7 +31,7 @@ struct ScheduleView: View {
             .padding(.horizontal)
         }
       } else {
-        ErrorView(iconName: "antenna.radiowaves.left.and.right.slash", title: "Unable to Load Schedule", message: "Unable to load \(contextModel.context.selectedSemester.name) schedule for \(classInfo.fullClassCode)")
+        ErrorView(iconName: "antenna.radiowaves.left.and.right", title: "Unable to Load Schedule", message: "Unable to load \(contextModel.context.selectedSemester.name) schedule for \(classInfo.fullClassCode)")
           .padding(.horizontal)
       }
     }.navigationTitle(Text("Schedule"))

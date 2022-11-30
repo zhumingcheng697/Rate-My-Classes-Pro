@@ -28,7 +28,7 @@
 		C2BD02722937B27D0026D82E /* Semester.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD02712937B27D0026D82E /* Semester.swift */; };
 		C2BD02742937D48D0026D82E /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD02732937D48D0026D82E /* ScheduleView.swift */; };
 		C2BD02762937D7A00026D82E /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD02752937D7A00026D82E /* ErrorView.swift */; };
-		C2BD027A2937F7080026D82E /* IconHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD02792937F7080026D82E /* IconHStack.swift */; };
+		C2BD027A2937F7080026D82E /* IconTextPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD02792937F7080026D82E /* IconTextPair.swift */; };
 		C2D29A3E2935B7D400E64851 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D29A3D2935B7D400E64851 /* Context.swift */; };
 		C2F35E5C29366F5500EF89CD /* Rate My Classes.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C25F9C64292F14340007E3C3 /* Rate My Classes.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -94,7 +94,7 @@
 		C2BD02712937B27D0026D82E /* Semester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Semester.swift; sourceTree = "<group>"; };
 		C2BD02732937D48D0026D82E /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
 		C2BD02752937D7A00026D82E /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
-		C2BD02792937F7080026D82E /* IconHStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconHStack.swift; sourceTree = "<group>"; };
+		C2BD02792937F7080026D82E /* IconTextPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTextPair.swift; sourceTree = "<group>"; };
 		C2D29A3D2935B7D400E64851 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -227,7 +227,7 @@
 				C2BD02692936D2630026D82E /* StarredClassView.swift */,
 				C2BD02732937D48D0026D82E /* ScheduleView.swift */,
 				C2BD02752937D7A00026D82E /* ErrorView.swift */,
-				C2BD02792937F7080026D82E /* IconHStack.swift */,
+				C2BD02792937F7080026D82E /* IconTextPair.swift */,
 				C2BD026F2937B25D0026D82E /* ClassInfo.swift */,
 				C2BD02712937B27D0026D82E /* Semester.swift */,
 				C2BD026D2937201C0026D82E /* Schedge.swift */,
@@ -554,7 +554,7 @@
 			files = (
 				C25F9C69292F14340007E3C3 /* ContentView.swift in Sources */,
 				C2BD02722937B27D0026D82E /* Semester.swift in Sources */,
-				C2BD027A2937F7080026D82E /* IconHStack.swift in Sources */,
+				C2BD027A2937F7080026D82E /* IconTextPair.swift in Sources */,
 				C2BD02702937B25D0026D82E /* ClassInfo.swift in Sources */,
 				C25F9C67292F14340007E3C3 /* RateMyClassesApp.swift in Sources */,
 				C2D29A3E2935B7D400E64851 /* Context.swift in Sources */,

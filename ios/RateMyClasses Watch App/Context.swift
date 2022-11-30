@@ -6,7 +6,6 @@
 //
 
 import WatchConnectivity
-import SwiftUI
 
 struct ApplicationContext: Codable {
   let hasSynced: Bool

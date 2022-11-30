@@ -36,3 +36,25 @@ struct StarredClass: ClassInfo, Codable, Hashable, Identifiable {
     return fullClassCode
   }
 }
+
+struct Section: Codable, Hashable {
+  struct Meeting: Codable, Hashable {
+    let beginDate: String
+    let minutesDuration: Int
+    let endDate: String
+  }
+  
+  let code: String
+  let instructors: [String]?
+  let type: String?
+  let stauts: String?
+  let meetings: [Meeting]?
+  let name: String?
+  let campus: String?
+  let minUnits: Int?
+  let maxUnits: Int?
+  let location: String?
+  let notes: String?
+  let prerequisites: String?
+  let recitations: [Section]?
+}

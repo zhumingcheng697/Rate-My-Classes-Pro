@@ -8,7 +8,7 @@
 import WatchConnectivity
 import SwiftUI
 
-struct StarredClassInfo: Codable, Hashable {
+struct StarredClass: Codable, Hashable {
   let schoolCode: String
   let departmentCode: String
   let classNumber: String
@@ -29,6 +29,10 @@ struct Semester: Codable {
   let semesterCode: SemesterCode
   let year: Int
 
+  var code: String {
+    return "\(semesterCode.rawValue)\(year)"
+  }
+
   var name: String {
     let semesterName: String
     switch semesterCode {
@@ -42,10 +46,6 @@ struct Semester: Codable {
         semesterName = "Fall"
     }
     return "\(semesterName) \(year)"
-  }
-
-  var code: String {
-    return "\(semesterCode.rawValue)\(year)"
   }
 
   static func predictCurrentSemester() -> Semester {
@@ -69,7 +69,7 @@ struct Semester: Codable {
 
 struct ApplicationContext: Codable {
   let synced: Bool
-  let starred: [StarredClassInfo]
+  let starred: [StarredClass]
   let selectedSemester: Semester
   let isAuthenticated: Bool
 }

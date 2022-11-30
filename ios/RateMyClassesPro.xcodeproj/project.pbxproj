@@ -21,7 +21,7 @@
 		C2788FCA292695BB0009567E /* RNSystemFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2788FC9292695BB0009567E /* RNSystemFont.mm */; };
 		C281D999280F5DD8009E8DBF /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = C281D998280F5DD8009E8DBF /* File.swift */; };
 		C2B63311292D4221002183A3 /* RNUserActivity.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2B63310292D4221002183A3 /* RNUserActivity.mm */; };
-		C2BD026A2936D2630026D82E /* StarredClassInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD02692936D2630026D82E /* StarredClassInfoView.swift */; };
+		C2BD026A2936D2630026D82E /* StarredClassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD02692936D2630026D82E /* StarredClassView.swift */; };
 		C2D29A3E2935B7D400E64851 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D29A3D2935B7D400E64851 /* Context.swift */; };
 		C2F35E5C29366F5500EF89CD /* Rate My Classes.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C25F9C64292F14340007E3C3 /* Rate My Classes.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -80,7 +80,7 @@
 		C281D998280F5DD8009E8DBF /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		C2B6330F292D41DE002183A3 /* RNUserActivity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNUserActivity.h; sourceTree = "<group>"; };
 		C2B63310292D4221002183A3 /* RNUserActivity.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RNUserActivity.mm; sourceTree = "<group>"; };
-		C2BD02692936D2630026D82E /* StarredClassInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarredClassInfoView.swift; sourceTree = "<group>"; };
+		C2BD02692936D2630026D82E /* StarredClassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarredClassView.swift; sourceTree = "<group>"; };
 		C2D29A3D2935B7D400E64851 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -209,7 +209,7 @@
 				C25F9C72292F145B0007E3C3 /* RateMyClasses Watch App.entitlements */,
 				C25F9C66292F14340007E3C3 /* RateMyClassesApp.swift */,
 				C25F9C68292F14340007E3C3 /* ContentView.swift */,
-				C2BD02692936D2630026D82E /* StarredClassInfoView.swift */,
+				C2BD02692936D2630026D82E /* StarredClassView.swift */,
 				C2D29A3D2935B7D400E64851 /* Context.swift */,
 				C25F9C6A292F14350007E3C3 /* Assets.xcassets */,
 				C25F9C6C292F14350007E3C3 /* Preview Content */,
@@ -534,7 +534,7 @@
 				C25F9C69292F14340007E3C3 /* ContentView.swift in Sources */,
 				C25F9C67292F14340007E3C3 /* RateMyClassesApp.swift in Sources */,
 				C2D29A3E2935B7D400E64851 /* Context.swift in Sources */,
-				C2BD026A2936D2630026D82E /* StarredClassInfoView.swift in Sources */,
+				C2BD026A2936D2630026D82E /* StarredClassView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

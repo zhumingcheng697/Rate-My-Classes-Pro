@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
   @EnvironmentObject var contextModel: ContextModel
   
-  func starredClassInfoToString(_ starredClassInfo: StarredClassInfo) -> String {
+  func starredClassToString(_ starredClassInfo: StarredClass) -> String {
     if let data = try? JSONEncoder().encode(starredClassInfo) {
       if let str = String(data: data, encoding: .utf8) {
         return str
@@ -43,7 +43,7 @@ struct ContentView: View {
 
       ScrollView {
         ForEach(Array(contextModel.context.starred), id: \.self) { starredClassInfo in
-          Text(starredClassInfoToString(starredClassInfo))
+          Text(starredClassToString(starredClassInfo))
             .foregroundColor(.secondary)
         }
       }

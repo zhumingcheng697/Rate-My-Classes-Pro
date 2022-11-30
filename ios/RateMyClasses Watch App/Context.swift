@@ -24,6 +24,7 @@ enum SemesterCode: String, Codable {
 struct Semester: Codable {
   let semesterCode: SemesterCode
   let year: Int
+
   var name: String {
     let semesterName: String
     switch semesterCode {
@@ -38,8 +39,27 @@ struct Semester: Codable {
     }
     return "\(semesterName) \(year)"
   }
+
   var code: String {
     return "\(semesterCode.rawValue)\(year)"
+  }
+
+  static func predictCurrentSemester() -> Semester {
+    let semesterCode: SemesterCode
+    let month = Calendar(identifier: .gregorian).component(.month, from: Date())
+    let year = Calendar(identifier: .gregorian).component(.year, from: Date())
+
+    if (month <= 1) {
+      semesterCode = .ja
+    } else if (month <= 5) {
+      semesterCode = .sp
+    } else if (month <= 8) {
+      semesterCode = .su
+    } else {
+      semesterCode = .fa
+    }
+
+    return Semester(semesterCode: semesterCode, year: year)
   }
 }
 
@@ -61,21 +81,7 @@ class ContextModel: NSObject, WCSessionDelegate, ObservableObject {
       context = decodedContext
       super.init()
     } else {
-      let semesterCode: SemesterCode
-      let month = Calendar(identifier: .gregorian).component(.month, from: Date())
-      let year = Calendar(identifier: .gregorian).component(.year, from: Date())
-      
-      if (month <= 1) {
-        semesterCode = .ja
-      } else if (month <= 5) {
-        semesterCode = .sp
-      } else if (month <= 8) {
-        semesterCode = .su
-      } else {
-        semesterCode = .fa
-      }
-      
-      context = ApplicationContext(synced: false, starred: [:], selectedSemester: Semester(semesterCode: semesterCode, year: year), isAuthenticated: false)
+      context = ApplicationContext(synced: false, starred: [:], selectedSemester: Semester.predictCurrentSemester(), isAuthenticated: false)
       super.init()
       updateUserDefaults()
     }

@@ -72,7 +72,7 @@ struct Semester: Codable {
 }
 
 struct ApplicationContext: Codable {
-  let synced: Bool
+  let hasSynced: Bool
   let starred: [StarredClass]
   let selectedSemester: Semester
   let isAuthenticated: Bool

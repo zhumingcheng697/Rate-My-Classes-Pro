@@ -6,79 +6,122 @@
 //
 
 import SwiftUI
+import RegexBuilder
+
+fileprivate struct PrimitiveComponent: View {
+  let iconName: String
+  let data: String?
+  
+  var body: some View {
+    if let data = data, data.count != 0 {
+      IconPair(iconName: iconName) {
+        Text(data)
+      }
+    }
+  }
+}
+
+fileprivate struct CreditComponent: View {
+  let minUnits: Int?
+  let maxUnits: Int?
+  
+  var body: some View {
+    if let maxUnits = maxUnits {
+      if let minUnits = minUnits, minUnits > 0 && minUnits != maxUnits {
+        PrimitiveComponent(iconName: "rosette", data: "\(minUnits)–\(maxUnits) Credits")
+      } else {
+        PrimitiveComponent(iconName: "rosette", data: "\(maxUnits) Credit\(maxUnits == 1 ? "" : "s")")
+      }
+    }
+  }
+}
+
+fileprivate struct LocationComponent: View {
+  let campus: String?
+  let location: String?
+  
+  var body: some View {
+    if let campus = campus {
+      if let location = location {
+        PrimitiveComponent(iconName: "location.fill", data: "\(campus): \(location)")
+      } else {
+        PrimitiveComponent(iconName: "location.fill", data: campus)
+      }
+    } else if let location = location {
+      PrimitiveComponent(iconName: "location.fill", data: location)
+    }
+  }
+}
+
+fileprivate struct MeetingComponent: View {
+  let schedule: [String]?
+  
+  var body: some View {
+    if let schedule = schedule, schedule.count > 0 {
+      IconPair(iconName: "clock.fill") {
+        VStack(alignment: .leading, spacing: 0) {
+          ForEach(schedule, id: \.self) { meeting in
+            Text(meeting)
+              .font(.body.leading(.tight))
+          }
+        }
+      }
+    }
+  }
+}
 
 struct SectionView: View {
   let classInfo: ClassInfo
   let section: SectionInfo
   @State var schedule: [String]? = nil
   
+  func prepend(_ text: String, with prefix: String, seperator: String = ":\n") -> String {
+    if text.uppercased().starts(with: prefix.uppercased()) {
+      return text
+    } else {
+      return prefix + seperator + text
+    }
+  }
+  
   var body: some View {
-    VStack(alignment: .leading) {
-      Text("\(section.name ?? classInfo.name) ")
-        .font(.callout)
-        .fontWeight(.medium)
-      +
-      Text("(\(classInfo.fullClassCode) \(section.code))")
-        .font(.callout)
+    VStack(alignment: .leading, spacing: 4) {
+      VStack(alignment: .leading) {
+        Text("\(section.name ?? classInfo.name) ")
+          .font(.headline)
+        
+        Text("\(classInfo.fullClassCode) \(section.code)")
+          .font(.subheadline)
+      }
       
       LazyVGrid(columns:[.init(.flexible(minimum: 20, maximum: 20), spacing: 12), .init(.flexible(), alignment: .leading)], spacing: 4) {
-        if let instructors = section.instructors, instructors.count != 0 {
-          IconPair(iconName: "graduationcap.fill") { Text(instructors.joined(separator: ", "))
-          }
-        }
         
-        if let maxUnits = section.maxUnits {
-          if let minUnites = section.minUnits, minUnites > 0 && minUnites != maxUnits {
-            IconPair(iconName: "rosette") {
-              Text("\(minUnites)–\(maxUnits) Credits")
-            }
-          } else {
-            IconPair(iconName: "rosette") {
-              Text("\(maxUnits) Credit\(maxUnits == 1 ? "" : "s")")
-            }
-          }
-        }
+        PrimitiveComponent(iconName: "graduationcap.fill", data: section.instructors?.joined(separator: ", "))
         
-        if let type = section.type {
-          IconPair(iconName: "rectangle.inset.filled.and.person.filled") {
-            Text(type)
-          }
-        }
+        CreditComponent(minUnits: section.minUnits, maxUnits: section.maxUnits)
         
-        if let status = section.stauts {
-          IconPair(iconName: "flag.2.crossed.fill") {
-            Text(status)
-          }
-        }
+        PrimitiveComponent(iconName: "rectangle.inset.filled.and.person.filled", data: section.type)
         
-        if let campus = section.campus {
-          if let location = section.location {
-            IconPair(iconName: "location.fill") {
-              Text("\(campus): \(location)")
-            }
-          } else {
-            IconPair(iconName: "location.fill") {
-              Text(campus)
-            }
-          }
-        } else if let location = section.location {
-          IconPair(iconName: "location.fill") {
-            Text(location)
-          }
-        }
+        PrimitiveComponent(iconName: "flag.2.crossed.fill", data: section.stauts)
         
-        if let schedule = schedule, schedule.count > 0 {
-          IconPair(iconName: "clock.fill") {
-            VStack(alignment: .leading, spacing: 0) {
-              ForEach(schedule, id: \.self) { meeting in
-                Text(meeting)
-                  .font(Font.body.leading(.tight))
-              }
-            }
-          }
-        }
+        LocationComponent(campus: section.campus, location: section.location)
+        
+        MeetingComponent(schedule: schedule)
+      }
+      
+      if let notes = section.notes {
+        Text(prepend(notes, with: "Notes"))
+          .font(.caption.leading(.tight))
+          .foregroundColor(.secondary)
+      }
+      
+      if let prereq = section.prerequisites {
+        Text(prepend(prereq, with: "Prerequisite"))
+          .font(.caption.leading(.tight))
+          .foregroundColor(.secondary)
       }
     }
+    .navigationTitle(Text(section.code))
+    .navigationBarTitleDisplayMode(.inline)
     .padding()
     .onAppear {
       schedule = section.schedule

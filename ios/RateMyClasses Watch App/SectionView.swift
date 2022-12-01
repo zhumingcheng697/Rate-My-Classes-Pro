@@ -71,7 +71,7 @@ fileprivate struct MeetingComponent: View {
 }
 
 struct SectionView: View {
-  let classInfo: ClassInfo
+  let fullClassCode: String
   let section: SectionInfo
   @State var schedule: [String]? = nil
   
@@ -84,65 +84,58 @@ struct SectionView: View {
   }
   
   var body: some View {
-    VStack(alignment: .leading, spacing: 4) {
-      VStack(alignment: .leading) {
-        Text("\(section.name ?? classInfo.name) ")
-          .font(.headline)
+    ScrollView {
+      VStack(alignment: .leading, spacing: 4) {
+        Text("\(fullClassCode) \(section.code)")
+          .font(.title3)
+          .foregroundColor(.accentColor)
+          .fontWeight(.semibold)
+          .padding([.horizontal])
         
-        Text("\(classInfo.fullClassCode) \(section.code)")
-          .font(.subheadline)
+        LazyVGrid(columns:[.init(.flexible(minimum: 20, maximum: 20), spacing: 12), .init(.flexible(), alignment: .leading)], spacing: 4) {
+          
+          PrimitiveComponent(iconName: "graduationcap.fill", data: section.instructors?.joined(separator: ", "))
+          
+          CreditComponent(minUnits: section.minUnits, maxUnits: section.maxUnits)
+          
+          PrimitiveComponent(iconName: "rectangle.inset.filled.and.person.filled", data: section.type)
+          
+          PrimitiveComponent(iconName: "flag.2.crossed.fill", data: section.status)
+          
+          LocationComponent(campus: section.campus, location: section.location)
+          
+          MeetingComponent(schedule: schedule)
+        }
+        
+        if let notes = section.notes {
+          Text(prepend(notes, with: "Notes"))
+            .font(.caption.leading(.tight))
+            .foregroundColor(.secondary)
+        }
+        
+        if let prereq = section.prerequisites {
+          Text(prepend(prereq, with: "Prerequisite"))
+            .font(.caption.leading(.tight))
+            .foregroundColor(.secondary)
+        }
       }
-      
-      LazyVGrid(columns:[.init(.flexible(minimum: 20, maximum: 20), spacing: 12), .init(.flexible(), alignment: .leading)], spacing: 4) {
-        
-        PrimitiveComponent(iconName: "graduationcap.fill", data: section.instructors?.joined(separator: ", "))
-        
-        CreditComponent(minUnits: section.minUnits, maxUnits: section.maxUnits)
-        
-        PrimitiveComponent(iconName: "rectangle.inset.filled.and.person.filled", data: section.type)
-        
-        PrimitiveComponent(iconName: "flag.2.crossed.fill", data: section.stauts)
-        
-        LocationComponent(campus: section.campus, location: section.location)
-        
-        MeetingComponent(schedule: schedule)
+      .navigationTitle(Text(section.code))
+      .navigationBarTitleDisplayMode(.inline)
+      .padding(.horizontal)
+      .onAppear {
+        schedule = section.schedule
       }
-      
-      if let notes = section.notes {
-        Text(prepend(notes, with: "Notes"))
-          .font(.caption.leading(.tight))
-          .foregroundColor(.secondary)
-      }
-      
-      if let prereq = section.prerequisites {
-        Text(prepend(prereq, with: "Prerequisite"))
-          .font(.caption.leading(.tight))
-          .foregroundColor(.secondary)
-      }
-    }
-    .navigationTitle(Text(section.code))
-    .navigationBarTitleDisplayMode(.inline)
-    .padding()
-    .onAppear {
-      schedule = section.schedule
     }
   }
 }
 
 struct SectionView_Previews: PreviewProvider {
   static var previews: some View {
-    SectionView(classInfo: StarredClass(
-      schoolCode: "UY",
-      departmentCode: "CS",
-      classNumber: "2124",
-      name: "Object Oriented Programming",
-      description: "This intermediate-level programming course teaches object-oriented programming in C++. Topics: Pointers, dynamic memory allocation and recursion. Classes and objects including constructors, destructors, methods (member functions) and data members. Access and the interface to relationships of classes including composition, association and inheritance. Polymorphism through function overloading operators. Inheritance and templates. Use of the standard template library containers and algorithms. | Prerequisite: CS-UY 1134 (C- or better); Corequisite: EX-UY 1",
-      starredDate: 0
-    ), section: SectionInfo(
+    SectionView(fullClassCode: "CS-UY 2124", section: SectionInfo(
       code: "A",
       instructors: ["John Apple"],
       type: "Lecture",
-      stauts: "Open",
+      status: "Open",
       meetings: [
         SectionInfo.Meeting(beginDate: "2023-01-23T14:30:00Z", minutesDuration: 80, endDate: "2023-05-09T03:59:00Z"),
         SectionInfo.Meeting(beginDate: "2023-01-25T14:30:00Z", minutesDuration: 80, endDate: "2023-05-09T03:59:00Z"),
@@ -160,7 +153,7 @@ struct SectionView_Previews: PreviewProvider {
           code: "A",
           instructors: ["John Apple"],
           type: "Lecture",
-          stauts: "Open",
+          status: "Open",
           meetings: [
             SectionInfo.Meeting(beginDate: "2023-01-23T14:30:00Z", minutesDuration: 80, endDate: "2023-05-09T03:59:00Z"),
             SectionInfo.Meeting(beginDate: "2023-01-25T14:30:00Z", minutesDuration: 80, endDate: "2023-05-09T03:59:00Z"),

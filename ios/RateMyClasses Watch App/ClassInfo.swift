@@ -49,7 +49,7 @@ struct SectionInfo: Codable, Hashable {
   let code: String
   let instructors: [String]?
   let type: String?
-  let stauts: String?
+  let status: String?
   let meetings: [Meeting]?
   let name: String?
   let campus: String?

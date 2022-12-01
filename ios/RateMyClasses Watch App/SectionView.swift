@@ -142,7 +142,9 @@ struct SectionView: View {
       .navigationBarTitleDisplayMode(.inline)
       .padding(.horizontal)
       .onAppear {
-        schedule = section.schedule
+        if (schedule == nil) {
+          schedule = section.schedule
+        }
       }
     }
   }

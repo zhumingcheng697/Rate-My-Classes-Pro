@@ -2,7 +2,7 @@ import type { LinkingOptions, NavigationState } from "@react-navigation/native";
 import { WEB_DEPLOYMENT_URL } from "react-native-dotenv";
 
 import parse from "./parse";
-import stringnify from "./stringify";
+import stringify from "./stringify";
 import type { RootNavigationParamList } from "../../libs/types";
 import { tryCatch } from "../../libs/utils";
 
@@ -16,7 +16,7 @@ const linking: LinkingOptions<RootNavigationParamList> = {
   getPathFromState(state) {
     return (
       tryCatch(() =>
-        stringnify(state as NavigationState<RootNavigationParamList>)
+        stringify(state as NavigationState<RootNavigationParamList>)
       ) || ""
     );
   },

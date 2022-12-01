@@ -237,22 +237,22 @@ export function getMeetingScheduleString(meetings: [Date, Date][]) {
     weeklySchedule[begin.getDay()].push([begin, end]);
   }
 
-  const stringnifiedSchedule: Record<number, string> = {};
+  const stringifiedSchedule: Record<number, string> = {};
 
   const sortDate = ([a]: [Date, Date], [b]: [Date, Date]) =>
     a.valueOf() - b.valueOf();
 
   for (let day in weeklySchedule) {
-    const stringnifiedDailySchedule: Set<string> = new Set();
+    const stringifiedDailySchedule: Set<string> = new Set();
 
     const stringifySchedule = ([begin, end]: [Date, Date]) =>
-      stringnifiedDailySchedule.add(
+      stringifiedDailySchedule.add(
         `${getTimeString(begin)}–${getTimeString(end)}`
       );
 
     weeklySchedule[day].sort(sortDate).forEach(stringifySchedule);
 
-    stringnifiedSchedule[day] = [...stringnifiedDailySchedule].join(", ");
+    stringifiedSchedule[day] = [...stringifiedDailySchedule].join(", ");
   }
 
   const finalSchedule: [string, string][] = [];
@@ -263,7 +263,7 @@ export function getMeetingScheduleString(meetings: [Date, Date][]) {
     const day = daysOfWeek[i];
     if (day in weeklySchedule) {
       const currDay = [getWeekDayString(weeklySchedule[day][0][0])];
-      const currMeeting = stringnifiedSchedule[day];
+      const currMeeting = stringifiedSchedule[day];
       delete weeklySchedule[day];
 
       for (let j = i + 1; j < 7; ++j) {
@@ -271,7 +271,7 @@ export function getMeetingScheduleString(meetings: [Date, Date][]) {
 
         if (
           otherDay in weeklySchedule &&
-          stringnifiedSchedule[otherDay] === currMeeting
+          stringifiedSchedule[otherDay] === currMeeting
         ) {
           currDay.push(getWeekDayString(weeklySchedule[otherDay][0][0]));
           delete weeklySchedule[otherDay];

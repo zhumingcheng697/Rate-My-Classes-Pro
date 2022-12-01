@@ -46,7 +46,9 @@ fileprivate struct LocationComponent: View {
         IconPair(iconName: "location.fill") {
           VStack(alignment: .leading) {
             Text("\(campus): ")
+              .font(.body.leading(.tight))
             Text(location)
+              .font(.caption2.leading(.tight))
           }
         }
       } else {
@@ -59,15 +61,19 @@ fileprivate struct LocationComponent: View {
 }
 
 fileprivate struct MeetingComponent: View {
-  let schedule: [String]?
+  let schedule: [(String, String)]?
   
   var body: some View {
     if let schedule = schedule, schedule.count > 0 {
       IconPair(iconName: "clock.fill") {
         VStack(alignment: .leading, spacing: 0) {
-          ForEach(schedule, id: \.self) { meeting in
-            Text(meeting)
-              .font(.body.leading(.tight))
+          ForEach(schedule.indices, id: \.self) { i in
+            VStack(alignment: .leading) {
+              Text("\(schedule[i].0):")
+                .font(.body.leading(.tight))
+              Text(schedule[i].1)
+                .font(.caption2.leading(.tight))
+            }
           }
         }
       }
@@ -78,7 +84,7 @@ fileprivate struct MeetingComponent: View {
 struct SectionView: View {
   let fullClassCode: String
   let section: SectionInfo
-  @State var schedule: [String]? = nil
+  @State var schedule: [(String, String)]? = nil
   
   var body: some View {
     ScrollView {
@@ -107,6 +113,7 @@ struct SectionView: View {
           VStack(alignment: .leading) {
             Text("Notes:")
             Text(notes)
+              .font(.caption2.leading(.tight))
           }
           .font(.caption.leading(.tight))
           .foregroundColor(.secondary)
@@ -116,8 +123,8 @@ struct SectionView: View {
           VStack(alignment: .leading) {
             Text("Prerequisites:")
             Text(prereq)
+              .font(.caption2.leading(.tight))
           }
-          .font(.caption.leading(.tight))
           .foregroundColor(.secondary)
         }
       }

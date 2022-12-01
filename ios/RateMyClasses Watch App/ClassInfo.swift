@@ -60,7 +60,7 @@ struct SectionInfo: Codable, Hashable {
   let prerequisites: String?
   let recitations: [SectionInfo]?
   
-  var schedule: [String]? {
+  var schedule: [(day: String, time: String)]? {
     func getTimeIntervalString(from: Date, to: Date) -> String {
       let dateIntervalFormatter = DateIntervalFormatter()
       dateIntervalFormatter.calendar = Calendar(identifier: .gregorian)
@@ -76,7 +76,7 @@ struct SectionInfo: Codable, Hashable {
     }
     
     if let meetings = meetings {
-      var weeklySchedule = [Int: [(Date, Date)]]()
+      var weeklySchedule = [Int: [(from: Date, to: Date)]]()
       
       for meeting in meetings {
         if let begin = try? Date(meeting.beginDate, strategy: .iso8601) {
@@ -92,7 +92,7 @@ struct SectionInfo: Codable, Hashable {
         var stringifiedDailySchedule = [String]()
         
         dailySchedule.sorted { (a, b) in
-          a.0 < b.0
+          a.from < b.from
         }.forEach { meeting in
           let meetingStr = getTimeIntervalString(from: meeting.0, to: meeting.1)
           if !stringifiedDailySchedule.contains(meetingStr) {
@@ -103,13 +103,13 @@ struct SectionInfo: Codable, Hashable {
         stringifiedSchedule[day] = stringifiedDailySchedule.joined(separator: ", ")
       }
       
-      var finalSchedule = [String]()
+      var finalSchedule = [(day: String, time: String)]()
       
       for i in 1...7 {
         let day = i % 7
         if let currDaySchedule = weeklySchedule[day], currDaySchedule.count > 0,
            let currMeeting = stringifiedSchedule[day] {
-          var currDay = [getWeekDayString(date: currDaySchedule[0].0)]
+          var currDay = [getWeekDayString(date: currDaySchedule[0].from)]
           weeklySchedule.removeValue(forKey: day)
           
           for j in i + 1...7 {
@@ -121,7 +121,7 @@ struct SectionInfo: Codable, Hashable {
             }
           }
           
-          finalSchedule.append("\(currDay.joined(separator: ", ")): \(currMeeting)")
+          finalSchedule.append((currDay.joined(separator: ", "), currMeeting))
         }
       }
       

@@ -7,7 +7,7 @@
 
 import WatchConnectivity
 
-struct ApplicationContext: Codable {
+struct WatchAppContext: Codable {
   let hasSynced: Bool
   let starred: [StarredClass]
   let selectedSemester: Semester
@@ -15,17 +15,17 @@ struct ApplicationContext: Codable {
 }
 
 class ContextModel: NSObject, WCSessionDelegate, ObservableObject {
-  @Published var context: ApplicationContext
+  @Published var context: WatchAppContext
   
   private static let userDefaultsKey = "RATE_MY_CLASSES_PRO:APPLICATION_CONTEXT"
   
   init(session: WCSession = .default) {
     if let data = UserDefaults.standard.data(forKey: ContextModel.userDefaultsKey),
-       let decodedContext = try? JSONDecoder().decode(ApplicationContext.self, from: data) {
+       let decodedContext = try? JSONDecoder().decode(WatchAppContext.self, from: data) {
       context = decodedContext
       super.init()
     } else {
-      context = ApplicationContext(hasSynced: false, starred: [], selectedSemester: Semester.predictCurrentSemester(), isAuthenticated: false)
+      context = WatchAppContext(hasSynced: false, starred: [], selectedSemester: Semester.predictCurrentSemester(), isAuthenticated: false)
       super.init()
       updateUserDefaults()
     }
@@ -39,9 +39,8 @@ class ContextModel: NSObject, WCSessionDelegate, ObservableObject {
   }
   
   func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any] = [:]) {
-    if let dataString = userInfo["context"] as? String,
-       let data = dataString.data(using: .utf8),
-       let decodedContext = try? JSONDecoder().decode(ApplicationContext.self, from: data) {
+    if let data = try? JSONSerialization.data(withJSONObject: userInfo),
+       let decodedContext = try? JSONDecoder().decode(WatchAppContext.self, from: data) {
       context = decodedContext
       updateUserDefaults()
     }

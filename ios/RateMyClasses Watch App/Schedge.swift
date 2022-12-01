@@ -22,7 +22,9 @@ struct Schedge {
        let (data, _) = try? await URLSession.shared.data(from: url),
        let classRecords = try? JSONDecoder().decode([ClassRecord].self, from: data) {
       var sections = classRecords.first {
-        $0.name?.uppercased() == classInfo.name.uppercased() && $0.deptCourseId == classInfo.classNumber && $0.subjectCode == classInfo.fullDepartmentCode
+        $0.name?.uppercased() == classInfo.name.uppercased() &&
+        $0.deptCourseId == classInfo.classNumber &&
+        $0.subjectCode == classInfo.fullDepartmentCode
       }?.sections ?? []
       sections = Array(Set(sections))
       sections.sort { $0.code < $1.code }

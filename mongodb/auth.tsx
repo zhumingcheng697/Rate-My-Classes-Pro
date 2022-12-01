@@ -140,12 +140,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [syncCleanupRef.current]);
 
   const cleanupLocalProfile = useCallback(() => {
-    Action.loadStarredClasses(dispatch)({});
-    Action.loadReviewedClasses(dispatch)({});
     syncCleanup();
     setIsVerified(false);
     setUser(null);
     setDB(null);
+    Action.loadStarredClasses(dispatch)({});
+    Action.loadReviewedClasses(dispatch)({});
   }, [syncCleanup]);
 
   // The signOut function calls the logOut function on the currently

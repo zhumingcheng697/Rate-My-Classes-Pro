@@ -171,14 +171,14 @@ export default function RootNavigation() {
   const [isReady, context] = useMemo(() => {
     return [
       auth.isSemesterSettled && auth.isSettingsSettled,
-      JSON.stringify({
+      {
         hasSynced: true,
         starred: starred
           ? Object.values(starred).sort((a, b) => b.starredDate - a.starredDate)
           : [],
         selectedSemester,
         isAuthenticated: auth.isAuthenticated,
-      }),
+      },
     ];
   }, [
     auth.isSemesterSettled && auth.isSettingsSettled,

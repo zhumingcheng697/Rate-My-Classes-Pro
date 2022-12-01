@@ -49,6 +49,13 @@ export type ReviewedClassRecord = Record<string, ReviewedClassInfo>;
 
 export type ReviewRecord = Record<string, Review>;
 
+export type WatchAppContext = {
+  hasSynced: boolean;
+  starred: StarredClassInfo[];
+  selectedSemester: SemesterInfo;
+  isAuthenticated: boolean;
+};
+
 export enum ErrorType {
   network = "NETWORK_ERROR",
   noData = "NO_DATA_ERROR",

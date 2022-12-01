@@ -13,7 +13,7 @@ fileprivate struct PrimitiveComponent: View {
   let data: String?
   
   var body: some View {
-    if let data = data, data.count != 0 {
+    if let data = data, data.count > 0 {
       IconPair(iconName: iconName) {
         Text(data)
       }
@@ -41,9 +41,14 @@ fileprivate struct LocationComponent: View {
   let location: String?
   
   var body: some View {
-    if let campus = campus {
-      if let location = location {
-        PrimitiveComponent(iconName: "location.fill", data: "\(campus): \(location)")
+    if let campus = campus, campus.count > 0 {
+      if let location = location, location.count > 0 {
+        IconPair(iconName: "location.fill") {
+          VStack(alignment: .leading) {
+            Text("\(campus): ")
+            Text(location)
+          }
+        }
       } else {
         PrimitiveComponent(iconName: "location.fill", data: campus)
       }
@@ -75,24 +80,15 @@ struct SectionView: View {
   let section: SectionInfo
   @State var schedule: [String]? = nil
   
-  func prepend(_ text: String, with prefix: String, seperator: String = ":\n") -> String {
-    if text.uppercased().starts(with: prefix.uppercased()) {
-      return text
-    } else {
-      return prefix + seperator + text
-    }
-  }
-  
   var body: some View {
     ScrollView {
-      VStack(alignment: .leading, spacing: 4) {
+      VStack(alignment: .leading, spacing: 5) {
         Text("\(fullClassCode) \(section.code)")
           .font(.title3)
           .foregroundColor(.accentColor)
           .fontWeight(.semibold)
-          .padding([.horizontal])
         
-        LazyVGrid(columns:[.init(.flexible(minimum: 20, maximum: 20), spacing: 12), .init(.flexible(), alignment: .leading)], spacing: 4) {
+        LazyVGrid(columns:[.init(.flexible(minimum: 20, maximum: 20), spacing: 12), .init(.flexible(), alignment: .leading)], spacing: 5) {
           
           PrimitiveComponent(iconName: "graduationcap.fill", data: section.instructors?.joined(separator: ", "))
           
@@ -107,16 +103,22 @@ struct SectionView: View {
           MeetingComponent(schedule: schedule)
         }
         
-        if let notes = section.notes {
-          Text(prepend(notes, with: "Notes"))
-            .font(.caption.leading(.tight))
-            .foregroundColor(.secondary)
+        if let notes = section.notes, notes.count > 0 {
+          VStack(alignment: .leading) {
+            Text("Notes:")
+            Text(notes)
+          }
+          .font(.caption.leading(.tight))
+          .foregroundColor(.secondary)
         }
         
         if let prereq = section.prerequisites {
-          Text(prepend(prereq, with: "Prerequisite"))
-            .font(.caption.leading(.tight))
-            .foregroundColor(.secondary)
+          VStack(alignment: .leading) {
+            Text("Prerequisites:")
+            Text(prereq)
+          }
+          .font(.caption.leading(.tight))
+          .foregroundColor(.secondary)
         }
       }
       .navigationTitle(Text(section.code))

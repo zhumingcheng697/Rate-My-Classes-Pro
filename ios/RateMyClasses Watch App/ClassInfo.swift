@@ -91,9 +91,7 @@ struct SectionInfo: Codable, Hashable {
       for (day, dailySchedule) in weeklySchedule {
         var stringifiedDailySchedule = [String]()
         
-        dailySchedule.sorted { (a, b) in
-          a.from < b.from
-        }.forEach { meeting in
+        dailySchedule.sorted { $0.from < $1.from }.forEach { meeting in
           let meetingStr = getTimeIntervalString(from: meeting.0, to: meeting.1)
           if !stringifiedDailySchedule.contains(meetingStr) {
             stringifiedDailySchedule.append(meetingStr)

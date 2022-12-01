@@ -17,6 +17,15 @@ struct ScheduleView: View {
     return contextModel.context.selectedSemester - Semester.predictCurrentSemester()
   }
   
+  func recitationsFor(_ section: SectionInfo) -> [SectionInfo] {
+    if var recitations = section.recitations {
+      recitations = Array(Set(recitations))
+      recitations.sort { $0.code < $1.code }
+      return recitations
+    }
+    return []
+  }
+  
   var body: some View {
     Section {
       if isLoading {
@@ -33,8 +42,13 @@ struct ScheduleView: View {
               
               ForEach(sections, id: \.code) { section in
                 NavigationLink("\(classInfo.fullClassCode) \(section.code)") {
-                  SectionView(fullClassCode: classInfo.fullClassCode, section: section)
+                  SectionView(classInfo: classInfo, section: section)
                 }.buttonBorderShape(.roundedRectangle)
+                ForEach(recitationsFor(section), id: \.code) { recitation in
+                  NavigationLink("\(classInfo.fullClassCode) \(recitation.code)") {
+                    SectionView(classInfo: classInfo, section: recitation)
+                  }.buttonBorderShape(.roundedRectangle)
+                }
               }
             }
           }

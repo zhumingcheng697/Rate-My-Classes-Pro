@@ -29,7 +29,7 @@ fileprivate struct CreditComponent: View {
     if let maxUnits = maxUnits {
       if let minUnits = minUnits, minUnits > 0 && minUnits != maxUnits {
         PrimitiveComponent(iconName: "rosette", data: "\(minUnits)–\(maxUnits) Credits")
-      } else {
+      } else if maxUnits > 0 {
         PrimitiveComponent(iconName: "rosette", data: "\(maxUnits) Credit\(maxUnits == 1 ? "" : "s")")
       }
     }
@@ -45,10 +45,11 @@ fileprivate struct LocationComponent: View {
       if let location = location, location.count > 0 {
         IconPair(iconName: "location.fill") {
           VStack(alignment: .leading) {
-            Text("\(campus): ")
+            Text(campus)
               .font(.body.leading(.tight))
             Text(location)
               .font(.caption2.leading(.tight))
+              .fontWeight(.medium)
           }
         }
       } else {
@@ -69,10 +70,11 @@ fileprivate struct MeetingComponent: View {
         VStack(alignment: .leading, spacing: 0) {
           ForEach(schedule.indices, id: \.self) { i in
             VStack(alignment: .leading) {
-              Text("\(schedule[i].0):")
+              Text(schedule[i].0)
                 .font(.body.leading(.tight))
               Text(schedule[i].1)
                 .font(.caption2.leading(.tight))
+                .fontWeight(.medium)
             }
           }
         }
@@ -82,17 +84,25 @@ fileprivate struct MeetingComponent: View {
 }
 
 struct SectionView: View {
-  let fullClassCode: String
+  let classInfo: ClassInfo
   let section: SectionInfo
   @State var schedule: [(String, String)]? = nil
   
   var body: some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 5) {
-        Text("\(fullClassCode) \(section.code)")
-          .font(.title3)
-          .foregroundColor(.accentColor)
-          .fontWeight(.semibold)
+        if let name = section.name,
+           name != classInfo.name {
+          Text(name)
+            .font(.title3)
+            .foregroundColor(.accentColor)
+            .fontWeight(.semibold)
+        } else {
+          Text("\(classInfo.fullClassCode) \(section.code)")
+            .font(.title3)
+            .foregroundColor(.accentColor)
+            .fontWeight(.semibold)
+        }
         
         LazyVGrid(columns:[.init(.flexible(minimum: 20, maximum: 20), spacing: 12), .init(.flexible(), alignment: .leading)], spacing: 5) {
           
@@ -140,7 +150,14 @@ struct SectionView: View {
 
 struct SectionView_Previews: PreviewProvider {
   static var previews: some View {
-    SectionView(fullClassCode: "CS-UY 2124", section: SectionInfo(
+    SectionView(classInfo: StarredClass(
+      schoolCode: "UY",
+      departmentCode: "CS",
+      classNumber: "2124",
+      name: "Object Oriented Programming",
+      description: "This intermediate-level programming course teaches object-oriented programming in C++. Topics: Pointers, dynamic memory allocation and recursion. Classes and objects including constructors, destructors, methods (member functions) and data members. Access and the interface to relationships of classes including composition, association and inheritance. Polymorphism through function overloading operators. Inheritance and templates. Use of the standard template library containers and algorithms. | Prerequisite: CS-UY 1134 (C- or better); Corequisite: EX-UY 1",
+      starredDate: 0
+    ), section: SectionInfo(
       code: "A",
       instructors: ["John Apple"],
       type: "Lecture",

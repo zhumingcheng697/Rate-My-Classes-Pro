@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct StarredClassView: View {
+  let starredClass: StarredClass
   @EnvironmentObject var contextModel: ContextModel
   @State var isLoadingSchedule = true
   @State var schedules: [SectionInfo]? = nil
   @State var timer: Timer? = nil
-  let starredClass: StarredClass
   
   func fetchSections(selectedSemester: Semester? = nil) {
     if let timer = timer {
       timer.invalidate()
     }
     
-    timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { _ in
+    timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false) { _ in
       Task {
         isLoadingSchedule = true
         schedules = await Schedge.getSchedule(
@@ -47,7 +47,7 @@ struct StarredClassView: View {
           .padding([.horizontal])
         
         NavigationLink(destination: {
-          ScheduleView(sections: $schedules, isLoading: $isLoadingSchedule, classInfo: starredClass)
+          ScheduleView(classInfo: starredClass, sections: $schedules, isLoading: $isLoadingSchedule)
         }) {
           if isLoadingSchedule {
             ProgressView()
@@ -56,11 +56,11 @@ struct StarredClassView: View {
                  ? "Unable to Load \(currentSemesterName) Schedule"
                  : schedules?.count == 0
                  ? "Not Offered in \(currentSemesterName)"
-                 : "\(currentSemesterName) Schedule")
+                 : "View \(currentSemesterName) Schedule")
           }
         }
         .disabled((!isLoadingSchedule && schedules != nil && schedules?.count != 0) ? false : true)
-        .padding(.vertical, 6)
+        .padding(.vertical)
         
         Text(starredClass.description)
           .font(.caption)
@@ -82,13 +82,7 @@ struct StarredClassView: View {
 
 struct StarredClassView_Previews: PreviewProvider {
   static var previews: some View {
-    StarredClassView(starredClass: StarredClass(
-      schoolCode: "UY",
-      departmentCode: "CS",
-      classNumber: "2124",
-      name: "Object Oriented Programming",
-      description: "This intermediate-level programming course teaches object-oriented programming in C++. Topics: Pointers, dynamic memory allocation and recursion. Classes and objects including constructors, destructors, methods (member functions) and data members. Access and the interface to relationships of classes including composition, association and inheritance. Polymorphism through function overloading operators. Inheritance and templates. Use of the standard template library containers and algorithms. | Prerequisite: CS-UY 1134 (C- or better); Corequisite: EX-UY 1",
-      starredDate: 0))
+    StarredClassView(starredClass: starredClassPreview)
     .environmentObject(ContextModel())
   }
 }

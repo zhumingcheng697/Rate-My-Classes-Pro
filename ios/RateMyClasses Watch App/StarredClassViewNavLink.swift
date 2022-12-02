@@ -26,13 +26,7 @@ struct StarredClassViewNavLink: View {
 
 struct StarredClassViewNavLink_Previews: PreviewProvider {
   static var previews: some View {
-    StarredClassViewNavLink(starredClass: StarredClass(
-      schoolCode: "UY",
-      departmentCode: "CS",
-      classNumber: "2124",
-      name: "Object Oriented Programming",
-      description: "This intermediate-level programming course teaches object-oriented programming in C++. Topics: Pointers, dynamic memory allocation and recursion. Classes and objects including constructors, destructors, methods (member functions) and data members. Access and the interface to relationships of classes including composition, association and inheritance. Polymorphism through function overloading operators. Inheritance and templates. Use of the standard template library containers and algorithms. | Prerequisite: CS-UY 1134 (C- or better); Corequisite: EX-UY 1",
-      starredDate: 0))
+    StarredClassViewNavLink(starredClass: starredClassPreview)
     .environmentObject(ContextModel())
   }
 }

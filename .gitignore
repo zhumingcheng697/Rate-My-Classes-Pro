@@ -19,7 +19,7 @@ web-build/
 .DS_Store
 
 Info.plist
-GoogleService-Info.plist
+*-Info.plist
 
 # Xcode
 #

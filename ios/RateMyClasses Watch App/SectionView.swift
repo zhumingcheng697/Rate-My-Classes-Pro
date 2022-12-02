@@ -16,6 +16,7 @@ fileprivate struct PrimitiveComponent: View {
     if let data = data, data.count > 0 {
       IconPair(iconName: iconName) {
         Text(data)
+          .font(.body.leading(.tight))
       }
     }
   }
@@ -67,7 +68,7 @@ fileprivate struct MeetingComponent: View {
   var body: some View {
     if let schedule = schedule, schedule.count > 0 {
       IconPair(iconName: "clock.fill") {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 2) {
           ForEach(schedule.indices, id: \.self) { i in
             VStack(alignment: .leading) {
               Text(schedule[i].0)
@@ -104,7 +105,7 @@ struct SectionView: View {
             .fontWeight(.semibold)
         }
         
-        LazyVGrid(columns:[.init(.flexible(minimum: 20, maximum: 20), spacing: 12), .init(.flexible(), alignment: .leading)], spacing: 5) {
+        LazyVGrid(columns:[.init(.flexible(minimum: 20, maximum: 20), spacing: 12), .init(.flexible(), alignment: .leading)], spacing: 6) {
           
           PrimitiveComponent(iconName: "graduationcap.fill", data: section.instructors?.joined(separator: ", "))
           

@@ -58,12 +58,7 @@
   
   NSArray* userActivitiyTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSUserActivityTypes"];
   if ([userActivitiyTypes isKindOfClass:[NSArray class]]) {
-    if ([userActivitiyTypes count] >= 1) {
-      NSString* handOffActivityType = userActivitiyTypes[0];
-      if ([handOffActivityType isKindOfClass:[NSString class]]) {
-        return [handOffActivityType isEqualToString:activityType];
-      }
-    }
+    return [userActivitiyTypes containsObject:activityType];
   }
   
   return NO;
@@ -82,6 +77,8 @@
 - (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
  restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
+  if (!userActivity.webpageURL) return NO;
+  
   NSUserActivity* activity = userActivity;
   
   if ([AppDelegate isHandOffActivityType:activity.activityType]) {

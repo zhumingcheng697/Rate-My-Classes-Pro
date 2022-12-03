@@ -114,7 +114,7 @@ export default class Semester {
     return new Semester({ semesterCode, year });
   }
 
-  static getSemesterOptions(showNext: boolean = true, prevCount: number = 4) {
+  static getSemesterOptions(showNext: boolean = true, prevCount: number = 6) {
     const semesterOptions = [];
     const current = Semester.predictCurrentSemester();
     let start = current.prev(Math.max(0, prevCount));

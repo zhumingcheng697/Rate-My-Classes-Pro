@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import {
   useInstalled,
   transferUserInfo,
+  updateApplicationContext,
 } from "react-native-watch-connectivity";
 
 import { useAppState } from "./hooks";
@@ -16,6 +17,7 @@ export function useWatchConnectivity(
   useEffect(() => {
     if (isReady && isWatchAppInstalled && appState === "active") {
       transferUserInfo(context);
+      updateApplicationContext(context);
     }
   }, [appState, isWatchAppInstalled, isReady, context]);
 }

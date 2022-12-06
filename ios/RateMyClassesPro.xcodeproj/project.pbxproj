@@ -20,6 +20,7 @@
 		C25F9C6E292F14350007E3C3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C25F9C6D292F14350007E3C3 /* Preview Assets.xcassets */; };
 		C2788FCA292695BB0009567E /* RNSystemFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2788FC9292695BB0009567E /* RNSystemFont.mm */; };
 		C281D999280F5DD8009E8DBF /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = C281D998280F5DD8009E8DBF /* File.swift */; };
+		C2AE54CB293B0B64009F8415 /* Rate My Classes.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C25F9C64292F14340007E3C3 /* Rate My Classes.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C2B63311292D4221002183A3 /* RNUserActivity.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2B63310292D4221002183A3 /* RNUserActivity.mm */; };
 		C2BD026A2936D2630026D82E /* StarredClassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD02692936D2630026D82E /* StarredClassView.swift */; };
 		C2BD026C2936F9030026D82E /* StarredClassViewNavLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD026B2936F9030026D82E /* StarredClassViewNavLink.swift */; };
@@ -31,9 +32,13 @@
 		C2BD02782937EB790026D82E /* SectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD02772937EB790026D82E /* SectionView.swift */; };
 		C2BD027A2937F7080026D82E /* IconPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD02792937F7080026D82E /* IconPair.swift */; };
 		C2BD027C293881170026D82E /* SectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD027B293881170026D82E /* SectionInfo.swift */; };
+		C2BD027E293913610026D82E /* Rating.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD027D293913610026D82E /* Rating.swift */; };
+		C2BD0280293913990026D82E /* Realm.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD027F293913990026D82E /* Realm.swift */; };
 		C2BD0282293964FD0026D82E /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD0281293964FD0026D82E /* PreviewData.swift */; };
+		C2BD0284293977B00026D82E /* RatingDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD0283293977B00026D82E /* RatingDashboard.swift */; };
+		C2BD028729399C700026D82E /* ReadMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD028629399C700026D82E /* ReadMoreView.swift */; };
+		C2BD028E293A43390026D82E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BD028D293A43390026D82E /* AppDelegate.swift */; };
 		C2D29A3E2935B7D400E64851 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D29A3D2935B7D400E64851 /* Context.swift */; };
-		C2F35E5C29366F5500EF89CD /* Rate My Classes.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C25F9C64292F14340007E3C3 /* Rate My Classes.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +49,13 @@
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = RateMyClassesPro;
 		};
+		C2AE54CC293B0B64009F8415 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C25F9C63292F14340007E3C3;
+			remoteInfo = "RateMyClasses Watch App";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,7 +65,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				C2F35E5C29366F5500EF89CD /* Rate My Classes.app in Embed Watch Content */,
+				C2AE54CB293B0B64009F8415 /* Rate My Classes.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -100,7 +112,13 @@
 		C2BD02772937EB790026D82E /* SectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionView.swift; sourceTree = "<group>"; };
 		C2BD02792937F7080026D82E /* IconPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPair.swift; sourceTree = "<group>"; };
 		C2BD027B293881170026D82E /* SectionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionInfo.swift; sourceTree = "<group>"; };
+		C2BD027D293913610026D82E /* Rating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rating.swift; sourceTree = "<group>"; };
+		C2BD027F293913990026D82E /* Realm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Realm.swift; sourceTree = "<group>"; };
 		C2BD0281293964FD0026D82E /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
+		C2BD0283293977B00026D82E /* RatingDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingDashboard.swift; sourceTree = "<group>"; };
+		C2BD0285293996850026D82E /* RateMyClasses-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "RateMyClasses-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
+		C2BD028629399C700026D82E /* ReadMoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadMoreView.swift; sourceTree = "<group>"; };
+		C2BD028D293A43390026D82E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C2D29A3D2935B7D400E64851 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -226,20 +244,29 @@
 		C25F9C65292F14340007E3C3 /* RateMyClasses Watch App */ = {
 			isa = PBXGroup;
 			children = (
+				C2BD0285293996850026D82E /* RateMyClasses-Watch-App-Info.plist */,
 				C25F9C72292F145B0007E3C3 /* RateMyClasses Watch App.entitlements */,
 				C25F9C66292F14340007E3C3 /* RateMyClassesApp.swift */,
 				C25F9C68292F14340007E3C3 /* ContentView.swift */,
-				C2BD026B2936F9030026D82E /* StarredClassViewNavLink.swift */,
 				C2BD02692936D2630026D82E /* StarredClassView.swift */,
 				C2BD02732937D48D0026D82E /* ScheduleView.swift */,
 				C2BD02772937EB790026D82E /* SectionView.swift */,
 				C2BD02752937D7A00026D82E /* ErrorView.swift */,
+				C2BD028629399C700026D82E /* ReadMoreView.swift */,
+				C2BD026B2936F9030026D82E /* StarredClassViewNavLink.swift */,
 				C2BD02792937F7080026D82E /* IconPair.swift */,
+				C2BD0283293977B00026D82E /* RatingDashboard.swift */,
+				C2BD028D293A43390026D82E /* AppDelegate.swift */,
+				C2D29A3D2935B7D400E64851 /* Context.swift */,
 				C2BD026F2937B25D0026D82E /* ClassInfo.swift */,
 				C2BD027B293881170026D82E /* SectionInfo.swift */,
 				C2BD02712937B27D0026D82E /* Semester.swift */,
+				C2BD027D293913610026D82E /* Rating.swift */,
 				C2BD026D2937201C0026D82E /* Schedge.swift */,
-				C2D29A3D2935B7D400E64851 /* Context.swift */,
+				C2BD027F293913990026D82E /* Realm.swift */,
+				C2BD02882939A8AC0026D82E /* Screens */,
+				C2BD02892939A8DC0026D82E /* Componenets */,
+				C2BD028A2939A8EC0026D82E /* Libs */,
 				C25F9C6A292F14350007E3C3 /* Assets.xcassets */,
 				C25F9C6C292F14350007E3C3 /* Preview Content */,
 			);
@@ -249,10 +276,31 @@
 		C25F9C6C292F14350007E3C3 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				C25F9C6D292F14350007E3C3 /* Preview Assets.xcassets */,
 				C2BD0281293964FD0026D82E /* PreviewData.swift */,
+				C25F9C6D292F14350007E3C3 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		C2BD02882939A8AC0026D82E /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		C2BD02892939A8DC0026D82E /* Componenets */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Componenets;
+			sourceTree = "<group>";
+		};
+		C2BD028A2939A8EC0026D82E /* Libs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Libs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -296,6 +344,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C2AE54CD293B0B64009F8415 /* PBXTargetDependency */,
 			);
 			name = RateMyClassesPro;
 			productName = RateMyClassesPro;
@@ -566,11 +615,16 @@
 				C2BD027A2937F7080026D82E /* IconPair.swift in Sources */,
 				C2BD02782937EB790026D82E /* SectionView.swift in Sources */,
 				C2BD02702937B25D0026D82E /* ClassInfo.swift in Sources */,
+				C2BD0280293913990026D82E /* Realm.swift in Sources */,
+				C2BD0284293977B00026D82E /* RatingDashboard.swift in Sources */,
+				C2BD028E293A43390026D82E /* AppDelegate.swift in Sources */,
 				C25F9C67292F14340007E3C3 /* RateMyClassesApp.swift in Sources */,
+				C2BD027E293913610026D82E /* Rating.swift in Sources */,
 				C2BD0282293964FD0026D82E /* PreviewData.swift in Sources */,
 				C2D29A3E2935B7D400E64851 /* Context.swift in Sources */,
 				C2BD02762937D7A00026D82E /* ErrorView.swift in Sources */,
 				C2BD027C293881170026D82E /* SectionInfo.swift in Sources */,
+				C2BD028729399C700026D82E /* ReadMoreView.swift in Sources */,
 				C2BD02742937D48D0026D82E /* ScheduleView.swift in Sources */,
 				C2BD026C2936F9030026D82E /* StarredClassViewNavLink.swift in Sources */,
 				C2BD026A2936D2630026D82E /* StarredClassView.swift in Sources */,
@@ -585,6 +639,12 @@
 			isa = PBXTargetDependency;
 			target = 13B07F861A680F5B00A75B9A /* RateMyClassesPro */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
+		};
+		C2AE54CD293B0B64009F8415 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = ios;
+			target = C25F9C63292F14340007E3C3 /* RateMyClasses Watch App */;
+			targetProxy = C2AE54CC293B0B64009F8415 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -654,6 +714,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = RateMyClassesPro/RateMyClassesPro.entitlements;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = MGM7CAKZL4;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = RateMyClassesPro/Info.plist;
@@ -665,7 +726,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -694,6 +755,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = RateMyClassesPro/RateMyClassesPro.entitlements;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = MGM7CAKZL4;
 				INFOPLIST_FILE = RateMyClassesPro/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Rate My Classes";
@@ -704,7 +766,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -868,6 +930,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = WatchAppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = nyu;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -876,20 +939,22 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "RateMyClasses Watch App/RateMyClasses Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 10;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "\"RateMyClasses Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = MGM7CAKZL4;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "RateMyClasses-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Rate My Classes";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.mingcheng-mccoy-zhu.RateMyClassesPro";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mingcheng-mccoy-zhu.RateMyClassesPro.watchkitapp";
@@ -910,6 +975,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = WatchAppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = nyu;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -919,20 +985,22 @@
 				CODE_SIGN_ENTITLEMENTS = "RateMyClasses Watch App/RateMyClasses Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 10;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"RateMyClasses Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = MGM7CAKZL4;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "RateMyClasses-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Rate My Classes";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.mingcheng-mccoy-zhu.RateMyClassesPro";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mingcheng-mccoy-zhu.RateMyClassesPro.watchkitapp";
 				PRODUCT_NAME = "Rate My Classes";

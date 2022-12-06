@@ -54,6 +54,8 @@ export type WatchAppContext = {
   starred: StarredClassInfo[];
   selectedSemester: SemesterInfo;
   isAuthenticated: boolean;
+  schoolNameRecord: SchoolNameRecord;
+  departmentNameRecord: DepartmentNameRecord;
 };
 
 export enum ErrorType {

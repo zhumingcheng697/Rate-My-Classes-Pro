@@ -21,6 +21,7 @@ import {
   type RootNavigationParamList,
   type SchoolNameRecord,
   type DepartmentNameRecord,
+  type WatchAppContext,
   ErrorType,
 } from "../libs/types";
 import Schedge from "../libs/schedge";
@@ -168,21 +169,67 @@ export default function RootNavigation() {
     }
   }, [recordError, accountError, userDocError, showAlert]);
 
+  const [sortedStarred, compactSchoolNameRecord, compactDepartmentNameRecord] =
+    useMemo(() => {
+      const sortedStarred = starred
+        ? Object.values(starred).sort((a, b) => b.starredDate - a.starredDate)
+        : [];
+
+      if (!sortedStarred.length) {
+        return [[], {}, {}];
+      }
+
+      if (!schoolNameRecord || !departmentNameRecord) {
+        return [[], null, null];
+      }
+
+      const compactSchoolNameRecord: SchoolNameRecord = {};
+      const compactDepartmentNameRecord: DepartmentNameRecord = {};
+
+      for (let { schoolCode, departmentCode } of sortedStarred) {
+        if (schoolCode in schoolNameRecord) {
+          compactSchoolNameRecord[schoolCode] = schoolNameRecord[schoolCode];
+        }
+
+        if (
+          schoolCode in departmentNameRecord &&
+          departmentCode in departmentNameRecord[schoolCode]
+        ) {
+          if (!(schoolCode in compactDepartmentNameRecord)) {
+            compactDepartmentNameRecord[schoolCode] = {};
+          }
+          compactDepartmentNameRecord[schoolCode][departmentCode] =
+            departmentNameRecord[schoolCode][departmentCode];
+        }
+      }
+
+      return [
+        sortedStarred,
+        compactSchoolNameRecord,
+        compactDepartmentNameRecord,
+      ];
+    }, [starred, schoolNameRecord, departmentNameRecord]);
+
   const [isReady, context] = useMemo(() => {
     return [
-      auth.isSemesterSettled && auth.isSettingsSettled,
+      auth.isSemesterSettled &&
+        auth.isSettingsSettled &&
+        !!compactSchoolNameRecord &&
+        !!compactDepartmentNameRecord,
       {
         hasSynced: true,
-        starred: starred
-          ? Object.values(starred).sort((a, b) => b.starredDate - a.starredDate)
-          : [],
+        starred: sortedStarred,
         selectedSemester,
         isAuthenticated: auth.isAuthenticated,
-      },
+        schoolNameRecord: compactSchoolNameRecord || {},
+        departmentNameRecord: compactDepartmentNameRecord || {},
+      } as WatchAppContext,
     ];
   }, [
     auth.isSemesterSettled && auth.isSettingsSettled,
-    starred,
+    compactSchoolNameRecord,
+    compactDepartmentNameRecord,
+    sortedStarred,
     selectedSemester,
     auth.isAuthenticated,
   ]);

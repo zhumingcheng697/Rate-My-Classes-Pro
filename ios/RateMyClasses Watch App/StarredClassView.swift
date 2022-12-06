@@ -10,11 +10,31 @@ import SwiftUI
 struct StarredClassView: View {
   let starredClass: StarredClass
   @EnvironmentObject var contextModel: ContextModel
+  @EnvironmentObject var appDelegate: AppDelegate
+  @State var isRatingLoaded = false
+  @State var rating: Rating? = nil
   @State var isLoadingSchedule = true
   @State var schedules: [SectionInfo]? = nil
   @State var timer: Timer? = nil
   
+  var schoolName: String? {
+    return contextModel.context.schoolNameRecord[starredClass.schoolCode]
+  }
+  
+  var departmentName: String? {
+    return contextModel.context.departmentNameRecord[starredClass.schoolCode]?[starredClass.departmentCode]
+  }
+  
+  func fetchRating() {
+    Task {
+      rating = await Realm.getRating(classInfo: starredClass)
+      isRatingLoaded = true
+    }
+  }
+  
   func fetchSections(selectedSemester: Semester? = nil) {
+    isLoadingSchedule = true
+    
     if let timer = timer {
       timer.invalidate()
     }
@@ -34,17 +54,33 @@ struct StarredClassView: View {
     let currentSemesterName = contextModel.context.selectedSemester.name
     
     return ScrollView {
-      VStack(alignment: .leading, spacing: 2) {
+      VStack(alignment: .leading, spacing: 3) {
         Text(starredClass.name)
           .font(.title3)
           .foregroundColor(.accentColor)
           .fontWeight(.semibold)
           .padding([.horizontal])
         
-        Text(starredClass.fullClassCode)
-          .font(.callout)
-          .fontWeight(.medium)
-          .padding([.horizontal])
+        if schoolName == nil && departmentName == nil {
+          Text("\(starredClass.departmentCode)-\(starredClass.schoolCode)")
+            .font(.headline.leading(.tight))
+            .padding([.horizontal])
+        } else {
+          VStack(alignment: .leading) {
+            Text(schoolName ?? starredClass.schoolCode)
+              .font(.headline.leading(.tight))
+              .padding([.horizontal])
+            
+            Text(departmentName ?? starredClass.departmentCode)
+              .font(.subheadline.leading(.tight))
+              .padding([.horizontal])
+          }
+        }
+        
+        RatingDashboard(isRatingLoaded: $isRatingLoaded, rating: $rating)
+          .padding(.horizontal)
+          .padding(.top, 7)
+          .padding(.bottom, 12)
         
         NavigationLink(destination: {
           ScheduleView(classInfo: starredClass, sections: $schedules, isLoading: $isLoadingSchedule)
@@ -60,17 +96,21 @@ struct StarredClassView: View {
           }
         }
         .disabled((!isLoadingSchedule && schedules != nil && schedules?.count != 0) ? false : true)
-        .padding(.vertical)
         
-        Text(starredClass.description)
-          .font(.caption)
-          .padding([.horizontal])
+        if starredClass.description.count != 0 {
+          ReadMoreView(title: "Description", text: starredClass.description)
+            .padding(.top, 2)
+        }
       }
     }
     .onAppear {
-      if (schedules == nil) {
+      if !isRatingLoaded {
+        fetchRating()
+      }
+      if schedules == nil {
         fetchSections()
       }
+      appDelegate.updateUserActivity(title: "View \(starredClass.fullClassCode)", urlPath: "/starred/\(starredClass.schoolCode)/\(starredClass.departmentCode)/\(starredClass.classNumber)")
     }
     .onChange(of: contextModel.context.selectedSemester) {
       fetchSections(selectedSemester: $0)
@@ -80,9 +120,12 @@ struct StarredClassView: View {
   }
 }
 
+#if DEBUG
 struct StarredClassView_Previews: PreviewProvider {
   static var previews: some View {
     StarredClassView(starredClass: starredClassPreview)
-    .environmentObject(ContextModel())
+      .environmentObject(ContextModel())
+      .environmentObject(AppDelegate())
   }
 }
+#endif

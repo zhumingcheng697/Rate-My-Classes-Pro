@@ -16,6 +16,7 @@ struct StarredClassViewNavLink: View {
         Text(starredClass.name)
           .foregroundColor(.accentColor)
           .fontWeight(.medium)
+          .lineLimit(3)
         
         Text(starredClass.fullClassCode)
           .font(.caption)

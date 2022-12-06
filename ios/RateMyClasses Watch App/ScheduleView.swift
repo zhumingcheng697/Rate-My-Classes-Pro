@@ -10,18 +10,28 @@ import SwiftUI
 struct ScheduleView: View {
   let classInfo: ClassInfo
   @EnvironmentObject var contextModel: ContextModel
+  @EnvironmentObject var appDelegate: AppDelegate
   @Binding var sections: [SectionInfo]?
   @Binding var isLoading: Bool
+  
+  @State var showAlert = false
   
   var diff: Int {
     return contextModel.context.selectedSemester - Semester.predictCurrentSemester()
   }
   
   func recitationsFor(_ section: SectionInfo) -> [SectionInfo] {
-    if var recitations = section.recitations {
-      recitations = Array(Set(recitations))
-      recitations.sort { $0.code < $1.code }
-      return recitations
+    if let recitations = section.recitations {
+      var recitationCodes = Set<String>()
+      var recitationsToKeep = [SectionInfo]()
+      for recitation in recitations {
+        if !recitationCodes.contains(recitation.code) {
+          recitationCodes.insert(recitation.code)
+          recitationsToKeep.append(recitation)
+        }
+      }
+      recitationsToKeep.sort { $0.code < $1.code }
+      return recitationsToKeep
     }
     return []
   }
@@ -52,6 +62,9 @@ struct ScheduleView: View {
               }
             }
           }
+          .onAppear {
+            appDelegate.updateUserActivity(title: "View \(classInfo.fullClassCode) Schedule", urlPath: "/starred/\(classInfo.schoolCode)/\(classInfo.departmentCode)/\(classInfo.classNumber)/schedule")
+          }
         } else {
           ErrorView(iconName: "calendar.badge.exclamationmark", title: "Not Offered", message: "\(classInfo.fullClassCode) \(diff > 0 ? "will not be" : diff < 0 ? "was not" : "is not") offered in \(contextModel.context.selectedSemester.name)")
             .padding(.horizontal)
@@ -61,17 +74,20 @@ struct ScheduleView: View {
           .padding(.horizontal)
       }
     }
+    .onChange(of: sections) { _ in
+      showAlert = true
+    }
     .navigationTitle(Text("Schedule"))
     .navigationBarTitleDisplayMode(.inline)
   }
 }
 
+#if DEBUG
 struct ScheduleView_Previews: PreviewProvider {
   static var previews: some View {
-    ScheduleView(
-      classInfo: starredClassPreview,
-      sections: Binding(get: { Array(repeating: sectionPreview, count: 4) }, set: { _, _ in }),
-      isLoading: Binding(get: { false }, set: { _, _ in }))
-    .environmentObject(ContextModel())
+    ScheduleView(classInfo: starredClassPreview, sections: .constant(Array(repeating: sectionPreview, count: 4)), isLoading: .constant(false))
+      .environmentObject(ContextModel())
+      .environmentObject(AppDelegate())
   }
 }
+#endif

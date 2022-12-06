@@ -16,7 +16,7 @@ struct StarredClassViewNavLink: View {
         Text(starredClass.name)
           .foregroundColor(.accentColor)
           .fontWeight(.medium)
-
+        
         Text(starredClass.fullClassCode)
           .font(.caption)
       }
@@ -24,9 +24,11 @@ struct StarredClassViewNavLink: View {
   }
 }
 
+#if DEBUG
 struct StarredClassViewNavLink_Previews: PreviewProvider {
   static var previews: some View {
     StarredClassViewNavLink(starredClass: starredClassPreview)
-    .environmentObject(ContextModel())
+      .environmentObject(ContextModel())
   }
 }
+#endif

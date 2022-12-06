@@ -98,11 +98,13 @@ struct SectionView: View {
             .font(.title3)
             .foregroundColor(.accentColor)
             .fontWeight(.semibold)
+            .padding(.horizontal)
         } else {
           Text("\(classInfo.fullClassCode) \(section.code)")
             .font(.title3)
             .foregroundColor(.accentColor)
             .fontWeight(.semibold)
+            .padding(.horizontal)
         }
         
         LazyVGrid(columns:[.init(.flexible(minimum: 20, maximum: 20), spacing: 12), .init(.flexible(), alignment: .leading)], spacing: 6) {
@@ -119,29 +121,19 @@ struct SectionView: View {
           
           MeetingComponent(schedule: schedule)
         }
+        .padding((section.notes != nil && section.notes?.count != 0) ||
+                 (section.prerequisites != nil && section.prerequisites?.count != 0) ? [.bottom, .horizontal] : [.horizontal])
         
         if let notes = section.notes, notes.count > 0 {
-          VStack(alignment: .leading) {
-            Text("Notes:")
-            Text(notes)
-              .font(.caption2.leading(.tight))
-          }
-          .font(.caption.leading(.tight))
-          .foregroundColor(.secondary)
+          ReadMoreView(title: "Notes", text: notes)
         }
         
         if let prereq = section.prerequisites {
-          VStack(alignment: .leading) {
-            Text("Prerequisites:")
-            Text(prereq)
-              .font(.caption2.leading(.tight))
-          }
-          .foregroundColor(.secondary)
+          ReadMoreView(title: "Prerequisites", text: prereq)
         }
       }
       .navigationTitle(Text(section.code))
       .navigationBarTitleDisplayMode(.inline)
-      .padding(.horizontal)
       .onAppear {
         if (schedule == nil) {
           schedule = section.schedule
@@ -151,8 +143,10 @@ struct SectionView: View {
   }
 }
 
+#if DEBUG
 struct SectionView_Previews: PreviewProvider {
   static var previews: some View {
     SectionView(classInfo: starredClassPreview, section: sectionPreview)
   }
 }
+#endif

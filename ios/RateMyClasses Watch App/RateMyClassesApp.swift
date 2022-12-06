@@ -9,7 +9,8 @@ import SwiftUI
 
 @main
 struct RateMyClassesWatchApp: App {
-  @ObservedObject var contextModel = ContextModel()
+  @WKApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+  @StateObject var contextModel = ContextModel()
 
   var body: some Scene {
     WindowGroup {

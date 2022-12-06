@@ -9,7 +9,7 @@ import SwiftUI
 
 struct IconPair<Content: View>: View {
   let iconName: String
-  let child: () -> Content
+  let content: () -> Content
   let symbolRenderingMode: SymbolRenderingMode = .hierarchical
   
   var body: some View {
@@ -18,7 +18,7 @@ struct IconPair<Content: View>: View {
         .foregroundColor(.accentColor)
         .symbolRenderingMode(symbolRenderingMode)
       
-      child()
+      content()
     }
   }
 }

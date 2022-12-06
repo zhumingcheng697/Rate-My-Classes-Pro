@@ -14,8 +14,6 @@ struct ScheduleView: View {
   @Binding var sections: [SectionInfo]?
   @Binding var isLoading: Bool
   
-  @State var showAlert = false
-  
   var diff: Int {
     return contextModel.context.selectedSemester - Semester.predictCurrentSemester()
   }
@@ -73,9 +71,6 @@ struct ScheduleView: View {
         ErrorView(iconName: "antenna.radiowaves.left.and.right", title: "Unable to Load Schedule", message: "Unable to load \(contextModel.context.selectedSemester.name) schedule for \(classInfo.fullClassCode)")
           .padding(.horizontal)
       }
-    }
-    .onChange(of: sections) { _ in
-      showAlert = true
     }
     .navigationTitle(Text("Schedule"))
     .navigationBarTitleDisplayMode(.inline)

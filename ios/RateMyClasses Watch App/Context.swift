@@ -12,12 +12,14 @@ struct WatchAppContext: Codable {
   let starred: [StarredClass]
   let selectedSemester: Semester
   let isAuthenticated: Bool
+  let schoolNameRecord: [String: String]
+  let departmentNameRecord: [String: [String: String]]
 }
 
 class ContextModel: NSObject, WCSessionDelegate, ObservableObject {
   @Published var context: WatchAppContext
   
-  private static let userDefaultsKey = "RATE_MY_CLASSES_PRO:APPLICATION_CONTEXT"
+  private static let userDefaultsKey = "RATE_MY_CLASSES_PRO:WATCH_APP_CONTEXT"
   
   init(session: WCSession = .default) {
     if let data = UserDefaults.standard.data(forKey: ContextModel.userDefaultsKey),
@@ -25,7 +27,7 @@ class ContextModel: NSObject, WCSessionDelegate, ObservableObject {
       context = decodedContext
       super.init()
     } else {
-      context = WatchAppContext(hasSynced: false, starred: [], selectedSemester: Semester.predictCurrentSemester(), isAuthenticated: false)
+      context = WatchAppContext(hasSynced: false, starred: [], selectedSemester: Semester.predictCurrentSemester(), isAuthenticated: false, schoolNameRecord: [:], departmentNameRecord: [:])
       super.init()
       updateUserDefaults()
     }
@@ -39,7 +41,15 @@ class ContextModel: NSObject, WCSessionDelegate, ObservableObject {
   }
   
   func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any] = [:]) {
-    if let data = try? JSONSerialization.data(withJSONObject: userInfo),
+    decodeContext(userInfo)
+  }
+  
+  func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+    decodeContext(applicationContext)
+  }
+  
+  private func decodeContext(_ payload: [String: Any]) {
+    if let data = try? JSONSerialization.data(withJSONObject: payload),
        let decodedContext = try? JSONDecoder().decode(WatchAppContext.self, from: data) {
       context = decodedContext
       updateUserDefaults()

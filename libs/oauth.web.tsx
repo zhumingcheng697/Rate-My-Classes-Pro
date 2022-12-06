@@ -121,7 +121,12 @@ export namespace GoogleOAuth {
       [callback, onError]
     );
 
-    return useGoogleLogin({ onSuccess, onError: _onError, flow: "auth-code" });
+    return useGoogleLogin({
+      onSuccess,
+      onError: _onError,
+      onNonOAuthError: _onError,
+      flow: "auth-code",
+    });
   }
 
   export async function signOut() {

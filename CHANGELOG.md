@@ -1,5 +1,15 @@
 # Changelog
 
+## [v1.3](https://github.com/zhumingcheng697/Rate-My-Classes-Pro/releases/tag/v1.3)
+
+**Built:** December 5, 2022
+
+**Released:** December 6, 2022
+
+- Added Apple Watch support.
+- Added support for Handoff from Apple Watch.
+- Additional bug fixes and improvements.
+
 ## [v1.2](https://github.com/zhumingcheng697/Rate-My-Classes-Pro/releases/tag/v1.2)
 
 **Built:** November 23, 2022

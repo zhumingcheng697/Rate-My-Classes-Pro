@@ -22,6 +22,7 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 ## Platforms
 
 - [iOS](https://apple.co/3AduK8G)
+- [watchOS](https://apple.co/3AduK8G)
 - [macOS](https://apple.co/3AduK8G)
 - [Web](https://rate-my-classes-pro.netlify.app/)
 
@@ -61,6 +62,7 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 - Fullscreen web app on iOS
 - Multiple-tab support on web
 - `mask-icon` on Safari for Mac
+- Track starred classes, schedules, and overall rating on Apple Watch
 
 ## Tech Stack
 
@@ -71,6 +73,8 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 - [Redux](https://redux.js.org)
 - [Schedge](https://github.com/A1Liu/schedge)
 - [TypeScript](https://www.typescriptlang.org)
+- [Swift](https://www.swift.org)
+- [SwiftUI](https://developer.apple.com/documentation/swiftui/)
 - [React Native Web](https://necolas.github.io/react-native-web/)
 - [Mac Catalyst](https://developer.apple.com/mac-catalyst/)
 - [Netlify](https://www.netlify.com)

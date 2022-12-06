@@ -6,6 +6,7 @@
 //
 
 import WatchConnectivity
+import Combine
 
 struct WatchAppContext: Codable {
   let hasSynced: Bool
@@ -18,6 +19,8 @@ struct WatchAppContext: Codable {
 
 class ContextModel: NSObject, WCSessionDelegate, ObservableObject {
   @Published var context: WatchAppContext
+  
+  static let semesterPublisher = PassthroughSubject<Semester, Never>()
   
   private static let userDefaultsKey = "RATE_MY_CLASSES_PRO:WATCH_APP_CONTEXT"
   
@@ -51,7 +54,13 @@ class ContextModel: NSObject, WCSessionDelegate, ObservableObject {
   private func decodeContext(_ payload: [String: Any]) {
     if let data = try? JSONSerialization.data(withJSONObject: payload),
        let decodedContext = try? JSONDecoder().decode(WatchAppContext.self, from: data) {
+      let semester = context.selectedSemester
       context = decodedContext
+      
+      if context.selectedSemester != semester {
+        ContextModel.semesterPublisher.send(context.selectedSemester)
+      }
+      
       updateUserDefaults()
     }
   }

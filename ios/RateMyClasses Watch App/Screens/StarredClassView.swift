@@ -112,7 +112,7 @@ struct StarredClassView: View {
       }
       appDelegate.updateUserActivity(title: "View \(starredClass.fullClassCode)", urlPath: "/starred/\(starredClass.schoolCode)/\(starredClass.departmentCode)/\(starredClass.classNumber)")
     }
-    .onChange(of: contextModel.context.selectedSemester) {
+    .onReceive(ContextModel.semesterPublisher) {
       fetchSections(selectedSemester: $0)
     }
     .navigationTitle(Text(starredClass.fullClassCode))

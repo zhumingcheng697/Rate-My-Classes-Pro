@@ -247,23 +247,6 @@
 				C2BD0285293996850026D82E /* RateMyClasses-Watch-App-Info.plist */,
 				C25F9C72292F145B0007E3C3 /* RateMyClasses Watch App.entitlements */,
 				C25F9C66292F14340007E3C3 /* RateMyClassesApp.swift */,
-				C25F9C68292F14340007E3C3 /* ContentView.swift */,
-				C2BD02692936D2630026D82E /* StarredClassView.swift */,
-				C2BD02732937D48D0026D82E /* ScheduleView.swift */,
-				C2BD02772937EB790026D82E /* SectionView.swift */,
-				C2BD02752937D7A00026D82E /* ErrorView.swift */,
-				C2BD028629399C700026D82E /* ReadMoreView.swift */,
-				C2BD026B2936F9030026D82E /* StarredClassViewNavLink.swift */,
-				C2BD02792937F7080026D82E /* IconPair.swift */,
-				C2BD0283293977B00026D82E /* RatingDashboard.swift */,
-				C2BD028D293A43390026D82E /* AppDelegate.swift */,
-				C2D29A3D2935B7D400E64851 /* Context.swift */,
-				C2BD026F2937B25D0026D82E /* ClassInfo.swift */,
-				C2BD027B293881170026D82E /* SectionInfo.swift */,
-				C2BD02712937B27D0026D82E /* Semester.swift */,
-				C2BD027D293913610026D82E /* Rating.swift */,
-				C2BD026D2937201C0026D82E /* Schedge.swift */,
-				C2BD027F293913990026D82E /* Realm.swift */,
 				C2BD02882939A8AC0026D82E /* Screens */,
 				C2BD02892939A8DC0026D82E /* Componenets */,
 				C2BD028A2939A8EC0026D82E /* Libs */,
@@ -285,6 +268,12 @@
 		C2BD02882939A8AC0026D82E /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				C25F9C68292F14340007E3C3 /* ContentView.swift */,
+				C2BD02692936D2630026D82E /* StarredClassView.swift */,
+				C2BD02732937D48D0026D82E /* ScheduleView.swift */,
+				C2BD02772937EB790026D82E /* SectionView.swift */,
+				C2BD02752937D7A00026D82E /* ErrorView.swift */,
+				C2BD028629399C700026D82E /* ReadMoreView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -292,6 +281,9 @@
 		C2BD02892939A8DC0026D82E /* Componenets */ = {
 			isa = PBXGroup;
 			children = (
+				C2BD026B2936F9030026D82E /* StarredClassViewNavLink.swift */,
+				C2BD02792937F7080026D82E /* IconPair.swift */,
+				C2BD0283293977B00026D82E /* RatingDashboard.swift */,
 			);
 			path = Componenets;
 			sourceTree = "<group>";
@@ -299,6 +291,14 @@
 		C2BD028A2939A8EC0026D82E /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				C2BD028D293A43390026D82E /* AppDelegate.swift */,
+				C2D29A3D2935B7D400E64851 /* Context.swift */,
+				C2BD026F2937B25D0026D82E /* ClassInfo.swift */,
+				C2BD027B293881170026D82E /* SectionInfo.swift */,
+				C2BD02712937B27D0026D82E /* Semester.swift */,
+				C2BD027D293913610026D82E /* Rating.swift */,
+				C2BD026D2937201C0026D82E /* Schedge.swift */,
+				C2BD027F293913990026D82E /* Realm.swift */,
 			);
 			path = Libs;
 			sourceTree = "<group>";

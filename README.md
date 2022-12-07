@@ -1,4 +1,6 @@
-![Main](https://user-images.githubusercontent.com/31050761/206310506-3caa7e2f-a2d6-4f46-8849-7fe635b2618c.jpg)
+<picture>
+  <img src="https://user-images.githubusercontent.com/31050761/206311363-06b7a08a-be11-49af-9921-ac036112ded8.png">
+</picture>
 
 <h1><picture>
   <source valign="middle" height="55px" srcset="https://github.com/zhumingcheng697/Rate-My-Classes-Pro/raw/main/icons/violet.png" media="(prefers-color-scheme: dark)">

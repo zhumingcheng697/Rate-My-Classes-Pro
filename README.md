@@ -77,6 +77,7 @@ Ever got frustrated by how slow and how hard to use Albert is? Having a hard tim
 - [Redux](https://redux.js.org)
 - [Schedge](https://github.com/A1Liu/schedge)
 - [TypeScript](https://www.typescriptlang.org)
+- [Node.js](https://nodejs.org)
 - [Swift](https://www.swift.org)
 - [SwiftUI](https://developer.apple.com/documentation/swiftui/)
 - [React Native Web](https://necolas.github.io/react-native-web/)

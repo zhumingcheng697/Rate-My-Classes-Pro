@@ -1,5 +1,5 @@
-import React from "react";
-import { type ReturnKeyTypeOptions } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Platform, type ReturnKeyTypeOptions } from "react-native";
 import { Input, IconButton, Icon, type IInputProps, Box } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -24,6 +24,13 @@ export default function ClearableInput({
   canClear,
   ...rest
 }: ClearableInputProps) {
+  const [isMouseDown, setIsMouseDown] = useState(false);
+
+  useEffect(() => {
+    if (Platform.OS === "web")
+      window.addEventListener("mouseup", () => setIsMouseDown(false));
+  }, []);
+
   return (
     <Input
       {...rest}
@@ -57,9 +64,10 @@ export default function ClearableInput({
               _web={{
                 // @ts-ignore
                 onMouseUp: (e: MouseEvent) => {
-                  if (!e.button) {
-                    onChangeText("");
-                  }
+                  if (!e.button && isMouseDown) onChangeText("");
+                },
+                onMouseDown: (e: MouseEvent) => {
+                  if (!e.button) setIsMouseDown(true);
                 },
               }}
             />

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Platform } from "react-native";
+import { enableFreeze } from "react-native-screens";
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
 import { createStore } from "redux";
@@ -15,6 +16,8 @@ import { useColorModeSynchronizer } from "./styling/color-mode-utils";
 import nativeBaseTheme from "./styling/theme";
 import { useAppState } from "./libs/hooks";
 import { OAuthProvider } from "./libs/oauth";
+
+enableFreeze(true);
 
 Ionicons.loadFont();
 

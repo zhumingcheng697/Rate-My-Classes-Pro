@@ -11,7 +11,10 @@ export function useDynamicColor(colors: Parameters<typeof DynamicColorIOS>[0]) {
 
 export const colorModeResponsiveStyle = (
   style: (selector: typeof DynamicColorIOS) => Record<string, any>
-) => ({ ...style(DynamicColorIOS) });
+) => {
+  const _style = style(DynamicColorIOS);
+  return { _light: _style, _dark: _style };
+};
 
 const dynamicThemeColor = (
   selector: (

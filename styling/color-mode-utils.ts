@@ -13,7 +13,7 @@ export function useDynamicColor({ light, dark }: ColorPair) {
 export const colorModeResponsiveStyle = (
   style: (selector: (colorPair: ColorPair) => string) => Record<string, any>
 ) => ({
-  ...style(({ light }) => light),
+  _light: style(({ light }) => light),
   _dark: style(({ dark }) => dark),
 });
 

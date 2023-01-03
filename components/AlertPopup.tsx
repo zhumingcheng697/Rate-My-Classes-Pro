@@ -30,6 +30,20 @@ export type AlertPopupProps = {
   onClose: () => any;
 };
 
+const bgStyle = colorModeResponsiveStyle((selector) => ({
+  background: selector({
+    light: theme.colors.gray[50],
+    dark: theme.colors.gray[700],
+  }),
+}));
+
+const bgStyle2 = colorModeResponsiveStyle((selector) => ({
+  background: selector({
+    light: theme.colors.gray[100],
+    dark: theme.colors.gray[600],
+  }),
+}));
+
 export default function AlertPopup({
   header = "Unable to Load Class Information",
   body = "Please check your network connection or try again later.",
@@ -163,26 +177,27 @@ export default function AlertPopup({
           width: "100%",
         }}
       >
-        <AlertDialog.Content
-          maxHeight={"100%"}
-          {...colorModeResponsiveStyle((selector) => ({
-            background: selector({
-              light: theme.colors.gray[50],
-              dark: theme.colors.gray[700],
-            }),
-          }))}
-        >
+        <AlertDialog.Content maxHeight={"100%"} {...bgStyle2}>
           <AlertDialog.Header
-            py={isCompact ? "9px" : undefined}
+            px={"12px"}
+            py={isCompact ? "9px" : "16px"}
             _text={textColorStyle}
             borderColor={subtleBorder}
+            {...bgStyle}
           >
             {header}
           </AlertDialog.Header>
           <AlertDialog.Body
-            ref={scrollRef}
-            pt={isCompact ? "5px" : undefined}
-            pb={isCompact ? "10px" : undefined}
+            // @ts-ignore
+            _scrollview={{
+              minH: 0,
+              ref: scrollRef,
+              ...bgStyle,
+            }}
+            px={"12px"}
+            pt={isCompact ? "5px" : "8px"}
+            pb={isCompact ? "10px" : "12px"}
+            {...bgStyle}
             _text={colorModeResponsiveStyle((selector) => ({
               color: selector({
                 light: theme.colors.gray[500],
@@ -193,13 +208,10 @@ export default function AlertPopup({
             {body}
           </AlertDialog.Body>
           <AlertDialog.Footer
-            py={isCompact ? "7px" : undefined}
-            {...colorModeResponsiveStyle((selector) => ({
-              background: selector({
-                light: theme.colors.gray[100],
-                dark: theme.colors.gray[600],
-              }),
-            }))}
+            px={"12px"}
+            py={isCompact ? "7px" : "12px"}
+            borderColor={subtleBorder}
+            {...bgStyle2}
           >
             {footer ? (
               footer(ref, isCompact)
@@ -209,9 +221,10 @@ export default function AlertPopup({
                   variant="unstyled"
                   _pressed={{ opacity: 0.5 }}
                   _hover={{ opacity: 0.72 }}
-                  py={isCompact ? "5px" : undefined}
+                  py={isCompact ? "5px" : "8px"}
                   onPress={onClose}
                   ref={ref}
+                  _text={{ fontWeight: "medium" }}
                 >
                   Cancel
                 </Button>
@@ -222,7 +235,7 @@ export default function AlertPopup({
                 ref={ref}
                 onPress={onClose}
                 borderRadius={isCompact ? 8 : undefined}
-                py={isCompact ? "5px" : undefined}
+                py={isCompact ? "5px" : "8px"}
               >
                 OK
               </Button>

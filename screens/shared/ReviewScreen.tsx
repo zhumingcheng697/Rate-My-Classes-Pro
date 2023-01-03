@@ -282,7 +282,7 @@ export default function ReviewScreen() {
         footerPrimaryButton={(isCompact) => (
           <Button
             borderRadius={isCompact ? 8 : undefined}
-            py={isCompact ? "5px" : undefined}
+            py={isCompact ? "5px" : "8px"}
             variant={"dangerous"}
             onPress={() => {
               setShowAlert(false);

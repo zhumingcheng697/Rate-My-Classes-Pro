@@ -76,7 +76,7 @@ function NativeSharingButton({ url, copyLink }: SharingButtonProps) {
             ? (isCompact) => (
                 <Button
                   borderRadius={isCompact ? 8 : undefined}
-                  py={isCompact ? "5px" : undefined}
+                  py={isCompact ? "5px" : "8px"}
                   onPress={() => {
                     setShareAlert(false);
                     copyLink(url);

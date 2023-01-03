@@ -148,7 +148,7 @@ export default function SettingsScreen() {
             auth={auth}
             variant={"dangerous"}
             borderRadius={isCompact ? 8 : undefined}
-            py={isCompact ? "5px" : undefined}
+            py={isCompact ? "5px" : "8px"}
             deleteReviews={deleteReviews}
             setAccountDeleted={setAccountDeleted}
             setIsDeletingAccount={setIsDeletingAccount}

@@ -137,8 +137,8 @@ export default function VerifyAccountPopup({
               }
             }}
             borderRadius={isCompact ? "8px" : undefined}
-            pt={isCompact ? "5px" : undefined}
-            pb={isCompact ? "5px" : undefined}
+            pt={isCompact ? "5px" : "8px"}
+            pb={isCompact ? "5px" : "8px"}
           >
             Send Code
           </Button>
@@ -211,8 +211,8 @@ export default function VerifyAccountPopup({
               }
             }}
             borderRadius={isCompact ? "8px" : undefined}
-            pt={isCompact ? "5px" : undefined}
-            pb={isCompact ? "5px" : undefined}
+            pt={isCompact ? "5px" : "8px"}
+            pb={isCompact ? "5px" : "8px"}
           >
             Verify
           </Button>

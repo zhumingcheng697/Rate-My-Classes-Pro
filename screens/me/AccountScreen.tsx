@@ -75,7 +75,7 @@ export default function AccountScreen() {
             <Button
               variant={"dangerous"}
               borderRadius={isCompact ? 8 : undefined}
-              py={isCompact ? "5px" : undefined}
+              py={isCompact ? "5px" : "8px"}
               onPress={async () => {
                 setIsSigningOut(true);
                 setShowAlert(false);

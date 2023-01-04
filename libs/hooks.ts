@@ -408,7 +408,11 @@ export function useClassInfoLoader(
             setScheduleLoaded(true);
             setClassInfoError(null);
           } else if (loadFromStarredReviewed()) {
-            setClassInfoError(null);
+            if (isSettingsSettled && loadSchedule) {
+              setClassInfoError(ErrorType.noData);
+            } else {
+              setClassInfoError(null);
+            }
           } else if (isSettingsSettled) {
             setClassInfo(null);
             setClassInfoError(ErrorType.noData);

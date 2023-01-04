@@ -25,7 +25,7 @@
     "@react-navigation/stack": "^6.3.2",
     "@react-oauth/google": "^0.5.1",
     "expo": "^44.0.6",
-    "native-base": "^3.3.10",
+    "native-base": "^3.4.25",
     "react": "17.0.2",
     "react-apple-signin-auth": "^1.0.9",
     "react-dom": "17.0.2",

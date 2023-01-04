@@ -294,3 +294,18 @@ export function TieredTextButton({
     </SubtleButton>
   );
 }
+
+type IconButtonBaseProps = {
+  icon: ReactNode;
+} & LinkTo;
+
+export type IconButtonProps = IconButtonBaseProps &
+  Omit<IPressableProps, keyof IconButtonBaseProps | "children">;
+
+export function IconButton({ icon, ...rest }: IconButtonProps) {
+  return (
+    <Pressable {...pressableBaseStyle} {...rest}>
+      {icon}
+    </Pressable>
+  );
+}

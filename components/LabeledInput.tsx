@@ -3,14 +3,12 @@ import { Box, type IBoxProps, HStack, Text } from "native-base";
 
 import colors from "../styling/colors";
 import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
-import theme from "../styling/theme";
 
 type LabeledInputBaseProps = {
   label: string;
   isDisabled?: boolean;
   usePlainLabel?: boolean;
   showRequiredIcon?: boolean;
-  dimDisabledInput?: boolean;
   input?: ReactNode;
   children?: ReactNode;
 };
@@ -23,7 +21,6 @@ export default function LabeledInput({
   isDisabled,
   usePlainLabel = false,
   showRequiredIcon = false,
-  dimDisabledInput = true,
   input,
   children,
   ...rest
@@ -51,9 +48,7 @@ export default function LabeledInput({
           </Text>
         )}
       </HStack>
-      <Box opacity={isDisabled && dimDisabledInput ? 0.5 : undefined}>
-        {input ?? children}
-      </Box>
+      {input ?? children}
     </Box>
   );
 }

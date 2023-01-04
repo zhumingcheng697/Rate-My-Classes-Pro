@@ -149,13 +149,15 @@ const componentsStyle = {
   },
   Input: {
     defaultProps: {
+      placeholderTextColor: theme.colors.gray[400],
       maxLength: 50,
       enablesReturnKeyAutomatically: true,
+      _disabled: {
+        opacity: 0.5,
+      },
       ...inputSelectDefaultProps,
     },
-    baseStyle: {
-      ...inputSelectBaseStyle,
-    },
+    baseStyle: inputSelectBaseStyle,
     variants: {
       password: {
         secureTextEntry: true,
@@ -260,7 +262,8 @@ const componentsStyle = {
         })),
       },
       button: {
-        color: "#ffffff",
+        _light: { color: "#ffffff" },
+        _dark: { color: "#ffffff" },
         ...buttonTextBaseStyle,
       },
       subtleButton: {

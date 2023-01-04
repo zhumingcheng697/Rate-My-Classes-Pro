@@ -28,7 +28,7 @@ export default function IconHStack({
   _icon = Object.assign(
     {
       marginTop: "3px",
-      size: "xs",
+      size: "sm",
       ...colorModeResponsiveStyle((selector) => ({
         color: selector(colors.nyu),
       })),

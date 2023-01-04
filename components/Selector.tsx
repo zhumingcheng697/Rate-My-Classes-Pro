@@ -53,6 +53,13 @@ export default function Selector<T>({
         selectedOption ? serializeOption(selectedOption) : undefined
       }
       onValueChange={(option) => onSelectedOptionChange(optionRecord[option])}
+      dropdownIcon={
+        <Icon
+          size={"20px"}
+          as={<Ionicons name={"chevron-down"} />}
+          marginRight={"4px"}
+        />
+      }
       _actionSheetContent={{
         marginLeft: `${inset.left}px`,
         marginRight: `${inset.right}px`,

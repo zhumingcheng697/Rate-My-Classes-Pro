@@ -48,17 +48,36 @@ const inputSelectDefaultProps = {
   backgroundColor: "transparent",
   size: "lg",
   borderWidth: 1,
+  padding: "8px",
   borderColor: solidBorder,
   ...colorModeResponsiveStyle((selector) => ({
     selectionColor: selector(colors.nyu),
   })),
+  focusOutlineColor: solidBorder,
   _focus: {
     borderColor: solidBorder,
   },
+  _hover: {
+    borderColor: solidBorder,
+    _disabled: {
+      borderColor: solidBorder,
+    },
+  },
   _web: colorModeResponsiveStyle((selector) => ({
+    focusOutlineColor: selector(colors.nyu),
     _focus: {
-      boxShadow: "0 0 0 1px " + selector(colors.nyu),
       borderColor: selector(colors.nyu),
+      _hover: {
+        borderColor: selector(colors.nyu),
+      },
+      _stack: {
+        style: {
+          boxShadow: "0 0 0 1px " + selector(colors.nyu),
+        },
+      },
+      _disabled: {
+        focusOutlineColor: solidBorder,
+      },
     },
   })),
 };
@@ -149,6 +168,9 @@ const componentsStyle = {
   Select: {
     defaultProps: {
       ...inputSelectDefaultProps,
+      _disabled: {
+        opacity: 1,
+      },
       _actionSheetContent: {
         padding: "10px",
         ...colorModeResponsiveStyle((selector) => ({
@@ -163,6 +185,7 @@ const componentsStyle = {
         marginY: "2px",
         padding: "10px",
         borderRadius: 10,
+        background: "transparent",
         _text: textColorStyle,
         ...colorModeResponsiveStyle((selector) => ({
           _pressed: { background: selector(colors.background.tertiary) },
@@ -180,9 +203,7 @@ const componentsStyle = {
         },
       },
     },
-    baseStyle: {
-      ...inputSelectBaseStyle,
-    },
+    baseStyle: inputSelectBaseStyle,
   },
   ScrollView: {
     defaultProps: {

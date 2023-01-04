@@ -142,11 +142,6 @@ const componentsStyle = {
       },
     },
   },
-  IconButton: {
-    defaultProps: {
-      ...pressableBaseStyle,
-    },
-  },
   Input: {
     defaultProps: {
       placeholderTextColor: theme.colors.gray[400],

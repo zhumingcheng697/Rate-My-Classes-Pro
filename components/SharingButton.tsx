@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Platform, Share } from "react-native";
-import { Button, Icon, IconButton, Toast, Text, HStack } from "native-base";
+import { View, Button, Icon, Toast, Text, HStack } from "native-base";
 import { type RouteProp, useRoute } from "@react-navigation/native";
 import Clipboard from "@react-native-clipboard/clipboard";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -17,6 +17,7 @@ import { stringifyRoute } from "../navigation/linking/stringify";
 import { colorModeResponsiveStyle } from "../styling/color-mode-utils";
 import colors from "../styling/colors";
 import AlertPopup from "./AlertPopup";
+import { IconButton } from "./LinkCompatibleButton";
 
 function showConfirmation(message: string) {
   Toast.closeAll();
@@ -88,31 +89,31 @@ function NativeSharingButton({ url, copyLink }: SharingButtonProps) {
             : undefined
         }
       />
-      <IconButton
-        ref={ref}
-        disabled={!url}
-        isDisabled={!url}
-        variant={"unstyled"}
-        marginRight={"5px"}
-        padding={"5px"}
-        icon={<Icon as={<Ionicons name={"share-outline"} />} />}
-        onPress={() => {
-          if (url) {
-            Share.share(
-              Platform.OS === "ios" ? { url } : { message: url },
-              typeof anchor === "number" && Platform.OS === "ios"
-                ? { anchor }
-                : undefined
-            ).catch((err) => {
-              if (!/Cancel/i.test(composeErrorMessage(err, ""))) {
-                console.error(err);
-                setShareError(err);
-                setShareAlert(true);
-              }
-            });
-          }
-        }}
-      />
+      <View ref={ref}>
+        <IconButton
+          disabled={!url}
+          isDisabled={!url}
+          marginRight={"5px"}
+          padding={"5px"}
+          icon={<Icon as={<Ionicons name={"share-outline"} />} />}
+          onPress={() => {
+            if (url) {
+              Share.share(
+                Platform.OS === "ios" ? { url } : { message: url },
+                typeof anchor === "number" && Platform.OS === "ios"
+                  ? { anchor }
+                  : undefined
+              ).catch((err) => {
+                if (!/Cancel/i.test(composeErrorMessage(err, ""))) {
+                  console.error(err);
+                  setShareError(err);
+                  setShareAlert(true);
+                }
+              });
+            }
+          }}
+        />
+      </View>
     </>
   );
 }

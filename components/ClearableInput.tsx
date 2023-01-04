@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Platform, type ReturnKeyTypeOptions } from "react-native";
-import { Input, IconButton, Icon, type IInputProps, Box } from "native-base";
+import { Input, Icon, type IInputProps, Box } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { IconButton } from "./LinkCompatibleButton";
 
 type ClearableInputBaseProps = {
   value: string;
@@ -54,7 +55,6 @@ export default function ClearableInput({
         <Box>
           {(canClear ?? !!value) && (
             <IconButton
-              variant={"unstyled"}
               padding={"3px"}
               marginRight={"2px"}
               icon={

@@ -5,7 +5,6 @@ import {
   Text,
   VStack,
   type IStackProps,
-  IconButton,
   Icon,
   Button,
 } from "native-base";
@@ -17,7 +16,7 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { PlainTextButton } from "./LinkCompatibleButton";
+import { IconButton, PlainTextButton } from "./LinkCompatibleButton";
 import AlertPopup from "./AlertPopup";
 import IconHStack from "./IconHStack";
 import {
@@ -143,7 +142,6 @@ function VoteBlock({
       />
       <HStack alignItems={"center"} {...rest}>
         <IconButton
-          variant={"unstyled"}
           padding={"3px"}
           icon={
             <Icon
@@ -154,7 +152,7 @@ function VoteBlock({
                     ? colors.nyu
                     : {
                         light: theme.colors.gray[400],
-                        dark: theme.colors.gray[700],
+                        dark: theme.colors.gray[600],
                       }
                 ),
               }))}
@@ -199,7 +197,6 @@ function VoteBlock({
         />
         <Text fontWeight={"semibold"}>{voteCount}</Text>
         <IconButton
-          variant={"unstyled"}
           padding={"3px"}
           icon={
             <Icon
@@ -210,7 +207,7 @@ function VoteBlock({
                     ? colors.nyu
                     : {
                         light: theme.colors.gray[400],
-                        dark: theme.colors.gray[700],
+                        dark: theme.colors.gray[600],
                       }
                 ),
               }))}

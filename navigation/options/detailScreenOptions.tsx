@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IconButton, Icon, Button, theme, HStack } from "native-base";
+import { Icon, Button, theme, HStack } from "native-base";
 import { type RouteProp } from "@react-navigation/native";
 import type {
   StackNavigationProp,
@@ -18,6 +18,7 @@ import { getFullClassCode, extractClassInfo } from "../../libs/utils";
 import { useAuth } from "../../mongodb/auth";
 import Action from "../../redux/actions";
 import SharingButton from "../../components/SharingButton";
+import { IconButton } from "../../components/LinkCompatibleButton";
 
 type DetailScreenNavigationProp = StackNavigationProp<
   SharedNavigationParamList,
@@ -105,7 +106,6 @@ export default ({
           <IconButton
             disabled={!classInfo}
             isDisabled={!classInfo}
-            variant={"unstyled"}
             marginRight={"5px"}
             padding={"5px"}
             icon={

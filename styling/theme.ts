@@ -28,12 +28,12 @@ export const pressableBaseStyle = {
   _disabled: { opacity: 0.5 },
   _pressed: { opacity: 0.5 },
   _hover: { opacity: 0.72 },
-  _web: { userSelect: "none" },
 };
 
 export const buttonBaseStyle = {
   paddingX: "12px",
-  paddingY: "8px",
+  pt: "8px",
+  pb: "8px",
   borderRadius: 10,
   ...pressableBaseStyle,
 };
@@ -134,7 +134,7 @@ const componentsStyle = {
   },
   Icon: {
     defaultProps: {
-      size: "sm",
+      size: "24px",
       color: solidBorder,
       _web: {
         userSelect: "none",

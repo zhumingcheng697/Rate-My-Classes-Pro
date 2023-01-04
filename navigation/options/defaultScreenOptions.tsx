@@ -19,7 +19,7 @@ function ChevronIcon(props: IIconProps) {
   return (
     <Icon
       {...props}
-      size={"md"}
+      size={"28px"}
       {...colorModeResponsiveStyle((selector) => ({
         color: selector(colors.nyu),
       }))}

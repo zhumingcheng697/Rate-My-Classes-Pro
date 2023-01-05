@@ -64,9 +64,11 @@ export default function ClearableInput({
               onPress={() => onChangeText("")}
               _web={{
                 // @ts-ignore
+                // eslint-disable-next-line no-undef
                 onMouseUp: (e: MouseEvent) => {
                   if (!e.button && isMouseDown) onChangeText("");
                 },
+                // eslint-disable-next-line no-undef
                 onMouseDown: (e: MouseEvent) => {
                   if (!e.button) setIsMouseDown(true);
                 },

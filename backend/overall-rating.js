@@ -1,8 +1,8 @@
 exports = async function ({ query }) {
   if (!query || !query.class) return {};
 
-  const mongodb = context.services.get(context.values.get("service-name"));
-  const db = mongodb.db(context.values.get("database-name"));
+  const mongodb = context.services.get(context.values.get("service-name")); // eslint-disable-line no-undef
+  const db = mongodb.db(context.values.get("database-name")); // eslint-disable-line no-undef
   const doc = await db.collection("reviews").findOne({ _id: query.class });
 
   if (!doc) return {};

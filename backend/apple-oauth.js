@@ -4,6 +4,7 @@ exports = async function ({ query }) {
 
   const appleSignin = require("apple-signin-auth");
 
+  // eslint-disable-next-line no-undef
   const clientID = context.values.get(
     query.platform !== "ios" && query.platform !== "macos"
       ? "apple-service-id"
@@ -12,9 +13,9 @@ exports = async function ({ query }) {
 
   const clientSecret = appleSignin.getClientSecret({
     clientID,
-    teamID: context.values.get("apple-team-id"),
-    privateKey: context.values.get("apple-private-key"),
-    keyIdentifier: context.values.get("apple-private-key-id"),
+    teamID: context.values.get("apple-team-id"), // eslint-disable-line no-undef
+    privateKey: context.values.get("apple-private-key"), // eslint-disable-line no-undef
+    keyIdentifier: context.values.get("apple-private-key-id"), // eslint-disable-line no-undef
   });
 
   if (query.action === "revoke") {
@@ -27,7 +28,7 @@ exports = async function ({ query }) {
 
   return await appleSignin.getAuthorizationToken(query.code, {
     clientID,
-    redirectUri: context.values.get("web-deployment-url"),
+    redirectUri: context.values.get("web-deployment-url"), // eslint-disable-line no-undef
     clientSecret,
   });
 };

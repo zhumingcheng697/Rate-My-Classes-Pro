@@ -2,10 +2,10 @@ exports = async function ({ query }) {
   if (!query || !query.code || !query.id)
     throw new Error("Invalid query parameters");
 
-  const mongodb = context.services.get(context.values.get("service-name"));
-  const db = mongodb.db(context.values.get("database-name"));
+  const mongodb = context.services.get(context.values.get("service-name")); // eslint-disable-line no-undef
+  const db = mongodb.db(context.values.get("database-name")); // eslint-disable-line no-undef
   const doc = await db
-    .collection(context.values.get("collection-name"))
+    .collection(context.values.get("collection-name")) // eslint-disable-line no-undef
     .findOneAndDelete({ _id: query.id });
 
   if (doc && doc.code === query.code) {

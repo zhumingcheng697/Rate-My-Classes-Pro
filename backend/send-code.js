@@ -8,10 +8,10 @@ exports = async function ({ query }) {
   const crypto = require("crypto");
   const code = crypto.randomBytes(3).toString("hex");
 
-  const mongodb = context.services.get(context.values.get("service-name"));
-  const db = mongodb.db(context.values.get("database-name"));
+  const mongodb = context.services.get(context.values.get("service-name")); // eslint-disable-line no-undef
+  const db = mongodb.db(context.values.get("database-name")); // eslint-disable-line no-undef
   await db
-    .collection(context.values.get("collection-name"))
+    .collection(context.values.get("collection-name")) // eslint-disable-line no-undef
     .updateOne(
       { _id: query.id },
       { code, generatedAt: Date.now() },
@@ -23,13 +23,13 @@ exports = async function ({ query }) {
   const transporter = nodeMailer.createTransport({
     service: "gmail",
     auth: {
-      user: context.values.get("email-address"),
-      pass: context.values.get("email-password"),
+      user: context.values.get("email-address"), // eslint-disable-line no-undef
+      pass: context.values.get("email-password"), // eslint-disable-line no-undef
     },
   });
 
   await transporter.sendMail({
-    from: `Rate My Classes Pro <${context.values.get("email-address")}>`,
+    from: `Rate My Classes Pro <${context.values.get("email-address")}>`, // eslint-disable-line no-undef
     to: query.email,
     subject: "Rate My Classes Confirmation Code",
     html: `<div><p>Thank you for verifying your Rate My Classes account.</p><p>Your confirmation code is:</p><p style="font-size: 2.5em; font-weight: 700; margin: 1rem 0; color: #57068c; font-family: ui-monospace, 'SF Mono', SFMono-Regular, 'DejaVu Sans Mono', Menlo, Consolas, monospace;">${code}</p><p>This code will expire in 30 minutes.</p></div>`,

@@ -77,7 +77,9 @@ const recoverReview = (query: Record<keyof PendingReview | "for", string>) => {
   } = query;
 
   const parseRating = (rating?: string) =>
-    rating && /^[1-5]$/.test(rating) ? (parseInt(rating) as Rating) : undefined;
+    rating && /^[1-5]$/.test(rating)
+      ? (parseInt(rating, 10) as Rating)
+      : undefined;
 
   recoveredReview.enjoyment = parseRating(enjoyment);
   recoveredReview.difficulty = parseRating(difficulty);
@@ -353,7 +355,7 @@ export default function parse(
   const cleanupValue = (e: string, i: number) =>
     i === 0 ? decodeURIComponent(e).toLowerCase() : decodeURIComponent(e);
 
-  const paramsToEntry = (param: string) => param.split(/=/).map(cleanupValue);
+  const paramsToEntry = (param: string) => param.split(/[=]/).map(cleanupValue);
 
   const params: Record<string, string> = Object.fromEntries(
     param?.split(/&/)?.map(paramsToEntry) ?? []

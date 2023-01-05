@@ -151,7 +151,6 @@ export default function DepartmentScreen() {
           <ClassesGrid
             isLoaded={!!classes.length && !error}
             classes={classes}
-            navigation={navigation}
             semesterInfo={semesterInfo}
           />
         </Box>

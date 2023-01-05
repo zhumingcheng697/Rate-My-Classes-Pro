@@ -289,11 +289,11 @@ export function compareSchools(a: string, b: string) {
   const isGradA = isSchoolGrad(a);
   const isGradB = isSchoolGrad(b);
 
-  if (isGradA == isGradB) {
+  if (isGradA === isGradB) {
     const isStandardA = /^(?:U|G)/.test(a);
     const isStandardB = /^(?:U|G)/.test(b);
 
-    if (isStandardA == isStandardB) {
+    if (isStandardA === isStandardB) {
       return a < b ? -1 : 1;
     } else if (isStandardA) {
       return -1;
@@ -366,11 +366,11 @@ export function hasEditedReview(
 ) {
   return (
     !review ||
-    review.enjoyment != enjoyment ||
-    review.difficulty != difficulty ||
-    review.workload != workload ||
-    review.value != value ||
-    review.comment != comment
+    review.enjoyment !== enjoyment ||
+    review.difficulty !== difficulty ||
+    review.workload !== workload ||
+    review.value !== value ||
+    review.comment !== comment
   );
 }
 
@@ -400,17 +400,17 @@ export const compareReviews = (() => {
   const sortByMostRecentSemesterWithComment = (a?: Review, b?: Review) =>
     !!a?.comment === !!b?.comment
       ? sortByMostRecentSemester(a, b)
-      : (!!b?.comment ? 1 : 0) - (!!a?.comment ? 1 : 0);
+      : (b?.comment ? 1 : 0) - (a?.comment ? 1 : 0);
 
   const sortByMostRecentReviewWithComment = (a?: Review, b?: Review) =>
     !!a?.comment === !!b?.comment
       ? sortByMostRecentReview(a, b)
-      : (!!b?.comment ? 1 : 0) - (!!a?.comment ? 1 : 0);
+      : (b?.comment ? 1 : 0) - (a?.comment ? 1 : 0);
 
   const sortByMostHelpfulWithComment = (a?: Review, b?: Review) =>
     !!a?.comment === !!b?.comment
       ? sortByMostHelpful(a, b)
-      : (!!b?.comment ? 1 : 0) - (!!a?.comment ? 1 : 0);
+      : (b?.comment ? 1 : 0) - (a?.comment ? 1 : 0);
 
   const sortFunc = {
     [ReviewOrder.mostRecentSemester]: sortByMostRecentSemester,

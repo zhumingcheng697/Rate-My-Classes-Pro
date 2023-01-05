@@ -161,7 +161,7 @@ export default function AccountScreen() {
               )}
             </VStack>
           </Box>
-          <Box flexGrow={1}></Box>
+          <Box flexGrow={1} />
           <Box>
             <Text
               textAlign={"center"}

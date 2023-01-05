@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Platform, type ReturnKeyTypeOptions } from "react-native";
 import { Input, Icon, type IInputProps, Box } from "native-base";
 import Ionicons from "react-native-vector-icons/Ionicons";
+
 import { IconButton } from "./LinkCompatibleButton";
 
 type ClearableInputBaseProps = {

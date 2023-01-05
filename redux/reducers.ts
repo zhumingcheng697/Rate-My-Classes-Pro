@@ -67,7 +67,7 @@ function starredClassReducer(
   state: StarredClassRecord | null = null,
   action: StarClassAction
 ) {
-  if (!!action.payload) {
+  if (action.payload) {
     if (action.type === ActionType.loadStarredClasses) {
       return action.payload;
     } else if (action.type === ActionType.starClass) {
@@ -88,7 +88,7 @@ function reviewedClassReducer(
   state: ReviewedClassRecord | null = null,
   action: ReviewClassAction
 ) {
-  if (!!action.payload) {
+  if (action.payload) {
     if (action.type === ActionType.loadReviewedClasses) {
       return action.payload;
     } else if (action.type === ActionType.reviewClass) {

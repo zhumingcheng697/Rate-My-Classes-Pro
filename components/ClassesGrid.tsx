@@ -1,22 +1,14 @@
 import React, { useCallback, useMemo } from "react";
-import { type StackNavigationProp } from "@react-navigation/stack";
 
-import type {
-  SharedNavigationParamList,
-  ClassInfo,
-  StarredOrReviewed,
-} from "../libs/types";
+import type { ClassInfo, StarredOrReviewed } from "../libs/types";
 import { getFullClassCode, Route } from "../libs/utils";
 import { useInitialTabName } from "../libs/hooks";
 import Grid, { type GridProps } from "../containers/Grid";
 import { TieredTextButton } from "./LinkCompatibleButton";
 import type { SemesterInfo } from "../libs/semester";
 
-type ClassesGridNavigationProp = StackNavigationProp<SharedNavigationParamList>;
-
 type ClassesGridBaseProps = {
   classes: ClassInfo[];
-  navigation: ClassesGridNavigationProp;
   query?: string;
   starredOrReviewed?: StarredOrReviewed;
   semesterInfo: SemesterInfo;
@@ -27,7 +19,6 @@ export type ClassesGridProps = ClassesGridBaseProps &
 
 export default function ClassesGrid({
   classes,
-  navigation,
   query,
   starredOrReviewed,
   semesterInfo,

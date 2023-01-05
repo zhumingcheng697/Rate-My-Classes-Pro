@@ -1,6 +1,6 @@
 import type { WatchAppContext } from "./types";
 
 export function useWatchConnectivity(
-  isReady: boolean,
-  context: WatchAppContext
+  _isReady: boolean,
+  _context: WatchAppContext
 ) {}

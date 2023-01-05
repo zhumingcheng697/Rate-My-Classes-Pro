@@ -137,7 +137,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         syncCleanupRef.current.delete(f);
       });
     }
-  }, [syncCleanupRef.current]);
+  }, []);
 
   const cleanupLocalProfile = useCallback(() => {
     syncCleanup();

@@ -61,7 +61,7 @@ export default class Semester {
     if (!code) return undefined;
 
     const semesterCode = code.slice(0, 2)?.toLowerCase() as SemesterCode;
-    const year = parseInt(code.slice(2) || "");
+    const year = parseInt(code.slice(2) || "", 10);
 
     if (year && this.semesterCodes.includes(semesterCode)) {
       const semester = new Semester({ semesterCode, year });

@@ -85,7 +85,6 @@ export default function StarredReviewedScreen() {
           starredOrReviewed={route.name}
           isLoaded={!!classes.length}
           classes={classes}
-          navigation={navigation}
           semesterInfo={selectedSemester}
         />
       </Box>

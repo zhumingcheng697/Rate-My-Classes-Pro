@@ -227,7 +227,10 @@ export default function ScheduleScreen() {
   const cleanText = useCallback(
     (text: string) =>
       text
-        .replace(new RegExp(`^\s*${getFullClassCode(classCode)}\s*`, "gi"), "")
+        .replace(
+          new RegExp(`^\\s*${getFullClassCode(classCode)}\\s*`, "gi"),
+          ""
+        )
         .replace(/^\s+/gi, ""),
     [classCode]
   );

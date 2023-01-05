@@ -31,7 +31,7 @@ export function OAuthProvider({ children }: OAuthProviderProps) {
 export namespace AppleOAuth {
   export function isSupported() {
     return !(
-      Platform.OS === "ios" && parseInt(Platform.Version.split(".")[0]) < 13
+      Platform.OS === "ios" && parseInt(Platform.Version.split(".")[0], 10) < 13
     );
   }
 

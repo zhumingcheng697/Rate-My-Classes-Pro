@@ -44,7 +44,7 @@ export default ({
     const { classCode, pendingReview, previousReview, newOrEdit, semester } =
       route.params;
 
-    let newReview: Omit<Review, "userId"> | undefined = undefined;
+    let newReview: Omit<Review, "userId"> | undefined;
     let hasEdited = false;
 
     if (

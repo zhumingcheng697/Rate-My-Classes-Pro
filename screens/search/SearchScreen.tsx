@@ -234,7 +234,6 @@ export default function SearchScreen() {
             marginY={"10px"}
             isLoaded={isLoaded && isSettingsSettled}
             classes={matchedClasses}
-            navigation={navigation}
             semesterInfo={semesterInfo}
           />
         ) : (

@@ -23,12 +23,7 @@ import {
   RatingType,
   ErrorType,
 } from "../../libs/types";
-import {
-  getFullClassCode,
-  isObjectEmpty,
-  notOfferedMessage,
-  Route,
-} from "../../libs/utils";
+import { getFullClassCode, notOfferedMessage, Route } from "../../libs/utils";
 import {
   useClassInfoLoader,
   useHandoff,

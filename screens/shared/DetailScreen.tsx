@@ -147,7 +147,7 @@ export default function DetailScreen() {
       ++count;
     }
 
-    if (count == 0) {
+    if (count === 0) {
       return [NaN, NaN, NaN, NaN];
     }
 
@@ -208,7 +208,7 @@ export default function DetailScreen() {
           try {
             const reviewRecord: ReviewRecord =
               (await db.loadReviewDoc(classCode)) ?? {};
-            delete reviewRecord["_id"];
+            delete reviewRecord._id;
             setReviewRecord(reviewRecord);
             setReviewError(false);
           } catch (e) {

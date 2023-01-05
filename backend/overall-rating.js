@@ -7,7 +7,7 @@ exports = async function ({ query }) {
 
   if (!doc) return {};
 
-  delete doc["_id"];
+  delete doc._id;
 
   let enjoyment = 0;
   let difficulty = 0;
@@ -24,7 +24,7 @@ exports = async function ({ query }) {
     ++count;
   }
 
-  if (count == 0) {
+  if (count === 0) {
     return {};
   }
 

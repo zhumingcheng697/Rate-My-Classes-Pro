@@ -1,15 +1,23 @@
 module.exports = {
   root: true,
-  extends: '@react-native-community',
-  parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  extends: "@react-native-community",
+  parser: "@typescript-eslint/parser",
+  plugins: ["@typescript-eslint"],
   overrides: [
     {
-      files: ['*.ts', '*.tsx'],
+      files: ["*.js", "*.jsx", "*.ts", "*.tsx"],
       rules: {
-        '@typescript-eslint/no-shadow': ['error'],
-        'no-shadow': 'off',
-        'no-undef': 'off',
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          {
+            argsIgnorePattern: "^_",
+            varsIgnorePattern: "^_",
+            caughtErrorsIgnorePattern: "^_",
+          },
+        ],
+        curly: "off",
+        "no-shadow": "off",
+        quotes: ["warn", "double", { avoidEscape: true }],
       },
     },
   ],

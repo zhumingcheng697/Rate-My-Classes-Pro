@@ -13,7 +13,7 @@ export const colorModeResponsiveStyle = (
   style: (selector: typeof DynamicColorIOS) => Record<string, any>
 ) => {
   const _style = style(DynamicColorIOS);
-  return { _light: _style, _dark: _style };
+  return { ..._style, _light: _style, _dark: _style };
 };
 
 const dynamicThemeColor = (

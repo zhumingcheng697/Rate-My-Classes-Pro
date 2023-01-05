@@ -12,10 +12,14 @@ export function useDynamicColor({ light, dark }: ColorPair) {
 
 export const colorModeResponsiveStyle = (
   style: (selector: (colorPair: ColorPair) => string) => Record<string, any>
-) => ({
-  _light: style(({ light }) => light),
-  _dark: style(({ dark }) => dark),
-});
+) => {
+  const lightStyle = style(({ light }) => light);
+  return {
+    ...lightStyle,
+    _light: lightStyle,
+    _dark: style(({ dark }) => dark),
+  };
+};
 
 export function useColorModeSynchronizer() {
   const current = useColorScheme();

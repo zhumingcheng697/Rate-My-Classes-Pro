@@ -7,7 +7,13 @@ import React, {
   useState,
   useMemo,
 } from "react";
-import { Animated, Keyboard, Platform, type ScrollView } from "react-native";
+import {
+  Animated,
+  Keyboard,
+  Platform,
+  StyleSheet,
+  type ScrollView,
+} from "react-native";
 import { Button, AlertDialog, theme } from "native-base";
 import { useIsFocused } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -29,6 +35,16 @@ export type AlertPopupProps = {
   footerPrimaryButton?: (isCompact: boolean) => ReactElement;
   onClose: () => any;
 };
+
+const styles = StyleSheet.create({
+  animatedView: {
+    flex: 1,
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
+    width: "100%",
+  },
+});
 
 const bgStyle = colorModeResponsiveStyle((selector) => ({
   background: selector({
@@ -170,11 +186,7 @@ export default function AlertPopup({
         style={{
           maxHeight,
           transform: [{ translateY }, { perspective: 1000 }],
-          flex: 1,
-          justifyContent: "center",
-          alignContent: "center",
-          alignItems: "center",
-          width: "100%",
+          ...styles.animatedView,
         }}
       >
         <AlertDialog.Content maxHeight={"100%"} {...bgStyle2}>

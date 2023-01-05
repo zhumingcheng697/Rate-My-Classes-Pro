@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.3.1](https://github.com/zhumingcheng697/Rate-My-Classes-Pro/releases/tag/v1.3.1)
+
+**Built:** January 4, 2023
+
+**Released:** January 4, 2023
+
+- Significant performance improvement and additional bug fixes.
+
 ## [v1.3](https://github.com/zhumingcheng697/Rate-My-Classes-Pro/releases/tag/v1.3)
 
 **Built:** December 5, 2022

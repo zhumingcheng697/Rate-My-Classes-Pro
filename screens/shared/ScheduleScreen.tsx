@@ -154,7 +154,7 @@ function SectionView({
           {name || (classInfo?.name ?? getFullClassCode(classCode))}
         </Text>
         <Text fontSize={"xl"} lineHeight={"1.15em"} marginY={"1px"}>
-          ({[getFullClassCode(classCode), code].join(" ")})
+          ({[getFullClassCode(classCode), code].filter(Boolean).join(" ")})
         </Text>
       </HStack>
       <VStack space={"3px"}>
@@ -176,7 +176,7 @@ function SectionView({
         {(!!campus || !!location) && (
           <IconHStack
             iconName={"location"}
-            text={[campus, location].join(": ")}
+            text={[campus, location].filter(Boolean).join(": ")}
           />
         )}
         {!!meetings && !!meetings.length && (

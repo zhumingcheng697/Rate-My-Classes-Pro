@@ -11,23 +11,11 @@ Streamline your NYU course selection process with Rate My Classes!
 
 Ever got frustrated by how slow and how hard to use Albert is? Having a hard time keeping track of all the classes you are interested in? Can’t find reviews for the class you are considering or the professor teaching the class? Want to know how enjoyable, difficult, heavy, or valuable your peers think a class is? Try out Rate My Classes today!
 
-<a href="https://apple.co/3VXE6OD" style="display: inline-block; overflow: hidden;">
-<picture alt="Download on the App Store">
-  <source height="55px" srcset="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us" media="(prefers-color-scheme: dark)">
-  <img height="55px" src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/white/en-us">
-</picture></a>
-&nbsp;
-<a href="https://apple.co/3FurlEt" style="display: inline-block; overflow: hidden;">
-<picture alt="Download on the Mac App Store">
-  <source height="55px" srcset="https://tools.applemediaservices.com/api/badges/download-on-the-mac-app-store/black/en-us" media="(prefers-color-scheme: dark)">
-  <img height="55px" src="https://tools.applemediaservices.com/api/badges/download-on-the-mac-app-store/white/en-us">
-</picture></a>
-
 ## Platforms
 
-- [iOS](https://apple.co/3VXE6OD)
-- [watchOS](https://apple.co/3FowEFj)
-- [macOS](https://apple.co/3FurlEt)
+- iOS
+- watchOS
+- macOS
 - [Web](https://rate-my-classes-pro.netlify.app/)
 
 ## Features

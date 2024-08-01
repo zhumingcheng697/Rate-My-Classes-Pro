@@ -15,6 +15,13 @@ export default class Semester {
     SemesterCode.fall,
   ];
 
+  private static lastSupportedSemester() {
+    return new Semester({
+      semesterCode: SemesterCode.summer,
+      year: 2023,
+    });
+  }
+
   private static readonly numOfSemesters = Semester.semesterCodes.length;
 
   readonly semesterCode: SemesterCode;
@@ -89,7 +96,17 @@ export default class Semester {
       semesterCode = SemesterCode.fall;
     }
 
-    return new Semester({ semesterCode, year: today.getFullYear() });
+    const predictedSemester = new Semester({
+      semesterCode,
+      year: today.getFullYear(),
+    });
+    const lastSupportedSemester = Semester.lastSupportedSemester();
+
+    if (Semester.between(predictedSemester, lastSupportedSemester) < 0) {
+      return predictedSemester;
+    } else {
+      return lastSupportedSemester;
+    }
   }
 
   static predictFurthestSemester() {
@@ -111,7 +128,14 @@ export default class Semester {
       year += 1;
     }
 
-    return new Semester({ semesterCode, year });
+    const predictedSemester = new Semester({ semesterCode, year });
+    const lastSupportedSemester = Semester.lastSupportedSemester();
+
+    if (Semester.between(predictedSemester, lastSupportedSemester) < 0) {
+      return predictedSemester;
+    } else {
+      return lastSupportedSemester;
+    }
   }
 
   static getSemesterOptions(showNext: boolean = true, prevCount: number = 6) {
